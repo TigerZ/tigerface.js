@@ -3,10 +3,412 @@
  * Date: 2018/2/27.
  * Time: 14:13.
  */
-import EventDispatcher from "../event/EventDispatcher";
+import {EventDispatcher, Event} from 'tigerface-event';
+import {Shape as S} from 'tigerface-shape';
+import {Utilities as T} from 'tigerface-common';
 
 export default class DisplayObject extends EventDispatcher{
-    constructor(...args) {
-        super(...args);
+
+    constructor(options) {
+
+        super();
+
+        this.state = {
+            pos: {x: 0, y: 0},
+            size: {width: 320, height: 240},
+            scale: {x: 1, y: 1},
+            origin: {x: 0, y: 0},
+            alpha: 1,
+            rotation: 0,
+            visible: true,
+        };
+
+        this.setState(options);
+
+        // 基本信息
+        this.className = "DisplayObject";
+
+        this.uuid = T.uuid();
+
+        // 通过侦听 MOUSE_MOVE 事件，产生内部的 mouseX 和 mouseY 属性
+        this.on(Event.MouseEvent.MOUSE_DOWN, (e)=>this._onMouseDown_(e));
+        this.on(Event.MouseEvent.MOUSE_MOVE, (e)=>this._onMouseMove_(e));
+        this._bounds_ = [];
+
     }
-};
+
+    /***************************************************************************
+     *
+     * 属性方法
+     *
+     **************************************************************************/
+
+    setState(props) {
+        //const states = Object.keys(this);
+        //for (let key of Object.keys(props)) {
+        //    if (states.includes(key)) {
+        //        this[key] = props[key];
+        //    }
+        //}
+        Object.assign(this, props)
+    }
+
+    //******************************* pos **************************************
+
+    set x(x) {
+        this.pos = {x};
+    }
+
+    get x() {
+        return this.pos.x;
+    }
+
+    set y(y) {
+        this.pos = {y};
+    }
+
+    get y() {
+        return this.pos.y;
+    }
+
+    set pos(pos) {
+        Object.assign(this.state.pos, pos);
+        this._onPosChanged_();
+        this.postChange("pos");
+    }
+
+    get pos() {
+        return this.state.pos;
+    }
+
+    _onPosChanged_() {
+    }
+
+    //********************************** scale ***************************************
+
+    set scaleX(x) {
+        this.scale = {x};
+    }
+
+    get scaleX() {
+        return this.scale.x;
+    }
+
+    set scaleY(y) {
+        this.scale = {y};
+    }
+
+    get scaleY() {
+        return this.scale.y;
+    }
+
+    set scale(scale) {
+        Object.assign(this.state.scale, scale);
+        this._onScaleChanged_();
+        this.postChange("scale");
+    }
+
+    get scale() {
+        return this.state.scale;
+    }
+
+    _onScaleChanged_() {
+    }
+
+    //************************************ alpha **************************************
+
+    set alpha(alpha) {
+        this.state.alpha = alpha;
+        this._onAlphaChanged_();
+        this.postChange("setAlpha");
+    }
+
+    get alpha() {
+        return this.state.alpha;
+    }
+
+    _onAlphaChanged_() {
+    }
+
+    //*********************************** rotation ***************************************
+
+    set rotation(rotation) {
+        this.state.rotation = rotation % 360;
+        this._onRotationChanged_();
+        this.postChange("rotation");
+    }
+
+    get rotation() {
+        return this.state.rotation;
+    }
+
+    _onRotationChanged_() {
+    }
+
+    //************************************ visible **************************************
+
+    set visible(visible) {
+        this.state.visible = visible;
+        this._onVisibleChanged_();
+        this.postChange("visible");
+    }
+
+    get visible() {
+        return this.state.visible;
+    }
+
+    _onVisibleChanged_() {
+    }
+
+    //************************************ origin **************************************
+
+    set originX(x) {
+        this.origin = {x};
+    }
+
+    get originX() {
+        return this.origin.x;
+    }
+
+    set originY(y) {
+        this.origin = {y};
+    }
+
+    get originY() {
+        return this.origin.y;
+    }
+
+    set origin(origin) {
+        Object.assign(this.state.origin, origin);
+        this._onOriginChanged_();
+        this.postChange("origin");
+    }
+
+    get origin() {
+        return this.state.origin;
+    }
+
+    _onOriginChanged_() {
+    }
+
+    //*********************************** size ***************************************
+
+    set width(width) {
+        this.size = {width};
+    }
+
+    get width() {
+        return this.size.width;
+    }
+
+    set height(height) {
+        this.size = {height};
+    }
+
+    get height() {
+        return this.size.height;
+    }
+
+    set size(size) {
+        var old = this.size;
+        Object.assign(this.state.size, size);
+        this._onSizeChanged_();
+        this.postChange("size");
+        if (this.state.size.width != old.width || this.state.size.height != old.height)
+            this.dispatchEvent(Event.RESIZE);
+    }
+
+    get size() {
+        return this.state.size;
+    }
+
+    _onSizeChanged_() {
+    }
+
+    //**************************************************************************
+
+
+    /**
+     * 鼠标移动事件侦听
+     * @param e
+     * @private
+     */
+    _onMouseMove_(e) {
+        this._mouseX_ = e.pos.x;
+        this._mouseY_ = e.pos.y;
+    }
+
+    _onMouseDown_(e) {
+        this._onMouseMove_(e);
+    }
+
+    /**
+     * 获得鼠标坐标
+     * @returns {{x: *, y: *}}
+     */
+    getMousePos() {
+        return {x: this._mouseX_, y: this._mouseY_};
+    }
+
+
+
+    /**
+     * 提交“已改变”状态
+     * @param log
+     */
+    postChange(log) {
+        this._changed_ = true;
+        this._change_log_ = log;
+        this.dispatchEvent(Event.STATUS_CHANGED, {log: log});
+    }
+
+    /**
+     * 清除“已改变”状态
+     */
+    clearChange() {
+        this._changed_ = false;
+        this._change_log_ = undefined;
+    }
+
+    /**
+     * 是否已改变
+     * @returns {boolean|*|DisplayObject._changed_}
+     */
+    isChanged() {
+        return this._changed_;
+    }
+
+
+    /***************************************************************************
+     *
+     * 绘制事件
+     *
+     **************************************************************************/
+
+    /**
+     * 重绘方法，需要被实现
+     *
+     * @param context
+     * @private
+     */
+    paint(ctx) {
+    }
+
+    /**
+     * 绘制前准备环境：缩放、旋转
+     *
+     * @param context
+     *            绘图上下文
+     */
+    _onBeforePaint_(ctx) {
+    }
+
+    _onAfterPaint_(ctx) {
+    }
+
+    /**
+     * 完整绘制方法，此方法会被主循环调用
+     *
+     * @param context
+     * @private
+     */
+    _paint_(ctx) {
+        if (this.visible) {
+            this.clearChange();
+
+            ctx && ctx.save();
+            this._onBeforePaint_(ctx);
+            this.dispatchEvent(Event.BEFORE_REDRAW, {target: this, context: ctx});
+
+            ctx && ctx.save();
+            this.paint(ctx);
+            this.dispatchEvent(Event.REDRAW, {target: this, context: ctx});
+
+            this._onAfterPaint_(ctx);
+            ctx && ctx.restore();
+
+            this.dispatchEvent(Event.AFTER_REDRAW, {target: this, context: ctx});
+            ctx && ctx.restore();
+        }
+    }
+
+    /**
+     * 系统进入帧事件侦听器，将事件转发至自身的侦听器
+     *
+     */
+    _onEnterFrame_() {
+        this.emit(Event.ENTER_FRAME, {target: this});
+    }
+
+    /***************************************************************************
+     *
+     * 坐标转换
+     *
+     **************************************************************************/
+
+    /**
+     * 返回外部坐标
+     *
+     * @param point 内部坐标
+     * @returns 外部坐标
+     */
+    getOuterPos(point, digits) {
+        if (point == undefined) return undefined;
+        point = new S.Point(point.x, point.y);
+
+        var o = this.origin;
+        var r = this.rotation;
+        var s = this.scale;
+
+        // 抵消原点 > 旋转 > 缩放 > 移动
+        var pos = point
+            .move(-o.x, -o.y)
+            .rotate(T.degreeToRadian(r))
+            .scale(s.x, s.y)
+            .move(this.x, this.y);
+
+        // 除非指定小数位数，缺省取整
+        pos.x = T.round(pos.x, digits > 0 ? digits : 0);
+        pos.y = T.round(pos.y, digits > 0 ? digits : 0);
+
+        //console.log("getOuterPos", point, pos);
+
+        return pos;
+    }
+
+    /**
+     * 返回内部坐标
+     *
+     * @param point 外部坐标
+     * @returns 内部坐标
+     */
+    getInnerPos(point, digits) {
+        if (point == undefined) return undefined;
+
+        point = new S.Point(point.x, point.y);
+
+        var o = this.origin;
+        var r = this.rotation;
+        var s = this.scale;
+
+        var p = point.move(-this.x, -this.y) // 偏移本地位置
+            .scale(1 / s.x, 1 / s.y) // 缩放
+            .rotate(T.degreeToRadian(-r)) // 旋转
+            .move(o.x, o.y); // 偏移原点
+
+        // 除非指定小数位数，缺省取整
+        p.x = T.round(p.x, digits > 0 ? digits : 0);
+        p.y = T.round(p.y, digits > 0 ? digits : 0);
+
+        return p;
+    }
+
+
+    /*************************************************************************
+     *
+     * 整理后新添加的方法, 待整理
+     *
+     **/
+
+
+}
