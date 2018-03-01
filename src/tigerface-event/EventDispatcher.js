@@ -36,6 +36,7 @@ export const Mixin = {
      */
     construct() {
     },
+
     /**
      * 此类支持 Mixin 方式与其他类整合, 那种情况下 constructor 不会被正确执行.
      *  _getEmitter_ 提供一种懒加载的方式, 即使 constructor 没有被执行, this._eventEmitter_ 依然会被初始化并被返回.
@@ -58,6 +59,10 @@ export const Mixin = {
         return this._eventEmitter_;
     },
 
+    /**
+     * 获得全部事件订阅者
+     * @returns {Array} 订阅者数组
+     */
     getEventSubscribers() {
         if (!this._eventSubscribers_) {
             this._eventSubscribers_ = [];
@@ -146,8 +151,9 @@ export const Mixin = {
      */
     dispatchEvent(eventName, data) {
         this.emit(eventName, data);
+        if (this.debugging && this.getEventSubscribers().length > 0)
+            EventDispatcher.logger.debug(`向事件 ${this.getEventSubscribers().length} 个订阅者转发事件`);
         this.getEventSubscribers().map((subscriber) => {
-            EventDispatcher.logger.debug(`事件订阅者，转发事件`, subscriber.dispatchEvent !=undefined);
             subscriber.dispatchEvent && subscriber.dispatchEvent(eventName, data);
         });
     },
@@ -160,8 +166,7 @@ export const Mixin = {
      * @param data
      */
     emit(eventName, data) {
-        //if (this.debug && !this._isNoise_(eventName))
-        //    console.log("%cEmit Event " + eventName, "color:grey", data || "");
+
         let e = {
             className: "Event",
             currentTarget: this,
@@ -169,8 +174,17 @@ export const Mixin = {
         };
         Object.assign(e, data);
         this._getEmitter_().emit(eventName, e);
+
+        if (this.debugging && !this._isNoise_(eventName))
+            EventDispatcher.logger.debug(`已执行发送事件 [${eventName}]`, data);
     },
 
+    /**
+     * 判断是否忽略的事件，用于内部监控
+     * @param eventName 事件名称
+     * @returns {boolean} 判断结果
+     * @private
+     */
     _isNoise_(eventName) {
         return [
             Event.BEFORE_REDRAW,
@@ -184,13 +198,14 @@ export const Mixin = {
     },
 
     /**
-     * 简单提供触发异步事件的方法
+     * 发送异步事件
      * @param eventName
      * @param data
      */
     dispatchAsyncEvent(eventName, data) {
         // setTimeout(()=>this.emit(eventName, data), 10);
         process.nextTick(() => this.emit(eventName, data));
+        EventDispatcher.logger.debug(`已安排发送异步事件 [${eventName}] `, data);
     },
 
     /**
@@ -200,6 +215,7 @@ export const Mixin = {
      */
     removeEventListener(eventName, listener) {
         this._getEmitter_().removeListener(eventName, listener);
+        EventDispatcher.logger.debug(`已删除事件 [${eventName}] 的侦听器：`, listener);
     },
 
     /**
@@ -208,6 +224,7 @@ export const Mixin = {
      */
     removeAllEventListeners(eventName) {
         this._getEmitter_().removeAllListeners(eventName);
+        EventDispatcher.logger.debug(`已删除事件 [${eventName}] 的全部侦听器`);
     },
 
     /**
@@ -227,6 +244,7 @@ export const Mixin = {
      * @param n
      */
     setMaxListeners(n) {
+        EventDispatcher.logger.debug(`设置最大侦听器数量为 ${n}`);
         this._getEmitter_().setMaxListeners(n);
     },
 
@@ -263,6 +281,7 @@ export const Mixin = {
         };
         Object.assign(e, data);
         win.postMessage(JSON.stringify(e), "*");
+        EventDispatcher.logger.debug(`发送跨窗口事件 [${eventName}]`, data);
     }
 }
 
