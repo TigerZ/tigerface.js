@@ -5,14 +5,20 @@
  */
 import {EventDispatcher, Event} from 'tigerface-event';
 import {Shape as S} from 'tigerface-shape';
-import {Utilities as T} from 'tigerface-common';
+import {Utilities as T, Logger} from 'tigerface-common';
 
-export default class DisplayObject extends EventDispatcher{
+export default class DisplayObject extends EventDispatcher {
+    static logger = Logger.getLogger(DisplayObject.name);
 
+    /**
+     * 构造器。
+     * @param options {Object} 属性初始值，比如：pos，origin，size ...
+     */
     constructor(options) {
 
         super();
 
+        // 基本属性
         this.state = {
             pos: {x: 0, y: 0},
             size: {width: 320, height: 240},
@@ -23,16 +29,20 @@ export default class DisplayObject extends EventDispatcher{
             visible: true,
         };
 
-        this.setState(options);
+        // 设置传入的初始值
+        if (options) this.setState(options);
 
         // 基本信息
         this.className = "DisplayObject";
 
+        // 为实例产生唯一ID
         this.uuid = T.uuid();
 
         // 通过侦听 MOUSE_MOVE 事件，产生内部的 mouseX 和 mouseY 属性
-        this.on(Event.MouseEvent.MOUSE_DOWN, (e)=>this._onMouseDown_(e));
-        this.on(Event.MouseEvent.MOUSE_MOVE, (e)=>this._onMouseMove_(e));
+        this.on(Event.MouseEvent.MOUSE_DOWN, (e) => this._onMouseDown_(e));
+        this.on(Event.MouseEvent.MOUSE_MOVE, (e) => this._onMouseMove_(e));
+
+        // 边界图形数组
         this._bounds_ = [];
 
     }
@@ -43,14 +53,13 @@ export default class DisplayObject extends EventDispatcher{
      *
      **************************************************************************/
 
+    /**
+     * 批量设置对象属性
+     * @param props
+     */
     setState(props) {
-        //const states = Object.keys(this);
-        //for (let key of Object.keys(props)) {
-        //    if (states.includes(key)) {
-        //        this[key] = props[key];
-        //    }
-        //}
-        Object.assign(this, props)
+        Object.assign(this, props);
+        DisplayObject.logger.debug("批量设置状态属性", props);
     }
 
     //******************************* pos **************************************
@@ -251,7 +260,6 @@ export default class DisplayObject extends EventDispatcher{
     }
 
 
-
     /**
      * 提交“已改变”状态
      * @param log
@@ -281,7 +289,8 @@ export default class DisplayObject extends EventDispatcher{
 
     /***************************************************************************
      *
-     * 绘制事件
+     * 绘制事件，无论是否有内容，都要保留方法结构，供 _paint_ 方法调用。
+     * 子类通过覆盖这些方法，来执行绘制前后的代码
      *
      **************************************************************************/
 
@@ -313,28 +322,43 @@ export default class DisplayObject extends EventDispatcher{
      * @private
      */
     _paint_(ctx) {
-        if (this.visible) {
-            this.clearChange();
+        // 为最高效率，对象可见，才进入
+        if (!this.visible) return;
 
-            ctx && ctx.save();
-            this._onBeforePaint_(ctx);
-            this.dispatchEvent(Event.BEFORE_REDRAW, {target: this, context: ctx});
+        // 清除"状态已改变"标志
+        this.clearChange();
 
-            ctx && ctx.save();
-            this.paint(ctx);
-            this.dispatchEvent(Event.REDRAW, {target: this, context: ctx});
+        // 保存一次上下文
+        ctx && ctx.save();
 
-            this._onAfterPaint_(ctx);
-            ctx && ctx.restore();
+        // 先调用绘制前处理
+        this._onBeforePaint_(ctx);
+        this.dispatchEvent(Event.BEFORE_REDRAW, {target: this, context: ctx});
 
-            this.dispatchEvent(Event.AFTER_REDRAW, {target: this, context: ctx});
-            ctx && ctx.restore();
-        }
+        // 保存二次上下文
+        ctx && ctx.save();
+
+        // 再调用自身绘制
+        this.paint(ctx);
+        this.dispatchEvent(Event.REDRAW, {target: this, context: ctx});
+
+        // 最后调用绘制后处理
+        this._onAfterPaint_(ctx);
+        this.dispatchEvent(Event.AFTER_REDRAW, {target: this, context: ctx});
+
+        // 恢复二次上下文
+        ctx && ctx.restore();
+
+        // 恢复一次上下文
+        ctx && ctx.restore();
+
     }
 
     /**
-     * 系统进入帧事件侦听器，将事件转发至自身的侦听器
-     *
+     * 系统进入帧事件侦听器方法。
+     * 此事件由舞台发出，显示对象接收后，由自身转发相同事件.
+     * 用户通过侦听显示对象上的 Event.ENTER_FRAME 事件，执行相应的代码
+     * @private
      */
     _onEnterFrame_() {
         this.emit(Event.ENTER_FRAME, {target: this});
@@ -349,8 +373,9 @@ export default class DisplayObject extends EventDispatcher{
     /**
      * 返回外部坐标
      *
-     * @param point 内部坐标
-     * @returns 外部坐标
+     * @param point {Point} 内部坐标
+     * @param digits {Integer} 结果小数位数（精确度）
+     * @returns {Point} 外部坐标
      */
     getOuterPos(point, digits) {
         if (point == undefined) return undefined;
@@ -371,7 +396,7 @@ export default class DisplayObject extends EventDispatcher{
         pos.x = T.round(pos.x, digits > 0 ? digits : 0);
         pos.y = T.round(pos.y, digits > 0 ? digits : 0);
 
-        //console.log("getOuterPos", point, pos);
+        DisplayObject.logger.debug("getOuterPos", point, pos);
 
         return pos;
     }
@@ -400,15 +425,8 @@ export default class DisplayObject extends EventDispatcher{
         p.x = T.round(p.x, digits > 0 ? digits : 0);
         p.y = T.round(p.y, digits > 0 ? digits : 0);
 
+        DisplayObject.logger.debug("getInnerPos", point, p);
+
         return p;
     }
-
-
-    /*************************************************************************
-     *
-     * 整理后新添加的方法, 待整理
-     *
-     **/
-
-
 }

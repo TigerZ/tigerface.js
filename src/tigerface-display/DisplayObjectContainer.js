@@ -5,14 +5,19 @@
  */
 
 import {EventDispatcher, Event} from 'tigerface-event';
+import {Logger} from 'tigerface-common';
 import DisplayObject from './DisplayObject';
 
 export default class DisplayObjectContainer extends DisplayObject {
+    static logger = Logger.getLogger(DisplayObjectContainer.name);
+
     constructor(...args) {
         super(...args);
 
-        // 上下级关系属性
+        // 上级容器
         this._parent_ = null;
+
+        // 下级显示对象
         this._children_ = [];
     }
 
@@ -25,7 +30,7 @@ export default class DisplayObjectContainer extends DisplayObject {
     }
 
     set children(v) {
-        //console.log("不能覆盖 children 属性");
+        DisplayObjectContainer.logger.error('不允许设置或覆盖 children 属性');
     }
 
     get children() {
@@ -39,17 +44,20 @@ export default class DisplayObjectContainer extends DisplayObject {
      **************************************************************************/
 
     /**
-     * 添加子节点
-     * @param child 子节点
-     * @returns {Node} 返回父节点, 支持链式调用
+     * 添加子显示对象
+     * @param child {DisplayObject} 子显示对象
+     * @returns {DisplayObjectContainer} 返回本容器, 支持链式调用，例如：a.addChild(b).addChild(c);
      */
     addChild(child) {
-        // 子节点添加前调用方法
+        // 子节点添加前调用方法，可用于检查合法性
         if (this._onBeforeAddChild_(child) === false) {
+            DisplayObjectContainer.logger.debug('子显示对象添加失败', child);
             return this;
         }
-        // 添加至容器
+        // 将子节点添加至容器最后
         this.children.push(child);
+
+        // 设置本容器为子节点的 parent
         child.parent = this;
 
         // 子节点添加完成事件方法
@@ -62,37 +70,71 @@ export default class DisplayObjectContainer extends DisplayObject {
     }
 
     /**
-     * 移除指定子对象
-     * @param child
-     * @returns {Container}
+     * 移除指定子显示对象
+     * @param child {DisplayObject} 要移除的子显示对象
+     * @returns {DisplayObjectContainer} 返回本容器, 支持链式调用，例如：a.addChild(b).addChild(c);
      */
     removeChild(child) {
+        // 移除前调用方法，可用于检查合法性
         if (this._onBeforeRemoveChild_(child) === false) {
+            DisplayObjectContainer.logger.debug('removeChild 子显示对象移除失败', child);
             return this;
         }
+
+        // 执行移除
         this._removeChild_(child);
-        this._onRemoveChild_(child)
+
+        // 调用事件方法
+        this._onRemoveChild_(child);
         this._onChildrenChanged_();
+
+        // 状态已改变
         this.postChange("removeChild");
+
         return this;
     }
 
+    /**
+     * 执行移除。内部调用方法，不调用事件方法
+     * @param child {DisplayObject}
+     * @private
+     */
     _removeChild_(child) {
         var index = this.getChildIndex(child);
-        if (index > -1)
-            this.children.splice(index, 1);
+        this._removeChildAt_(index);
     }
 
     /**
      * 移除指定位置的子对象
-     * @param index
+     * @param index {Integer}
      * @returns {Container}
      */
     removeChildAt(index) {
-        this.children.splice(index, 1);
+        // 移除前调用方法，可用于检查合法性
+
+        if (index < 0 || index >= this.children.length || this._onBeforeRemoveChild_(this.children[index]) === false) {
+            DisplayObjectContainer.logger.debug('removeChildAt() 子显示对象移除失败', index);
+            return this;
+        }
+
+        let child = this.children[index];
+
+        // 执行移除
+        this._removeChildAt_(index);
+
+        // 调用事件方法
+        this._onRemoveChild_(child);
         this._onChildrenChanged_();
+
+        // 状态已改变
         this.postChange("removeChildAt");
+
         return this;
+    }
+
+    _removeChildAt_(index) {
+        if (index > -1)
+            this.children.splice(index, 1);
     }
 
     /**
@@ -234,8 +276,8 @@ export default class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 子节点添加前调用的方法
-     * 子类可通过重写此方法, 对将要添加的子节点进行检查, 如果返回 false, 可导致添加失败
-     * @param child 子节点
+     * 子类可通过重写此方法, 对将要添加的子节点进行检查, 如果返回 false, 可导致良性添加失败
+     * @param child {DisplayObject} 子节点
      * @returns {boolean} 如果精确返回 false, 会导致添加失败
      */
     _onBeforeAddChild_(child) {
@@ -257,7 +299,7 @@ export default class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 当子节点添加完成后被调用
-     * @param child
+     * @param child {DisplayObject}
      */
     _onAddChild_(child) {
         this.emit(Event.NodeEvent.CHILD_ADDED, child);
