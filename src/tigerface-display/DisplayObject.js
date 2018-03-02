@@ -404,8 +404,8 @@ export default class DisplayObject extends EventDispatcher {
     /**
      * 返回内部坐标
      *
-     * @param point 外部坐标
-     * @returns 内部坐标
+     * @param point {Point} 外部坐标
+     * @returns {Point} 内部坐标
      */
     getInnerPos(point, digits) {
         if (point == undefined) return undefined;
