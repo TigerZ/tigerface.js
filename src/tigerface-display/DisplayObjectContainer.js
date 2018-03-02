@@ -237,10 +237,11 @@ export default class DisplayObjectContainer extends DisplayObject {
      * @returns {Container}
      */
     setTop(child, neighbor) {
+        if (child === neighbor) return;
         if (neighbor) {
-            this._removeChild_(child);
-            var index1 = this.getChildIndex(neighbor);
-            this.setChildIndex(child, index1 - 1);
+            let n1 = this.getChildIndex(neighbor);
+            let n0 = this.getChildIndex(child);
+            this.setChildIndex(child, n0 < n1 ? n1 : n1 + 1);
         } else
             this.setChildIndex(child, this.children.length - 1);
         //
@@ -256,10 +257,11 @@ export default class DisplayObjectContainer extends DisplayObject {
      * @returns {Container}
      */
     setBottom(child, neighbor) {
+        if (child === neighbor) return;
         if (neighbor) {
-            this._removeChild_(child);
-            var index1 = this.getChildIndex(neighbor);
-            this.setChildIndex(child, index1);
+            var n0 = this.getChildIndex(child);
+            var n1 = this.getChildIndex(neighbor);
+            this.setChildIndex(child, n0 > n1 ? n1 : n1 - 1);
         } else
             this.setChildIndex(child, 0);
         this._onChildrenChanged_();
@@ -297,13 +299,6 @@ export default class DisplayObjectContainer extends DisplayObject {
         }
     }
 
-    /**
-     * 当子节点添加完成后被调用
-     * @param child {DisplayObject}
-     */
-    _onAddChild_(child) {
-        this.emit(Event.NodeEvent.CHILD_ADDED, child);
-    }
 
     _onBeforeRemoveChild_(child) {
         return true;
@@ -365,8 +360,12 @@ export default class DisplayObjectContainer extends DisplayObject {
         this._stage_ = v;
     }
 
+    /**
+     * 当子节点添加完成后被调用
+     * @param child {DisplayObject}
+     */
     _onAddChild_(child) {
-        super._onAddChild_(child);
+        this.emit(Event.NodeEvent.CHILD_ADDED, child);
         child._onAppendToStage_();
     }
 
