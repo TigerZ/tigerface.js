@@ -6,7 +6,7 @@
 import Rectangle from "./Rectangle";
 
 export default class Square extends Rectangle {
-    constructor(...args) {
-        super(...args);
+    constructor(x, y, width) {
+        super(x, y, width, width);
     }
-};
+}
