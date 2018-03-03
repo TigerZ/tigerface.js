@@ -4,7 +4,7 @@
  * Time: 14:13.
  */
 
-import {EventDispatcher, Event} from 'tigerface-event';
+import {Event} from 'tigerface-event';
 import {Logger} from 'tigerface-common';
 import DisplayObject from './DisplayObject';
 

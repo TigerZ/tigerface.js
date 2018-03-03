@@ -4,6 +4,7 @@
  * Time: 22:34.
  */
 import {Utilities as T, Logger} from 'tigerface-common';
+import Curve from './Curve';
 /**
  * 二次贝塞尔曲线<br>
  * 为了高效，曲线在初始化时就已经确定了采样点，以后不会再次计算。如果要改变采样精度，调用refresh方法

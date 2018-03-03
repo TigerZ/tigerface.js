@@ -42,9 +42,6 @@ export default class DisplayObject extends EventDispatcher {
         this.on(Event.MouseEvent.MOUSE_DOWN, (e) => this._onMouseDown_(e));
         this.on(Event.MouseEvent.MOUSE_MOVE, (e) => this._onMouseMove_(e));
 
-        // 边界图形数组
-        this._bounds_ = [];
-
     }
 
     /***************************************************************************
@@ -255,7 +252,7 @@ export default class DisplayObject extends EventDispatcher {
      * 获得鼠标坐标
      * @returns {{x: *, y: *}}
      */
-    getMousePos() {
+    get mousePos() {
         return {x: this._mouseX_, y: this._mouseY_};
     }
 

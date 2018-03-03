@@ -21,6 +21,13 @@
         "stage-1",
         "react"
       ]
+    },
+    "test": {
+      "presets": [
+        "env",
+        "stage-1",
+        "react"
+      ]
     }
   }
 }

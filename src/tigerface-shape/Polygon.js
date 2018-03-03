@@ -3,7 +3,8 @@
  * Date: 2018/2/27.
  * Time: 13:01.
  */
-import Shape from "./Shape";
+import Shape from './Shape';
+import {convertVertexArray} from './Vertex'
 
 /**
  * 多边形类<br>
@@ -64,15 +65,7 @@ export default class Polygon extends Shape {
         };
     }
 
-    /**
-     * 提取外接矩形（缓存）
-     * @returns {{left: Number, top: Number, width: Number, height: Number}}
-     */
-    getBoundingRect() {
-        if (!this.boundingRect)
-            this.boundingRect = this._getBoundingRect_();
-        return this.boundingRect;
-    }
+
 
     /**
      * 返回外接矩形的宽度

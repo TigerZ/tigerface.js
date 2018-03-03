@@ -1,11 +1,13 @@
-import Polygon from "./Polygon";
+import Polygon from './Polygon';
+import Shape from './Shape';
+import Point from './Point';
 
 /**
  * 圆
  *
- * @type {*|void}
+ *
  */
-export default class Circle extends Polygon {
+export default class Circle extends Shape {
     /**
      * 圆构造器
      *
@@ -18,7 +20,7 @@ export default class Circle extends Polygon {
         this.p0 = new Point(x, y);
         this.radius = radius;
         // 转换为多边形处理
-        this.initPolygon(this.getVertexes());
+        // this.initPolygon(this.getVertexes());
         this.className = "Circle";
     }
 
@@ -58,7 +60,7 @@ export default class Circle extends Polygon {
      * @returns {{left: Number, top: Number, width: Number, height: Number}}
      * @private
      */
-    _getBoundingRect() {
+    _getBoundingRect_() {
         var left = this.p0.x - this.radius;
         var right = this.p0.x + this.radius;
         var top = this.p0.y - this.radius;
