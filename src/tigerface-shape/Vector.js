@@ -40,7 +40,7 @@ export default class Vector {
             this.y = y || 0;
         }
 
-        this.className = "Vector";
+        this.className = Vector.name;
 
     }
 

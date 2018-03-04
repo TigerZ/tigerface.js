@@ -8,6 +8,7 @@ export default class Shape {
     static logger = Logger.getLogger(Shape.logger);
 
     constructor() {
+        this.className = Shape.name;
     }
 
     /**

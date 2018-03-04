@@ -3,7 +3,8 @@
  * Date: 2018/2/27.
  * Time: 13:02.
  */
-import Polygon from "./Polygon";
+import Polygon from './Polygon';
+import Point from './Point';
 /**
  * 矩形
  *
@@ -37,7 +38,7 @@ export default class Rectangle extends Polygon {
         ];
 
         this.initPolygon(points);
-        this.className = "Rectangle";
+        this.className = Rectangle.name;
     }
 
     clone() {

@@ -21,7 +21,7 @@ export default class Circle extends Shape {
         this.radius = radius;
         // 转换为多边形处理
         // this.initPolygon(this.getVertexes());
-        this.className = "Circle";
+        this.className = Circle.name;
     }
 
     clone() {

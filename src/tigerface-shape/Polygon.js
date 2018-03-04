@@ -5,6 +5,7 @@
  */
 import Shape from './Shape';
 import {convertVertexArray} from './Vertex'
+import Line from './Line';
 
 /**
  * 多边形类<br>
@@ -21,7 +22,7 @@ export default class Polygon extends Shape {
         if (points)
             this.initPolygon(points);
 
-        this.className = "Polygon";
+        this.className = Polygon.name;
     }
 
     initPolygon(points) {

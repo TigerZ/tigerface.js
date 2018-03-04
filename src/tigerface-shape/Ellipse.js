@@ -4,12 +4,16 @@
  * Time: 12:58.
  */
 import Polygon from "./Polygon";
+import Point from './Point';
+import {Utilities as T, Logger} from 'tigerface-common';
 /**
  * 椭圆
  *
  * @type {*|void}
  */
 export default class Ellipse extends Polygon {
+    static logger = Logger.getLogger(Ellipse.name);
+
     constructor(x, y, radiusX, radiusY, precision) {
         super();
         this.p0 = new Point(x, y);
@@ -18,7 +22,7 @@ export default class Ellipse extends Polygon {
         this.precision = precision == undefined ? 5 : precision;
         // 转换为多边形处理
         this.initPolygon(this.getVertexes());
-        this.className = "Ellipse";
+        this.className = Ellipse.name;
     }
 
     clone() {

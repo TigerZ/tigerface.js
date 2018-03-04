@@ -4,10 +4,11 @@
  * Time: 22:38.
  */
 import Point from './Point';
+import {Utilities as T} from 'tigerface-common';
 export default class Vertex extends Point {
     constructor(x, y) {
         super(x, y);
-        this.className = "Vertex";
+        this.className = Vertex.name;
     }
 
     getSide() {

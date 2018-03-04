@@ -17,5 +17,6 @@ export default class RightTriangle extends Polygon {
         points.push(new Point(x, y - l2));
         points.push(new Point(x + l1, y));
         this.initPolygon(points);
+        this.className = RightTriangle.name;
     }
 }

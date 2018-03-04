@@ -4,6 +4,7 @@
  * Time: 13:06.
  */
 import Point from './Point';
+import {convertVertex} from './Vertex';
 /**
  * Line类，由两点坐标描述一个直线段
  */
@@ -33,7 +34,7 @@ export default class Line {
         this.p0 = convertVertex(p0);
         this.p1 = convertVertex(p1);
 
-        this.className = "Line";
+        this.className = Line.name;
 
     }
 
