@@ -2,23 +2,37 @@
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
 
+import $ from "jquery";
+import Logger from './Logger';
+
+const logger = Logger.getLogger('Utilities');
 
 // Private array of chars to use
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
 export default {
 
+    /**
+     * 控制台输出方法，用于在未来输出时增加选项，例如整体开关日志，或者控制日志级别
+     *
+     * @param str
+     */
+    trace: function (str) {
+        console.log(str);
+        throw new Error(`Utilities.trace 方法已经废弃，请使用 Logger.debug`);
+    },
+
     css: function (dom, name, value, autoPrefix) {
         if (value != undefined) {
-            $(dom).css(name, value);
+            dom.style.setProperty(name, value);
             if (autoPrefix) {
-                $(dom).css("-webkit-" + name, value);
-                $(dom).css("-moz-" + name, value);
-                $(dom).css("-o-" + name, value);
-                $(dom).css("-ms-" + name, value);
+                dom.style.setProperty('-webkit-' + name, value);
+                dom.style.setProperty('-moz-' + name, value);
+                dom.style.setProperty('-o-' + name, value);
+                dom.style.setProperty('-ms-' + name, value);
             }
         } else {
-            return $(dom).css(name);
+            return dom.style.getPropertyValue(name);
         }
     },
 
@@ -33,38 +47,66 @@ export default {
                 ext["-ms-" + key] = css[key];
             }
             this.merge(dom.style, ext);
-        } else
+        } else {
             this.merge(dom.style, css);
+        }
     },
 
     removeCss: function (dom, name, autoPrefix) {
-        $(dom).css(name, "");
+        dom.style.removeProperty(name);
         if (autoPrefix) {
-            $(dom).css("-webkit-" + name, "");
-            $(dom).css("-moz-" + name, "");
-            $(dom).css("-o-" + name, "");
-            $(dom).css("-ms-" + name, "");
+            dom.style.removeProperty("-webkit-" + name);
+            dom.style.removeProperty("-moz-" + name);
+            dom.style.removeProperty("-o-" + name);
+            dom.style.removeProperty("-ms-" + name);
         }
     },
 
     addClass: function (dom, name) {
-        return $(dom).addClass(name);
+        let cs = dom.className ? dom.className.split(' ') : [];
+        if (!cs.includes(name)) {
+            cs.push(name);
+        }
+        dom.className = cs.join(' ');
     },
 
     removeClass: function (dom, name) {
-        return $(dom).removeClass(name);
+        let cs = dom.className ? dom.className.split(' ') : [];
+        if (cs.includes(name)) {
+            cs = cs.splice(cs.indexOf(name), 1);
+        }
+        dom.className = cs.join(' ');
     },
 
     attr: function (dom, name, value) {
         if (arguments.length == 2)
-            return $(dom).attr(name);
+            return dom.getAttribute(name);
         else if (arguments.length == 3) {
-            $(dom).attr(name, value);
+            dom.setAttribute(name, value);
         }
     },
 
     removeAttr: function (dom, name) {
-        $(dom).removeAttr(name);
+        dom.removeAttribute(name);
+    },
+
+    _getElementLeft: function (element) {
+        var actualLeft = element.offsetLeft;
+        var current = element.offsetParent;
+        while (current !== null) {
+            actualLeft += current.offsetLeft;
+            current = current.offsetParent;
+        }
+        return actualLeft;
+    },
+    _getElementTop: function (element) {
+        var actualTop = element.offsetTop;
+        var current = element.offsetParent;
+        while (current !== null) {
+            actualTop += current.offsetTop;
+            current = current.offsetParent;
+        }
+        return actualTop;
     },
 
     /**
@@ -72,38 +114,40 @@ export default {
      * @param dom
      * @returns {{x: jQuery.left, y: jQuery.top}}
      */
+
+
     pos: function (dom) {
-        var pos = $(dom).position();
-        return {x: pos.left, y: pos.top};
+        return {x: this._getElementLeft(dom), y: this._getElementTop(dom)};
     },
 
     size: function (dom) {
-        var $dom = $(dom);
-        return {width: $dom.width(), height: $dom.height()};
+        let width = dom.getAttribute('width') ? dom.getAttribute('width') : dom.style.getPropertyValue('width');
+        let height = dom.getAttribute('height') ? dom.getAttribute('height') : dom.style.getPropertyValue('height');
+        return {width: width, height: height};
     },
 
-    scrollTop: function (dom, value) {
-        if (arguments.length == 1)
-            return $(dom).scrollTop();
-        else {
-            $(dom).scrollTop(value);
-        }
-    },
-
-    scrollLeft: function (dom, value) {
-        if (arguments.length == 1)
-            return $(dom).scrollLeft();
-        else {
-            $(dom).scrollLeft(value);
-        }
-    },
-
-    data: function (dom, name, value) {
-        if (value != undefined)
-            $(dom).data(name, value);
-        else
-            return $(dom).data(name);
-    },
+    // scrollTop: function (dom, value) {
+    //     if (arguments.length == 1)
+    //         return $(dom).scrollTop();
+    //     else {
+    //         $(dom).scrollTop(value);
+    //     }
+    // },
+    //
+    // scrollLeft: function (dom, value) {
+    //     if (arguments.length == 1)
+    //         return $(dom).scrollLeft();
+    //     else {
+    //         $(dom).scrollLeft(value);
+    //     }
+    // },
+    //
+    // data: function (dom, name, value) {
+    //     if (value != undefined)
+    //         $(dom).data(name, value);
+    //     else
+    //         return $(dom).data(name);
+    // },
 
     /**
      * 运行测试用例

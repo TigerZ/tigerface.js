@@ -15,7 +15,7 @@ function now() {
 }
 
 function isBrowserEnv() {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && window === global) {
         return true;
     }
     return false;

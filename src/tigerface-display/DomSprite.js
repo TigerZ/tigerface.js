@@ -262,7 +262,7 @@ export default class DomSprite extends Sprite {
     }
 
     setStyle(nameOrCss, value, autoPrefix) {
-        DomSprite.logger.debug('setStyle', this.state, nameOrCss, value, autoPrefix);
+        // DomSprite.logger.debug('setStyle', this.state, nameOrCss, value, autoPrefix);
         if (arguments.length === 1 && typeof nameOrCss === 'object') {
             this.state.css = Object.assign({}, this.state.css, nameOrCss);
             T.cssMerge(this.dom, nameOrCss, autoPrefix);
@@ -309,28 +309,28 @@ export default class DomSprite extends Sprite {
         T.removeCss(this.dom, "transition", true);
     }
 
-    //getDom() {
-    //    return this._dom_ === document ? document.documentElement : this._dom_;
-    //}
+    getDom() {
+       return this._dom_ === document ? document.documentElement : this._dom_;
+    }
 
-    // getScroll() {
-    //     var dom = this.dom;
-    //     return {
-    //         scrollTop: T.scrollTop(dom),
-    //         scrollLeft: T.scrollLeft(dom)
-    //     };
-    // }
-    //
-    // setScroll(scrollLeft, scrollTop) {
-    //     var dom = this.dom;
-    //     if (arguments.length == 1) {
-    //         scrollLeft.scrollLeft !== undefined && T.scrollLeft(dom, scrollLeft.scrollLeft);
-    //         scrollLeft.scrollTop !== undefined && T.scrollTop(dom, scrollLeft.scrollTop);
-    //     } else {
-    //         T.scrollLeft(dom, scrollLeft);
-    //         T.scrollTop(dom, scrollTop);
-    //     }
-    // }
+    getScroll() {
+        var dom = this.dom;
+        return {
+            scrollTop: T.scrollTop(dom),
+            scrollLeft: T.scrollLeft(dom)
+        };
+    }
+
+    setScroll(scrollLeft, scrollTop) {
+        var dom = this.dom;
+        if (arguments.length == 1) {
+            scrollLeft.scrollLeft !== undefined && T.scrollLeft(dom, scrollLeft.scrollLeft);
+            scrollLeft.scrollTop !== undefined && T.scrollTop(dom, scrollLeft.scrollTop);
+        } else {
+            T.scrollLeft(dom, scrollLeft);
+            T.scrollTop(dom, scrollTop);
+        }
+    }
 
     getDomInfo() {
         var dom = this.dom;

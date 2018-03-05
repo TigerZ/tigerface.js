@@ -44,17 +44,15 @@ export default class Stage extends DomSprite {
         this._signing_();
 
         // 增加屏幕方向翻转检测
-        try {
-            window.onOrientationChange = (e) => {
-                var orientation = window.orientation || 0;
-                this.dispatchEvent(Event.ORIENTATION_CHANGE, {
-                    orientation: orientation,
-                    width: screen.width,
-                    height: screen.height
-                });
-            };
-        } catch (e) {
-        }
+
+        window.onOrientationChange = (e) => {
+            var orientation = window.orientation || 0;
+            this.dispatchEvent(Event.ORIENTATION_CHANGE, {
+                orientation: orientation,
+                width: screen.width,
+                height: screen.height
+            });
+        };
         //this.on(Event.ENTER_FRAME, ()=>console.log(this.name+" ENTER_FRAME "+new Date().getSeconds()));
     }
 
@@ -77,36 +75,33 @@ export default class Stage extends DomSprite {
     }
 
     _signing_() {
-        try {
-            var sign = "Paint by TigerFace.js 0.9 - www.tigerfacejs.org";
-            var devicePixelRatio = window.devicePixelRatio || 1;
-            var font = 10 * devicePixelRatio + "px Microsoft YaHei";
-            var ctx = document.createElement("canvas").getContext("2d");
-            ctx.font = font;
-            var width = ctx.measureText(sign).width + 20;
-            var height = 20;
-            ctx.canvas.width = width;
-            ctx.canvas.height = height * devicePixelRatio;
-            ctx.fillStyle = "rgba(0,0,0,0.3)";
-            ctx.strokeStyle = "rgba(255,255,255,1)";
-            ctx.textBaseline = "middle";
-            ctx.textAlign = "left";
+        var sign = "Paint by TigerFace.js 0.9 - www.tigerfacejs.org";
+        var devicePixelRatio = window.devicePixelRatio || 1;
+        var font = 10 * devicePixelRatio + "px Microsoft YaHei";
+        var ctx = document.createElement("canvas").getContext("2d");
+        ctx.font = font;
+        var width = ctx.measureText(sign).width + 20;
+        var height = 20;
+        ctx.canvas.width = width;
+        ctx.canvas.height = height * devicePixelRatio;
+        ctx.fillStyle = "rgba(0,0,0,0.3)";
+        ctx.strokeStyle = "rgba(255,255,255,1)";
+        ctx.textBaseline = "middle";
+        ctx.textAlign = "left";
 
-            // 改变 canvas 尺寸后，原来的设置的 font 失效，再次设置
-            ctx.font = font;
+        // 改变 canvas 尺寸后，原来的设置的 font 失效，再次设置
+        ctx.font = font;
 
-            ctx.strokeText(sign, 10, ctx.canvas.height / 2);
-            ctx.fillText(sign, 10, ctx.canvas.height / 2);
+        ctx.strokeText(sign, 10, ctx.canvas.height / 2);
+        ctx.fillText(sign, 10, ctx.canvas.height / 2);
 
-            var data = ctx.canvas.toDataURL();
-            this.setStyle({
-                "background-image": "url(" + data + ")",
-                "background-position": "right bottom",
-                "background-repeat": "no-repeat",
-                "background-size": T.round(width / devicePixelRatio) + "px " + height + "px"
-            });
-        } catch (e) {
-        }
+        var data = ctx.canvas.toDataURL();
+        this.setStyle({
+            "background-image": "url(" + data + ")",
+            "background-position": "right bottom",
+            "background-repeat": "no-repeat",
+            "background-size": T.round(width / devicePixelRatio) + "px " + height + "px"
+        });
     }
 
 }

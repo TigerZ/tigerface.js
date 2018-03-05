@@ -3,8 +3,11 @@ import {Event} from 'tigerface-event';
 import Stage from '../src/tigerface-display/Stage';
 import {JSDOM} from "jsdom";
 
-const {document} = new JSDOM(`<!DOCTYPE html><div></div>`).window;
-const dom = document.querySelector('div');
+const win = new JSDOM(`<!DOCTYPE html><div></div>`).window;
+const dom = win.document.querySelector('div');
+global.$ = require('jquery')(win);
+global.window = win;
+global.document = win.document;
 
 describe('测试舞台对象 Stage', () => {
     describe('初始化', () => {
