@@ -14,6 +14,13 @@ function now() {
     return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}.${d.getMilliseconds()}`;
 }
 
+function isBrowserEnv() {
+    if (typeof window !== "undefined") {
+        return true;
+    }
+    return false;
+}
+
 /**
  * User: zyh
  * Date: 2018/2/27.
@@ -49,12 +56,15 @@ export default class Logger extends Debuggable {
 
     info(msg) {
         if (!this.debugging || Logger.LOG_LEVEL < INFO || getClassLogLevel(this.clazz) < INFO) return;
-        console.log(colors.green(`${now()} [INFO] ${this.clazz}: ${msg}`));
+        isBrowserEnv() ?
+            console.log(`%c${now()} [INFO] ${this.clazz}: ${msg}`, 'color:green') :
+            console.log(colors.green(`${now()} [INFO] ${this.clazz}: ${msg}`));
     }
 
     warn(msg) {
         if (!this.debugging || Logger.LOG_LEVEL < WARN || getClassLogLevel(this.clazz) < WARN) return;
-        console.log(colors.yellow(`${now()} [WARN] ${this.clazz}: ${msg}`));
+        isBrowserEnv() ? console.log(`%c${now()} [WARN] ${this.clazz}: ${msg}`, 'color:orange') :
+            console.log(colors.yellow(`${now()} [WARN] ${this.clazz}: ${msg}`));
     }
 
     error(msg) {
@@ -63,13 +73,14 @@ export default class Logger extends Debuggable {
         throw new Error(`${now()} [ERROR] ${this.clazz}: ${msg}`);
     }
 
-    _isDebugging_ () {
+    _isDebugging_() {
         return this.debugging && Logger.LOG_LEVEL >= DEBUG && getClassLogLevel(this.clazz) >= DEBUG;
     }
 
     debug(...msg) {
         if (!this._isDebugging_()) return;
-        console.log(colors.blue(`${now()} [DEBUG] ${this.clazz}:`), ...msg);
+        isBrowserEnv() ? console.log(`%c${now()} [DEBUG] ${this.clazz}:`, 'color:blue', ...msg) :
+            console.log(colors.blue(`${now()} [DEBUG] ${this.clazz}:`), ...msg);
     }
 
     debugTimingReset() {
@@ -78,12 +89,13 @@ export default class Logger extends Debuggable {
             t = n - this._last_debug_time_;
         }
         this._last_debug_time_ = n;
-        return t>60000?'60s more':`${t}ms`;
+        return t > 60000 ? '60s more' : `${t}ms`;
     }
 
     debugTiming(...msg) {
         if (!this._isDebugging_()) return;
-        console.log(`%c${now()} (+${this.debugTimingReset()}) [DEBUG] ${this.clazz}:`, 'color:blue;font-weight:bold', ...msg);
+        isBrowserEnv() ? console.log(`%c${now()} (+${this.debugTimingReset()}) [DEBUG] ${this.clazz}:`, 'color:blue;font-weight:bold', ...msg) :
+            console.log(colors.blue.bold(`${now()} (+${this.debugTimingReset()}) [DEBUG] ${this.clazz}:`), ...msg);
     }
 
     debugTimingBegin(...msg) {

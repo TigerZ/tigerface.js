@@ -22,6 +22,7 @@ const config = {
         port: 9000
     },
     module: {
+        exprContextCritical: false,
         rules: [
             // // 以下是没有 .babelrc 文档的完整配置写法
             // {
