@@ -8,7 +8,7 @@
 npm install
 ```
 
-完整运行测试。此方式会首先运行 prepare.sh
+完整运行测试。已改为使用 babel，支持 ES6 语法，不再先执行 prepare.sh，需要时手工执行
 
 ```
 npm test
@@ -17,5 +17,5 @@ npm test
 再次运行测试，全部或单一文件
 
 ```
-mocha [xxx.test.js]
+npm test -- [xxx.test.js]
 ```

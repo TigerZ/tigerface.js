@@ -1,5 +1,6 @@
 import Debuggable from './Debuggable';
 import config from 'log-config.json';
+import colors from 'colors/safe';
 
 var OFF = 0, ERROR = 1, WARN = 2, INFO = 3, DEBUG = 4, FULL = 99;
 
@@ -48,12 +49,12 @@ export default class Logger extends Debuggable {
 
     info(msg) {
         if (!this.debugging || Logger.LOG_LEVEL < INFO || getClassLogLevel(this.clazz) < INFO) return;
-        console.log(`%c${now()} [INFO] ${this.clazz}: ${msg}`, 'color:green');
+        console.log(colors.green(`${now()} [INFO] ${this.clazz}: ${msg}`));
     }
 
     warn(msg) {
         if (!this.debugging || Logger.LOG_LEVEL < WARN || getClassLogLevel(this.clazz) < WARN) return;
-        console.log(`%c${now()} [WARN] ${this.clazz}: ${msg}`, 'color:orange');
+        console.log(colors.yellow(`${now()} [WARN] ${this.clazz}: ${msg}`));
     }
 
     error(msg) {
@@ -68,7 +69,7 @@ export default class Logger extends Debuggable {
 
     debug(...msg) {
         if (!this._isDebugging_()) return;
-        console.log(`%c${now()} [DEBUG] ${this.clazz}:`, 'color:blue', ...msg);
+        console.log(colors.blue(`${now()} [DEBUG] ${this.clazz}:`), ...msg);
     }
 
     debugTimingReset() {

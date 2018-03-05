@@ -21,7 +21,7 @@ export default class Sprite extends DisplayObjectContainer {
         super(options);
 
         // 基本信息
-        this.className = "Sprite";
+        this.className = Sprite.name;
 
         this.on(Event.APPEND_TO_STAGE, (e) => {
 
