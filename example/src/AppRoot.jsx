@@ -35,7 +35,7 @@ export default class AppRoot extends React.Component {
     render() {
         return (
             <div>
-                <div>{"你好，世界aaa !!!"}</div>
+                <div>{"你好，世界 !!!"}</div>
             </div>
         )
     }

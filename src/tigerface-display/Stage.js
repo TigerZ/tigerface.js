@@ -5,9 +5,8 @@
  */
 
 import {Utilities as T, Logger} from 'tigerface-common';
-import FrameEventAdapter from '../../src/tigerface-event/FrameEventAdapter';
 import DomSprite from './DomSprite';
-import {Event, EventDispatcher} from 'tigerface-event';
+import {Event, EventDispatcher, FrameEventGenerator} from 'tigerface-event';
 
 export default class Stage extends DomSprite {
     static logger = Logger.getLogger(Stage.name);
@@ -65,10 +64,10 @@ export default class Stage extends DomSprite {
         Stage.logger.info('舞台帧速率设置为 ' + this.state.fps);
 
         if (this.frameAdapter) this.frameAdapter.destroy();
-        this.frameAdapter = new FrameEventAdapter({fps: this.state.fps});
+        this.frameAdapter = new FrameEventGenerator({fps: this.state.fps});
         // Stage.logger.debug('初始化帧事件引擎，帧速率设置为 ' + this.state.fps);
 
-        this.frameAdapter.on(Event.REDRAW, (e) => this._paint_(e));
+        this.frameAdapter.on(Event.REDRAW, () => this._paint_());
         this.frameAdapter.on(Event.ENTER_FRAME, () => this._onEnterFrame_());
         // Stage.logger.debug('注册帧事件引擎的重绘事件 [Event.REDRAW] 和进入帧事件 [Event.ENTER_FRAME] 侦听器');
     }

@@ -6,6 +6,7 @@
 import {EventDispatcher, Event} from 'tigerface-event';
 import {Shape as S} from 'tigerface-shape';
 import {Utilities as T, Logger} from 'tigerface-common';
+import FrameEventGenerator from "../tigerface-event/FrameEventGenerator";
 
 export default class DisplayObject extends EventDispatcher {
     static logger = Logger.getLogger(DisplayObject.name);
@@ -319,6 +320,7 @@ export default class DisplayObject extends EventDispatcher {
      * @private
      */
     _paint_(ctx) {
+        // FrameEventGenerator.logger.debug('重绘...');
         // 为最高效率，对象可见，才进入
         if (!this.visible) return;
 
