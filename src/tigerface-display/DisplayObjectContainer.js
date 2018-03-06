@@ -11,8 +11,8 @@ import DisplayObject from './DisplayObject';
 export default class DisplayObjectContainer extends DisplayObject {
     static logger = Logger.getLogger(DisplayObjectContainer.name);
 
-    constructor(...args) {
-        super(...args);
+    constructor(options) {
+        super(options);
 
         // 上级容器
         this._parent_ = null;
@@ -51,7 +51,7 @@ export default class DisplayObjectContainer extends DisplayObject {
     addChild(child) {
         // 子节点添加前调用方法，可用于检查合法性
         if (this._onBeforeAddChild_(child) === false) {
-            DisplayObjectContainer.logger.debug('子显示对象添加失败', child);
+            DisplayObjectContainer.logger.info('addChild(): 下级显示对象添加失败');
             return this;
         }
         // 将子节点添加至容器最后

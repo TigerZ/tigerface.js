@@ -36,9 +36,10 @@ export default class DomSprite extends Sprite {
      */
     constructor(options, dom) {
 
-        super();
+        dom = dom || document.createElement("div");
 
         let state = Object.assign({
+            _dom_: dom,
             preventDefault: false,
             css: {
                 padding: "0px", // 无内边距
@@ -47,11 +48,11 @@ export default class DomSprite extends Sprite {
                 display: "block",
                 outline: "none" // 隐藏 focus 的方框
             }
-        }, options);
+        }, options || {});
 
-        this.dom = dom;
+        super(state);
 
-        this.setState(state);
+        //this.setState(state);
 
         // 基本信息
         this.className = DomSprite.name;
@@ -69,6 +70,7 @@ export default class DomSprite extends Sprite {
         // Dom 位置和尺寸获取方法，能同步 Dom 实际值和 DomSprite 属性
         this.resize();
 
+        this.isDomSprite = true;
     }
 
     set dom(v) {
@@ -168,11 +170,12 @@ export default class DomSprite extends Sprite {
         if (parent !== this.dom) {
             this.dom.appendChild(child.dom);
         }
+        DomSprite.logger.debug('_onAddChild_(): child =', child.name || child.className);
         super._onAddChild_(child);
     }
 
     _onDomChanged_() {
-        DomSprite.logger.debug(this.children);
+        // DomSprite.logger.debug('_onDomChanged_(): children =', this.children);
         for (let child of this.children) {
             var parent = child.dom.parentNode;
             if (parent !== this.dom) {
@@ -254,6 +257,13 @@ export default class DomSprite extends Sprite {
             }
     }
 
+    _onBeforeAddChild_(child) {
+        if (child.isDomSprite)
+            return true;
+        DomSprite.logger.warn('_onBeforeAddChild_(): DomSprite 类型容器的 addChild 方法只能接受同样是 DomSprite 类型的子节点');
+        return false;
+    }
+
     setLayout(layout) {
         if (layout && layout.isLayout()) {
             this.layout = layout;
@@ -310,7 +320,7 @@ export default class DomSprite extends Sprite {
     }
 
     getDom() {
-       return this._dom_ === document ? document.documentElement : this._dom_;
+        return this._dom_ === document ? document.documentElement : this._dom_;
     }
 
     getScroll() {
