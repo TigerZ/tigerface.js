@@ -6,7 +6,7 @@ var OFF = 0, ERROR = 1, WARN = 2, INFO = 3, DEBUG = 4, FULL = 99;
 
 function getClassLogLevel(className) {
     return (config["class-log-level"] != undefined && config["class-log-level"][className] != undefined)
-        ? Logger.level[config["class-log-level"][className].toUpperCase()] : FULL;
+        ? Logger.level[config["class-log-level"][className].toUpperCase()] : -1;
 }
 
 function now() {
@@ -55,30 +55,33 @@ export default class Logger extends Debuggable {
 
 
     info(msg) {
-        if (!this.debugging || Logger.LOG_LEVEL < INFO || getClassLogLevel(this.clazz) < INFO) return;
+        if (this._isForbidden_(INFO)) return;
         isBrowserEnv() ?
             console.log(`%c${now()} [INFO] ${this.clazz}: ${msg}`, 'color:green') :
             console.log(colors.green(`${now()} [INFO] ${this.clazz}: ${msg}`));
     }
 
     warn(msg) {
-        if (!this.debugging || Logger.LOG_LEVEL < WARN || getClassLogLevel(this.clazz) < WARN) return;
+        if (this._isForbidden_(WARN)) return;
         isBrowserEnv() ? console.log(`%c${now()} [WARN] ${this.clazz}: ${msg}`, 'color:orange') :
             console.log(colors.yellow(`${now()} [WARN] ${this.clazz}: ${msg}`));
     }
 
     error(msg) {
-        if (!this.debugging || Logger.LOG_LEVEL < ERROR || getClassLogLevel(this.clazz) < ERROR) return;
         // console.log(`%c${now()} [ERROR] ${this.clazz}: ${msg}`, 'text-decoration:underline;color:red');
         throw new Error(`${now()} [ERROR] ${this.clazz}: ${msg}`);
     }
 
-    _isDebugging_() {
-        return this.debugging && Logger.LOG_LEVEL >= DEBUG && getClassLogLevel(this.clazz) >= DEBUG;
+    _isForbidden_(level) {
+        let clazzLevel = getClassLogLevel(this.clazz);
+        if (clazzLevel >= 0) {
+            return clazzLevel < level;
+        }
+        return Logger.LOG_LEVEL < level;
     }
 
     debug(...msg) {
-        if (!this._isDebugging_()) return;
+        if (this._isForbidden_(DEBUG)) return;
         isBrowserEnv() ? console.log(`%c${now()} [DEBUG] ${this.clazz}:`, 'color:blue', ...msg) :
             console.log(colors.blue(`${now()} [DEBUG] ${this.clazz}:`), ...msg);
     }
@@ -93,7 +96,7 @@ export default class Logger extends Debuggable {
     }
 
     debugTiming(...msg) {
-        if (!this._isDebugging_()) return;
+        if (this._isForbidden_(DEBUG)) return;
         isBrowserEnv() ? console.log(`%c${now()} (+${this.debugTimingReset()}) [DEBUG] ${this.clazz}:`, 'color:blue;font-weight:bold', ...msg) :
             console.log(colors.blue.bold(`${now()} (+${this.debugTimingReset()}) [DEBUG] ${this.clazz}:`), ...msg);
     }
