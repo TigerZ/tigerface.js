@@ -1,5 +1,3 @@
-import CanvasSprite from "./CanvasSprite";
-
 module.exports = {
     'DisplayObject': require('./DisplayObject').default,
     'DisplayObjectContainer': require('./DisplayObjectContainer').default,

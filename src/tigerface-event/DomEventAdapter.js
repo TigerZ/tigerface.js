@@ -17,13 +17,13 @@ export default class DomEventAdapter extends EventDispatcher {
      * @param setting 配置参数
      */
     constructor(dom, setting, handler) {
+
         super();
 
-        if (dom) {
-            this.dom = dom;
-        } else {
+        if (dom == undefined)
             DomEventAdapter.logger.error("DomEventAdapter 对象初始化时发现参数 dom 无效。");
-        }
+
+        this.dom = dom;
 
         this.handler = handler;
 
@@ -427,12 +427,9 @@ export default class DomEventAdapter extends EventDispatcher {
      */
     _bindEventListener_() {
         // Keyboard Events
-        try {
-            this.addSystemEventListener(window, Event.KeyEvent.KEY_DOWN);
-            this.addSystemEventListener(window, Event.KeyEvent.KEY_UP);
-            this.addSystemEventListener(window, Event.KeyEvent.KEY_PRESS);
-        } catch (e) {
-        }
+        this.addSystemEventListener(window, Event.KeyEvent.KEY_DOWN);
+        this.addSystemEventListener(window, Event.KeyEvent.KEY_UP);
+        this.addSystemEventListener(window, Event.KeyEvent.KEY_PRESS);
 
         // Mouse Events
         this.addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_DOWN);

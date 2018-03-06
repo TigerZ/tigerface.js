@@ -1,4 +1,4 @@
-import Canvas from 'canvas';
+
 export default class Context {
     constructor(ctx) {
         if(ctx) this.context = ctx;

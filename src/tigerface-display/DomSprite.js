@@ -4,7 +4,7 @@
  * Time: 14:11.
  */
 import {Utilities as T, Logger} from 'tigerface-common';
-import {Shape as S} from 'tigerface-shape';
+import {Rectangle, Point} from 'tigerface-shape';
 import Sprite from './Sprite';
 import {Event, DomEventAdapter} from 'tigerface-event';
 
@@ -17,9 +17,6 @@ import {Event, DomEventAdapter} from 'tigerface-event';
 
 export default class DomSprite extends Sprite {
     static logger = Logger.getLogger(DomSprite.name);
-    static Css = {
-        alpha: {}
-    };
 
     static Position = {
         STATIC: "static",
@@ -39,7 +36,7 @@ export default class DomSprite extends Sprite {
         dom = dom || document.createElement("div");
 
         let state = Object.assign({
-            _dom_: dom,
+            _dom_: dom, // 注意：这里通过 _dom_ 来设置，因为用"dom =..."，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
             css: {
                 padding: "0px", // 无内边距
@@ -51,8 +48,6 @@ export default class DomSprite extends Sprite {
         }, options || {});
 
         super(state);
-
-        //this.setState(state);
 
         // 基本信息
         this.className = DomSprite.name;
@@ -101,7 +96,7 @@ export default class DomSprite extends Sprite {
     getBounds() {
         if (this._bounds_.length == 0) {
             var size = this.size;
-            return [new S.Rectangle(0, 0, size.width, size.height)];
+            return [new Rectangle(0, 0, size.width, size.height)];
         }
         return this._bounds_;
     }
@@ -116,14 +111,14 @@ export default class DomSprite extends Sprite {
     getDomBoundingRect() {
         // 实例化图形对象，用于计算
         var size = this.size;
-        var rect = new S.Rectangle(0, 0, size.width, size.height);
+        var rect = new Rectangle(0, 0, size.width, size.height);
 
         var vertexes = rect.getVertexes();
         var points = [];
         for (var i = 0; i < vertexes.length; i++) {
             points.push(this.getOuterPos(vertexes[i]));
         }
-        return new S.Rectangle(points);
+        return new Rectangle(points);
     }
 
     /**
@@ -137,7 +132,7 @@ export default class DomSprite extends Sprite {
 
         // 坐标系转换
         var rect = this.getDomBoundingRect();
-        pos = this.getInnerPos(new S.Point(pos).move(rect.left, rect.top), 2);
+        pos = this.getInnerPos(new Point(pos).move(rect.left, rect.top), 2);
 
         return pos;
     }

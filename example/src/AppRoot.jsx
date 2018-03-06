@@ -1,7 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Logger} from 'tigerface-common';
-import {EventDispatcher} from 'tigerface-event';
+import {Event, EventDispatcher} from 'tigerface-event';
+import LayerComponent from './LayerComponent';
+import CanvasLayer from './CanvasLayer';
+import {DomSpriteComponent, CanvasComponent} from 'tigerface-react';
+import {DomSprite} from "tigerface-display";
+import $ from 'jquery';
+window.$ = $;
+
+class Panel extends DomSpriteComponent {
+
+    _createDisplayObject_(dom, props) {
+        console.log("**********", dom, props);
+        let sprite = new DomSprite(dom);
+        sprite.on(Event.NodeEvent.CHILDREN_CHANGED, ()=>{
+            console.log("子节点发生变化", sprite.children);
+        });
+        return sprite;
+    }
+
+    _updateDisplayObject_(defore, after) {
+    }
+
+    _onDestroy_() {
+
+    }
+}
 
 /**
  * User: zyh
@@ -11,8 +36,8 @@ import {EventDispatcher} from 'tigerface-event';
 export default class AppRoot extends React.Component {
     static logger = Logger.getLogger("example.AppRoot");
 
-    constructor() {
-        super(...arguments);
+    constructor(...args) {
+        super(...args);
         //AppRoot.logger.error("初始化 CanvasLayer 实例");
         // AppRoot.logger.warn("下一个时间片","a",{b:2});
         // AppRoot.logger.info("下一个时间片","a",{b:2});
@@ -30,14 +55,21 @@ export default class AppRoot extends React.Component {
             EventDispatcher.logger.debugTimingEnd("结束");
         }, 1200);
 
+        this.dom = document.createElement('div');
     }
 
     render() {
         return (
             <div>
-                <div>{"你好，世界 !!!"}</div>
+                <Panel>
+                    <CanvasComponent style={Style}/>
+                </Panel>
             </div>
         )
     }
 };
+
+const Style = {
+    backgroundColor:'red'
+}
 

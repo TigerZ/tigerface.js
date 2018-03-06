@@ -1,9 +1,6 @@
 {
-  "log-level": "info",
+  "log-level": "debug",
   "class-log-level": {
-    "example.AppRoot": "debug",
-    "EventDispatcher":"off",
-    "DomSprite":"debug",
-    "Stage":"debug"
+    "EventDispatcher":"off"
   }
 }
