@@ -1,6 +1,6 @@
 import assert from 'assert';
 import {Event} from 'tigerface-event';
-import Stage from '../src/tigerface-display/Stage';
+import {Stage} from 'tigerface-display';
 import {JSDOM} from "jsdom";
 
 const win = new JSDOM(`<!DOCTYPE html><div></div>`).window;

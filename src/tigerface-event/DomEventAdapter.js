@@ -2,7 +2,7 @@
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
 import $ from 'jquery';
-import {Utilities as T, Logger} from '../../src/tigerface-common';
+import {Utilities as T, Logger} from 'tigerface-common';
 import {Shape as S} from 'tigerface-shape';
 import EventDispatcher from './EventDispatcher';
 import Event from './Event';

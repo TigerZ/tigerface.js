@@ -3,10 +3,10 @@
  * Date: 2018/2/27.
  * Time: 14:11.
  */
-import {Utilities as T, Logger} from '../../src/tigerface-common';
+import {Utilities as T, Logger} from 'tigerface-common';
 import {Shape as S} from 'tigerface-shape';
 import Sprite from './Sprite';
-import {Event, DomEventAdapter} from '../../src/tigerface-event';
+import {Event, DomEventAdapter} from 'tigerface-event';
 
 /********************************************************************************************************
  *
