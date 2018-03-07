@@ -18,7 +18,7 @@ export default class CanvasLayer extends DomSprite {
      * @param wrapper Dom节点
      * @param options 选项
      */
-    constructor(options) {
+    constructor(options, dom) {
         let state = Object.assign({
             devicePixelRatio: 1,
             width: 320,
@@ -28,18 +28,18 @@ export default class CanvasLayer extends DomSprite {
             useDirtyRect: false,
             redrawAsNeeded: true,
             useOffScreenCanvas: false,
-            css: {
+            style: {
                 backgroundColor: 'rgba(0,0,0,0.3)'
             }
         }, options);
 
-        let canvas = document.createElement("canvas");
+        let canvas = dom || document.createElement("canvas");
         // 调用 DisplayObject 的构造器
         super(state, canvas);
 
         this.canvas = canvas;
 
-        this.context2d = new Graphics(this.canvas);
+        this.graphics = new Graphics(this.canvas.getContext('2d'));
 
         // 基本信息
         this.className = CanvasLayer.name;
@@ -134,10 +134,11 @@ export default class CanvasLayer extends DomSprite {
     }
 
     _onBeforeAddChild_(child) {
-        if (!child.isDomSprite)
-            return true;
-        DomSprite.logger.warn('_onBeforeAddChild_(): CanvasContainer 的内部显示对象不能是 DomSprite 的实例');
-        return false;
+        if (child.isDomSprite) {
+            DomSprite.logger.warn(`_onBeforeAddChild_(${child.name||child.className} ${child.isDomSprite}): CanvasContainer 的内部显示对象不能是 DomSprite 的实例`);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -202,10 +203,9 @@ export default class CanvasLayer extends DomSprite {
      * @private
      */
     _paint_() {
-        var ctx = this.context2d;
         if (!this.state.redrawAsNeeded || this.isChanged()) {
-            ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            super._paint_(ctx);
+            this.graphics.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            super._paint_(this.graphics);
         }
     }
 
@@ -219,10 +219,10 @@ export default class CanvasLayer extends DomSprite {
         // 注意：Canvas 不能旋转缩放，否则坐标为外界矩形内部坐标，如果 DomSprite 已实现坐标转换，请删除此行注释。
         super._onMouseMove_(e);
 
-        for (var i = this.children.length - 1; i >= 0; i--) {
-            var child = this.children[i];
-            child._onLayerMouseMove_(this.getMousePos(), 2);
-        }
+        // for (var i = this.children.length - 1; i >= 0; i--) {
+        //     var child = this.children[i];
+        //     child._onLayerMouseMove_(this.getMousePos(), 2);
+        // }
     }
 
     /**

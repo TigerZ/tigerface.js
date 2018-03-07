@@ -1,52 +1,52 @@
 
 export default class Context {
     constructor(ctx) {
-        if(ctx) this.context = ctx;
+        this.context = ctx;
 
-        this.save = (...args)=>this.context.save(...args);
-        this.restore = (...args)=>this.context.restore.bind(...args);
-        //this.getContext = (...args)=>this.context.getContext(...args);
-        //this.createEvent = (...args)=>this.context.createEvent(...args);
-        //this.toDataURL = (...args)=>this.context.toDataURL(...args);
+        this.save = this.context.save.bind(this.context);
+        this.restore = this.context.restore.bind(this.context);
+        //this.getContext = this.context.getContext.bind(this.context);
+        //this.createEvent = this.context.createEvent.bind(this.context);
+        //this.toDataURL = this.context.toDataURL.bind(this.context);
 
-        this.createImageData = (...args)=>this.context.createImageData(...args);
-        this.getImageData = (...args)=>this.context.getImageData(...args);
-        this.putImageData = (...args)=>this.context.putImageData(...args);
+        this.createImageData = this.context.createImageData.bind(this.context);
+        this.getImageData = this.context.getImageData.bind(this.context);
+        this.putImageData = this.context.putImageData.bind(this.context);
 
-        this.drawImage = (...args)=>this.context.drawImage(...args);
+        this.drawImage = this.context.drawImage.bind(this.context);
 
-        this.fillText = (...args)=>this.context.fillText(...args);
-        this.strokeText = (...args)=>this.context.strokeText(...args);
-        this.measureText = (...args)=>this.context.measureText(...args);
+        this.fillText = this.context.fillText.bind(this.context);
+        this.strokeText = this.context.strokeText.bind(this.context);
+        this.measureText = this.context.measureText.bind(this.context);
 
-        this.scale = (...args)=>this.context.scale(...args);
-        this.rotate = (...args)=>this.context.rotate(...args);
-        this.translate = (...args)=>this.context.translate(...args);
-        this.transform = (...args)=>this.context.transform(...args);
-        this.setTransform = (...args)=>this.context.setTransform(...args);
+        this.scale = this.context.scale.bind(this.context);
+        this.rotate = this.context.rotate.bind(this.context);
+        this.translate = this.context.translate.bind(this.context);
+        this.transform = this.context.transform.bind(this.context);
+        this.setTransform = this.context.setTransform.bind(this.context);
 
-        this.fill = (...args)=>this.context.fill(...args);
-        this.stroke = (...args)=>this.context.stroke(...args);
-        this.beginPath = (...args)=>this.context.beginPath(...args);
-        this.moveTo = (...args)=>this.context.moveTo(...args);
-        this.closePath = (...args)=>this.context.closePath(...args);
-        this.lineTo = (...args)=>this.context.lineTo(...args);
-        this.clip = (...args)=>this.context.clip(...args);
-        this.quadraticCurveTo = (...args)=>this.context.quadraticCurveTo(...args);
-        this.bezierCurveTo = (...args)=>this.context.bezierCurveTo(...args);
-        this.arc = (...args)=>this.context.arc(...args);
-        this.arcTo = (...args)=>this.context.arcTo(...args);
-        this.isPointInPath = (...args)=>this.context.isPointInPath(...args);
+        this.fill = this.context.fill.bind(this.context);
+        this.stroke = this.context.stroke.bind(this.context);
+        this.beginPath = this.context.beginPath.bind(this.context);
+        this.moveTo = this.context.moveTo.bind(this.context);
+        this.closePath = this.context.closePath.bind(this.context);
+        this.lineTo = this.context.lineTo.bind(this.context);
+        this.clip = this.context.clip.bind(this.context);
+        this.quadraticCurveTo = this.context.quadraticCurveTo.bind(this.context);
+        this.bezierCurveTo = this.context.bezierCurveTo.bind(this.context);
+        this.arc = this.context.arc.bind(this.context);
+        this.arcTo = this.context.arcTo.bind(this.context);
+        this.isPointInPath = this.context.isPointInPath.bind(this.context);
 
-        this.rect = (...args)=>this.context.rect(...args);
-        this.fillRect = (...args)=>this.context.fillRect(...args);
-        this.strokeRect = (...args)=>this.context.strokeRect(...args);
-        this.clearRect = (...args)=>this.context.clearRect(...args);
+        this.rect = this.context.rect.bind(this.context);
+        this.fillRect = this.context.fillRect.bind(this.context);
+        this.strokeRect = this.context.strokeRect.bind(this.context);
+        this.clearRect = this.context.clearRect.bind(this.context);
 
-        this.createLinearGradient = (...args)=>this.context.createLinearGradient(...args);
-        this.createPattern = (...args)=>this.context.createPattern(...args);
-        this.createRadialGradient = (...args)=>this.context.createRadialGradient(...args);
-        //this.addColorStop = (...args)=>this.context.addColorStop(...args);
+        this.createLinearGradient = this.context.createLinearGradient.bind(this.context);
+        this.createPattern = this.context.createPattern.bind(this.context);
+        this.createRadialGradient = this.context.createRadialGradient.bind(this.context);
+        //this.addColorStop = this.context.addColorStop.bind(this.context);
     }
 
     get context() {

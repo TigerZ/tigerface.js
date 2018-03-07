@@ -309,6 +309,7 @@ export default class DisplayObjectContainer extends DisplayObject {
     }
 
     _onChildrenChanged_() {
+        DisplayObjectContainer.logger.debug('子节点发生变化', this.children);
         this.emit(Event.NodeEvent.CHILDREN_CHANGED);
     }
 

@@ -3,7 +3,7 @@
  */
 import $ from 'jquery';
 import {Utilities as T, Logger} from 'tigerface-common';
-import {Shape as S} from 'tigerface-shape';
+import {Point} from 'tigerface-shape';
 import EventDispatcher from './EventDispatcher';
 import Event from './Event';
 
@@ -344,17 +344,17 @@ export default class DomEventAdapter extends EventDispatcher {
      * 注意：当 DOM 旋转后，得到的是外接矩形的内部坐标！！！
      * @param pageX
      * @param pageY
-     * @returns {Shape.Point}
+     * @returns {Point}
      * @private
      */
     _pageToDom_(pageX, pageY) {
         var pos = $(this.dom).offset();
         if (this.dom === document)
-            return new Shape.Point(pageX, pageY);
+            return new Point(pageX, pageY);
         else {
             var offsetLeft = parseFloat(T.css(this.dom, "margin-left")) + parseFloat(T.css(this.dom, "padding-left"));
             var offsetTop = parseFloat(T.css(this.dom, "margin-top")) + parseFloat(T.css(this.dom, "padding-top"));
-            return new Shape.Point(pageX - pos.left + offsetLeft, pageY - pos.top + offsetTop);
+            return new Point(pageX - pos.left + offsetLeft, pageY - pos.top + offsetTop);
         }
     }
 

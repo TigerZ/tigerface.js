@@ -37,11 +37,8 @@ export default class Stage extends DomSprite {
         this.className = Stage.name;
         this.name = Stage.name;
 
-        // 帧数控制在至少 12 帧
-        if (this.state.fps < 12) this.state.fps = 12;
-
         // 如果舞台绑定的是局部 Dom 对象，那么在这个 Dom 对象里绘制签名
-        this._signing_();
+        // this._signing_();
 
         // 增加屏幕方向翻转检测
 
@@ -56,9 +53,21 @@ export default class Stage extends DomSprite {
         //this.on(Event.ENTER_FRAME, ()=>console.log(this.name+" ENTER_FRAME "+new Date().getSeconds()));
     }
 
+    _checkFPS_(v) {
+        // 帧数控制在至少 12 帧
+        if (this.state.fps < 12) {
+            Stage.logger.warn(`帧数 [${fps}] 限制为最少 12 帧`);
+            return 12;
+        } else if (this.state.fps > 60) {
+            Stage.logger.warn(`帧数 [${fps}] 限制为最多 60 帧`);
+            return 60
+        } else
+            return v
+    }
+
     set fps(v) {
 
-        this.state.fps = v;
+        this.state.fps = this._checkFPS_(v);
         Stage.logger.info('舞台帧速率设置为 ' + this.state.fps);
 
         if (this.frameAdapter) this.frameAdapter.destroy();
@@ -75,7 +84,7 @@ export default class Stage extends DomSprite {
     }
 
     _signing_() {
-        var sign = "Paint by TigerFace.js 0.9 - www.tigerfacejs.org";
+        var sign = "Paint by TigerFace.js 0.10 - tigerface.org";
         var devicePixelRatio = window.devicePixelRatio || 1;
         var font = 10 * devicePixelRatio + "px Microsoft YaHei";
         var ctx = document.createElement("canvas").getContext("2d");

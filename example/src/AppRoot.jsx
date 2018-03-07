@@ -1,22 +1,25 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {Logger} from 'tigerface-common';
-import {Event, EventDispatcher} from 'tigerface-event';
-import LayerComponent from './LayerComponent';
-import CanvasLayer from './CanvasLayer';
-import {DomSpriteComponent, CanvasComponent} from 'tigerface-react';
-import {DomSprite} from "tigerface-display";
+import {EventDispatcher} from 'tigerface-event';
+import {DomSpriteComponent, CanvasComponent, CanvasSpriteComponent, StageComponent} from 'tigerface-react';
+import {CanvasSprite, DomSprite} from "tigerface-display";
 import $ from 'jquery';
+
 window.$ = $;
+import {Circle, Rectangle} from 'tigerface-shape';
 
 class Panel extends DomSpriteComponent {
+    constructor(options) {
+        super(options);
+        this.name = 'Panel'
+    }
 
     _createDisplayObject_(dom, props) {
-        console.log("**********", dom, props);
-        let sprite = new DomSprite(dom);
-        sprite.on(Event.NodeEvent.CHILDREN_CHANGED, ()=>{
-            console.log("子节点发生变化", sprite.children);
-        });
+        // console.log("**********", dom, props);
+        let sprite = new DomSprite({}, dom);
+        // sprite.on(Event.NodeEvent.CHILDREN_CHANGED, ()=>{
+        //     console.log("子节点发生变化", sprite.children);
+        // });
         return sprite;
     }
 
@@ -25,6 +28,34 @@ class Panel extends DomSpriteComponent {
 
     _onDestroy_() {
 
+    }
+}
+
+class BallSprite extends CanvasSprite {
+    constructor(options) {
+        super(options);
+        this.size = {width: 100, height: 100};
+        this.pos = {x: 100, y: 100};
+        this.step = 1;
+    }
+
+    //
+    move() {
+        if (this.y < 50 || this.y > 150) this.step = -this.step;
+        this.y += this.step;
+    }
+
+    paint(ctx) {
+
+        ctx.lineWidth = 1;
+        ctx.fillStyle = 'rgba(255,0,0,0.5)';
+
+        ctx.drawRectangle(new Rectangle(0, 0, 100, 50),
+            ctx.DrawStyle.FILL);
+
+        this.move();
+        // this.postChange();
+        // console.log("%cpaint", "color:red", this.y);
     }
 }
 
@@ -38,38 +69,22 @@ export default class AppRoot extends React.Component {
 
     constructor(...args) {
         super(...args);
-        //AppRoot.logger.error("初始化 CanvasLayer 实例");
-        // AppRoot.logger.warn("下一个时间片","a",{b:2});
-        // AppRoot.logger.info("下一个时间片","a",{b:2});
-        // AppRoot.logger.debug("下一个时间片","a",{b:2});
-        this.ed = new EventDispatcher();
-        EventDispatcher.logger.debugTimingBegin("开始");
-        this.ed.addEventListener('a', () => {
-        });
-        this.ed.addEventListener('b', () => {
-        });
-        EventDispatcher.logger.debugTiming("继续");
-        setTimeout(() => {
-            this.ed.addEventListener('c', () => {
-            });
-            EventDispatcher.logger.debugTimingEnd("结束");
-        }, 1200);
-
-        this.dom = document.createElement('div');
     }
 
     render() {
         return (
-            <div>
+            <StageComponent>
                 <Panel>
-                    <CanvasComponent style={Style}/>
+                    <CanvasComponent title={'Surface'} style={Style}>
+                        <CanvasSpriteComponent clazz={BallSprite}/>
+                    </CanvasComponent>
                 </Panel>
-            </div>
+            </StageComponent>
         )
     }
 };
 
 const Style = {
-    backgroundColor:'red'
+    backgroundColor: 'rgba(0,0,0,0.2)'
 }
 

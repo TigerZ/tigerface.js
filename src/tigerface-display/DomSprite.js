@@ -32,13 +32,17 @@ export default class DomSprite extends Sprite {
      * @param options 选项
      */
     constructor(options, dom) {
-
-        dom = dom || document.createElement("div");
-
+        try {
+            if (options instanceof HTMLElement && dom === undefined) {
+                dom = options;
+                options = {};
+            }
+        } catch (e) {
+        }
         let state = Object.assign({
-            _dom_: dom, // 注意：这里通过 _dom_ 来设置，因为用"dom =..."，会导致过早触发 _onDomChanged_ 事件
+            _dom_: dom || document.createElement("p"), // 注意：这里通过 _dom_ 来设置，因为用"dom =..."，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
-            css: {
+            style: {
                 padding: "0px", // 无内边距
                 margin: "0px", // 无外边距
                 overflow: "hidden", // 溢出隐藏
@@ -78,6 +82,10 @@ export default class DomSprite extends Sprite {
     }
 
     set css(v) {
+        this.style = v;
+    }
+
+    set style(v) {
         this.setStyle(v);
     }
 
@@ -165,7 +173,9 @@ export default class DomSprite extends Sprite {
         if (parent !== this.dom) {
             this.dom.appendChild(child.dom);
         }
-        DomSprite.logger.debug('_onAddChild_(): child =', child.name || child.className);
+        // DomSprite.logger.debug('_onAddChild_(): parent =', this.dom, ' child =', child.dom);
+        // DomSprite.logger.debug(`_onAddChild_(): ${parent.nodeName}[${parent.title}] =? ${this.dom.nodeName}[${this.dom.title}]`);
+        // DomSprite.logger.debug('_onAddChild_(): child =', child.name || child.className);
         super._onAddChild_(child);
     }
 
@@ -255,7 +265,7 @@ export default class DomSprite extends Sprite {
     _onBeforeAddChild_(child) {
         if (child.isDomSprite)
             return true;
-        DomSprite.logger.warn('_onBeforeAddChild_(): DomSprite 类型容器的 addChild 方法只能接受同样是 DomSprite 类型的子节点');
+        DomSprite.logger.warn(`_onBeforeAddChild_(${child.name || child.className} ${child.isDomSprite}): DomSprite 类型容器的 addChild 方法只能接受同样是 DomSprite 类型的子节点`);
         return false;
     }
 

@@ -56,6 +56,10 @@ export default class Graphics extends Context {
         this._saved_ = {};
     }
 
+    get canvas() {
+        return this.context.canvas;
+    }
+
     save() {
         super.save();
         this._saved_.autoApple = this.autoApply;

@@ -1,10 +1,11 @@
 const assert = require('assert');
-import Canvas from 'canvas';
 import {Shape, Circle, Polygon, Ellipse, Triangle, Square} from 'tigerface-shape';
 import {Graphics} from 'tigerface-graphic';
 import {Utilities as T} from 'tigerface-common';
 
 const fs = require('fs');
+
+var Canvas = require('canvas');
 
 
 function paintToFile(g, filename) {
@@ -28,7 +29,7 @@ describe('测试 Shape', () => {
 
 
         it('绘制正常', () => {
-            let g = new Graphics();
+            let g = new Graphics(new Canvas(640, 480).getContext('2d'));
             g.strokeStyle = '#D40000';
             g.fillStyle = '#D40000';
             g.lineWidth = 1;
@@ -58,7 +59,7 @@ describe('测试 Shape', () => {
 
 
         it('绘制正常', () => {
-            let g = new Graphics();
+            let g = new Graphics(new Canvas(640, 480).getContext('2d'));
             g.strokeStyle = '#D40000';
             g.fillStyle = '#D40000';
             g.lineWidth = 1;
@@ -90,7 +91,7 @@ describe('测试 Shape', () => {
 
 
         it('绘制正常', () => {
-            let g = new Graphics();
+            let g = new Graphics(new Canvas(640, 480).getContext('2d'));
             g.strokeStyle = '#D40000';
             g.fillStyle = '#D40000';
             g.lineWidth = 1;
@@ -122,7 +123,7 @@ describe('测试 Shape', () => {
 
 
         it('绘制正常', () => {
-            let g = new Graphics();
+            let g = new Graphics(new Canvas(640, 480).getContext('2d'));
             g.strokeStyle = '#D40000';
             g.fillStyle = '#D40000';
             g.lineWidth = 1;
@@ -156,7 +157,7 @@ describe('测试 Shape', () => {
 
 
         it('绘制正常', () => {
-            let g = new Graphics();
+            let g = new Graphics(new Canvas(640, 480).getContext('2d'));
             g.strokeStyle = '#D40000';
             g.fillStyle = '#D40000';
             g.lineWidth = 1;
