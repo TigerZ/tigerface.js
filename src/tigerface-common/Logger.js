@@ -68,8 +68,8 @@ export default class Logger extends Debuggable {
     }
 
     error(msg) {
-        console.error(`${now()} [ERROR] ${this.clazz}: ${msg}`);
-        //throw new Error(`${now()} [ERROR] ${this.clazz}: ${msg}`);
+        // console.error(`${now()} [ERROR] ${this.clazz}: ${msg}`);
+        throw new Error(`${now()} [ERROR] ${this.clazz}: ${msg}`);
     }
 
     _isForbidden_(level) {

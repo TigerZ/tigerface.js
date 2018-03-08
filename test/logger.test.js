@@ -9,8 +9,7 @@ describe('测试日志', () => {
         logger.info("这是消息");
         logger.warn("这是警告");
         logger.debug("这是调试");
-        logger.error("这是错误")
-        // assert.throws(function() { logger.error("这是错误") }, /这是错误/);
+        assert.throws(function() { logger.error("这是错误") }, /这是错误/);
     });
     it('...', () => {
         console.time('100-elements');
