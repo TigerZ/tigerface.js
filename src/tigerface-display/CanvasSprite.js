@@ -27,16 +27,13 @@ export default class CanvasSprite extends Sprite {
      */
     constructor(options) {
 
-        let state = Object.assign({
-            x: 0,
-            y: 0,
-            width: 100,
-            height: 100,
-            scaleX: 1,
-            scaleY: 1
-        }, options);
+        const _default = {
+            pos: {x: 0, y: 0},
+            size: {width: 100, height: 100},
+            scale: {scaleX: 1, scaleY: 1}
+        };
 
-        super(state);
+        super(options, _default);
 
         // 基本信息
         this.className = "CanvasSprite";

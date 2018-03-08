@@ -20,7 +20,7 @@ export default class DomEventAdapter extends EventDispatcher {
         super();
 
         if (dom == undefined)
-            DomEventAdapter.logger.error("DomEventAdapter 对象初始化时发现参数 dom 无效。");
+            DomEventAdapter.logger.error(`[${this.className}]:对象初始化时发现参数 dom 无效。`);
 
         this.dom = dom;
 
@@ -32,6 +32,8 @@ export default class DomEventAdapter extends EventDispatcher {
         this.setting = Object.assign({
             preventDefault: false
         }, setting);
+
+        DomEventAdapter.logger.debug(`[${this.className}]:初始化参数：`, this.setting);
 
         // 设置 tabIndex 属性，否则不会有 focus/blur 事件
         if (T.attr(this.dom, "tabIndex") == undefined) {
@@ -393,7 +395,7 @@ export default class DomEventAdapter extends EventDispatcher {
         //if (preventDefault === true && ret === false) {
 
         // 当事件任何一个侦听器返回false，会导致系统终止缺省的事件传递
-        if (ret === false) {
+        if (preventDefault || ret === false) {
             // 终止系统事件传播
             this._stopPropagation_(e);
             return false;

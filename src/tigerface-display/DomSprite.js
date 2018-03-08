@@ -40,7 +40,7 @@ export default class DomSprite extends Sprite {
         } catch (e) {
         }
 
-        let state = Object.assign({
+        let state = T.merge({
             _dom_: dom || document.createElement("p"), // 注意：这里通过 _dom_ 来设置，因为用"dom =..."，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
             style: {
@@ -48,14 +48,21 @@ export default class DomSprite extends Sprite {
                 margin: "0px", // 无外边距
                 overflow: "hidden", // 溢出隐藏
                 display: "block",
-                outline: "none" // 隐藏 focus 的方框
+                outline: "none", // 隐藏 focus 的方框
+                "-webkit-user-select": "none",
+                "-moz-user-select": "none",
+                "-ms-user-select": "none",
+                "user-select": "none"
             }
-        }, options || {});
+        }, options);
+
 
         super(state);
 
         // 基本信息
         this.className = DomSprite.name;
+
+        DomSprite.logger.debug(`[${this.className}]:初始化参数：options=`, options, 'state=', this.state);
 
         // 定义 Dom 引擎
         this.domAdapter = new DomEventAdapter(this.dom, {

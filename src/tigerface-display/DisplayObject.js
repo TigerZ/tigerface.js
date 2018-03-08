@@ -30,11 +30,14 @@ export default class DisplayObject extends EventDispatcher {
             visible: true,
         };
 
-        // 设置传入的初始值
-        if (options) this.setState(options);
-
         // 基本信息
         this.className = "DisplayObject";
+
+        // 设置传入的初始值
+        Object.assign(this.state, options);
+        DisplayObject.logger.debug(`[${this.className}]:批量设置状态属性`, this.state);
+        if (options) this.setState(options);
+
 
         // 为实例产生唯一ID
         this.uuid = T.uuid();

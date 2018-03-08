@@ -19,7 +19,8 @@ const config = {
         contentBase: path.resolve(__dirname, "./example/assets"),
         hot: true,
         compress: true,
-        port: 9000
+        port: 9000,
+        host: "0.0.0.0"
     },
     module: {
         exprContextCritical: false,

@@ -22,7 +22,8 @@ export default class Stage extends DomSprite {
             fps: 30, // 每秒30帧
             width: 320,
             height: 240,
-            css: {'position': DomSprite.Position.RELATIVE}
+            preventDefault: true,
+            style: {'position': DomSprite.Position.RELATIVE}
         }, options);
 
         super(state, dom);
