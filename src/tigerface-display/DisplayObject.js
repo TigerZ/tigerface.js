@@ -4,7 +4,7 @@
  * Time: 14:13.
  */
 import {EventDispatcher, Event} from 'tigerface-event';
-import {Shape as S} from 'tigerface-shape';
+import {Point} from 'tigerface-shape';
 import {Utilities as T, Logger} from 'tigerface-common';
 import FrameEventGenerator from "../tigerface-event/FrameEventGenerator";
 
@@ -57,7 +57,7 @@ export default class DisplayObject extends EventDispatcher {
      */
     setState(props) {
         Object.assign(this, props);
-        DisplayObject.logger.debug("批量设置状态属性", props);
+        DisplayObject.logger.debug(`[${this.className}]:批量设置状态属性`, props);
     }
 
     //******************************* pos **************************************
@@ -243,6 +243,7 @@ export default class DisplayObject extends EventDispatcher {
     _onMouseMove_(e) {
         this._mouseX_ = e.pos.x;
         this._mouseY_ = e.pos.y;
+        // DisplayObject.logger.debug(`[${this.className}]:_onMouseMove_(): this._mouseX_=${this._mouseX_}, this._mouseY_=${this._mouseY_}`);
     }
 
     _onMouseDown_(e) {
@@ -253,7 +254,7 @@ export default class DisplayObject extends EventDispatcher {
      * 获得鼠标坐标
      * @returns {{x: *, y: *}}
      */
-    get mousePos() {
+    getMousePos() {
         return {x: this._mouseX_, y: this._mouseY_};
     }
 
@@ -320,7 +321,7 @@ export default class DisplayObject extends EventDispatcher {
      * @private
      */
     _paint_(ctx) {
-        // FrameEventGenerator.logger.debug('重绘...');
+        // FrameEventGenerator.logger.debug(`[${this.className}]:重绘...`);
         // 为最高效率，对象可见，才进入
         if (!this.visible) return;
 
@@ -378,7 +379,7 @@ export default class DisplayObject extends EventDispatcher {
      */
     getOuterPos(point, digits) {
         if (point == undefined) return undefined;
-        point = new S.Point(point.x, point.y);
+        point = new Point(point.x, point.y);
 
         var o = this.origin;
         var r = this.rotation;
@@ -395,7 +396,7 @@ export default class DisplayObject extends EventDispatcher {
         pos.x = T.round(pos.x, digits > 0 ? digits : 0);
         pos.y = T.round(pos.y, digits > 0 ? digits : 0);
 
-        DisplayObject.logger.debug("getOuterPos", point, pos);
+        // DisplayObject.logger.debug(`[${this.className}]:getOuterPos()`, point, pos);
 
         return pos;
     }
@@ -409,7 +410,7 @@ export default class DisplayObject extends EventDispatcher {
     getInnerPos(point, digits) {
         if (point == undefined) return undefined;
 
-        point = new S.Point(point.x, point.y);
+        point = new Point(point.x, point.y);
 
         var o = this.origin;
         var r = this.rotation;
@@ -424,7 +425,7 @@ export default class DisplayObject extends EventDispatcher {
         p.x = T.round(p.x, digits > 0 ? digits : 0);
         p.y = T.round(p.y, digits > 0 ? digits : 0);
 
-        DisplayObject.logger.debug("getInnerPos", point, p);
+        // DisplayObject.logger.debug(`[${this.className}]:getInnerPos`, point, p);
 
         return p;
     }

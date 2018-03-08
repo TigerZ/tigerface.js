@@ -1,6 +1,6 @@
 import {Utilities as T, Logger} from 'tigerface-common';
 import DomSprite from './DomSprite';
-import {Event, DomEventAdapter} from 'tigerface-event';
+import {Event} from 'tigerface-event';
 import {Graphics} from 'tigerface-graphic';
 
 /********************************************************************************************************
@@ -11,6 +11,7 @@ import {Graphics} from 'tigerface-graphic';
  *******************************************************************************************************/
 
 export default class CanvasLayer extends DomSprite {
+    static logger = Logger.getLogger(CanvasLayer.name);
 
     /**
      * 初始化舞台
@@ -219,10 +220,10 @@ export default class CanvasLayer extends DomSprite {
         // 注意：Canvas 不能旋转缩放，否则坐标为外界矩形内部坐标，如果 DomSprite 已实现坐标转换，请删除此行注释。
         super._onMouseMove_(e);
 
-        // for (var i = this.children.length - 1; i >= 0; i--) {
-        //     var child = this.children[i];
-        //     child._onLayerMouseMove_(this.getMousePos(), 2);
-        // }
+        for (var i = this.children.length - 1; i >= 0; i--) {
+            var child = this.children[i];
+            child._onLayerMouseMove_(this.getMousePos(), 2);
+        }
     }
 
     /**
@@ -231,6 +232,7 @@ export default class CanvasLayer extends DomSprite {
      * @private
      */
     _onMouseEvents_(e) {
+        // CanvasLayer.logger.debug(`[${this.className}]:_onMouseEvents_()`, e);
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
             child._onLayerMouseEvents_(e.eventName);

@@ -39,6 +39,7 @@ export default class DomSprite extends Sprite {
             }
         } catch (e) {
         }
+
         let state = Object.assign({
             _dom_: dom || document.createElement("p"), // 注意：这里通过 _dom_ 来设置，因为用"dom =..."，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
@@ -101,7 +102,7 @@ export default class DomSprite extends Sprite {
      * Dom 特有的边界获取方法，如果存在图形边界，返回图形边界数组，否则，返回边框图形
      * @returns {*}
      */
-    getBounds() {
+    get bounds() {
         if (this._bounds_.length == 0) {
             var size = this.size;
             return [new Rectangle(0, 0, size.width, size.height)];
@@ -136,7 +137,9 @@ export default class DomSprite extends Sprite {
      * @returns {内部坐标}
      */
     getMousePos() {
+
         var pos = super.getMousePos();
+        // DomSprite.logger.debug("getMousePos(): pos=", pos);
 
         // 坐标系转换
         var rect = this.getDomBoundingRect();

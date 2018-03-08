@@ -1,7 +1,8 @@
 /**
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
-
+import Logger from './Logger';
+const logger = Logger.getLogger('Utilities');
 
 // Private array of chars to use
 const CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');

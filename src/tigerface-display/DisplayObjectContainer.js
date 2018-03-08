@@ -77,7 +77,7 @@ export default class DisplayObjectContainer extends DisplayObject {
     removeChild(child) {
         // 移除前调用方法，可用于检查合法性
         if (this._onBeforeRemoveChild_(child) === false) {
-            DisplayObjectContainer.logger.debug('removeChild 子显示对象移除失败', child);
+            DisplayObjectContainer.logger.debug(`[${this.className}]:removeChild 子显示对象移除失败`, child);
             return this;
         }
 
@@ -113,7 +113,7 @@ export default class DisplayObjectContainer extends DisplayObject {
         // 移除前调用方法，可用于检查合法性
 
         if (index < 0 || index >= this.children.length || this._onBeforeRemoveChild_(this.children[index]) === false) {
-            DisplayObjectContainer.logger.debug('removeChildAt() 子显示对象移除失败', index);
+            DisplayObjectContainer.logger.debug(`[${this.className}]:removeChildAt() 子显示对象移除失败`, index);
             return this;
         }
 
@@ -309,7 +309,7 @@ export default class DisplayObjectContainer extends DisplayObject {
     }
 
     _onChildrenChanged_() {
-        DisplayObjectContainer.logger.debug('子节点发生变化', this.children);
+        DisplayObjectContainer.logger.debug(`[${this.className}]:子节点发生变化`, this.children);
         this.emit(Event.NodeEvent.CHILDREN_CHANGED);
     }
 

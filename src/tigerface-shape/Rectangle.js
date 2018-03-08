@@ -5,12 +5,22 @@
  */
 import Polygon from './Polygon';
 import Point from './Point';
+import {Utilities as T} from 'tigerface-common';
 /**
  * 矩形
  *
  * @type {*|void}
  */
 export default class Rectangle extends Polygon {
+    static isRectangle = function(points) {
+        if (points.length == 4) {
+            return points[0].getDistance(points[1]) == points[2].getDistance(points[3])
+                && points[0].getDistance(points[2]) == points[1].getDistance(points[3])
+                && points[0].getDistance(points[3]) == points[1].getDistance(points[2]);
+            return true;
+        }
+        return false;
+    }
     constructor(left, top, width, height) {
         super();
         if (arguments.length == 1 && T.isArray(left)) {
@@ -107,14 +117,4 @@ export default class Rectangle extends Polygon {
         return new Rectangle(this.left * scaleX, this.top * scaleY, this.width * scaleX, this.height * scaleY);
     }
 
-}
-
-export function isRectangle (points) {
-    if (points.length == 4) {
-        return points[0].getDistance(points[1]) == points[2].getDistance(points[3])
-            && points[0].getDistance(points[2]) == points[1].getDistance(points[3])
-            && points[0].getDistance(points[3]) == points[1].getDistance(points[2]);
-        return true;
-    }
-    return false;
 }

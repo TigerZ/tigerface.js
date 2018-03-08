@@ -1,12 +1,12 @@
 import React from 'react';
 import {Logger} from 'tigerface-common';
-import {EventDispatcher} from 'tigerface-event';
 import {DomSpriteComponent, CanvasComponent, CanvasSpriteComponent, StageComponent} from 'tigerface-react';
 import {CanvasSprite, DomSprite} from "tigerface-display";
 import $ from 'jquery';
 
 window.$ = $;
 import {Circle, Rectangle} from 'tigerface-shape';
+import {Event} from "../../src/tigerface-event";
 
 class Panel extends DomSpriteComponent {
     constructor(options) {
@@ -37,6 +37,9 @@ class BallSprite extends CanvasSprite {
         this.size = {width: 100, height: 100};
         this.pos = {x: 100, y: 100};
         this.step = 1;
+        this.on(Event.ENTER_FRAME, this.onEnterFrame);
+        this.addBound(new Rectangle(0, 0, 100, 50));
+        this.enableDrag();
     }
 
     //
@@ -45,17 +48,19 @@ class BallSprite extends CanvasSprite {
         this.y += this.step;
     }
 
+    onEnterFrame = () => {
+        // this.move();
+    }
+
     paint(ctx) {
 
         ctx.lineWidth = 1;
         ctx.fillStyle = 'rgba(255,0,0,0.5)';
 
-        ctx.drawRectangle(new Rectangle(0, 0, 100, 50),
+        ctx.drawRectangle(this.boundingRect,
             ctx.DrawStyle.FILL);
 
-        this.move();
-        // this.postChange();
-        // console.log("%cpaint", "color:red", this.y);
+        // this.move();
     }
 }
 

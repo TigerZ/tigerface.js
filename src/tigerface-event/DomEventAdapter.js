@@ -7,7 +7,6 @@ import {Point} from 'tigerface-shape';
 import EventDispatcher from './EventDispatcher';
 import Event from './Event';
 
-
 export default class DomEventAdapter extends EventDispatcher {
     static logger = Logger.getLogger(DomEventAdapter.name);
 
@@ -29,13 +28,10 @@ export default class DomEventAdapter extends EventDispatcher {
 
         this.className = DomEventAdapter.name;
 
-        // 缺省配置
-        var _default = {
-            preventDefault: false
-        };
-
         // 合并配置参数
-        this.setting = T.merge(_default, setting);
+        this.setting = Object.assign({
+            preventDefault: false
+        }, setting);
 
         // 设置 tabIndex 属性，否则不会有 focus/blur 事件
         if (T.attr(this.dom, "tabIndex") == undefined) {
@@ -107,10 +103,13 @@ export default class DomEventAdapter extends EventDispatcher {
              * @param e
              */
             adapters[Event.MouseEvent.MOUSE_MOVE] = function (e) {
+
                 var pos = self._pageToDom_(e.pageX, e.pageY);
+                // DomEventAdapter.logger.debug(`系统事件：MOUSE_MOVE`, pos);
                 self.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE, e, {
                     pos: pos
                 }, self.setting.preventDefault);
+
             };
             /**
              * 鼠标移入事件
@@ -377,6 +376,7 @@ export default class DomEventAdapter extends EventDispatcher {
      * @returns {boolean}
      */
     dispatchSystemEvent(eventName, e, data, preventDefault) {
+        // DomEventAdapter.logger.debug(`dispatchSystemEvent()`, eventName, this.handler, e, data);
         data || (data = {});
         data.name = eventName;
 

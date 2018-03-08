@@ -17,7 +17,6 @@ module.exports = {
     'Triangle': require('./Triangle').default,
     'Vector': require('./Vector').default,
     'Vertex': require('./Vertex').default,
-    'isRectangle': require('./Rectangle').isRectangle,
     'convertVertex': require('./Vertex').convertVertex,
     'convertVertexArray': require('./Vertex').convertVertexArray
 }

@@ -5,9 +5,11 @@
  */
 
 import {Utilities as T, Logger} from 'tigerface-common';
-import {Shape as S} from 'tigerface-shape';
+import {Rectangle, Polygon} from 'tigerface-shape';
 import Sprite from './Sprite';
 import {Event, DomEventAdapter} from 'tigerface-event';
+import {Point} from "../tigerface-shape";
+import DomSprite from "./DomSprite";
 
 /********************************************************************************************************
  *
@@ -194,8 +196,8 @@ export default class CanvasSprite extends Sprite {
     mirror() {
         var shadow = new Context2DSprite();
         // 通过感应区的外边框的坐标变换，来计算投影的旋转和缩放
-        for (var i = 0; i < this.getBounds().length; i++) {
-            var bound = this.getBounds()[i];
+        for (var i = 0; i < this.bounds.length; i++) {
+            var bound = this.bounds[i];
             shadow.addBound(this._shapeToGlobal_(bound));
         }
         return shadow;
@@ -212,11 +214,11 @@ export default class CanvasSprite extends Sprite {
         for (var i = 0; i < vertexes.length; i++) {
             points.push(this.getGlobalPos(vertexes[i]));
         }
-        //console.log("_shapeToGlobal_", shape, new S.Rectangle(points), new S.Polygon(points));
-        if (S.isRectangle(points)) {
-            return new S.Rectangle(points);
+        //console.log("_shapeToGlobal_", shape, new Rectangle(points), new Polygon(points));
+        if (Rectangle.isRectangle(points)) {
+            return new Rectangle(points);
         }
-        return new S.Polygon(points);
+        return new Polygon(points);
     }
 
     _shapeToOuter_(shape) {
@@ -225,7 +227,7 @@ export default class CanvasSprite extends Sprite {
         for (var i = 0; i < vertexes.length; i++) {
             points.push(this.getOuterPos(vertexes[i]));
         }
-        return new S.Polygon(points);
+        return new Polygon(points);
     }
 
     /**
@@ -294,13 +296,13 @@ export default class CanvasSprite extends Sprite {
      */
     _pointInBounds_(point) {
         // 先做外接矩形碰撞测试，排除远点
-        if (this.getBoundingRect().hitTestPoint(point)) {
-            // 如果没定义边界图形，那么说明getBoundingRect()从孩子获取，直接返回true，主要用于图纸等用途
+        if (this.boundingRect.hitTestPoint(point)) {
+            // 如果没定义边界图形，那么说明 boundingRect 从孩子获取，直接返回true，主要用于图纸等用途
             if (this._bounds_.length == 0) {
                 return true;
             }
-            for (var i = 0; i < this.getBounds().length; i++) {
-                if (this.getBounds()[i].hitTestPoint(point)) {
+            for (var i = 0; i < this.bounds.length; i++) {
+                if (this.bounds[i].hitTestPoint(point)) {
                     return true;
                 }
             }
@@ -328,11 +330,11 @@ export default class CanvasSprite extends Sprite {
         var a = this.mirror();
         var b = target.mirror();
 
-        if (a.getBoundingRect().hitTestRectangle(b.getBoundingRect())) {
-            for (var i = 0; i < a.getBounds().length; i++) {
-                var shape1 = a.getBounds()[i];
-                for (var j = 0; j < b.getBounds().length; j++) {
-                    var shape2 = b.getBounds()[j];
+        if (a.boundingRect.hitTestRectangle(b.boundingRect)) {
+            for (var i = 0; i < a.bounds.length; i++) {
+                var shape1 = a.bounds[i];
+                for (var j = 0; j < b.bounds.length; j++) {
+                    var shape2 = b.bounds[j];
                     if (shape1.hitTestPolygon(shape2)) {
                         //console.log("hit", i, j);
                         return true;

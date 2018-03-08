@@ -6,9 +6,10 @@
 import DisplayObjectContainer from "./DisplayObjectContainer";
 import {Logger} from 'tigerface-common';
 import {Event} from 'tigerface-event';
-import {Shape as S} from 'tigerface-shape';
+import {Rectangle} from 'tigerface-shape';
 
 export default class Sprite extends DisplayObjectContainer {
+    static logger = Logger.getLogger(Sprite.name);
 
     /**
      * 初始化舞台
@@ -101,7 +102,7 @@ export default class Sprite extends DisplayObjectContainer {
         };
         //console.log(this.name, rect);
         Sprite.logger.debug("_createBoundingRect_()", this.name, rect);
-        return new S.Rectangle(rect.left, rect.top, rect.width, rect.height);
+        return new Rectangle(rect.left, rect.top, rect.width, rect.height);
     }
 
     /**
@@ -130,12 +131,12 @@ export default class Sprite extends DisplayObjectContainer {
     }
 
     _startDrag_ = () => {
-
         this.parent.addEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
 
         if (!this._dragging_) {
+            Sprite.logger.debug(`_startDrag_(): mousePos=`, this.getMousePos());
             this._dragging_ = true;
-            var m = this.getOuterPos(this.mousePos);
+            var m = this.getOuterPos(this.getMousePos());
             this._dragX_ = m.x - this.x;
             this._dragY_ = m.y - this.y;
             this.dispatchEvent(Event.MouseEvent.DRAG_START);
@@ -145,6 +146,7 @@ export default class Sprite extends DisplayObjectContainer {
 
     _endDrag_ = () => {
         if (this._dragging_) {
+            Sprite.logger.debug(`_endDrag_()`);
             this._dragging_ = false;
             this.dispatchEvent(Event.MouseEvent.DRAG_END);
             return true;
@@ -152,6 +154,7 @@ export default class Sprite extends DisplayObjectContainer {
     }
 
     _move_ = (e) => {
+        // Sprite.logger.debug(`[${this.className}]:_move_()`);
         if (this._dragging_) {
             var last = {x: this.x, y: this.y};
             this.x = e.pos.x - this._dragX_;
