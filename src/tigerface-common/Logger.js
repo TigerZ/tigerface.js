@@ -57,19 +57,19 @@ export default class Logger extends Debuggable {
     info(msg) {
         if (this._isForbidden_(INFO)) return;
         isBrowserEnv() ?
-            console.log(`%c${now()} [INFO] ${this.clazz}: ${msg}`, 'color:green') :
-            console.log(colors.green(`${now()} [INFO] ${this.clazz}: ${msg}`));
+            console.info(`%c${now()} [INFO] ${this.clazz}: ${msg}`, 'color:green') :
+            console.info(colors.green(`${now()} [INFO] ${this.clazz}: ${msg}`));
     }
 
     warn(msg) {
         if (this._isForbidden_(WARN)) return;
-        isBrowserEnv() ? console.log(`%c${now()} [WARN] ${this.clazz}: ${msg}`, 'color:orange') :
-            console.log(colors.yellow(`${now()} [WARN] ${this.clazz}: ${msg}`));
+        isBrowserEnv() ? console.warn(`%c${now()} [WARN] ${this.clazz}: ${msg}`, 'color:orange') :
+            console.warn(colors.yellow(`${now()} [WARN] ${this.clazz}: ${msg}`));
     }
 
     error(msg) {
-        // console.log(`%c${now()} [ERROR] ${this.clazz}: ${msg}`, 'text-decoration:underline;color:red');
-        throw new Error(`${now()} [ERROR] ${this.clazz}: ${msg}`);
+        console.error(`${now()} [ERROR] ${this.clazz}: ${msg}`);
+        //throw new Error(`${now()} [ERROR] ${this.clazz}: ${msg}`);
     }
 
     _isForbidden_(level) {
@@ -82,8 +82,8 @@ export default class Logger extends Debuggable {
 
     debug(...msg) {
         if (this._isForbidden_(DEBUG)) return;
-        isBrowserEnv() ? console.log(`%c${now()} [DEBUG] ${this.clazz}:`, 'color:blue', ...msg) :
-            console.log(colors.blue(`${now()} [DEBUG] ${this.clazz}:`), ...msg);
+        isBrowserEnv() ? console.debug(`%c${now()} [DEBUG] ${this.clazz}:`, 'color:blue', ...msg) :
+            console.debug(colors.blue(`${now()} [DEBUG] ${this.clazz}:`), ...msg);
     }
 
     debugTimingReset() {

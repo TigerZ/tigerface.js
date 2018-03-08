@@ -26,7 +26,8 @@
       "presets": [
         "env",
         "stage-1",
-        "react"
+        "react",
+        "power-assert"
       ],
       "plugins": [
         ["module-resolver", {
