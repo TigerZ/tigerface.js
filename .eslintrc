@@ -8,6 +8,6 @@
   "extends": "eslint:recommended",
   "parser": "babel-eslint",
   "rules": {
-    "indent": 0
+//    "indent": 0
   }
 }
