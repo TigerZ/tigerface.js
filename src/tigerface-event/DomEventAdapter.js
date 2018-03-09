@@ -325,9 +325,9 @@ export default class DomEventAdapter extends EventDispatcher {
              * 尺寸变化事件
              * @param e
              */
-            adapters[Event.RESIZE] = function (e) {
+            adapters[Event.SIZE_CHANGED] = function (e) {
                 var $dom = $(self.dom);
-                self.dispatchSystemEvent(Event.RESIZE, e, {
+                self.dispatchSystemEvent(Event.SIZE_CHANGED, e, {
                     width: $dom.width(),
                     height: $dom.height()
                 }, false);

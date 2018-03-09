@@ -29,9 +29,9 @@ export default class DisplayObjectContainer extends DisplayObject {
         return this._parent_;
     }
 
-    set children(v) {
-        DisplayObjectContainer.logger.error('不允许设置或覆盖 children 属性');
-    }
+    // set children(v) {
+    //     DisplayObjectContainer.logger.error('不允许设置或覆盖 children 属性');
+    // }
 
     get children() {
         return this._children_;
@@ -100,14 +100,14 @@ export default class DisplayObjectContainer extends DisplayObject {
      * @private
      */
     _removeChild_(child) {
-        var index = this.getChildIndex(child);
+        let index = this.getChildIndex(child);
         this._removeChildAt_(index);
     }
 
     /**
      * 移除指定位置的子对象
-     * @param index {Integer}
-     * @returns {Container}
+     * @param index {number}
+     * @returns {DisplayObjectContainer}
      */
     removeChildAt(index) {
         // 移除前调用方法，可用于检查合法性
@@ -141,12 +141,12 @@ export default class DisplayObjectContainer extends DisplayObject {
      * 移除指定开始截止位置的多个子对象
      * @param startIndex
      * @param endIndex
-     * @returns {Container}
+     * @returns {DisplayObjectContainer}
      */
     removeChildren(startIndex, endIndex) {
-        if (startIndex == undefined)
+        if (startIndex === undefined)
             startIndex = 0;
-        if (endIndex == undefined)
+        if (endIndex === undefined)
             endIndex = this.children.length - 1;
         this.children.splice(startIndex, endIndex - startIndex + 1);
 
@@ -183,10 +183,10 @@ export default class DisplayObjectContainer extends DisplayObject {
      * 交换两个指定位置的子对象
      * @param index1
      * @param index2
-     * @returns {Container}
+     * @returns {DisplayObjectContainer}
      */
     swapChildrenAt(index1, index2) {
-        var tmp = this.children[index1];
+        let tmp = this.children[index1];
         this.children[index1] = this.children[index2];
         this.children[index2] = tmp;
         this._onChildrenChanged_();
@@ -198,11 +198,11 @@ export default class DisplayObjectContainer extends DisplayObject {
      * 交换两个子对象的位置
      * @param child1
      * @param child2
-     * @returns {Container}
+     * @returns {DisplayObjectContainer}
      */
     swapChildren(child1, child2) {
-        var index1 = this.getChildIndex(child1);
-        var index2 = this.getChildIndex(child2);
+        let index1 = this.getChildIndex(child1);
+        let index2 = this.getChildIndex(child2);
         this.swapChildrenAt(index1, index2);
         this._onChildrenChanged_();
         this.postChange("swapChildren");
@@ -213,7 +213,7 @@ export default class DisplayObjectContainer extends DisplayObject {
      * 指定子对象的位置
      * @param child
      * @param index
-     * @returns {Container}
+     * @returns {DisplayObjectContainer}
      */
     setChildIndex(child, index) {
         this._removeChild_(child);
@@ -234,10 +234,10 @@ export default class DisplayObjectContainer extends DisplayObject {
      * 设置子对象的位置为最顶层
      * @param child
      * @param neighbor 指定放在 neighbor 上面
-     * @returns {Container}
+     * @returns {DisplayObjectContainer}
      */
     setTop(child, neighbor) {
-        if (child === neighbor) return;
+        if (child === neighbor) return this;
         if (neighbor) {
             let n1 = this.getChildIndex(neighbor);
             let n0 = this.getChildIndex(child);
@@ -254,13 +254,13 @@ export default class DisplayObjectContainer extends DisplayObject {
      * 设置子对象的位置为最底层
      * @param child
      * @param neighbor 指定放在 neighbor 下面
-     * @returns {Container}
+     * @returns {DisplayObjectContainer}
      */
     setBottom(child, neighbor) {
-        if (child === neighbor) return;
+        if (child === neighbor) return this;
         if (neighbor) {
-            var n0 = this.getChildIndex(child);
-            var n1 = this.getChildIndex(neighbor);
+            let n0 = this.getChildIndex(child);
+            let n1 = this.getChildIndex(neighbor);
             this.setChildIndex(child, n0 > n1 ? n1 : n1 - 1);
         } else
             this.setChildIndex(child, 0);
@@ -279,9 +279,12 @@ export default class DisplayObjectContainer extends DisplayObject {
     /**
      * 子节点添加前调用的方法
      * 子类可通过重写此方法, 对将要添加的子节点进行检查, 如果返回 false, 可导致良性添加失败
-     * @param child {DisplayObject} 子节点
+     *
+     * @param child {DisplayObject} 要添加的子节点
      * @returns {boolean} 如果精确返回 false, 会导致添加失败
+     * @private
      */
+    // eslint-disable-next-line no-unused-vars
     _onBeforeAddChild_(child) {
         return true;
     }
@@ -293,13 +296,19 @@ export default class DisplayObjectContainer extends DisplayObject {
      * @private
      */
     _onAfterPaint_(ctx) {
-        for (var i = 0; i < this.children.length; i++) {
-            var child = this.children[i];
+        for (let i = 0; i < this.children.length; i++) {
+            let child = this.children[i];
             child._paint_(ctx);
         }
     }
 
-
+    /**
+     * 移除子节点前检查
+     * @param child {DisplayObject} 要移除的子节点
+     * @returns {boolean}
+     * @private
+     */
+    // eslint-disable-next-line no-unused-vars
     _onBeforeRemoveChild_(child) {
         return true;
     }
@@ -326,25 +335,19 @@ export default class DisplayObjectContainer extends DisplayObject {
 
     }
 
-    /***************************************************************************
-     *
-     *
-     *
-     **************************************************************************/
-
     /**
      * 通过向祖先的递归遍历，获得 stage 对象
      */
     get stage() {
         if (!this._stage_) {
-            var ancestors = [];
-            var parent = this.parent;
+            let ancestors = [];
+            let parent = this.parent;
             while (parent) {
                 // 直到找到个知道stage的上级
                 if (parent.stage) {
                     this.stage = parent.stage;
                     // 顺便把stage赋给全部没定义stage的上级
-                    for (var i = 0; i < ancestors.length; i++) {
+                    for (let i = 0; i < ancestors.length; i++) {
                         ancestors[i].stage = this._stage_;
                     }
                     break;
@@ -375,14 +378,10 @@ export default class DisplayObjectContainer extends DisplayObject {
      * @private
      */
     _onAppendToStage_() {
-        let stage = this.stage;
-        if (stage && stage != this) {
-            this.dispatchEvent(Event.APPEND_TO_STAGE);
-            this.postChange("AppendToStage");
-        }
+        super._onAppendToStage_();
 
-        for (var i = this.children.length - 1; i >= 0; i--) {
-            var child = this.children[i];
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
             child._onAppendToStage_();
         }
     }

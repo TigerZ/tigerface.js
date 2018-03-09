@@ -1,0 +1,13 @@
+{
+
+  "env": {
+    "browser": true,
+    "node": true
+  },
+//  "extends": "eslint-config-airbnb",
+  "extends": "eslint:recommended",
+  "parser": "babel-eslint",
+  "rules": {
+    "indent": 0
+  }
+}

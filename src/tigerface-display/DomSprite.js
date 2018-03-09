@@ -81,24 +81,36 @@ export default class DomSprite extends Sprite {
     }
 
     set dom(v) {
-        this._dom_ = v;
+        this.state._dom_ = v;
         this._onDomChanged_();
     }
 
     get dom() {
-        return this._dom_;
+        return this.state._dom_ === document ? document.documentElement : this.state._dom_;
+    }
+
+    get css() {
+        return this.style;
     }
 
     set css(v) {
         this.style = v;
     }
 
+    get style() {
+        return this.state.style || {};
+    }
+
     set style(v) {
         this.setStyle(v);
     }
 
-    set data(v) {
-        this.setData(data);
+    get preventDefault() {
+        return this.state.preventDefault;
+    }
+
+    set preventDefault(v) {
+        this.state.preventDefault = v;
     }
 
     resize() {
@@ -289,10 +301,10 @@ export default class DomSprite extends Sprite {
     setStyle(nameOrCss, value, autoPrefix) {
         // DomSprite.logger.debug('setStyle', this.state, nameOrCss, value, autoPrefix);
         if (arguments.length === 1 && typeof nameOrCss === 'object') {
-            this.state.css = Object.assign({}, this.state.css, nameOrCss);
+            this.state.style = Object.assign({}, this.state.style, nameOrCss);
             T.cssMerge(this.dom, nameOrCss, autoPrefix);
         } else {
-            this.state.css[nameOrCss] = value;
+            this.state.style[nameOrCss] = value;
             T.css(this.dom, nameOrCss, value, autoPrefix);
         }
         this.postChange();
@@ -332,10 +344,6 @@ export default class DomSprite extends Sprite {
 
     clearTween() {
         T.removeCss(this.dom, "transition", true);
-    }
-
-    getDom() {
-        return this._dom_ === document ? document.documentElement : this._dom_;
     }
 
     getScroll() {

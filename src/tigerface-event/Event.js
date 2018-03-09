@@ -81,7 +81,7 @@ module.exports = {
     SCROLL_RIGHT: "Event.SCROLL_RIGHT",
     SCROLL_TOP: "Event.SCROLL_TOP",
     SCROLL_BOTTOM: "Event.SCROLL_BOTTOM",
-    RESIZE: "resize",
+    SIZE_CHANGED: "resize",
     MOVE: "move",
 
     STATUS_CHANGED: "Event.STATUS_CHANGED",

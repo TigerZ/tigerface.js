@@ -12,9 +12,8 @@ export default class Sprite extends DisplayObjectContainer {
     static logger = Logger.getLogger(Sprite.name);
 
     /**
-     * 初始化舞台
+     * 构造器
      *
-     * @param wrapper Dom节点
      * @param options 选项
      */
     constructor(options) {
@@ -24,7 +23,7 @@ export default class Sprite extends DisplayObjectContainer {
         // 基本信息
         this.className = Sprite.name;
 
-        this.on(Event.APPEND_TO_STAGE, (e) => {
+        this.on(Event.APPEND_TO_STAGE, () => {
 
             // 拖拽时，移动设备的缺省触摸事件会干扰显示对象的移动，所以用下面侦听器，在拖拽时禁止缺省的 TOUCH_MOVE 事件传递。
             this.stage.on(Event.TouchEvent.TOUCH_MOVE, this._disableTouchMove_)
@@ -48,14 +47,12 @@ export default class Sprite extends DisplayObjectContainer {
      * 添加边界多边形<br>
      *     边界可由一个或多个多边形组成，bounds可以是一个shape对象或多个shape对象组成的数组
      *
-     * @param x 此边界多边形的X坐标
-     * @param y 此边界多边形的Y坐标
      * @param shape 边界多边形
      */
     addBound(shape) {
         this._bounds_.push(shape);
         this._boundingRect_ = this._createBoundingRect_();
-        this.postChange("addBound");
+        this.postChange('addBound');
         return this;
     }
 
@@ -64,7 +61,7 @@ export default class Sprite extends DisplayObjectContainer {
             this._bounds_.splice(i, 1);
             this._boundingRect_ = this._createBoundingRect_();
         }
-        this.postChange("removeBound");
+        this.postChange('removeBound');
     }
 
     get bounds() {
@@ -76,10 +73,10 @@ export default class Sprite extends DisplayObjectContainer {
      * @private
      */
     _createBoundingRect_() {
-        var left = 100000, top = 100000, right = -100000, bottom = -100000;
-        var changed = false;
-        for (var i = 0; i < this.bounds.length; i++) {
-            var rect = this.bounds[i].getBoundingRect();
+        let left = 100000, top = 100000, right = -100000, bottom = -100000;
+        let changed = false;
+        for (let i = 0; i < this.bounds.length; i++) {
+            let rect = this.bounds[i].getBoundingRect();
             rect.right = rect.left + rect.width;
             rect.bottom = rect.top + rect.height;
 
@@ -89,7 +86,7 @@ export default class Sprite extends DisplayObjectContainer {
             bottom = rect.bottom > bottom ? rect.bottom : bottom;
             changed = true;
         }
-        var rect = changed ? {
+        let boundRect = changed ? {
             left: left,
             top: top,
             width: right - left,
@@ -101,8 +98,8 @@ export default class Sprite extends DisplayObjectContainer {
             height: 0
         };
         //console.log(this.name, rect);
-        Sprite.logger.debug("_createBoundingRect_()", this.name, rect);
-        return new Rectangle(rect.left, rect.top, rect.width, rect.height);
+        Sprite.logger.debug("_createBoundingRect_()", this.name, boundRect);
+        return new Rectangle(boundRect.left, boundRect.top, boundRect.width, boundRect.height);
     }
 
     /**
@@ -136,13 +133,13 @@ export default class Sprite extends DisplayObjectContainer {
         if (!this._dragging_) {
             Sprite.logger.debug(`_startDrag_(): mousePos=`, this.getMousePos());
             this._dragging_ = true;
-            var m = this.getOuterPos(this.getMousePos());
+            let m = this.getOuterPos(this.getMousePos());
             this._dragX_ = m.x - this.x;
             this._dragY_ = m.y - this.y;
             this.dispatchEvent(Event.MouseEvent.DRAG_START);
             return true;
         }
-    }
+    };
 
     _endDrag_ = () => {
         if (this._dragging_) {
@@ -151,12 +148,12 @@ export default class Sprite extends DisplayObjectContainer {
             this.dispatchEvent(Event.MouseEvent.DRAG_END);
             return true;
         }
-    }
+    };
 
     _move_ = (e) => {
         // Sprite.logger.debug(`[${this.className}]:_move_()`);
         if (this._dragging_) {
-            var last = {x: this.x, y: this.y};
+            let last = {x: this.x, y: this.y};
             this.x = e.pos.x - this._dragX_;
             this.y = e.pos.y - this._dragY_;
             this.dispatchEvent(Event.MouseEvent.DRAG, {
@@ -164,7 +161,7 @@ export default class Sprite extends DisplayObjectContainer {
                 offset: {x: this.x - last.x, y: this.y - last.y}
             });
         }
-    }
+    };
 
     _disableTouchMove_ = () => {
         if (this._dragging_) return false;
