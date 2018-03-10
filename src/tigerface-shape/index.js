@@ -1,22 +1,20 @@
-module.exports = {
-    'Circle': require('./Circle').default,
-    'ClockwisePolygon': require('./ClockwisePolygon').default,
-    'CubicBezier': require('./CubicBezier').default,
-    'Curve': require('./Curve').default,
-    'Ellipse': require('./Ellipse').default,
-    'EquilateralTriangle': require('./EquilateralTriangle').default,
-    'Line': require('./Line').default,
-    'Point': require('./Point').default,
-    'Polygon': require('./Polygon').default,
-    'QuadraticBezier': require('./QuadraticBezier').default,
-    'Rectangle': require('./Rectangle').default,
-    'RightTriangle': require('./RightTriangle').default,
-    'Sector': require('./Sector').default,
-    'Shape': require('./Shape').default,
-    'Square': require('./Square').default,
-    'Triangle': require('./Triangle').default,
-    'Vector': require('./Vector').default,
-    'Vertex': require('./Vertex').default,
-    'convertVertex': require('./Vertex').convertVertex,
-    'convertVertexArray': require('./Vertex').convertVertexArray
-}
+export {default as Circle} from './Circle';
+export {default as ClockwisePolygon} from './ClockwisePolygon';
+export {default as CubicBezier} from './CubicBezier';
+export {default as Curve} from './Curve';
+export {default as Ellipse} from './Ellipse';
+export {default as EquilateralTriangle} from './EquilateralTriangle';
+export {default as Line} from './Line';
+export {default as Point} from './Point';
+
+export {default as Polygon} from './Polygon';
+export {default as QuadraticBezier} from './QuadraticBezier';
+export {default as Rectangle} from './Rectangle';
+export {default as RightTriangle} from './RightTriangle';
+export {default as Sector} from './Sector';
+export {default as Shape} from './Shape';
+export {default as Square} from './Square';
+
+export {default as Triangle} from './Triangle';
+export {default as Vector} from './Vector';
+export {default as Vertex} from './Vertex';

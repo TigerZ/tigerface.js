@@ -3,8 +3,13 @@
  * Date: 2018/3/2.
  * Time: 22:34.
  */
+
+
 import {Utilities as T, Logger} from 'tigerface-common';
+import Vertex from './Vertex';
 import Curve from './Curve';
+import Point from './Point';
+
 /**
  * 二次贝塞尔曲线<br>
  * 为了高效，曲线在初始化时就已经确定了采样点，以后不会再次计算。如果要改变采样精度，调用refresh方法
@@ -19,11 +24,12 @@ export default class QuadraticBezier extends Curve {
      * @param precision 精度（可选）
      */
     constructor(startPoint, controlPoint, endPoint, precision) {
-        super();
 
-        this.p0 = convertVertex(startPoint);
-        this.p1 = convertVertex(controlPoint);
-        this.p2 = convertVertex(endPoint);
+        super([startPoint, controlPoint, endPoint]);
+
+        this.p0 = Vertex.convertVertex(startPoint);
+        this.p1 = Vertex.convertVertex(controlPoint);
+        this.p2 = Vertex.convertVertex(endPoint);
 
         this.precision = precision ? precision : T.round((this.p0.getDistance(this.p1) + this.p1
             .getDistance(this.p2)) / 10);
@@ -42,8 +48,8 @@ export default class QuadraticBezier extends Curve {
      * @private
      */
     _getPoint(t) {
-        var x = (1 - t) * (1 - t) * this.p0.x + 2 * (1 - t) * t * this.p1.x + t * t * this.p2.x;
-        var y = (1 - t) * (1 - t) * this.p0.y + 2 * (1 - t) * t * this.p1.y + t * t * this.p2.y;
+        let x = (1 - t) * (1 - t) * this.p0.x + 2 * (1 - t) * t * this.p1.x + t * t * this.p2.x;
+        let y = (1 - t) * (1 - t) * this.p0.y + 2 * (1 - t) * t * this.p1.y + t * t * this.p2.y;
         return new Point(x, y);
     }
 
@@ -53,9 +59,9 @@ export default class QuadraticBezier extends Curve {
      * @private
      */
     _getPoints() {
-        var points = [];
-        var dt = 1 / (this.precision - 1);
-        for (var i = 0; i < this.precision; i++)
+        let points = [];
+        let dt = 1 / (this.precision - 1);
+        for (let i = 0; i < this.precision; i++)
             points.push(this._getPoint(i * dt));
         return points;
     }
@@ -70,4 +76,4 @@ export default class QuadraticBezier extends Curve {
         this.points = this._getPoints();
         this.segments = this._getSegments();
     }
-};
+}

@@ -3,6 +3,9 @@
  * Date: 2018/3/2.
  * Time: 22:33.
  */
+import Line from './Line';
+import Vertex from './Vertex';
+
 /**
  * 曲线基类
  */
@@ -19,7 +22,7 @@ export default class Curve {
     }
 
     initCurve(points) {
-        this.points = convertVertexArray(points);
+        this.points = Vertex.convertVertexArray(points);
         this.segments = this.points ? this._getSegments() : [];
     }
 
@@ -27,14 +30,13 @@ export default class Curve {
      * 根据点提取线段数组
      *
      * @returns {Array}
-     * @private
      */
     _getSegments() {
-        var lines = [];
-        var points = this.getPoints();
-        var p1, p2;
+        let lines = [];
+        let points = this.getPoints();
+        let p1, p2;
         p1 = points[0];
-        for (var i = 1; i <= points.length; i++) {
+        for (let i = 1; i <= points.length; i++) {
             p2 = points[i % points.length];
             lines.push(new Line(p1, p2));
             p1 = p2;
@@ -69,8 +71,8 @@ export default class Curve {
      * @returns {boolean}
      */
     hasIntersection(line) {
-        var segments = this.getSegments();
-        for (var i = 0; i < segments.length; i++) {
+        let segments = this.getSegments();
+        for (let i = 0; i < segments.length; i++) {
             if (segments[i].hasIntersection(line)) {
                 return true;
             }
@@ -84,8 +86,8 @@ export default class Curve {
      * @returns {*}
      */
     getIntersection(line) {
-        var segments = this.getSegments();
-        for (var i = 0; i < segments.length; i++) {
+        let segments = this.getSegments();
+        for (let i = 0; i < segments.length; i++) {
             if (segments[i].hasIntersection(line)) {
                 return segments[i].getIntersection(line);
             }
@@ -98,7 +100,7 @@ export default class Curve {
      * @param curve
      */
     connect(curve) {
-        var points = curve.getPoints();
+        let points = curve.getPoints();
         if (this.points[this.points.length - 1].equals(points[0])) {
             points.shift();
         }

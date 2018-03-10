@@ -2,7 +2,7 @@
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
 import {Utilities as T} from 'tigerface-common';
-import {Shape} from 'tigerface-shape';
+import {Point, Line} from 'tigerface-shape';
 import Context from './Context';
 
 export default class Graphics extends Context {
@@ -103,38 +103,38 @@ export default class Graphics extends Context {
             // 绘制 +
             this.translate(point.x, point.y);
             this.lineWidth = 0.5;
-            let p0 = Shape.Line.bySlope(new Shape.Point(0, 0), 0, radius).p1;
-            let p1 = Shape.Line.bySlope(new Shape.Point(0, 0), Math.PI, radius).p1;
-            this._drawLine(Shape.Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
+            let p0 = Line.bySlope(new Point(0, 0), 0, radius).p1;
+            let p1 = Line.bySlope(new Point(0, 0), Math.PI, radius).p1;
+            this._drawLine(Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
             this.rotate(Math.PI / 2);
-            this._drawLine(Shape.Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
+            this._drawLine(Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
             this.autoApply && this.stroke();
         } else if (pointStyle === Graphics.PointStyle.HOLLOW) { // 空心圆十字
             this.arc(point.x, point.y, radius, 0, Math.PI * 2);
             // 绘制 +
             this.translate(point.x, point.y);
             this.lineWidth = 0.5;
-            let p0 = Shape.Line.bySlope(new Shape.Point(0, 0), 0, radius).p1;
-            let p1 = Shape.Line.bySlope(new Shape.Point(0, 0), Math.PI, radius).p1;
-            this._drawLine(Shape.Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
+            let p0 = Line.bySlope(new Point(0, 0), 0, radius).p1;
+            let p1 = Line.bySlope(new Point(0, 0), Math.PI, radius).p1;
+            this._drawLine(Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
             this.rotate(Math.PI / 2);
-            this._drawLine(Shape.Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
+            this._drawLine(Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
             this.autoApply && this.stroke();
         } else if (pointStyle === Graphics.PointStyle.MULTIPLICATION) { // 叉子
             this.translate(point.x, point.y);
-            let p0 = Shape.Line.bySlope(new Shape.Point(0, 0), T.degreeToRadian(225), radius).p1;
-            let p1 = Shape.Line.bySlope(new Shape.Point(0, 0), T.degreeToRadian(45), radius).p1;
-            this._drawLine(Shape.Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
+            let p0 = Line.bySlope(new Point(0, 0), T.degreeToRadian(225), radius).p1;
+            let p1 = Line.bySlope(new Point(0, 0), T.degreeToRadian(45), radius).p1;
+            this._drawLine(Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
             this.rotate(T.degreeToRadian(90));
-            this._drawLine(Shape.Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
+            this._drawLine(Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
             this.autoApply && this.stroke();
         } else if (pointStyle === Graphics.PointStyle.PLUS) { // 十字
             this.translate(point.x, point.y);
-            let p0 = Shape.Line.bySlope(new Shape.Point(0, 0), 0, radius).p1;
-            let p1 = Shape.Line.bySlope(new Shape.Point(0, 0), Math.PI, radius).p1;
-            this._drawLine(Shape.Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
+            let p0 = Line.bySlope(new Point(0, 0), 0, radius).p1;
+            let p1 = Line.bySlope(new Point(0, 0), Math.PI, radius).p1;
+            this._drawLine(Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
             this.rotate(Math.PI / 2);
-            this._drawLine(Shape.Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
+            this._drawLine(Line.byPoint(p0, p1), Graphics.LineStyle.SOLID);
             this.autoApply && this.stroke();
         }
 
@@ -143,9 +143,9 @@ export default class Graphics extends Context {
     }
 
     drawLine(line, lineStyle) {
-        //if (!noPath) this.beginPath();
+        this.beginPath();
         this._drawLine(line, lineStyle);
-        //if (!noPath) this.closePath();
+        this.closePath();
     }
 
     _drawLine(line, style) {
@@ -192,15 +192,15 @@ export default class Graphics extends Context {
         let diff = T.degreeToRadian(30);
         if (radius === undefined)
             radius = 10;
-        let p1 = new Shape.Point(Math.cos(radian - diff) * radius + point.x, Math.sin(radian - diff) * radius
+        let p1 = new Point(Math.cos(radian - diff) * radius + point.x, Math.sin(radian - diff) * radius
             + point.y);
-        // let line1 = new Shape.Line(point, p1);
+        // let line1 = new Line(point, p1);
 
         diff = T.degreeToRadian(-30);
-        let p2 = new Shape.Point(Math.cos(radian - diff) * radius + point.x, Math.sin(radian - diff) * radius
+        let p2 = new Point(Math.cos(radian - diff) * radius + point.x, Math.sin(radian - diff) * radius
             + point.y);
 
-        // let line2 = new Shape.Line(point, p2);
+        // let line2 = new Line(point, p2);
         this.save();
         //this.beginPath();
         this.lineJoin = "round";
@@ -224,7 +224,7 @@ export default class Graphics extends Context {
         } else if (style === Graphics.ArrowStyle.WHITE_DIAMOND) {
             this.fillStyle = "rgb(255,255,255)";
             let length = 2 * Math.sqrt(3 / 4 * radius * radius);
-            let p3 = new Shape.Point(Math.cos(radian) * length + point.x, Math.sin(radian) * length + point.y);
+            let p3 = new Point(Math.cos(radian) * length + point.x, Math.sin(radian) * length + point.y);
             this.beginPath();
             this.moveTo(p3.x, p3.y);
             this.lineTo(p1.x, p1.y);
@@ -237,7 +237,7 @@ export default class Graphics extends Context {
         } else if (style === Graphics.ArrowStyle.BLACK_DIAMOND) {
             this.fillStyle = "rgb(0,0,0)";
             let length = 2 * Math.sqrt(3 / 4 * radius * radius);
-            let p3 = new Shape.Point(Math.cos(radian) * length + point.x, Math.sin(radian) * length + point.y);
+            let p3 = new Point(Math.cos(radian) * length + point.x, Math.sin(radian) * length + point.y);
             this.beginPath();
             this.moveTo(p3.x, p3.y);
             this.lineTo(p1.x, p1.y);
@@ -263,6 +263,7 @@ export default class Graphics extends Context {
     }
 
     drawBezier(bezier, lineStyle) {
+        this.beginPath();
         if (lineStyle && lineStyle !== Graphics.LineStyle.SOLID) {
             this._drawCurve(bezier.getPoints(), lineStyle);
         } else if (bezier.className === "QuadraticBezier") {
@@ -272,6 +273,7 @@ export default class Graphics extends Context {
         } else {
             this._drawCurve(bezier.getPoints());
         }
+        this.closePath();
     }
 
     _drawQuadraticBezier_(bezier) {
@@ -296,23 +298,22 @@ export default class Graphics extends Context {
      * @param lineStyle {string}
      */
     drawCurve(curve, lineStyle = Graphics.LineStyle.DEFAULT) {
-        //this.beginPath();
+        this.beginPath();
         this.lineJoin = "round";
         this.lineCap = "round";
         if (T.isArray(curve))
             this._drawCurve(curve, lineStyle);
         else
             this._drawCurve(curve.getPoints(), lineStyle);
-        //this.closePath();
+        this.closePath();
     }
 
     _drawCurve(points, lineStyle = Graphics.LineStyle.DEFAULT) {
-
         if (points.length > 1) {
             for (let i = 1; i < points.length; i++) {
                 let p1 = points[i - 1];
                 let p2 = points[i];
-                this.drawLine(new Shape.Line(p1, p2), lineStyle);
+                this._drawLine(new Line(p1, p2), lineStyle);
             }
         }
     }
@@ -346,6 +347,7 @@ export default class Graphics extends Context {
     }
 
     drawRectangle(rectangle, drawStyle) {
+        this.save();
         this.beginPath();
         this.rect(rectangle.left, rectangle.top, rectangle.width, rectangle.height);
         this.closePath();
@@ -357,6 +359,7 @@ export default class Graphics extends Context {
         if (drawStyle === Graphics.DrawStyle.STROKE || drawStyle === Graphics.DrawStyle.STROKE_FILL) {
             this.autoApply && this.stroke();
         }
+        this.restore();
     }
 
     drawRoundedRectangle(rectangle, radius, drawStyle) {

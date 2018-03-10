@@ -4,7 +4,8 @@
  * Time: 13:06.
  */
 import Point from './Point';
-import {convertVertex} from './Vertex';
+import Vertex from './Vertex';
+import Vector from './Vector';
 /**
  * Line类，由两点坐标描述一个直线段
  */
@@ -14,13 +15,13 @@ export default class Line {
     }
 
     static bySlope(p0, radian, length) {
-        var x = Math.cos(radian) * length + p0.x;
-        var y = Math.sin(radian) * length + p0.y;
+        let x = Math.cos(radian) * length + p0.x;
+        let y = Math.sin(radian) * length + p0.y;
         return new Line(p0, new Point(x, y));
     }
 
     static byVector(p0, vector, length) {
-        var radian = vector.getRadian();
+        let radian = vector.getRadian();
         return Line.bySlope(p0, radian, length);
     }
 
@@ -31,8 +32,8 @@ export default class Line {
      */
     constructor(p0, p1) {
 
-        this.p0 = convertVertex(p0);
-        this.p1 = convertVertex(p1);
+        this.p0 = Vertex.convertVertex(p0);
+        this.p1 = Vertex.convertVertex(p1);
 
         this.className = Line.name;
 
@@ -63,9 +64,10 @@ export default class Line {
     /**
      * 判断指定点是否在直线端上
      * @param p2 指定点
+     * @param precision {number} 精度
      * @returns {boolean}
      */
-    hitTestPoint(p2, precision) {
+    hitTestPoint(p2, precision = 0.01) {
         // 如果p2与两端点之一相等，返回true
         if (p2.equals(this.p0) || p2.equals(this.p1)) return true;
 
@@ -74,12 +76,12 @@ export default class Line {
         // 且 min(x1, x2) <= x <= max(x1, x2)
         // && min(y1, y2) <= y <= max(y1, y2)，则点 Q 在线段 P1P2 上
 
-        precision != undefined || (precision = 0.01);
+        // precision !== undefined || (precision = 0.01);
         // 如果测试点p位于两顶点之间，那么带入两点式方程，方程成立
         if (p2.x >= Math.min(this.p0.x, this.p1.x) && p2.x <= Math.max(this.p0.x, this.p1.x)
             && p2.y >= Math.min(this.p0.y, this.p1.y) && p2.y <= Math.max(this.p0.y, this.p1.y)) {
             // 叉积等于0，说明共线
-            var cp = Vector.byPoint(this.p0, this.p1).unit().crossProduct(Vector.byPoint(this.p0, p2).unit());
+            let cp = Vector.byPoint(this.p0, this.p1).unit().crossProduct(Vector.byPoint(this.p0, p2).unit());
             return (-precision < cp && cp < precision);
         }
         return false;
@@ -94,13 +96,13 @@ export default class Line {
     hasIntersection(line) {
 
         // 叉积
-        var crossProduct = function (p0, p1, p2) {
+        let crossProduct = function (p0, p1, p2) {
             // return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y -
             // p0.y);
             return new Vector(p1.x - p0.x, p1.y - p0.y).crossProduct(new Vector(p2.x - p0.x, p2.y - p0.y));
         };
-        var s1 = this.p0, e1 = this.p1;
-        var s2 = line.p0, e2 = line.p1;
+        let s1 = this.p0, e1 = this.p1;
+        let s2 = line.p0, e2 = line.p1;
 
         //console.log(line.toString(), this.toString());
         //console.log(Math.max(s2.x, e2.x), ">", Math.min(s1.x, e1.x));
@@ -121,21 +123,21 @@ export default class Line {
      */
     getIntersection(line) {
 
-        var a = this.p0, b = this.p1, c = line.p0, d = line.p1;
+        let a = this.p0, b = this.p1, c = line.p0, d = line.p1;
 
         // 先判断是否存在交点，因为内部的求交点算法是用直线方程计算的，得到的交点可能不在线段范围内。
         if (this.hasIntersection(line)) {
 
             // 如果叉积为0 则平行或共线, 不相交
-            // var cross = (b.y - a.y) * (d.x - c.x) - (a.x - b.x) * (c.y -
+            // let cross = (b.y - a.y) * (d.x - c.x) - (a.x - b.x) * (c.y -
             // d.y);
-            var cross = Vector.byPoint(a, b).crossProduct(Vector.byPoint(d, c));
+            let cross = Vector.byPoint(a, b).crossProduct(Vector.byPoint(d, c));
 
             // 线段所在直线的交点坐标 (x , y)
-            var x = ((b.x - a.x) * (d.x - c.x) * (c.y - a.y) + (b.y - a.y) * (d.x - c.x) * a.x - (d.y - c.y)
+            let x = ((b.x - a.x) * (d.x - c.x) * (c.y - a.y) + (b.y - a.y) * (d.x - c.x) * a.x - (d.y - c.y)
                 * (b.x - a.x) * c.x)
                 / cross;
-            var y = -((b.y - a.y) * (d.y - c.y) * (c.x - a.x) + (b.x - a.x) * (d.y - c.y) * a.y - (d.x - c.x)
+            let y = -((b.y - a.y) * (d.y - c.y) * (c.x - a.x) + (b.x - a.x) * (d.y - c.y) * a.y - (d.x - c.x)
                 * (b.y - a.y) * c.y)
                 / cross;
             return new Point(x, y);
@@ -153,14 +155,14 @@ export default class Line {
     getDistance(p) {
         // 算法来自网络，有修改。经测试，确实比较快，海量运算情况下，有优势
 
-        var a = this.p0;
-        var b = this.p1;
+        let a = this.p0;
+        let b = this.p1;
 
-        var l = this.getLength();
-        if (l == 0.0) /* a = b */
+        let l = this.getLength();
+        if (l === 0.0) /* a = b */
             return (p.getDistance(a));
 
-        var r = ((a.y - p.y) * (a.y - b.y) - (a.x - p.x) * (b.x - a.x)) / (l * l);
+        let r = ((a.y - p.y) * (a.y - b.y) - (a.x - p.x) * (b.x - a.x)) / (l * l);
 
         // P 的垂线投影位于 AB 的向前延伸线
         if (r > 1)
@@ -170,7 +172,7 @@ export default class Line {
         if (r < 0)
             return (Math.min(p.getDistance(b), p.getDistance(a)));
 
-        var s = ((a.y - p.y) * (b.x - a.x) - (a.x - p.x) * (b.y - a.y)) / (l * l);
+        let s = ((a.y - p.y) * (b.x - a.x) - (a.x - p.x) * (b.y - a.y)) / (l * l);
 
         return Math.abs(s * l);
     }
@@ -185,15 +187,15 @@ export default class Line {
     getDistance_method2(p) {
         // 本算法比较容易理解，但慢
 
-        var v = Vector.byPoint(this.p0, this.p1);
+        let v = Vector.byPoint(this.p0, this.p1);
 
-        var v0 = Vector.byPoint(this.p0, p);
+        let v0 = Vector.byPoint(this.p0, p);
         if (v.dotProduct(v0) <= 0) { // 对于 p0 大于等于90度
             // console.log("对于 p0 大于等于90度");
             return this.p0.getDistance(p);
         }
 
-        var v1 = Vector.byPoint(this.p1, p);
+        let v1 = Vector.byPoint(this.p1, p);
         if (v.reverse().dotProduct(v1) <= 0) { // 对于 p1 大于等于90度
             // console.log("对于 p1 大于等于90度");
             return this.p1.getDistance(p);
@@ -215,14 +217,14 @@ export default class Line {
     }
 
     getFootPoint(point) {
-        var v0 = Vector.byPoint(this.p0, this.p1);
-        var v1 = Vector.byPoint(this.p0, point);
-        var ac = this.p0.getDistance(point);
-        var a0 = v0.getAngle(v1);
-        var ab = ac * Math.cos(a0);
-        var a1 = v0.getRadian();
-        var x = Math.cos(a1) * ab + this.p0.x;
-        var y = Math.sin(a1) * ab + this.p0.y;
+        let v0 = Vector.byPoint(this.p0, this.p1);
+        let v1 = Vector.byPoint(this.p0, point);
+        let ac = this.p0.getDistance(point);
+        let a0 = v0.getAngle(v1);
+        let ab = ac * Math.cos(a0);
+        let a1 = v0.getRadian();
+        let x = Math.cos(a1) * ab + this.p0.x;
+        let y = Math.sin(a1) * ab + this.p0.y;
         return new Point(x, y);
     }
 }

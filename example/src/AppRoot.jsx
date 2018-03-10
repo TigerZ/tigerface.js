@@ -5,16 +5,17 @@ import {CanvasSprite, DomSprite} from "tigerface-display";
 import $ from 'jquery';
 
 window.$ = $;
-import {Circle, Rectangle} from 'tigerface-shape';
-import {Event} from "../../src/tigerface-event";
+import {Rectangle, Curve} from 'tigerface-shape';
+import {Event} from "tigerface-event";
 
+// eslint-disable-next-line no-unused-vars
 class Panel extends DomSpriteComponent {
     constructor(options) {
         super(options);
         this.name = 'Panel'
     }
 
-    _createDisplayObject_(dom, props) {
+    _createDisplayObject_(dom) {
         // console.log("**********", dom, props);
         let sprite = new DomSprite({}, dom);
         // sprite.on(Event.NodeEvent.CHILDREN_CHANGED, ()=>{
@@ -23,11 +24,10 @@ class Panel extends DomSpriteComponent {
         return sprite;
     }
 
-    _updateDisplayObject_(defore, after) {
+    _updateDisplayObject_() {
     }
 
     _onDestroy_() {
-
     }
 }
 
@@ -50,7 +50,7 @@ class BallSprite extends CanvasSprite {
 
     onEnterFrame = () => {
         this.move();
-    }
+    };
 
     paint() {
         let ctx = this.graphics;
@@ -59,6 +59,9 @@ class BallSprite extends CanvasSprite {
 
         ctx.drawRectangle(this.boundingRect,
             ctx.DrawStyle.FILL);
+
+        ctx.strokeStyle = 'rgb(0,0,255)';
+        ctx.drawCurve(new Curve([{x:0,y:0},{x:10,y:5},{x:15,y:10},{x:16,y:15}]))
 
         // this.move();
     }
@@ -87,9 +90,9 @@ export default class AppRoot extends React.Component {
             </StageComponent>
         )
     }
-};
+}
 
 const Style = {
     backgroundColor: 'rgba(0,0,0,0.2)'
-}
+};
 

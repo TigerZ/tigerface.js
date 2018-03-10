@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
@@ -25,8 +26,8 @@ export default {
 
     cssMerge: function (dom, css, autoPrefix) {
         if (autoPrefix) {
-            var ext = {};
-            for (var key in css) {
+            let ext = {};
+            for (let key in css) {
                 ext[key] = css[key];
                 ext["-webkit-" + key] = css[key];
                 ext["-moz-" + key] = css[key];
@@ -74,12 +75,12 @@ export default {
      * @returns {{x: jQuery.left, y: jQuery.top}}
      */
     pos: function (dom) {
-        var pos = $(dom).position();
+        let pos = $(dom).position();
         return {x: pos.left, y: pos.top};
     },
 
     size: function (dom) {
-        var $dom = $(dom);
+        let $dom = $(dom);
         return {width: $dom.width(), height: $dom.height()};
     },
 
@@ -116,15 +117,15 @@ export default {
      * @returns {number} 执行毫秒数（结果不符时返回 -1）
      */
     runTest: function (func, times, result, args) {
-        var begin, end, ret;
+        let begin, end, ret;
         begin = +new Date();
-        for (var i = 0; i < times; i++)
+        for (let i = 0; i < times; i++)
             ret = func.apply(undefined, args);
         end = +new Date();
         if (result === ret)
             return end - begin;
         else {
-            console.log("Failed", ret, "!=", result);
+            logger.debug("Failed", ret, "!=", result);
             return -1;
         }
     },
@@ -143,8 +144,8 @@ export default {
     },
 
     distance: function (p1, p2) {
-        var dx = p1.x - p2.x;
-        var dy = p1.y - p2.y;
+        let dx = p1.x - p2.x;
+        let dy = p1.y - p2.y;
 
         if (p1.x == p2.x) return Math.abs(dy);
         if (p1.y == p2.y) return Math.abs(dx);
@@ -173,7 +174,7 @@ export default {
             //return (0.5 + num) << 0;
             return Math.round(num);
         } else {
-            var factor = Math.pow(10, digits);
+            let factor = Math.pow(10, digits);
             return Math.round(num * factor) / factor;
         }
     },
@@ -199,7 +200,7 @@ export default {
         while (degree < 0) {
             degree = degree + 360;
         }
-        var d = degree % 360;
+        let d = degree % 360;
         return (d > 0 ? d : (360 + d)) * Math.PI / 180;
     },
 
@@ -210,7 +211,7 @@ export default {
      * @returns {Number}
      */
     radianToDegree: function (radian) {
-        var d = radian * 180 / Math.PI;
+        let d = radian * 180 / Math.PI;
         while (d < 0) {
             d = d + 360;
         }
@@ -235,15 +236,15 @@ export default {
     isEqual: function (a, b) {
         if (typeof a === typeof b) {
             if (typeof a === "object") {
-                for (var key in a) {
+                for (let key in a) {
                     if (!this.isEqual(a[key], b[key])) return false;
                 }
-                for (var key in b) {
+                for (let key in b) {
                     if (!this.isEqual(a[key], b[key])) return false;
                 }
             } else if (this.isArray(a)) {
                 if (a.length != b.length) return false;
-                for (var i = 0; i < a.length; i++) {
+                for (let i = 0; i < a.length; i++) {
                     if (!this.isEqual(a[i], b[i])) return false;
                 }
             } else if (a != b) return false;
@@ -261,7 +262,7 @@ export default {
      * @returns {*} 返回继承后的子类（改写extension）
      */
     extend: function (obj, extension) {
-        for (var key in obj) {
+        for (let key in obj) {
             extension[key] === undefined && (extension[key] = obj[key]);
         }
         return extension;
@@ -279,7 +280,7 @@ export default {
         if (!obj || !ext) {
             return obj || ext;
         }
-        var key;
+        let key;
         for (key in ext) {
             if (obj[key] && ext[key] && typeof obj[key] == 'object' && typeof ext[key] == 'object')
                 obj[key] = this.merge(obj[key], ext[key]);
@@ -290,7 +291,7 @@ export default {
     },
 
     inArray: function (obj, arr) {
-        for (var i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             if (arr[i] === obj) {
                 return i;
             }
@@ -303,25 +304,25 @@ export default {
     },
 
     toArray: function (obj) {
-        var tmp = [];
-        for (var key in obj) {
+        let tmp = [];
+        for (let key in obj) {
             tmp.push(obj[key]);
         }
         return tmp;
     },
 
     reverseArray: function (array) {
-        var tmp = [];
-        for (var i = 0; i < array.length; i++) {
+        let tmp = [];
+        for (let i = 0; i < array.length; i++) {
             tmp.unshift(array[i]);
         }
         return tmp;
     },
 
     getStrLen: function (str) {
-        var len = 0;
-        var charCode = -1;
-        for (var i = 0; i < str.length; i++) {
+        let len = 0;
+        let charCode = -1;
+        for (let i = 0; i < str.length; i++) {
             charCode = str.charCodeAt(i);
             if (charCode >= 0 && charCode <= 128) len += 1;
             else len += 2;
@@ -355,9 +356,9 @@ export default {
      *
      */
     browser: function () {
-        var ua = navigator.userAgent;
-        var ios = ua.match(/(iPhone|iPod|iPad)/);
-        var android = ua.match(/Android/);
+        let ua = navigator.userAgent;
+        let ios = ua.match(/(iPhone|iPod|iPad)/);
+        let android = ua.match(/Android/);
         return {
             isMobile: ios || android,
             isIOS: ios,
@@ -403,7 +404,7 @@ export default {
 
 
     uuid: function (len, radix) {
-        var chars = CHARS, uuid = [], i;
+        let chars = CHARS, uuid = [], i;
         radix = radix || chars.length;
 
         if (len) {
@@ -411,7 +412,7 @@ export default {
             for (i = 0; i < len; i++) uuid[i] = chars[0 | Math.random() * radix];
         } else {
             // rfc4122, version 4 form
-            var r;
+            let r;
 
             // rfc4122 requires these characters
             uuid[8] = uuid[13] = uuid[18] = uuid[23] = '-';
@@ -433,8 +434,8 @@ export default {
     // A more performant, but slightly bulkier, RFC4122v4 solution.  We boost performance
     // by minimizing calls to random()
     uuidFast: function () {
-        var chars = CHARS, uuid = new Array(36), rnd = 0, r;
-        for (var i = 0; i < 36; i++) {
+        let chars = CHARS, uuid = new Array(36), rnd = 0, r;
+        for (let i = 0; i < 36; i++) {
             if (i == 8 || i == 13 || i == 18 || i == 23) {
                 uuid[i] = '-';
             } else if (i == 14) {
@@ -452,7 +453,7 @@ export default {
     // A more compact, but less performant, RFC4122v4 solution:
     uuidCompact: function () {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
     }

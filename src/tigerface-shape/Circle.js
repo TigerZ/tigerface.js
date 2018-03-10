@@ -1,3 +1,4 @@
+
 import Polygon from './Polygon';
 import Shape from './Shape';
 import Point from './Point';
@@ -37,10 +38,10 @@ export default class Circle extends Shape {
      */
     _getVertexes(precision = 5, beginAngle = 0, endAngle = 360) {
         // if (!this.points) {
-        var points = [];
-        for (var i = beginAngle; i <= endAngle; i += precision) {
-            var x = Math.cos(T.degreeToRadian(i)) * this.radius + this.p0.x;
-            var y = Math.sin(T.degreeToRadian(i)) * this.radius + this.p0.y;
+        let points = [];
+        for (let i = beginAngle; i <= endAngle; i += precision) {
+            let x = Math.cos(T.degreeToRadian(i)) * this.radius + this.p0.x;
+            let y = Math.sin(T.degreeToRadian(i)) * this.radius + this.p0.y;
             points.push(new Point(x, y));
         }
         return points;
@@ -62,10 +63,10 @@ export default class Circle extends Shape {
      * @private
      */
     _getBoundingRect_() {
-        var left = this.p0.x - this.radius;
-        var right = this.p0.x + this.radius;
-        var top = this.p0.y - this.radius;
-        var bottom = this.p0.y + this.radius;
+        let left = this.p0.x - this.radius;
+        let right = this.p0.x + this.radius;
+        let top = this.p0.y - this.radius;
+        let bottom = this.p0.y + this.radius;
         return {
             left: left,
             top: top,
@@ -88,7 +89,7 @@ export default class Circle extends Shape {
 
     /**
      * 线碰撞检测
-     * @param point
+     * @param line {Line}
      * @returns {boolean}
      */
     hitTestLine(line) {
@@ -102,19 +103,19 @@ export default class Circle extends Shape {
      * @returns {boolean}
      */
     hitTestPolygon(polygon) {
-        if (polygon.className == "Circle") {
+        if (polygon.className === "Circle") {
             return this.p0.getDistance(polygon.p0) <= this.radius + polygon.radius;
         }
 
         // 点碰撞
-        var points = polygon.getVertexes();
-        for (var i in points) {
+        let points = polygon.getVertexes();
+        for (let i in points) {
             if (this.hitTestPoint(points[i])) {
                 return true;
             }
         }
         // 边碰撞
-        var sides = polygon.getSides();
+        let sides = polygon.getSides();
         for (let i in sides) {
             if (this.hitTestLine(sides[i])) {
                 return true;
@@ -127,10 +128,10 @@ export default class Circle extends Shape {
      * 旋转
      * @param radian 弧度
      * @param origin 原点 可选，缺省为（0，0）
-     * @returns {Polygon}
+     * @returns {Circle}
      */
     rotate(radian, origin) {
-        var p = this.p0.rotate(radian, origin);
+        let p = this.p0.rotate(radian, origin);
         return new Circle(p.x, p.y, this.radius);
     }
 
@@ -138,14 +139,14 @@ export default class Circle extends Shape {
      * 移动
      * @param offsetX X轴平移量
      * @param offsetY Y轴平移量
-     * @returns {Polygon}
+     * @returns {Circle}
      */
     move(offsetX, offsetY) {
-        var p = this.p0.move(offsetX, offsetY);
+        let p = this.p0.move(offsetX, offsetY);
         return new Circle(p.x, p.y, this.radius);
     }
 
     scale(scaleX, scaleY) {
-        return new Circle(this.p0.x, this.p0.y, this.radius * scaleX);
+        return new Circle(this.p0.x, this.p0.y, this.radius * Math.max(scaleX, scaleY));
     }
 }

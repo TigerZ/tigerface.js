@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {Logger} from 'tigerface-common';
 /**
  * User: zyh
@@ -43,7 +44,7 @@ export default class Shape {
 
     /**
      * 线碰撞检测
-     * @param point
+     * @param line {Line}
      * @returns {boolean}
      */
     hitTestLine(line) {

@@ -3,27 +3,25 @@
  * Date: 2018/2/27.
  * Time: 13:02.
  */
-import Polygon from './Polygon';
 import Point from './Point';
+import Polygon from './Polygon';
 import {Utilities as T} from 'tigerface-common';
+
 /**
  * 矩形
  *
  * @type {*|void}
  */
 export default class Rectangle extends Polygon {
-    static isRectangle = function(points) {
-        if (points.length == 4) {
-            return points[0].getDistance(points[1]) == points[2].getDistance(points[3])
-                && points[0].getDistance(points[2]) == points[1].getDistance(points[3])
-                && points[0].getDistance(points[3]) == points[1].getDistance(points[2]);
-            return true;
-        }
-        return false;
-    }
+    static isRectangle = function (points) {
+        return points.length === 4 && points[0].getDistance(points[1]) === points[2].getDistance(points[3])
+            && points[0].getDistance(points[2]) === points[1].getDistance(points[3])
+            && points[0].getDistance(points[3]) === points[1].getDistance(points[2]);
+    };
+    
     constructor(left, top, width, height) {
         super();
-        if (arguments.length == 1 && T.isArray(left)) {
+        if (arguments.length === 1 && T.isArray(left)) {
             this.left = Math.min(left[0].x, left[1].x, left[2].x, left[3].x);
             this.top = Math.min(left[0].y, left[1].y, left[2].y, left[3].y);
             this.right = Math.max(left[0].x, left[1].x, left[2].x, left[3].x);
@@ -40,7 +38,7 @@ export default class Rectangle extends Polygon {
         }
 
 
-        var points = [
+        let points = [
             new Point(this.left, this.top),
             new Point(this.right, this.top),
             new Point(this.right, this.bottom),
@@ -56,11 +54,11 @@ export default class Rectangle extends Polygon {
     }
 
     equals(rect) {
-        if (this.className == "Rectangle") {
-            return this.left == rect.left
-                && this.top == rect.top
-                && this.width == rect.width
-                && this.height == rect.height;
+        if (this.className === "Rectangle") {
+            return this.left === rect.left
+                && this.top === rect.top
+                && this.width === rect.width
+                && this.height === rect.height;
         }
         return false;
     }
@@ -93,9 +91,9 @@ export default class Rectangle extends Polygon {
 
     hitTestRectangle(rect2) {
 
-        var rect1 = this;
+        let rect1 = this;
 
-        if (rect2.className == "Rectangle") {
+        if (rect2.className === "Rectangle") {
             //console.log("hitTestRectangle", rect1, rect2);
             if ((rect1.right > rect2.left)
                 && (rect1.left < rect2.right)

@@ -1,11 +1,12 @@
+/* eslint-disable no-console */
 import Debuggable from './Debuggable';
 import config from 'log-config.json';
 import colors from 'colors/safe';
 
-var OFF = 0, ERROR = 1, WARN = 2, INFO = 3, DEBUG = 4, FULL = 99;
+const OFF = 0, ERROR = 1, WARN = 2, INFO = 3, DEBUG = 4, FULL = 99;
 
 function getClassLogLevel(className) {
-    return (config["class-log-level"] != undefined && config["class-log-level"][className] != undefined)
+    return (config["class-log-level"] !== undefined && config["class-log-level"][className] !== undefined)
         ? Logger.level[config["class-log-level"][className].toUpperCase()] : -1;
 }
 
@@ -15,10 +16,8 @@ function now() {
 }
 
 function isBrowserEnv() {
-    if (typeof window !== "undefined" && window === global) {
-        return true;
-    }
-    return false;
+    return typeof window !== "undefined" && window === global;
+
 }
 
 /**
