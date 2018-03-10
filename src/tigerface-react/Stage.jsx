@@ -77,11 +77,11 @@ const DisplayObjectRenderer = Reconciler({
     // eslint-disable-next-line no-unused-vars
     createInstance(type, props, internalInstanceHandle) {
         if (type === Tag.Sprite)
-            return new props.clazz({name: "ccc"});
+            return new props.clazz({name:props.name});
         else if (type === Tag.Surface)
-            return new CanvasLayer({name: "bbb"});
+            return new CanvasLayer({name:props.name, style:props.style});
         else if (type === Tag.Dom)
-            return new DomSprite({name: "aaa"});
+            return new DomSprite({name:props.name, style:props.style});
         StageComponent.logger.error("无效的标签");
     },
 

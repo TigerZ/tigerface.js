@@ -85,18 +85,18 @@ export default class AppRoot extends React.Component {
         return (
             <Stage>
                 <Tag.Dom>
-                    <Tag.Surface title={'Surface'} style={Style}>
+                    <Tag.Surface title={'Surface'} style={Style1}>
                         <Tag.Sprite clazz={BallSprite}/>
                     </Tag.Surface>
-                    <Tag.Surface title={'Surface'} style={Style}>
+                    <Tag.Surface title={'Surface'} style={Style2}>
                         <Tag.Sprite clazz={BallSprite}/>
                     </Tag.Surface>
                 </Tag.Dom>
                 <Tag.Dom>
-                    <Tag.Surface title={'Surface'} style={Style}>
+                    <Tag.Surface title={'Surface'} style={Style3}>
                         <Tag.Sprite clazz={BallSprite}/>
                     </Tag.Surface>
-                    <Tag.Surface title={'Surface'} style={Style}>
+                    <Tag.Surface title={'Surface'} style={Style4}>
                         <Tag.Sprite clazz={BallSprite}/>
                     </Tag.Surface>
                 </Tag.Dom>
@@ -105,7 +105,16 @@ export default class AppRoot extends React.Component {
     }
 }
 
-const Style = {
+const Style1 = {
+    backgroundColor: 'rgba(255,0,0,0.2)'
+};
+const Style2 = {
+    backgroundColor: 'rgba(0,255,0,0.2)'
+};
+const Style3 = {
+    backgroundColor: 'rgba(0,0,255,0.2)'
+};
+const Style4 = {
     backgroundColor: 'rgba(0,0,0,0.2)'
 };
 
