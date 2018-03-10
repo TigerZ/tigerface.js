@@ -61,7 +61,7 @@ export default class StageComponent extends React.Component {
                 style={props.style}
                 tabIndex={props.tabIndex}
                 title={props.title}
-            ></div>
+            />
         );
     }
 }

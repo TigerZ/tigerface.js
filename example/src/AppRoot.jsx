@@ -63,7 +63,7 @@ class BallSprite extends CanvasSprite {
             ctx.DrawStyle.FILL);
 
         ctx.strokeStyle = 'rgb(0,0,255)';
-        ctx.drawCurve(new Curve([{x:0,y:0},{x:10,y:5},{x:15,y:10},{x:16,y:15}]))
+        ctx.drawCurve(new Curve([{x: 0, y: 0}, {x: 10, y: 5}, {x: 15, y: 10}, {x: 16, y: 15}]))
 
         // this.move();
     }
@@ -83,28 +83,40 @@ export default class AppRoot extends React.Component {
 
     render() {
         return (
-            <Stage>
-                <Tag.Dom>
-                    <Tag.Surface title={'Surface'} style={Style1}>
-                        <Tag.Sprite clazz={BallSprite}/>
-                    </Tag.Surface>
-                    <Tag.Surface title={'Surface'} style={Style2}>
-                        <Tag.Sprite clazz={BallSprite}/>
-                    </Tag.Surface>
-                </Tag.Dom>
-                <Tag.Dom>
-                    <Tag.Surface title={'Surface'} style={Style3}>
-                        <Tag.Sprite clazz={BallSprite}/>
-                    </Tag.Surface>
-                    <Tag.Surface title={'Surface'} style={Style4}>
-                        <Tag.Sprite clazz={BallSprite}/>
-                    </Tag.Surface>
-                </Tag.Dom>
-            </Stage>
+            <div>
+                <div style={Style}> 菜单</div>
+                <Stage style={Style0}>
+                    <Tag.Dom>
+                        <Tag.Surface title={'Surface'} style={Style1}>
+                            <Tag.Sprite clazz={BallSprite}/>
+                        </Tag.Surface>
+                    </Tag.Dom>
+                </Stage>
+                <Stage style={Style0}>
+                    <Tag.Dom>
+                        <Tag.Surface title={'Surface'} style={Style2}>
+                            <Tag.Sprite clazz={BallSprite}/>
+                        </Tag.Surface>
+                    </Tag.Dom>
+                </Stage>
+                <Stage style={Style0}>
+                    <Tag.Dom>
+                        <Tag.Surface title={'Surface'} style={Style3}>
+                            <Tag.Sprite clazz={BallSprite}/>
+                        </Tag.Surface>
+                    </Tag.Dom>
+                </Stage>
+            </div>
         )
     }
 }
-
+const Style= {
+    float:'left',
+    backgroundColor: 'rgba(255,255,0,0.2)'
+};
+const Style0 = {
+    float: 'left'
+};
 const Style1 = {
     backgroundColor: 'rgba(255,0,0,0.2)'
 };
@@ -113,8 +125,5 @@ const Style2 = {
 };
 const Style3 = {
     backgroundColor: 'rgba(0,0,255,0.2)'
-};
-const Style4 = {
-    backgroundColor: 'rgba(0,0,0,0.2)'
 };
 
