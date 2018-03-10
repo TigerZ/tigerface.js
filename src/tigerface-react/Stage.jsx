@@ -1,18 +1,23 @@
 import React from 'react';
-import {CanvasLayer, CanvasSprite} from "tigerface-display";
+import {Stage, CanvasLayer, DomSprite} from "tigerface-display";
 import {Logger} from 'tigerface-common';
 import Reconciler from 'react-reconciler';
 import emptyObject from 'fbjs/lib/emptyObject';
 
-export const CanvasSpriteTag = 'CanvasSprite';
+export const Tag = {
+    Sprite: 'CanvasSprite',
+    Surface: 'CanvasLayer',
+    Dom: 'DomSprite'
+};
+
 
 /**
  * User: zyh
  * Date: 2018/3/6.
  * Time: 19:39.
  */
-export default class CanvasComponent extends React.Component {
-    static logger = Logger.getLogger(CanvasComponent.name);
+export default class StageComponent extends React.Component {
+    static logger = Logger.getLogger(StageComponent.name);
 
     constructor(...args) {
         super(...args);
@@ -21,14 +26,14 @@ export default class CanvasComponent extends React.Component {
 
     componentDidMount() {
         const props = this.props;
-        this._displayObject_ = new CanvasLayer({style: props.style}, this._tagRef);
+        this._displayObject_ = new Stage({style: props.style}, this._tagRef);
         if (props.appendToParent) {
             props.appendToParent(this._displayObject_);
         }
         this._mountNode = DisplayObjectRenderer.createContainer(this._displayObject_);
         DisplayObjectRenderer.updateContainer(this.props.children, this._mountNode, this);
 
-        CanvasComponent.logger.debug("componentDidMount()", this._displayObject_);
+        StageComponent.logger.debug("componentDidMount()", this._displayObject_);
     }
 
     // eslint-disable-next-line no-unused-vars
@@ -47,7 +52,7 @@ export default class CanvasComponent extends React.Component {
         const props = this.props;
 
         return (
-            <canvas
+            <div
                 ref={ref => (this._tagRef = ref)}
                 accessKey={props.accessKey}
                 className={props.className}
@@ -56,7 +61,7 @@ export default class CanvasComponent extends React.Component {
                 style={props.style}
                 tabIndex={props.tabIndex}
                 title={props.title}
-            />
+            ></div>
         );
     }
 }
@@ -66,13 +71,18 @@ const DisplayObjectRenderer = Reconciler({
     // eslint-disable-next-line no-unused-vars
     appendInitialChild(parentInstance, child) {
         // console.log("appendInitialChild", parentInstance, child);
+        parentInstance.addChild(child);
     },
 
     // eslint-disable-next-line no-unused-vars
     createInstance(type, props, internalInstanceHandle) {
-        if(type === CanvasSpriteTag)
-            return new props.clazz;
-        CanvasComponent.logger.error(`在 CanvasLayer 内部只能使用标签：${CanvasSpriteTag}\n用法： <${CanvasSpriteTag} clazz="<自定义的显示对象类>"></${CanvasSpriteTag}>`);
+        if (type === Tag.Sprite)
+            return new props.clazz({name: "ccc"});
+        else if (type === Tag.Surface)
+            return new CanvasLayer({name: "bbb"});
+        else if (type === Tag.Dom)
+            return new DomSprite({name: "aaa"});
+        StageComponent.logger.error("无效的标签");
     },
 
     // eslint-disable-next-line no-unused-vars

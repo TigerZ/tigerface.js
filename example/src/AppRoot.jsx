@@ -1,7 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import {Logger} from 'tigerface-common';
-import {DomSpriteComponent, CanvasComponent, CanvasSpriteComponent, StageComponent} from 'tigerface-react';
-import {CanvasSprite, DomSprite} from "tigerface-display";
+// import {DomSpriteComponent, CanvasComponent, CanvasSpriteComponent, StageComponent} from 'tigerface-react';
+import {Stage, Tag} from 'tigerface-react';
+import {CanvasSprite} from "tigerface-display";
 import $ from 'jquery';
 
 window.$ = $;
@@ -9,27 +11,27 @@ import {Rectangle, Curve} from 'tigerface-shape';
 import {Event} from "tigerface-event";
 
 // eslint-disable-next-line no-unused-vars
-class Panel extends DomSpriteComponent {
-    constructor(options) {
-        super(options);
-        this.name = 'Panel'
-    }
-
-    _createDisplayObject_(dom) {
-        // console.log("**********", dom, props);
-        let sprite = new DomSprite({}, dom);
-        // sprite.on(Event.NodeEvent.CHILDREN_CHANGED, ()=>{
-        //     console.log("子节点发生变化", sprite.children);
-        // });
-        return sprite;
-    }
-
-    _updateDisplayObject_() {
-    }
-
-    _onDestroy_() {
-    }
-}
+// class Panel extends DomSpriteComponent {
+//     constructor(options) {
+//         super(options);
+//         this.name = 'Panel'
+//     }
+//
+//     _createDisplayObject_(dom) {
+//         // console.log("**********", dom, props);
+//         let sprite = new DomSprite({}, dom);
+//         // sprite.on(Event.NodeEvent.CHILDREN_CHANGED, ()=>{
+//         //     console.log("子节点发生变化", sprite.children);
+//         // });
+//         return sprite;
+//     }
+//
+//     _updateDisplayObject_() {
+//     }
+//
+//     _onDestroy_() {
+//     }
+// }
 
 class BallSprite extends CanvasSprite {
     constructor(options) {
@@ -81,13 +83,24 @@ export default class AppRoot extends React.Component {
 
     render() {
         return (
-            <StageComponent>
-                <Panel>
-                    <CanvasComponent title={'Surface'} style={Style}>
-                        <CanvasSpriteComponent clazz={BallSprite}/>
-                    </CanvasComponent>
-                </Panel>
-            </StageComponent>
+            <Stage>
+                <Tag.Dom>
+                    <Tag.Surface title={'Surface'} style={Style}>
+                        <Tag.Sprite clazz={BallSprite}/>
+                    </Tag.Surface>
+                    <Tag.Surface title={'Surface'} style={Style}>
+                        <Tag.Sprite clazz={BallSprite}/>
+                    </Tag.Surface>
+                </Tag.Dom>
+                <Tag.Dom>
+                    <Tag.Surface title={'Surface'} style={Style}>
+                        <Tag.Sprite clazz={BallSprite}/>
+                    </Tag.Surface>
+                    <Tag.Surface title={'Surface'} style={Style}>
+                        <Tag.Sprite clazz={BallSprite}/>
+                    </Tag.Surface>
+                </Tag.Dom>
+            </Stage>
         )
     }
 }

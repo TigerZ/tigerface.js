@@ -1,3 +1,1 @@
-export {default as CanvasComponent, CanvasSpriteTag as CanvasSpriteComponent} from './CanvasComponent';
-export {default as DomSpriteComponent} from './DomSpriteComponent';
-export {default as StageComponent} from './StageComponent';
+export {default as Stage, Tag} from './Stage';
