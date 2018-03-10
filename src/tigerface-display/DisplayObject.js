@@ -1,9 +1,9 @@
 /**
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
-import { EventDispatcher, Event } from 'tigerface-event';
-import { Point } from 'tigerface-shape';
-import { Utilities as T, Logger } from 'tigerface-common';
+import {EventDispatcher, Event} from 'tigerface-event';
+import {Point} from 'tigerface-shape';
+import {Utilities as T, Logger} from 'tigerface-common';
 
 
 /**
@@ -26,10 +26,10 @@ export default class DisplayObject extends EventDispatcher {
 
         // 基本属性
         this.state = {
-            pos: { x: 0, y: 0 },
-            size: { width: 320, height: 240 },
-            scale: { x: 1, y: 1 },
-            origin: { x: 0, y: 0 },
+            pos: {x: 0, y: 0},
+            size: {width: 320, height: 240},
+            scale: {x: 1, y: 1},
+            origin: {x: 0, y: 0},
             alpha: 1,
             rotation: 0,
             visible: true,
@@ -38,6 +38,8 @@ export default class DisplayObject extends EventDispatcher {
         // 基本信息
         this.className = 'DisplayObject';
         this.parent = undefined;
+        this.layer = undefined;
+        this.stage = undefined;
 
         // 设置传入的初始值
         Object.assign(this.state, options);
@@ -71,7 +73,7 @@ export default class DisplayObject extends EventDispatcher {
     //* ****************************** pos **************************************
 
     set x(x) {
-        this.pos = { x };
+        this.pos = {x};
     }
 
     get x() {
@@ -79,7 +81,7 @@ export default class DisplayObject extends EventDispatcher {
     }
 
     set y(y) {
-        this.pos = { y };
+        this.pos = {y};
     }
 
     get y() {
@@ -102,7 +104,7 @@ export default class DisplayObject extends EventDispatcher {
     //* ********************************* scale ***************************************
 
     set scaleX(x) {
-        this.scale = { x };
+        this.scale = {x};
     }
 
     get scaleX() {
@@ -110,7 +112,7 @@ export default class DisplayObject extends EventDispatcher {
     }
 
     set scaleY(y) {
-        this.scale = { y };
+        this.scale = {y};
     }
 
     get scaleY() {
@@ -178,7 +180,7 @@ export default class DisplayObject extends EventDispatcher {
     //* *********************************** origin **************************************
 
     set originX(x) {
-        this.origin = { x };
+        this.origin = {x};
     }
 
     get originX() {
@@ -186,7 +188,7 @@ export default class DisplayObject extends EventDispatcher {
     }
 
     set originY(y) {
-        this.origin = { y };
+        this.origin = {y};
     }
 
     get originY() {
@@ -209,7 +211,7 @@ export default class DisplayObject extends EventDispatcher {
     //* ********************************** size ***************************************
 
     set width(width) {
-        this.size = { width };
+        this.size = {width};
     }
 
     get width() {
@@ -217,7 +219,7 @@ export default class DisplayObject extends EventDispatcher {
     }
 
     set height(height) {
-        this.size = { height };
+        this.size = {height};
     }
 
     get height() {
@@ -241,13 +243,20 @@ export default class DisplayObject extends EventDispatcher {
     _onSizeChanged_() {
     }
 
+    get graphics() {
+        return this._graphics_;
+    }
+
+    set graphics(v) {
+        this._graphics_ = v;
+    }
+
     //* *************************************************************************
 
 
     /**
      * 鼠标移动事件侦听
      * @param e
-     * @private
      */
     _onMouseMove_(e) {
         this._mouseX_ = e.pos.x;
@@ -264,7 +273,7 @@ export default class DisplayObject extends EventDispatcher {
      * @returns {{x: *, y: *}}
      */
     getMousePos() {
-        return { x: this._mouseX_, y: this._mouseY_ };
+        return {x: this._mouseX_, y: this._mouseY_};
     }
 
 
@@ -275,7 +284,7 @@ export default class DisplayObject extends EventDispatcher {
     postChange(log) {
         this._changed_ = true;
         // this._change_log_ = log;
-        this.dispatchEvent(Event.STATUS_CHANGED, { log });
+        this.dispatchEvent(Event.STATUS_CHANGED, {log});
     }
 
     /**
@@ -306,29 +315,25 @@ export default class DisplayObject extends EventDispatcher {
      * 重绘方法，需要被实现
      *
      */
-    // eslint-disable-next-line no-unused-vars
-    paint(ctx) {
+    paint() {
     }
 
     /**
      * 绘制前准备环境：缩放、旋转
      *
      */
-    // eslint-disable-next-line no-unused-vars
-    _onBeforePaint_(ctx) {
+    _onBeforePaint_() {
     }
 
-    // eslint-disable-next-line no-unused-vars
-    _onAfterPaint_(ctx) {
+    _onAfterPaint_() {
     }
 
     /**
      * 完整绘制方法，此方法会被主循环调用
      *
-     * @param ctx {Graphics}
-     * @private
      */
-    _paint_(ctx) {
+    _paint_() {
+        let g = this.graphics;
         // FrameEventGenerator.logger.debug(`[${this.className}]:重绘...`);
         // 为最高效率，对象可见，才进入
         if (!this.visible) return;
@@ -337,28 +342,28 @@ export default class DisplayObject extends EventDispatcher {
         this.clearChange();
 
         // 保存一次上下文
-        ctx && ctx.save();
+        g && g.save();
 
         // 先调用绘制前处理
-        this._onBeforePaint_(ctx);
-        this.dispatchEvent(Event.BEFORE_REDRAW, { target: this, context: ctx });
+        this._onBeforePaint_();
+        this.dispatchEvent(Event.BEFORE_REDRAW, {target: this, context: g});
 
         // 保存二次上下文
-        ctx && ctx.save();
+        g && g.save();
 
         // 再调用自身绘制
-        this.paint(ctx);
-        this.dispatchEvent(Event.REDRAW, { target: this, context: ctx });
+        this.paint();
+        this.dispatchEvent(Event.REDRAW, {target: this, context: g});
 
         // 最后调用绘制后处理
-        this._onAfterPaint_(ctx);
-        this.dispatchEvent(Event.AFTER_REDRAW, { target: this, context: ctx });
+        this._onAfterPaint_();
+        this.dispatchEvent(Event.AFTER_REDRAW, {target: this, context: g});
 
         // 恢复二次上下文
-        ctx && ctx.restore();
+        g && g.restore();
 
         // 恢复一次上下文
-        ctx && ctx.restore();
+        g && g.restore();
     }
 
     /**
@@ -367,7 +372,7 @@ export default class DisplayObject extends EventDispatcher {
      * 用户通过侦听显示对象上的 Event.ENTER_FRAME 事件，执行相应的代码
      */
     _onEnterFrame_() {
-        this.emit(Event.ENTER_FRAME, { target: this });
+        this.emit(Event.ENTER_FRAME, {target: this});
     }
 
     /** *************************************************************************
@@ -414,7 +419,7 @@ export default class DisplayObject extends EventDispatcher {
      * @param digits {number} 精度
      * @returns {Point} 内部坐标
      */
-    getInnerPos(point, digits) {
+    getInnerPos(point, digits = 0) {
         if (undefined === point) return undefined;
 
         point = new Point(point.x, point.y);
@@ -441,6 +446,14 @@ export default class DisplayObject extends EventDispatcher {
         if (this.stage && this.stage !== this) {
             this.dispatchEvent(Event.APPEND_TO_STAGE);
             this.postChange("AppendToStage");
+        }
+    }
+
+    _onAppendToLayer_() {
+        this.getLayer();
+        if (this.layer) {
+            this.dispatchEvent(Event.APPEND_TO_LAYER);
+            this.postChange("AppendToLayer");
         }
     }
 }

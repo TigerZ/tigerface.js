@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import DomSpriteComponent from "./DomSpriteComponent";
 import {Stage} from 'tigerface-display'
@@ -14,8 +15,7 @@ export default class StageComponent extends DomSpriteComponent {
     }
 
     _createDisplayObject_(dom, props) {
-        let sprite = new Stage({}, dom);
-        return sprite;
+        return new Stage({}, dom);
     }
 
     _updateDisplayObject_(defore, after) {

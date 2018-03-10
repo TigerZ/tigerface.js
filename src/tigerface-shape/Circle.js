@@ -1,6 +1,7 @@
 import Polygon from './Polygon';
 import Shape from './Shape';
 import Point from './Point';
+import {Utilities as T} from 'tigerface-common';
 
 /**
  * 圆
@@ -28,11 +29,13 @@ export default class Circle extends Shape {
         return new Circle(this.p0.x, this.p0.y, this.radius);
     }
 
-    _getVertexes(precision) {
-        if (precision == undefined)
-            precision = 5;
-        var beginAngle = 0;
-        var endAngle = 360;
+    /**
+     *
+     * @param precision {integer} 精度
+     * @returns {Array}
+     * @private
+     */
+    _getVertexes(precision = 5, beginAngle = 0, endAngle = 360) {
         // if (!this.points) {
         var points = [];
         for (var i = beginAngle; i <= endAngle; i += precision) {
@@ -45,13 +48,11 @@ export default class Circle extends Shape {
 
     /**
      * 转化为多边形
-     * @param precision
-     * @param beginAngle
-     * @param endAngle
+     * @param precision {integer}
      * @returns {Polygon}
      */
-    toPolygon(precision, beginAngle, endAngle) {
-        return new Polygon(this._getVertexes());
+    toPolygon(precision = 5) {
+        return new Polygon(this._getVertexes(precision));
     }
 
     /**
@@ -114,7 +115,7 @@ export default class Circle extends Shape {
         }
         // 边碰撞
         var sides = polygon.getSides();
-        for (var i in sides) {
+        for (let i in sides) {
             if (this.hitTestLine(sides[i])) {
                 return true;
             }

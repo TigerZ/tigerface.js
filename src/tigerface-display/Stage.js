@@ -6,7 +6,7 @@
 
 import {Utilities as T, Logger} from 'tigerface-common';
 import DomSprite from './DomSprite';
-import {Event, EventDispatcher, FrameEventGenerator} from 'tigerface-event';
+import {Event, FrameEventGenerator} from 'tigerface-event';
 
 export default class Stage extends DomSprite {
     static logger = Logger.getLogger(Stage.name);
@@ -29,7 +29,7 @@ export default class Stage extends DomSprite {
         super(state, dom);
 
         // 缺省的相对定位
-        // this.setStyle("position", DomSprite.Position.RELATIVE);
+        // this.setStyle({"position", DomSprite.Position.RELATIVE);
 
         // 舞台标识
         this.stage = this;
@@ -43,8 +43,8 @@ export default class Stage extends DomSprite {
 
         // 增加屏幕方向翻转检测
 
-        window.onOrientationChange = (e) => {
-            var orientation = window.orientation || 0;
+        window.onOrientationChange = () => {
+            let orientation = window.orientation || 0;
             this.dispatchEvent(Event.ORIENTATION_CHANGE, {
                 orientation: orientation,
                 width: screen.width,
@@ -57,10 +57,10 @@ export default class Stage extends DomSprite {
     _checkFPS_(v) {
         // 帧数控制在至少 12 帧
         if (this.state.fps < 12) {
-            Stage.logger.warn(`帧数 [${fps}] 限制为最少 12 帧`);
+            Stage.logger.warn(`帧数 [${this.fps}] 限制为最少 12 帧`);
             return 12;
         } else if (this.state.fps > 60) {
-            Stage.logger.warn(`帧数 [${fps}] 限制为最多 60 帧`);
+            Stage.logger.warn(`帧数 [${this.fps}] 限制为最多 60 帧`);
             return 60
         } else
             return v
@@ -85,13 +85,13 @@ export default class Stage extends DomSprite {
     }
 
     _signing_() {
-        var sign = "Paint by TigerFace.js 0.10 - tigerface.org";
-        var devicePixelRatio = window.devicePixelRatio || 1;
-        var font = 10 * devicePixelRatio + "px Microsoft YaHei";
-        var ctx = document.createElement("canvas").getContext("2d");
+        let sign = "Paint by TigerFace.js 0.10 - tigerface.org";
+        let devicePixelRatio = window.devicePixelRatio || 1;
+        let font = 10 * devicePixelRatio + "px Microsoft YaHei";
+        let ctx = document.createElement("canvas").getContext("2d");
         ctx.font = font;
-        var width = ctx.measureText(sign).width + 20;
-        var height = 20;
+        let width = ctx.measureText(sign).width + 20;
+        let height = 20;
         ctx.canvas.width = width;
         ctx.canvas.height = height * devicePixelRatio;
         ctx.fillStyle = "rgba(0,0,0,0.3)";
@@ -105,7 +105,7 @@ export default class Stage extends DomSprite {
         ctx.strokeText(sign, 10, ctx.canvas.height / 2);
         ctx.fillText(sign, 10, ctx.canvas.height / 2);
 
-        var data = ctx.canvas.toDataURL();
+        let data = ctx.canvas.toDataURL();
         this.setStyle({
             "background-image": "url(" + data + ")",
             "background-position": "right bottom",

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import {Logger} from "../tigerface-common";
 
 import React from 'react';
@@ -20,7 +21,7 @@ export default class SpriteComponent extends React.Component {
         return this._displayObject_;
     }
 
-    _appendChild_ (child) {
+    _appendChild_(child) {
         this._displayObjectChildren_.push(child);
     }
 
@@ -39,9 +40,9 @@ export default class SpriteComponent extends React.Component {
     componentDidMount() {
         const props = this.props;
         this._displayObject_ = this._createDisplayObject_(this._tagRef, props);
-        this._displayObjectChildren_.forEach((child)=>{
+        this._displayObjectChildren_.forEach(child => {
             this._displayObject_.addChild(child);
-        })
+        });
         if (props.appendToParent) {
             props.appendToParent(this._displayObject_);
         }
@@ -59,8 +60,8 @@ export default class SpriteComponent extends React.Component {
 
     render() {
         const props = this.props;
-        var childrenWithProps = React.Children.map(props.children, child =>
-            React.cloneElement(child, {appendToParent: (child) => this._appendChild_(child)}));
+        let childrenWithProps = React.Children.map(props.children, child =>
+            React.cloneElement(child, {appendToParent: (child) => this._appendChild_(child)}), {});
         return React.createElement(this.tagName, Object.assign({}, props), childrenWithProps);
     }
-};
+}

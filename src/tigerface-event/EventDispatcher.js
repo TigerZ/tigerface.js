@@ -199,8 +199,8 @@ export const Mixin = {
 
     /**
      * 发送异步事件
-     * @param eventName
-     * @param data
+     * @param eventName {string}
+     * @param data {object}
      */
     dispatchAsyncEvent(eventName, data) {
         // setTimeout(()=>this.emit(eventName, data), 10);
@@ -251,20 +251,20 @@ export const Mixin = {
     /**
      * 注册跨窗口事件侦听
      */
-    registerCrossWinEvent() {
-        let self = this;
-        //接收跨文档消息
-        window.addEventListener('message', (e) => {
-            if (e.data) {
-                try {
-                    let w = JSON.parse(e.data);
-                    if (w && w.eventName)
-                        self.dispatchAsyncEvent(w.eventName, w.data);
-                } catch (e) {
-                }
-            }
-        });
-    },
+    // registerCrossWinEvent() {
+    //     let self = this;
+    //     //接收跨文档消息
+    //     window.addEventListener('message', (e) => {
+    //         if (e.data) {
+    //             try {
+    //                 let w = JSON.parse(e.data);
+    //                 if (w && w.eventName)
+    //                     self.dispatchAsyncEvent(w.eventName, w.data);
+    //             } catch (e) {
+    //             }
+    //         }
+    //     });
+    // },
 
     /**
      * 触发跨窗口事件
@@ -273,16 +273,16 @@ export const Mixin = {
      * @param data
      * @param win
      */
-    dispatchEventCrossWindow(eventName, data, win) {
-        let e = {
-            className: "Event",
-            currentTarget: this,
-            eventName: eventName
-        };
-        Object.assign(e, data);
-        win.postMessage(JSON.stringify(e), "*");
-        EventDispatcher.logger.debug(`发送跨窗口事件 [${eventName}]`, data);
-    }
+    // dispatchEventCrossWindow(eventName, data, win) {
+    //     let e = {
+    //         className: "Event",
+    //         currentTarget: this,
+    //         eventName: eventName
+    //     };
+    //     Object.assign(e, data);
+    //     win.postMessage(JSON.stringify(e), "*");
+    //     EventDispatcher.logger.debug(`发送跨窗口事件 [${eventName}]`, data);
+    // }
 }
 
 export default withMix(EventDispatcher, Mixin);

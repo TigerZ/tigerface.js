@@ -6,6 +6,7 @@
 import Polygon from "./Polygon";
 import Point from './Point';
 import {Utilities as T, Logger} from 'tigerface-common';
+
 /**
  * 椭圆
  *
@@ -21,7 +22,7 @@ export default class Ellipse extends Polygon {
         this.radiusY = radiusY;
         this.precision = precision == undefined ? 5 : precision;
         // 转换为多边形处理
-        this.initPolygon(this.getVertexes());
+        this.initPolygon(this.getVertexes(this.precision));
         this.className = Ellipse.name;
     }
 
@@ -29,12 +30,10 @@ export default class Ellipse extends Polygon {
         return new Ellipse(this.p0.x, this.p0.y, this.radiusX, this.radiusY);
     }
 
-    _getVertexes() {
-        var beginAngle = 0;
-        var endAngle = 360;
+    _getVertexes(precision = 5, beginAngle = 0, endAngle = 360) {
         // if (!this.points) {
         var points = [];
-        for (var i = beginAngle; i <= endAngle; i += this.precision) {
+        for (var i = beginAngle; i <= endAngle; i += precision) {
             var x = Math.cos(T.degreeToRadian(i)) * this.radiusX + this.p0.x;
             var y = Math.sin(T.degreeToRadian(i)) * this.radiusY + this.p0.y;
             points.push(new Point(x, y));

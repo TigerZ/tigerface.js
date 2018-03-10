@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 import {Logger} from 'tigerface-common';
 import SpriteComponent from "./SpriteComponent";
 
@@ -18,9 +17,13 @@ export default class DomSpriteComponent extends SpriteComponent {
 
     render() {
         const props = this.props;
+
+        // eslint-disable-next-line no-unused-vars
         const Tag = this.tagName || 'div';
-        var childrenWithProps = React.Children.map(props.children, child =>
-            React.cloneElement(child, {appendToParent: (child) => this._appendChild_(child)}));
+
+        let childrenWithProps = React.Children.map(props.children, child =>
+            React.cloneElement(child, {appendToParent: (child) => this._appendChild_(child)}), {});
+
         return (
             <Tag
                 ref={ref => (this._tagRef = ref)}

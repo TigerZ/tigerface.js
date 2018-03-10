@@ -1,6 +1,4 @@
-module.exports = {
-    'Event': require('./Event'),
-    'EventDispatcher': require('./EventDispatcher').default,
-    'DomEventAdapter': require('./DomEventAdapter').default,
-    'FrameEventGenerator': require('./FrameEventGenerator').default
-}
+export Event from './Event';
+export {default as EventDispatcher} from './EventDispatcher';
+export {default as DomEventAdapter} from './DomEventAdapter';
+export {default as FrameEventGenerator} from './FrameEventGenerator';

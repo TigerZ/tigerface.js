@@ -12,7 +12,7 @@ if (!_win.requestNextAnimationFrame) {
         _win = window;
         _win.timeout = 0;
         window.requestNextAnimationFrame = (function () {
-            var originalWebkitRequestAnimationFrame = undefined, wrapper = undefined, callback = undefined,
+            var originalWebkitRequestAnimationFrame = undefined, wrapper = undefined,
                 geckoVersion = 0, userAgent = navigator.userAgent, index = 0, self = this;
 
             // Workaround for Chrome 10 bug where Chrome
@@ -67,7 +67,7 @@ if (!_win.requestNextAnimationFrame) {
             return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame
                 || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
 
-                function (callback, element) {
+                function (callback) {
                     var start, finish;
 
                     window.setTimeout(function () {
@@ -164,4 +164,4 @@ export default class FrameEventGenerator extends EventDispatcher {
             this._onEnterFrame_();
         }, this.frameTimeout);
     }
-};
+}

@@ -16,10 +16,10 @@ export default class CanvasLayer extends DomSprite {
     /**
      * 初始化舞台
      *
-     * @param wrapper Dom节点
-     * @param options 选项
+     * @param options {object} 选项
+     * @param dom {object} Dom节点
      */
-    constructor(options, dom) {
+    constructor(options, dom = undefined) {
         let state = Object.assign({
             devicePixelRatio: 1,
             width: 320,
@@ -113,6 +113,14 @@ export default class CanvasLayer extends DomSprite {
         return this.state.useOffScreenCanvas;
     }
 
+    get graphics() {
+        return this._graphics_;
+    }
+
+    set graphics(v) {
+        this._graphics_ = v;
+    }
+
     /**
      * 设置 Dom 的大小
      * @private
@@ -127,16 +135,21 @@ export default class CanvasLayer extends DomSprite {
         T.css(this.dom, "height", this.height + "px");
     }
 
+    /**
+     * 添加子节点
+     * @param child {DisplayObject}
+     */
     addChild(child) {
         super.addChild(child);
-        child.canvas = this.canvas;
+        child.graphics = this.graphics;
         child.layer = this;
         child._onAppendToLayer_();
+        return this;
     }
 
     _onBeforeAddChild_(child) {
         if (child.isDomSprite) {
-            DomSprite.logger.warn(`_onBeforeAddChild_(${child.name||child.className} ${child.isDomSprite}): CanvasContainer 的内部显示对象不能是 DomSprite 的实例`);
+            DomSprite.logger.warn(`_onBeforeAddChild_(${child.name || child.className} ${child.isDomSprite}): CanvasContainer 的内部显示对象不能是 DomSprite 的实例`);
             return false;
         }
         return true;
@@ -144,7 +157,9 @@ export default class CanvasLayer extends DomSprite {
 
     /**
      * 空方法，为了抵消 DomSprite 的同名方法
+     * @param child {DisplayObject}
      */
+    // eslint-disable-next-line no-unused-vars
     _onAddChild_(child) {
     }
 
@@ -156,47 +171,47 @@ export default class CanvasLayer extends DomSprite {
 
     /**
      * 绘制画布自身前的处理：缩放，设置透明度
-     * @param ctx
      * @private
      */
-    _onBeforePaint_(ctx) {
+    _onBeforePaint_() {
+        let g = this.graphics;
         // 缩放
-        if (this.state.devicePixelRatio != 1)
-            ctx.scale(this.state.devicePixelRatio, this.state.devicePixelRatio);
+        if (this.state.devicePixelRatio !== 1)
+            g.scale(this.state.devicePixelRatio, this.state.devicePixelRatio);
 
-        ctx.globalAlpha = this.alpha;
+        g.globalAlpha = this.alpha;
     }
 
     /**
      * 绘制画布自身后的处理：绘制子对象
-     * @param ctx
      * @private
      */
-    _onAfterPaint_(ctx) {
-        ctx.save();
+    _onAfterPaint_() {
+        let g = this.graphics;
+        g.save();
         // 绘制顺序为后绘制的在上层
-        ctx.globalCompositeOperation = "source-over";
+        g.globalCompositeOperation = "source-over";
 
         // 遍历孩子，顺序与globalCompositeOperation的设置要匹配，这里的效果是后添加的在上面
-        for (var i = 0; i < this.children.length; i++) {
-            var child = this.children[i];
+        for (let i = 0; i < this.children.length; i++) {
+            let child = this.children[i];
             // 子元件可见才绘制
             if (child.visible) {
                 // 孩子会坐标转换、缩放及旋转，所以先保存上下文
-                ctx.save();
+                g.save();
                 // 每个孩子的位置，由上层决定。孩子自己只知道从自己的originX, originY, 开始相对坐标即可
-                ctx.translate(child.x, child.y);
+                g.translate(child.x, child.y);
                 // 孩子的透明度
                 child.realAlpha = this.alpha * child.alpha;
-                ctx.globalAlpha = child.realAlpha;
+                g.globalAlpha = child.realAlpha;
                 // 调用孩子绘制方法
-                child._paint_(ctx);
+                child._paint_();
                 // 恢复上下文
-                ctx.restore();
+                g.restore();
             }
         }
 
-        ctx.restore();
+        g.restore();
     }
 
     /**
@@ -206,29 +221,28 @@ export default class CanvasLayer extends DomSprite {
     _paint_() {
         if (!this.state.redrawAsNeeded || this.isChanged()) {
             this.graphics.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            super._paint_(this.graphics);
+            super._paint_();
         }
     }
 
     /**
      * 接收 Canvas Dom 的鼠标移动事件，并且遍历内部 Context2DSprite 对象，调用其 _onLayerMouseMove_ 方法，间接触发内部鼠标移动相关事件
-     * @param e
-     * @private
+     * @param e {object}
      */
     _onMouseMove_(e) {
         // 调用 DisplayObject 的同名方法，转换坐标为内部坐标。
         // 注意：Canvas 不能旋转缩放，否则坐标为外界矩形内部坐标，如果 DomSprite 已实现坐标转换，请删除此行注释。
         super._onMouseMove_(e);
 
-        for (var i = this.children.length - 1; i >= 0; i--) {
-            var child = this.children[i];
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
             child._onLayerMouseMove_(this.getMousePos(), 2);
         }
     }
 
     /**
      * 接收 Canvas Dom 的鼠标单击事件，遍历内部对象，调用 _onLayerMouseClick_ 方法，由其自己判断是否发送内部鼠标单击事件
-     * @param e
+     * @param e {object}
      * @private
      */
     _onMouseEvents_(e) {

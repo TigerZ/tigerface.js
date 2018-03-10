@@ -33,6 +33,10 @@ export default class DisplayObjectContainer extends DisplayObject {
     //     DisplayObjectContainer.logger.error('不允许设置或覆盖 children 属性');
     // }
 
+    /**
+     *
+     * @returns {[DisplayObject]}
+     */
     get children() {
         return this._children_;
     }
@@ -292,13 +296,12 @@ export default class DisplayObjectContainer extends DisplayObject {
     /**
      * 绘制后调用的方法，子类需要根据情况覆盖此方法的实现
      *
-     * @param ctx
      * @private
      */
-    _onAfterPaint_(ctx) {
+    _onAfterPaint_() {
         for (let i = 0; i < this.children.length; i++) {
             let child = this.children[i];
-            child._paint_(ctx);
+            child._paint_();
         }
     }
 
@@ -362,6 +365,19 @@ export default class DisplayObjectContainer extends DisplayObject {
 
     set stage(v) {
         this._stage_ = v;
+    }
+
+    get graphics() {
+        if (this._graphics_ === undefined) {
+            if (this.parent && this.parent.graphics) {
+                this.graphics = this.parent.graphics;
+            }
+        }
+        return this._graphics_;
+    }
+
+    set graphics(v) {
+        this._graphics_ = v;
     }
 
     /**

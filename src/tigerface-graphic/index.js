@@ -1,4 +1,2 @@
-module.exports = {
-    'Context': require('./Context').default,
-    'Graphics': require('./Graphics').default
-}
+export {default as Context} from './Context';
+export {default as Graphics} from './Graphics';

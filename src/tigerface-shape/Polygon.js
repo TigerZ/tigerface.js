@@ -32,7 +32,6 @@ export default class Polygon extends Shape {
             this.points[i].owner = this;
         }
 
-
         //console.log("this.points", this.points);
 
         // 提取边
@@ -110,9 +109,9 @@ export default class Polygon extends Shape {
      *
      * @returns {Array}
      */
-    getVertexes() {
+    getVertexes(precision = 5, beginAngle = 0, endAngle = 360) {
         if (!this.vertexes)
-            this.vertexes = this._getVertexes();
+            this.vertexes = this._getVertexes(precision, beginAngle, endAngle);
         return this.vertexes;
     }
 

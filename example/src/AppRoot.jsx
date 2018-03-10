@@ -44,16 +44,16 @@ class BallSprite extends CanvasSprite {
 
     //
     move() {
-        if (this.y < 50 || this.y > 150) this.step = -this.step;
+        if (this.y < 0 || this.y > 200) this.step = -this.step;
         this.y += this.step;
     }
 
     onEnterFrame = () => {
-        // this.move();
+        this.move();
     }
 
-    paint(ctx) {
-
+    paint() {
+        let ctx = this.graphics;
         ctx.lineWidth = 1;
         ctx.fillStyle = 'rgba(255,0,0,0.5)';
 
