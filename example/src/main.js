@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {AppContainer} from 'react-hot-loader'
 import AppRoot from './AppRoot';
+import $ from 'jquery';
+window.$ = $;
 
 const render = (Component) => {
     ReactDOM.render(

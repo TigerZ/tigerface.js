@@ -20,8 +20,8 @@ export default class Stage extends DomSprite {
 
         let state = Object.assign({
             fps: 30, // 每秒30帧
-            width: 320,
-            height: 240,
+            width: 322,
+            height: 242,
             preventDefault: true,
             style: {'position': DomSprite.Position.RELATIVE}
         }, options);
