@@ -56,12 +56,13 @@ class BarChartSprite extends CanvasSprite {
 
         rects.forEach((bar, idx) => {
             g.lineWidth = 1;
-            g.fillStyle = 'rgba(0,0,255,0.5)';
-            g.strokeStyle = 'rgba(0,0,255,0.8)';
+            // g.fillStyle = 'rgba(0,0,255,0.5)';
+            // g.strokeStyle = 'rgba(0,0,255,0.8)';
+            g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+            g.strokeStyle = g.fillStyle;
             g.drawRectangle(bar,
                 g.DrawStyle.STROKE_FILL);
             g.lineWidth = 2;
-            g.fillStyle = 'rgba(255,0,0,0.8)';
             g.save();
             g.flipH(this.height);
             g.drawText(this.data[idx], {

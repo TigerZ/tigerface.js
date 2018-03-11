@@ -17,7 +17,8 @@ putDataToBarChart(
         font: '12px Courier',
         style: {
             backgroundColor: 'rgba(255,255,0,0.2)'
-        }
+        },
+        colors: ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple']
     }
 );
 
