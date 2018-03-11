@@ -40,29 +40,25 @@ class PieChartSprite extends CanvasSprite {
         this.data = data;
         T.merge(this.config, options);
         let sum = this.data.reduce((a, b) => {
-            return a + b;
-        });
-
+            return {num: a.num + b.num};
+        }).num;
         this.unitAngle = 360 / sum;
     }
 
     paint() {
         let g = this.graphics;
 
-        g.save();
-        // g.flipH(this.height);
-
         let finish = true;
         let shapes = [];
         let n = 0;
         let names = [];
         let count = 20;
-        let p0 = {x: 160, y: 120};
+        let p0 = {x: 160, y: 130};
 
         for (; n < count; n++) {
             let last = 0;
-            this.data.forEach((a) => {
-                let b = a * this.unitAngle;
+            this.data.forEach(({num, name}) => {
+                let b = num * this.unitAngle;
                 if (b > this.h0) finish = false;
                 let b0 = Math.min(this.h0, b);
                 shapes.push(
@@ -71,16 +67,15 @@ class PieChartSprite extends CanvasSprite {
 
                 if (n === count - 1) {
                     let c = last + Math.abs(b) / 2;
-                    // console.log("***********", b);
                     let p1 = {
-                        x: Math.cos(T.degreeToRadian(c)) * 16 * 8 + p0.x,
-                        y: Math.sin(T.degreeToRadian(c)) * 9 * 8 + p0.y - n + 10
+                        x: Math.cos(T.degreeToRadian(c)) * 16 * 6 + p0.x,
+                        y: Math.sin(T.degreeToRadian(c)) * 9 * 8 + p0.y - n + count / 2
                     };
                     let p2 = {
                         x: Math.cos(T.degreeToRadian(c)) * 80 + p0.x,
                         y: Math.sin(T.degreeToRadian(c)) * 45 + p0.y - n
                     };
-                    names.push([p1, p2]);
+                    names.push([p1, p2, name, num]);
                 }
 
                 last += b;
@@ -90,39 +85,39 @@ class PieChartSprite extends CanvasSprite {
         // g.drawPoint({x: 150, y: 120});
         g.lineWidth = 1;
         shapes.forEach((pie, idx) => {
-            //g.save();
             let t = idx % this.data.length;
-            // console.log(t);
+
             g.fillStyle = this.config.colors[t < this.config.colors.length ? t : this.config.colors.length - 1];
             g.strokeStyle = 'rgba(0,0,0,0.2)';
-            //
-            // g.translate(offsets[idx].x, offsets[idx].y);
+
             g.drawPolygon(pie, g.DrawStyle.STROKE_FILL);
-            //g.restore();
         });
 
         // g.save();
-        if (!finish) g.globalAlpha = 0;
-        names.forEach(([p1, p2], idx) => {
-            g.lineWidth = 1;
-            g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
-            g.strokeStyle = g.fillStyle;
-            // g.drawPoint(p1);
-            if (p1.x < p0.x) {
-                g.textAlign = 'end';
-                g.drawLine(new Line(p1, {x: p1.x - 30, y: p1.y}))
-            }
-            else {
-                g.textAlign = 'start';
-                g.drawLine(new Line(p1, {x: p1.x + 30, y: p1.y}))
-            }
-            g.drawLine(new Line(p1, p2));
-            g.textBaseline = 'bottom';
-            g.drawText(this.data[idx], p1, this.config.font, g.DrawStyle.FILL);
+        if (finish) {
+            names.forEach(([p1, p2, name, num], idx) => {
+                let str = `${name}：${num}`;
+                g.lineWidth = 1;
+                g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+                g.strokeStyle = g.fillStyle;
+                // g.drawPoint(p1);
+                let w = g.measureText(str).width;
+                if (p1.x < p0.x) {
+                    g.textAlign = 'end';
+                    g.drawLine(new Line(p1, {x: p1.x - w, y: p1.y}))
+                }
+                else {
+                    g.textAlign = 'start';
+                    g.drawLine(new Line(p1, {x: p1.x + w, y: p1.y}))
+                }
+                g.drawLine(new Line(p1, p2));
+                g.textBaseline = 'bottom';
+                g.drawText(str, p1, this.config.font, g.DrawStyle.FILL);
 
-        });
-        g.restore();
+            });
 
+
+        }
 
         this.h0 += this.config.speed;
         if (!finish) this.postChange();

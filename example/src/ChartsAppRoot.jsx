@@ -9,28 +9,38 @@ import PieChart, {putData as putDataToPieChart} from './PieChart';
  * Date: 2018/2/25.
  * Time: 22:37.
  */
-
+// const data = [5, 20, 25, 18, 12, 7, 15];
+const colors = ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon'];
+const data = [
+    {name: '何敏', num: 5},
+    {name: '王菲丽', num: 20},
+    {name: '张思雨', num: 25},
+    {name: '王明清', num: 18},
+    {name: '袁立', num: 12},
+    {name: '邢惠珊', num: 7},
+    {name: '李安和', num: 15}
+];
 putDataToBarChart(
-    [5, 20, 25, 18, 12, 7, 16, 24, 15, 8],
+    data,
     {
         speed: 3,
-        font: '12px Courier',
+        font: '12px Kaiti',
         style: {
             backgroundColor: 'rgba(255,255,0,0.2)'
         },
-        colors: ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon']
+        colors
     }
 );
 
 putDataToPieChart(
-    [5, 20, 25, 18, 12, 7, 16, 24, 15, 8],
+    data,
     {
         speed: 3,
-        font: '12px Courier',
+        font: '12px Kaiti',
         style: {
             backgroundColor: 'rgba(255,255,0,0.2)'
         },
-        colors: ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon']
+        colors
     }
 );
 
@@ -45,8 +55,8 @@ export default class AppRoot extends React.Component {
         const props = this.props;
         return (
             <div>
-                <BarChart name={'BarChart'} style={Style}/>
-                <PieChart name={'PieChart'} style={Style}/>
+                <BarChart style={Style}/>
+                <PieChart style={Style}/>
             </div>
         )
     }

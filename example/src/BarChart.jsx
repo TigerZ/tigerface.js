@@ -11,8 +11,10 @@ import {Utilities as T} from 'tigerface-common';
  * Time: 11:03.
  */
 const _default = {
-    width: 20,
-    unitHeight: 8,
+    paddingLeft: 50,
+    paddingTop: 20,
+    unit: 20,
+    scale: 8,
     xSpace: 5,
     ySpace: 5,
     font: '12px monaco',
@@ -42,34 +44,63 @@ class BarChartSprite extends CanvasSprite {
 
     paint() {
         let g = this.graphics;
-        g.flipH(this.height);
+        // g.flipH(this.height);
 
         let rects = [];
         let fonts = [];
         let finish = true;
 
-        this.data.forEach((bar, idx) => {
-            let height = this.config.unitHeight * bar;
-            if (height > this.h0) finish = false;
-            rects.push(new Rectangle(idx * (this.config.width + this.config.xSpace) + this.config.xSpace, 1, this.config.width, Math.min(this.h0, height)));
+        this.data.forEach(({name, num}, idx) => {
+            let length = this.config.scale * num;
+            if (length > this.h0) finish = false;
+            // rects.push(
+            //     new Rectangle(
+            //         idx * (this.config.unit + this.config.xSpace) + this.config.xSpace,
+            //         this.config.ySpace,
+            //         this.config.width,
+            //         Math.min(this.h0, length)
+            //     )
+            // );
+            rects.push(
+                [
+                    new Rectangle(
+                        this.config.xSpace + this.config.paddingLeft,
+                        idx * (this.config.unit + this.config.ySpace) + this.config.ySpace + this.config.paddingTop,
+                        Math.min(this.h0, length),
+                        this.config.unit
+                    ),
+                    name,
+                    num
+                ]
+            );
         });
 
-        rects.forEach((bar, idx) => {
+        g.textBaseline = 'middle';
+
+        rects.forEach(([bar, name, num], idx) => {
             g.lineWidth = 1;
             // g.fillStyle = 'rgba(0,0,255,0.5)';
             // g.strokeStyle = 'rgba(0,0,255,0.8)';
             g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
             g.strokeStyle = g.fillStyle;
+
+            g.textAlign = 'right';
+            g.drawText(name, {
+                x: this.config.paddingLeft,
+                y: bar.top + this.config.unit / 2
+            }, this.config.font, g.DrawStyle.FILL);
+
             g.drawRectangle(bar,
                 g.DrawStyle.STROKE_FILL);
             g.lineWidth = 2;
-            g.save();
-            g.flipH(this.height);
-            g.drawText(this.data[idx], {
-                x: bar.left + bar.width / 2 - 6,
-                y: this.height - bar.height - 10
+            // g.save();
+            // g.flipH(this.height);
+            g.textAlign = 'left';
+            g.drawText(num, {
+                x: bar.left + bar.width + this.config.xSpace * 2,
+                y: bar.top + this.config.unit / 2
             }, this.config.font, g.DrawStyle.FILL);
-            g.restore();
+            // g.restore();
         });
 
         this.h0 += this.config.speed;
