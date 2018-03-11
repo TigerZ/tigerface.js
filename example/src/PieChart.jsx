@@ -71,7 +71,7 @@ class PieChartSprite extends CanvasSprite {
             // let y = Math.sin(T.degreeToRadian(c)) * 50;
             // offsets.push({x, y});
         });
-        g.drawPoint({x: 150, y: 120});
+        // g.drawPoint({x: 150, y: 120});
         shapes.forEach((pie, idx) => {
             g.lineWidth = 1;
             g.strokeStyle = 'black'
