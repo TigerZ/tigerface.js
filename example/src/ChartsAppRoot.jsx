@@ -11,26 +11,26 @@ import PieChart, {putData as putDataToPieChart} from './PieChart';
  */
 
 putDataToBarChart(
-    [5, 20, 25, 18, 12, 7, 16],
+    [5, 20, 25, 18, 12, 7, 16, 24, 15, 8],
     {
         speed: 3,
         font: '12px Courier',
         style: {
             backgroundColor: 'rgba(255,255,0,0.2)'
         },
-        colors: ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple']
+        colors: ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon']
     }
 );
 
 putDataToPieChart(
-    [5, 20, 25, 18, 12, 7, 16],
+    [5, 20, 25, 18, 12, 7, 16, 24, 15, 8],
     {
-        speed: 1,
+        speed: 3,
         font: '12px Courier',
         style: {
             backgroundColor: 'rgba(255,255,0,0.2)'
         },
-        colors: ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple']
+        colors: ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon']
     }
 );
 

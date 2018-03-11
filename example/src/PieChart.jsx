@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import {Sector, Rectangle} from "../../src/tigerface-shape";
+import {Sector, Line} from "../../src/tigerface-shape";
 import {CanvasSprite} from "../../src/tigerface-display";
 import {Stage, Tag} from 'tigerface-react';
 import {Utilities as T} from 'tigerface-common';
@@ -52,38 +52,75 @@ class PieChartSprite extends CanvasSprite {
         g.save();
         // g.flipH(this.height);
 
-        let offsets = [];
-        let shapes = [];
-        let fonts = [];
         let finish = true;
-        let last = 0;
-        this.data.forEach(a => {
-            let b = a * this.unitAngle;
-            if (b > this.h0) finish = false;
-            let b0 = Math.min(this.h0, b);
-            shapes.push(
-                new Sector(150, 120, 100, 100, last, last + b0).scatter(10, 10)
-            );
-            last += b;
-            // let c = last + Math.abs(b) / 2;
-            // console.log("***********", b);
-            // let x = Math.cos(T.degreeToRadian(c)) * 50;
-            // let y = Math.sin(T.degreeToRadian(c)) * 50;
-            // offsets.push({x, y});
-        });
+        let shapes = [];
+        let n = 0;
+        let names = [];
+        let count = 20;
+        let p0 = {x: 160, y: 120};
+
+        for (; n < count; n++) {
+            let last = 0;
+            this.data.forEach((a) => {
+                let b = a * this.unitAngle;
+                if (b > this.h0) finish = false;
+                let b0 = Math.min(this.h0, b);
+                shapes.push(
+                    new Sector(p0.x, p0.y - n, 80, 45, last, last + b0)
+                );
+
+                if (n === count - 1) {
+                    let c = last + Math.abs(b) / 2;
+                    // console.log("***********", b);
+                    let p1 = {
+                        x: Math.cos(T.degreeToRadian(c)) * 16 * 8 + p0.x,
+                        y: Math.sin(T.degreeToRadian(c)) * 9 * 8 + p0.y - n + 10
+                    };
+                    let p2 = {
+                        x: Math.cos(T.degreeToRadian(c)) * 80 + p0.x,
+                        y: Math.sin(T.degreeToRadian(c)) * 45 + p0.y - n
+                    };
+                    names.push([p1, p2]);
+                }
+
+                last += b;
+            });
+        }
+
         // g.drawPoint({x: 150, y: 120});
+        g.lineWidth = 1;
         shapes.forEach((pie, idx) => {
-            g.lineWidth = 1;
-            g.strokeStyle = 'black'
-            g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
-            g.strokeStyle = g.fillStyle;
-            // g.save();
+            //g.save();
+            let t = idx % this.data.length;
+            // console.log(t);
+            g.fillStyle = this.config.colors[t < this.config.colors.length ? t : this.config.colors.length - 1];
+            g.strokeStyle = 'rgba(0,0,0,0.2)';
+            //
             // g.translate(offsets[idx].x, offsets[idx].y);
             g.drawPolygon(pie, g.DrawStyle.STROKE_FILL);
-
-            // g.restore();
+            //g.restore();
         });
 
+        // g.save();
+        if (!finish) g.globalAlpha = 0;
+        names.forEach(([p1, p2], idx) => {
+            g.lineWidth = 1;
+            g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+            g.strokeStyle = g.fillStyle;
+            // g.drawPoint(p1);
+            if (p1.x < p0.x) {
+                g.textAlign = 'end';
+                g.drawLine(new Line(p1, {x: p1.x - 30, y: p1.y}))
+            }
+            else {
+                g.textAlign = 'start';
+                g.drawLine(new Line(p1, {x: p1.x + 30, y: p1.y}))
+            }
+            g.drawLine(new Line(p1, p2));
+            g.textBaseline = 'bottom';
+            g.drawText(this.data[idx], p1, this.config.font, g.DrawStyle.FILL);
+
+        });
         g.restore();
 
 

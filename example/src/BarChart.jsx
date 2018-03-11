@@ -51,7 +51,7 @@ class BarChartSprite extends CanvasSprite {
         this.data.forEach((bar, idx) => {
             let height = this.config.unitHeight * bar;
             if (height > this.h0) finish = false;
-            rects.push(new Rectangle(idx * (this.config.width + this.config.xSpace) + this.config.xSpace, this.config.ySpace, this.config.width, Math.min(this.h0, height)));
+            rects.push(new Rectangle(idx * (this.config.width + this.config.xSpace) + this.config.xSpace, 1, this.config.width, Math.min(this.h0, height)));
         });
 
         rects.forEach((bar, idx) => {
