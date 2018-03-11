@@ -89,14 +89,17 @@ export default class BarChart extends React.Component {
     }
 
     render() {
+        const props = this.props;
         return (
-            <Stage style={StageStyle}>
-                <Tag.Dom>
-                    <Tag.Surface title={'Surface'} style={barChart.config.style}>
-                        <Tag.Sprite instance={barChart}/>
-                    </Tag.Surface>
-                </Tag.Dom>
-            </Stage>
+            <div {...props}>
+                <Stage style={StageStyle}>
+                    <Tag.Dom>
+                        <Tag.Surface title={'Surface'} style={barChart.config.style}>
+                            <Tag.Sprite instance={barChart}/>
+                        </Tag.Surface>
+                    </Tag.Dom>
+                </Stage>
+            </div>
         )
     }
 }

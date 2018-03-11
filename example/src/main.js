@@ -2,7 +2,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {AppContainer} from 'react-hot-loader'
-import AppRoot from './AppRoot';
+import AppRoot from './ChartsAppRoot';
 import $ from 'jquery';
 window.$ = $;
 
@@ -13,14 +13,14 @@ const render = (Component) => {
         </AppContainer>,
         document.getElementById('root'),
     )
-}
+};
 
-render(AppRoot)
+render(AppRoot);
 
 // Webpack Hot Module Replacement API
 if (module.hot) {
     module.hot.accept('./AppRoot', () => {
-        render(AppRoot)
+        render(AppRoot);
     })
 }
 

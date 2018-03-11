@@ -43,6 +43,14 @@ export default class Polygon extends Shape {
         this.boundingRect = this._getBoundingRect_();
     }
 
+    resetPoints(points) {
+        this.points = points;
+        // 提取边
+        this.sides = this._getSides();
+        // 提取外接矩形
+        this.boundingRect = this._getBoundingRect_();
+    }
+
     /**
      * 提取外接矩形
      *
@@ -112,9 +120,9 @@ export default class Polygon extends Shape {
      *
      * @returns {Array}
      */
-    getVertexes() {
+    getVertexes(...args) {
         if (!this.vertexes)
-            this.vertexes = this._getVertexes();
+            this.vertexes = this._getVertexes(...args);
         return this.vertexes;
     }
 
@@ -491,6 +499,8 @@ export default class Polygon extends Shape {
             newPoints.push(points[i].rotate(radian, origin));
         }
         return new Polygon(newPoints);
+        // this.initPolygon(newPoints);
+        // return this;
     }
 
     /**
@@ -507,6 +517,10 @@ export default class Polygon extends Shape {
             newPoints.push(points[i].move(offsetX, offsetY));
         }
         return new Polygon(newPoints);
+        // this.initPolygon(newPoints);
+        // return this;
+        // this.resetPoints(newPoints);
+        // return this;
     }
 
     /**
@@ -523,6 +537,8 @@ export default class Polygon extends Shape {
             newPoints.push(points[i].scale(scaleX, scaleY));
         }
         return new Polygon(newPoints);
+        // this.initPolygon(newPoints);
+        // return this;
     }
 
     merge(polygon, g) {
@@ -547,7 +563,7 @@ export default class Polygon extends Shape {
 
         // 记录点的方法，负责添加点，并且和前点链起来
         let record = (p) => {
-            let v = new Shape.Vertex(p.x, p.y);
+            let v = new Vertex(p.x, p.y);
             if (nps.length > 0) {
                 nps[nps.length - 1].next = v;
                 let l = new Line(nps[nps.length - 1], v);
@@ -566,7 +582,7 @@ export default class Polygon extends Shape {
         // 本该先检测两多边形碰撞，但后面要先获得最远没碰撞点，所以就省了
         // 先得到中点
         let rect2 = s2.getBoundingRect();
-        let pc2 = new Shape.Point(rect2.left + rect2.width / 2, rect2.top + rect2.height / 2);
+        let pc2 = new Point(rect2.left + rect2.width / 2, rect2.top + rect2.height / 2);
         // 寻找最远未碰撞点
         let p;
         for (let i = 0; i < s1.getVertexes().length; i++) {
@@ -579,7 +595,7 @@ export default class Polygon extends Shape {
         // 如果没找到，反过来找
         if (!p) {
             let rect1 = s1.getBoundingRect();
-            let pc1 = new Shape.Point(rect1.left + rect1.width / 2, rect1.top + rect1.height / 2);
+            let pc1 = new Point(rect1.left + rect1.width / 2, rect1.top + rect1.height / 2);
             for (let i = 0; i < s2.getVertexes().length; i++) {
                 if (!s1.hitTestPoint(s2.getVertexes()[i])) {
                     if (p === undefined || p.getDistance(pc1) < s2.getVertexes()[i].getDistance(pc1)) {
@@ -672,7 +688,7 @@ export default class Polygon extends Shape {
                         //if(debug) console.log("前一边", ps, "后一边", ns, "交点边", is);
                         if (ns > is) {
                             let ip = ips[0].point, side = ips[0].side;
-                            p = new Shape.Vertex(ip.x, ip.y);
+                            p = new Vertex(ip.x, ip.y);
                             p.next = side.p1;
                             p.prev = prev;
                             p.owner = p.next.owner;
@@ -701,7 +717,7 @@ export default class Polygon extends Shape {
                             //if(debug) console.log("前一边", ps, "后一边", ns, "交点边", is);
                             if (ns > is) {
                                 let ip = ips[0].point, side = ips[0].side;
-                                p = new Shape.Vertex(ip.x, ip.y);
+                                p = new Vertex(ip.x, ip.y);
                                 p.next = side.p1;
                                 p.prev = prev;
                                 p.owner = p.next.owner;
@@ -714,7 +730,7 @@ export default class Polygon extends Shape {
                             // 边边碰特点：边边碰情况简单，交点边一定是外围边
                             let ip = ips[0].point, side = ips[0].side;
 
-                            p = new Shape.Vertex(ip.x, ip.y);
+                            p = new Vertex(ip.x, ip.y);
                             p.next = side.p1;
                             //g.drawLine(p.getSide());
                             p.prev = prev;
@@ -751,7 +767,7 @@ export default class Polygon extends Shape {
             if (p === p0) {
                 //if(debug) console.log("*** 正常结束 ***");
                 if (nps.length > 2)
-                    return new Shape.Polygon(nps);
+                    return new Polygon(nps);
             }
 
             //if(debug) console.log("*** 非正常结束，检查是否存在合并错误 ***");
@@ -772,7 +788,7 @@ export default class Polygon extends Shape {
 
      let nps = [];
      let record = function (p) {
-     let v = new Shape.Vertex(p.x, p.y);
+     let v = new Vertex(p.x, p.y);
      if (nps.length > 0) {
      nps[nps.length - 1].next = v;
      }
@@ -784,7 +800,7 @@ export default class Polygon extends Shape {
 
      if (s1.hitTestPolygon(s2)) {
      //let rect = s2.getBoundingRect();
-     //let pc2 = new Shape.Point(rect.left + rect.width / 2, rect.top + rect.height / 2);
+     //let pc2 = new Point(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
      // 找到最远的没碰撞点
      let p;
@@ -901,7 +917,7 @@ export default class Polygon extends Shape {
      let ip = ips[0].point, side = ips[0].side;
 
      // p设置为交点
-     p = new Shape.Vertex(ip.x, ip.y);
+     p = new Vertex(ip.x, ip.y);
      if (p.equals(side.p1)) {
      p = side.p1;
      //console.log("碰撞在顶点", p.toString());
@@ -937,7 +953,7 @@ export default class Polygon extends Shape {
      }
      }
      if (nps.length > 2)
-     return new Shape.Polygon(nps);
+     return new Polygon(nps);
      }
      */
 }

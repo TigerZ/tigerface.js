@@ -93,7 +93,7 @@ export default class Graphics extends Context {
         if (pointStyle === undefined)
             pointStyle = Graphics.PointStyle.DEFAULT;
 
-        //this.beginPath();
+        this.beginPath();
 
         if (pointStyle === Graphics.PointStyle.SOLID) {// 实心圆十字
             this.beginPath();
@@ -138,8 +138,10 @@ export default class Graphics extends Context {
             this.autoApply && this.stroke();
         }
 
+
+        this.closePath();
+
         this.restore();
-        //this.closePath();
     }
 
     drawLine(line, lineStyle) {
@@ -415,6 +417,8 @@ export default class Graphics extends Context {
         if (drawStyle === Graphics.DrawStyle.STROKE || drawStyle === Graphics.DrawStyle.STROKE_FILL) {
             this.autoApply && this.stroke();
         }
+
+        // this.drawPoint(shape.p0);
 
     }
 

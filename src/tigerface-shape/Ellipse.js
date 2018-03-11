@@ -3,44 +3,26 @@
  * Date: 2018/2/27.
  * Time: 12:58.
  */
-import Polygon from "./Polygon";
+
 import Point from './Point';
 import {Utilities as T, Logger} from 'tigerface-common';
+import Sector from "./Sector";
 
 /**
  * 椭圆
  *
  * @type {*|void}
  */
-export default class Ellipse extends Polygon {
+export default class Ellipse extends Sector {
     static logger = Logger.getLogger(Ellipse.name);
 
     constructor(x, y, radiusX, radiusY, precision) {
-        super();
-        this.p0 = new Point(x, y);
-        this.radiusX = radiusX;
-        this.radiusY = radiusY;
-        this.precision = precision == undefined ? 5 : precision;
-        // 转换为多边形处理
-        this.initPolygon(this.getVertexes(this.precision));
+        super(x, y, radiusX, radiusY, 0, 360, precision);
         this.className = Ellipse.name;
     }
 
     clone() {
-        return new Ellipse(this.p0.x, this.p0.y, this.radiusX, this.radiusY);
-    }
-
-    _getVertexes(precision = 5, beginAngle = 0, endAngle = 360) {
-        // if (!this.points) {
-        var points = [];
-        for (var i = beginAngle; i <= endAngle; i += precision) {
-            var x = Math.cos(T.degreeToRadian(i)) * this.radiusX + this.p0.x;
-            var y = Math.sin(T.degreeToRadian(i)) * this.radiusY + this.p0.y;
-            points.push(new Point(x, y));
-        }
-        this.points = points;
-        // }
-        return this.points;
+        return new Ellipse(this.p0.x, this.p0.y, this.radiusX, this.radiusY, this.precision);
     }
 
     /**
