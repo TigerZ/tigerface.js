@@ -12,13 +12,13 @@ import PieChart, {putData as putDataToPieChart} from './PieChart';
 // const data = [5, 20, 25, 18, 12, 7, 15];
 const colors = ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon'];
 const data = [
-    {name: '何敏', num: 5},
-    {name: '王菲丽', num: 20},
+    {name: '何敏', num: 38},
+    {name: '王菲丽', num: 76},
     {name: '张思雨', num: 25},
-    {name: '王明清', num: 18},
-    {name: '袁立', num: 12},
-    {name: '邢惠珊', num: 7},
-    {name: '李安和', num: 15}
+    {name: '王明清', num: 48},
+    {name: '袁立', num: 22},
+    {name: '邢惠珊', num: 71},
+    {name: '李安和', num: 45}
 ];
 putDataToBarChart(
     data,

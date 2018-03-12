@@ -14,7 +14,7 @@ const _default = {
     paddingLeft: 50,
     paddingTop: 20,
     unit: 20,
-    scale: 8,
+    scale: 3,
     xSpace: 5,
     ySpace: 5,
     font: '12px monaco',

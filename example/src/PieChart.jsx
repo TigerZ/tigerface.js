@@ -36,12 +36,31 @@ class PieChartSprite extends CanvasSprite {
         this.config = _default;
     }
 
+    /**
+     *
+     * @param data [object]
+     * @param options {object}
+     */
     putData(data, options) {
-        this.data = data;
         T.merge(this.config, options);
-        let sum = this.data.reduce((a, b) => {
+        let sum = data.reduce((a, b) => {
             return {num: a.num + b.num};
         }).num;
+        let count = 0;
+        data.forEach(({num, name}, idx) => {
+            let percent = 0
+            if (idx === (data.length - 1)) {
+                percent = 100 - count;
+                // console.log("*******", percent, count);
+            }
+            else {
+                percent = Math.round(num / sum * 100);
+                count += percent;
+                // console.log("*******", num / sum, percent);
+            }
+            this.data.push({num, name, percent});
+        });
+
         this.unitAngle = 360 / sum;
     }
 
@@ -54,30 +73,31 @@ class PieChartSprite extends CanvasSprite {
         let names = [];
         let count = 20;
         let p0 = {x: 160, y: 130};
+        let r = 4;
 
         for (; n < count; n++) {
             let last = 0;
-            this.data.forEach(({num, name}) => {
+            this.data.forEach(({num, name, percent}) => {
                 let b = num * this.unitAngle;
                 if (b > this.h0) finish = false;
                 let b0 = Math.min(this.h0, b);
+
                 shapes.push(
-                    new Sector(p0.x, p0.y - n, 80, 45, last, last + b0)
+                    new Sector(p0.x, p0.y - n, r*16, r*9, last, last + b0)
                 );
 
                 if (n === count - 1) {
                     let c = last + Math.abs(b) / 2;
                     let p1 = {
-                        x: Math.cos(T.degreeToRadian(c)) * 16 * 6 + p0.x,
-                        y: Math.sin(T.degreeToRadian(c)) * 9 * 8 + p0.y - n + count / 2
+                        x: Math.cos(T.degreeToRadian(c)) * (r+1) * 16 + p0.x,
+                        y: Math.sin(T.degreeToRadian(c)) * (r+3) * 9 + p0.y - n + count / 2
                     };
                     let p2 = {
-                        x: Math.cos(T.degreeToRadian(c)) * 80 + p0.x,
-                        y: Math.sin(T.degreeToRadian(c)) * 45 + p0.y - n
+                        x: Math.cos(T.degreeToRadian(c)) * r*16 + p0.x,
+                        y: Math.sin(T.degreeToRadian(c)) * r*9 + p0.y - n
                     };
-                    names.push([p1, p2, name, num]);
+                    names.push([p1, p2, name, num, percent]);
                 }
-
                 last += b;
             });
         }
@@ -95,8 +115,8 @@ class PieChartSprite extends CanvasSprite {
 
         // g.save();
         if (finish) {
-            names.forEach(([p1, p2, name, num], idx) => {
-                let str = `${name}：${num}`;
+            names.forEach(([p1, p2, name, num, percent], idx) => {
+                let str = `${name}[${percent}%]`;
                 g.lineWidth = 1;
                 g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
                 g.strokeStyle = g.fillStyle;

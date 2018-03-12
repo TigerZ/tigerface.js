@@ -3,6 +3,7 @@
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
 import Logger from './Logger';
+
 const logger = Logger.getLogger('Utilities');
 
 // Private array of chars to use
@@ -161,9 +162,9 @@ export default {
      * @param digits 小数位数（缺省不保留）
      * @returns {Number} 整数或指定位数的小数
      */
-    round: function (num, digits) {
+    round: function (num, digits = 0) {
 
-        if (digits == undefined || digits == 0) {
+        if (digits === 0) {
             // With a bitwise or.
             // return (0.5 + num) | 0;
 
