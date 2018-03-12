@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import {Logger} from 'tigerface-common';
-import BarChart, {putData as putDataToBarChart} from './BarChart';
-import PieChart, {putData as putDataToPieChart} from './PieChart';
+import {default as BarChart, putData as putDataToBarChart} from './BarChart';
+import {default as PieChart, putData as putDataToPieChart} from './PieChart';
 
 /**
  * User: zyh
@@ -64,6 +64,6 @@ export default class AppRoot extends React.Component {
 
 const Style = {
     float: 'left',
-    width: '325px'
+    width: '404px'
 };
 

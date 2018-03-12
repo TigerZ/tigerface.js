@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import {Rectangle} from "../../src/tigerface-shape";
-import {CanvasSprite} from "../../src/tigerface-display";
-import {Stage, Tag} from 'tigerface-react';
+import {Rectangle, Square} from "tigerface-shape";
+import {CanvasSprite} from "tigerface-display";
+import {withSimpleSpriteComponent} from 'tigerface-react';
 import {Utilities as T} from 'tigerface-common';
 
 /**
@@ -35,6 +35,8 @@ class BarChartSprite extends CanvasSprite {
         this.data = [];
         this.h0 = 0;
         this.config = _default;
+        this.className = 'BarChartSprite';
+        this.name = 'BarChart';
     }
 
     putData(data, options) {
@@ -103,6 +105,23 @@ class BarChartSprite extends CanvasSprite {
             // g.restore();
         });
 
+        // 绘制图例
+        rects.forEach(([bar, name, num], idx) => {
+            let str = `${name} [${num}]`;
+            g.lineWidth = 1;
+            g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+            g.strokeStyle = g.fillStyle;
+            // g.drawPoint(p1);
+            let {width: w} = g.measureText(str);
+            let left = 30 + idx % 4 * 90;
+            let top = this.height - 10 + Math.floor(idx / 4) * 20;
+
+            g.drawRectangle(new Square(left, top, 10), g.DrawStyle.STROKE_FILL);
+            g.textBaseline = 'top';
+            g.drawText(str, {x: left + 10 + this.config.xSpace, y: top}, this.config.font, g.DrawStyle.FILL);
+
+        });
+
         this.h0 += this.config.speed;
         if (!finish) this.postChange();
     }
@@ -114,24 +133,4 @@ export const putData = (data, config) => {
     barChart.putData(data, config);
 };
 
-
-export default class BarChart extends React.Component {
-    constructor() {
-        super(...arguments);
-    }
-
-    render() {
-        const props = this.props;
-        return (
-            <div {...props}>
-                <Stage style={StageStyle}>
-                    <Tag.Dom>
-                        <Tag.Surface title={'Surface'} style={barChart.config.style}>
-                            <Tag.Sprite instance={barChart}/>
-                        </Tag.Surface>
-                    </Tag.Dom>
-                </Stage>
-            </div>
-        )
-    }
-}
+export default withSimpleSpriteComponent(barChart, barChart.config.style);

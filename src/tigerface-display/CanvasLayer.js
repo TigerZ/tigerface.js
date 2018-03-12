@@ -22,8 +22,8 @@ export default class CanvasLayer extends DomSprite {
     constructor(options, dom = undefined) {
         let state = Object.assign({
             devicePixelRatio: 1,
-            width: 320,
-            height: 240,
+            width: 400,
+            height: 300,
             retina: true,
             noClear: false,
             useDirtyRect: false,
@@ -219,10 +219,35 @@ export default class CanvasLayer extends DomSprite {
      * @private
      */
     _paint_() {
+
         if (!this.state.redrawAsNeeded || this.isChanged()) {
+            if (!this._painting_) {
+                this._painting_ = true;
+                CanvasLayer
+                    .logger.debug(`${this.name ? `[${this.name}] ` : ''}开始重绘`);
+            }
+            let start = +new Date();
+
             this.graphics.clearRect(0, 0, this.canvas.width, this.canvas.height);
             super._paint_();
+
+            let time = +new Date() - start;
+            if (time > 16 && time > (this._paint_time_ || 0)) {
+                let m = Math.floor(time / 60000);
+                let s = Math.floor((time - m * 60000) / 1000);
+                let mi = time - m * 60000 - s * 1000;
+                this._paint_time_ = time;
+                CanvasLayer
+                    .logger.warn(`耗时警告：最长重绘耗时为：${m}:${s}.${mi}，超过 16 毫秒，帧数将少于 60 帧`);
+            }
+        } else {
+            if (this._painting_) {
+                this._painting_ = false;
+                CanvasLayer
+                    .logger.debug(`${this.name ? `[${this.name}] ` : ''}已停止重绘`);
+            }
         }
+
     }
 
     /**

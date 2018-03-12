@@ -1,10 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import {Sector, Line} from "../../src/tigerface-shape";
-import {CanvasSprite} from "../../src/tigerface-display";
-import {Stage, Tag} from 'tigerface-react';
+import {Sector, Line, Square} from "tigerface-shape";
+import {CanvasSprite} from "tigerface-display";
+import {withSimpleSpriteComponent} from 'tigerface-react';
 import {Utilities as T} from 'tigerface-common';
-
 /**
  * User: zyh
  * Date: 2018/3/11.
@@ -15,11 +14,14 @@ const _default = {
     unitHeight: 8,
     xSpace: 5,
     ySpace: 5,
+    paddingTop: 20,
+    paddingLeft: 50,
     font: '12px monaco',
     speed: 3,
     style: {
         backgroundColor: 'white',
-        border: '1px solid blue'
+        border: '1px solid blue',
+        width: '100%'
     },
     colors: ['red']
 };
@@ -34,6 +36,7 @@ class PieChartSprite extends CanvasSprite {
         this.data = [];
         this.h0 = 0;
         this.config = _default;
+        this.className = 'PieChartSprite';
     }
 
     /**
@@ -72,9 +75,10 @@ class PieChartSprite extends CanvasSprite {
         let n = 0;
         let names = [];
         let count = 20;
-        let p0 = {x: 160, y: 130};
+        let p0 = {x: 200, y: 130};
         let r = 4;
 
+        // 生成图形
         for (; n < count; n++) {
             let last = 0;
             this.data.forEach(({num, name, percent}) => {
@@ -83,18 +87,18 @@ class PieChartSprite extends CanvasSprite {
                 let b0 = Math.min(this.h0, b);
 
                 shapes.push(
-                    new Sector(p0.x, p0.y - n, r*16, r*9, last, last + b0)
+                    new Sector(p0.x, p0.y - n, r * 16, r * 9, last, last + b0)
                 );
 
                 if (n === count - 1) {
                     let c = last + Math.abs(b) / 2;
                     let p1 = {
-                        x: Math.cos(T.degreeToRadian(c)) * (r+1) * 16 + p0.x,
-                        y: Math.sin(T.degreeToRadian(c)) * (r+3) * 9 + p0.y - n + count / 2
+                        x: Math.cos(T.degreeToRadian(c)) * (r + 1) * 16 + p0.x,
+                        y: Math.sin(T.degreeToRadian(c)) * (r + 3) * 9 + p0.y - n + count / 2
                     };
                     let p2 = {
-                        x: Math.cos(T.degreeToRadian(c)) * r*16 + p0.x,
-                        y: Math.sin(T.degreeToRadian(c)) * r*9 + p0.y - n
+                        x: Math.cos(T.degreeToRadian(c)) * r * 16 + p0.x,
+                        y: Math.sin(T.degreeToRadian(c)) * r * 9 + p0.y - n
                     };
                     names.push([p1, p2, name, num, percent]);
                 }
@@ -102,6 +106,7 @@ class PieChartSprite extends CanvasSprite {
             });
         }
 
+        // 绘制饼图
         // g.drawPoint({x: 150, y: 120});
         g.lineWidth = 1;
         shapes.forEach((pie, idx) => {
@@ -113,8 +118,10 @@ class PieChartSprite extends CanvasSprite {
             g.drawPolygon(pie, g.DrawStyle.STROKE_FILL);
         });
 
+
         // g.save();
         if (finish) {
+            // 绘制标签
             names.forEach(([p1, p2, name, num, percent], idx) => {
                 let str = `${name}[${percent}%]`;
                 g.lineWidth = 1;
@@ -139,6 +146,24 @@ class PieChartSprite extends CanvasSprite {
 
         }
 
+        // 绘制图例
+        names.forEach(([p1, p2, name, num], idx) => {
+            let str = `${name} [${num}]`;
+            g.lineWidth = 1;
+            g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+            g.strokeStyle = g.fillStyle;
+            // g.drawPoint(p1);
+            let {width: w} = g.measureText(str);
+            let left = 30 + idx % 4 * 90;
+            let top = this.height - 10 + Math.floor(idx / 4) * 20;
+
+            g.drawRectangle(new Square(left, top, 10), g.DrawStyle.STROKE_FILL);
+            g.textBaseline = 'top';
+            g.drawText(str, {x: left + 10 + this.config.xSpace, y: top}, this.config.font, g.DrawStyle.FILL);
+
+        });
+
+
         this.h0 += this.config.speed;
         if (!finish) this.postChange();
     }
@@ -150,24 +175,4 @@ export const putData = (data, config) => {
     pieChart.putData(data, config);
 };
 
-
-export default class PieChart extends React.Component {
-    constructor() {
-        super(...arguments);
-    }
-
-    render() {
-        const props = this.props;
-        return (
-            <div {...props}>
-                <Stage style={StageStyle}>
-                    <Tag.Dom>
-                        <Tag.Surface title={'Surface'} style={pieChart.config.style}>
-                            <Tag.Sprite instance={pieChart}/>
-                        </Tag.Surface>
-                    </Tag.Dom>
-                </Stage>
-            </div>
-        )
-    }
-}
+export default withSimpleSpriteComponent(pieChart, pieChart.config.style);
