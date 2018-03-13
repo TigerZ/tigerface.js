@@ -247,7 +247,7 @@ export default class DisplayObject extends EventDispatcher {
     _onMouseMove_(e) {
         this._mouseX_ = e.pos.x;
         this._mouseY_ = e.pos.y;
-        // this.logger.debug(`[${this.className}]:_onMouseMove_(): this._mouseX_=${this._mouseX_}, this._mouseY_=${this._mouseY_}`);
+        // this.logger.debug(`_onMouseMove_(): this._mouseX_=${this._mouseX_}, this._mouseY_=${this._mouseY_}`);
     }
 
     _onMouseDown_(e) {
@@ -315,7 +315,7 @@ export default class DisplayObject extends EventDispatcher {
      */
     _paint_() {
         let g = this.graphics;
-        // this.logger.debug(`[${this.className}]:重绘...`);
+        // this.logger.debug(`重绘...`);
         // 为最高效率，对象可见，才进入
         if (!this.visible) return;
 
@@ -381,7 +381,7 @@ export default class DisplayObject extends EventDispatcher {
         pos.x = T.round(pos.x, digits > 0 ? digits : 0);
         pos.y = T.round(pos.y, digits > 0 ? digits : 0);
 
-        // this.logger.debug(`[${this.className}]:getOuterPos()`, point, pos);
+        // this.logger.debug(`getOuterPos()`, point, pos);
 
         return pos;
     }
@@ -411,7 +411,7 @@ export default class DisplayObject extends EventDispatcher {
         p.x = T.round(p.x, digits > 0 ? digits : 0);
         p.y = T.round(p.y, digits > 0 ? digits : 0);
 
-        // this.logger.debug(`[${this.className}]:getInnerPos`, point, p);
+        // this.logger.debug(`getInnerPos`, point, p);
 
         return p;
     }

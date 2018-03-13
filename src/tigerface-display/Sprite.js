@@ -151,7 +151,7 @@ export default class Sprite extends DisplayObjectContainer {
     };
 
     _move_ = (e) => {
-        // this.logger.debug(`[${this.className}]:_move_()`);
+        // this.logger.debug(`_move_()`);
         if (this._dragging_) {
             let last = {x: this.x, y: this.y};
             this.x = e.pos.x - this._dragX_;

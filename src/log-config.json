@@ -2,7 +2,6 @@
   "log-level": "debug",
   "class-log-level": {
     "EventDispatcher": "off",
-    "CanvasLayer": "debug",
-    "BarChart": "debug"
+    "CanvasLayer": "debug"
   }
 }

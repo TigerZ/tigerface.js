@@ -15,25 +15,20 @@ export default class DomEventAdapter extends EventDispatcher {
      * @param dom 页面节点
      * @param setting 配置参数
      */
-    constructor(dom, setting, handler) {
+    constructor(dom, options, handler) {
 
-        super();
+        let props = {
+            className : DomEventAdapter.name,
+            preventDefault: true
+        };
+
+        super(props);
 
         if (dom == undefined)
-            this.logger.error(`[${this.className}]:对象初始化时发现参数 dom 无效。`);
+            this.logger.error(`对象初始化时发现参数 dom 无效。`);
 
         this.dom = dom;
-
         this.handler = handler;
-
-        this.className = DomEventAdapter.name;
-
-        // 合并配置参数
-        this.setting = Object.assign({
-            preventDefault: false
-        }, setting);
-
-        this.logger.debug(`[${this.className}]:初始化参数：`, this.setting);
 
         // 设置 tabIndex 属性，否则不会有 focus/blur 事件
         if (T.attr(this.dom, "tabIndex") == undefined) {
@@ -83,7 +78,7 @@ export default class DomEventAdapter extends EventDispatcher {
                 //console.log("Event.MouseEvent.MOUSE_DOWN");
                 self.dispatchSystemEvent(Event.MouseEvent.MOUSE_DOWN, e, {
                     pos: pos
-                }, self.setting.preventDefault);
+                }, self.preventDefault);
             };
             /**
              * 鼠标键松开事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
@@ -98,7 +93,7 @@ export default class DomEventAdapter extends EventDispatcher {
                 //console.log("Event.MouseEvent.MOUSE_UP");
                 self.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, {
                     pos: pos
-                }, self.setting.preventDefault);
+                }, self.preventDefault);
             };
             /**
              * 鼠标移动事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
@@ -110,7 +105,7 @@ export default class DomEventAdapter extends EventDispatcher {
                 // this.logger.debug(`系统事件：MOUSE_MOVE`, pos);
                 self.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE, e, {
                     pos: pos
-                }, self.setting.preventDefault);
+                }, self.preventDefault);
 
             };
             /**
@@ -121,7 +116,7 @@ export default class DomEventAdapter extends EventDispatcher {
                 var pos = self._pageToDom_(e.pageX, e.pageY);
                 self.dispatchSystemEvent(Event.MouseEvent.MOUSE_OVER, e, {
                     pos: pos
-                }, self.setting.preventDefault);
+                }, self.preventDefault);
             };
             /**
              * 鼠标移出事件
@@ -131,7 +126,7 @@ export default class DomEventAdapter extends EventDispatcher {
                 var pos = self._pageToDom_(e.pageX, e.pageY);
                 self.dispatchSystemEvent(Event.MouseEvent.MOUSE_OUT, e, {
                     pos: pos
-                }, self.setting.preventDefault);
+                }, self.preventDefault);
             };
             /**
              * 鼠标单击事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
@@ -144,7 +139,7 @@ export default class DomEventAdapter extends EventDispatcher {
                 var pos = self._pageToDom_(e.pageX, e.pageY);
                 self.dispatchSystemEvent(Event.MouseEvent.CLICK, e, {
                     pos: pos
-                }, self.setting.preventDefault);
+                }, self.preventDefault);
             };
             /**
              * 鼠标双击事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
@@ -157,7 +152,7 @@ export default class DomEventAdapter extends EventDispatcher {
                 var pos = self._pageToDom_(e.pageX, e.pageY);
                 self.dispatchSystemEvent(Event.MouseEvent.DOUBLE_CLICK, e, {
                     pos: pos
-                }, self.setting.preventDefault);
+                }, self.preventDefault);
             };
             /**
              * 鼠标右键单击事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
@@ -192,13 +187,13 @@ export default class DomEventAdapter extends EventDispatcher {
                 //console.log("Event.TouchEvent.TOUCH_START");
                 self.dispatchSystemEvent(Event.TouchEvent.TOUCH_START, e, {
                     touches: touches
-                }, self.setting.preventDefault);
+                }, self.preventDefault);
 
                 if (touches.length === 1) {
                     //console.log("TOUCH_START -> Event.MouseEvent.MOUSE_DOWN");
                     self.dispatchSystemEvent(Event.MouseEvent.MOUSE_DOWN, e, {
                         pos: touches[0].pos
-                    }, self.setting.preventDefault);
+                    }, self.preventDefault);
                 }
             };
             /**
@@ -219,13 +214,14 @@ export default class DomEventAdapter extends EventDispatcher {
                 //console.log("Event.TouchEvent.TOUCH_MOVE");
                 self.dispatchSystemEvent(Event.TouchEvent.TOUCH_MOVE, e, {
                     touches: touches
-                }, self.setting.preventDefault);
+                }, self.preventDefault);
                 if (touches.length === 1) {
                     //console.log("MOUSE_MOVE -> Event.MouseEvent.MOUSE_MOVE");
                     self.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE, e, {
                         pos: touches[0].pos
-                    }, self.setting.preventDefault);
+                    }, self.preventDefault);
                 }
+
             };
             /**
              * 触摸结束事件
@@ -243,18 +239,18 @@ export default class DomEventAdapter extends EventDispatcher {
                 //console.log("Event.TouchEvent.TOUCH_END");
                 self.dispatchSystemEvent(Event.TouchEvent.TOUCH_END, e, {
                     touches: touches
-                }, self.setting.preventDefault);
+                }, self.preventDefault);
 
                 if (touches.length === 1) {
                     //console.log("TOUCH_END -> Event.MouseEvent.MOUSE_UP");
-                    self.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, {}, self.setting.preventDefault);
+                    self.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, {}, self.preventDefault);
 
                     if ((!touches[0].pos || touches[0].pos.getDistance(touches[0].start) < 1) &&
                         +new Date() - touches[0].startTime < 500) {
                         //console.log("TOUCH_END -> Event.MouseEvent.CLICK");
                         self.dispatchSystemEvent(Event.MouseEvent.CLICK, e, {
                             pos: touches[0].pos || touches[0].start
-                        }, self.setting.preventDefault);
+                        }, self.preventDefault);
                     }
                 }
             };
@@ -264,7 +260,7 @@ export default class DomEventAdapter extends EventDispatcher {
              */
             adapters[Event.TouchEvent.TOUCH_CANCEL] = function (e) {
                 //console.log("Event.TouchEvent.TOUCH_CANCEL");
-                self.dispatchSystemEvent(Event.TouchEvent.TOUCH_CANCEL, e, {}, self.setting.preventDefault);
+                self.dispatchSystemEvent(Event.TouchEvent.TOUCH_CANCEL, e, {}, self.preventDefault);
             };
             /**
              * 失去焦点事件
@@ -338,6 +334,7 @@ export default class DomEventAdapter extends EventDispatcher {
 
         this._bindEventListener_();
 
+        this.assign(options);
     }
 
     /**

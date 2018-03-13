@@ -21,6 +21,7 @@ export default class CanvasLayer extends DomSprite {
      */
     constructor(options, dom = undefined) {
         let props = {
+            className: CanvasLayer.name,
             devicePixelRatio: 1,
             width: 400,
             height: 300,
@@ -42,9 +43,6 @@ export default class CanvasLayer extends DomSprite {
         this.canvas = canvas;
 
         this.graphics = new Graphics(this.canvas.getContext('2d'));
-
-        // 基本信息
-        this.className = CanvasLayer.name;
 
         // 下层显示对象通过此属性识别是否是上层 CanvasContainer 对象
         this.layer = this;
@@ -270,7 +268,7 @@ export default class CanvasLayer extends DomSprite {
      * @private
      */
     _onMouseEvents_(e) {
-        // this.logger.debug(`[${this.className}]:_onMouseEvents_()`, e);
+        // this.logger.debug(`_onMouseEvents_()`, e);
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
             child._onLayerMouseEvents_(e.eventName);

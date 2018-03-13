@@ -17,11 +17,15 @@ class EventDispatcher extends BaseObject {
     /**
      * 构造器
      */
-    constructor(...args) {
-        super();
-        this.className = EventDispatcher.name;
+    constructor(options) {
+        let props = {
+            className : EventDispatcher.name
+        }
+        super(props);
+
+        this.assign(options);
         // 如果存在 mixin 进来的构造方法，执行
-        this.construct && this.construct(...args);
+        this.construct && this.construct(options);
     }
 }
 

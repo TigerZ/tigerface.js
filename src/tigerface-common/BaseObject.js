@@ -14,9 +14,11 @@ export default class BaseObject {
      */
     constructor(options) {
 
+        this.className = BaseObject.name;
+
         this.logger = Logger.getLogger(this);
 
-        if (options) this.setState(options);
+        this.assign(options);
     }
 
     /**
