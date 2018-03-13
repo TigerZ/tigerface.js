@@ -3,6 +3,8 @@ import {Stage, CanvasLayer, DomSprite} from "tigerface-display";
 import {Logger} from 'tigerface-common';
 import Reconciler from 'react-reconciler';
 import emptyObject from 'fbjs/lib/emptyObject';
+import BaseComponent from "./BaseComponent";
+
 
 export const Tag = {
     Sprite: 'CanvasSprite',
@@ -16,11 +18,12 @@ export const Tag = {
  * Date: 2018/3/6.
  * Time: 19:39.
  */
-export default class StageComponent extends React.Component {
+export default class StageComponent extends BaseComponent {
     static logger = Logger.getLogger(StageComponent.name);
 
     constructor(...args) {
         super(...args);
+        this.className = StageComponent.name;
         this.tagName = 'canvas';
     }
 
@@ -33,7 +36,7 @@ export default class StageComponent extends React.Component {
         this._mountNode = DisplayObjectRenderer.createContainer(this._displayObject_);
         DisplayObjectRenderer.updateContainer(this.props.children, this._mountNode, this);
 
-        StageComponent.logger.debug("componentDidMount()", this._displayObject_);
+        this.logger.debug("componentDidMount()", this._displayObject_);
     }
 
     // eslint-disable-next-line no-unused-vars
@@ -84,7 +87,7 @@ const DisplayObjectRenderer = Reconciler({
         else if (type === Tag.Sprite) {
             return props.instance ? props.instance : new props.clazz({name: props.name});
         }
-        StageComponent.logger.error("无效的标签");
+        this.logger.error("无效的标签");
     },
 
     // eslint-disable-next-line no-unused-vars

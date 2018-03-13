@@ -1,5 +1,5 @@
 import EventEmitter from "events";
-import {withMix, Debuggable, Logger} from 'tigerface-common';
+import {withMix, BaseObject, Logger} from 'tigerface-common';
 import Event from './Event';
 
 /**
@@ -11,7 +11,7 @@ import Event from './Event';
  * 3. 注册侦听器时的缺省数据, 请在侦听函数内部自己实现
  * 4. 注册侦听器时指定 this 对象, 请使用箭头函数或使用 bind(this)
  */
-class EventDispatcher extends Debuggable {
+class EventDispatcher extends BaseObject {
     static logger = Logger.getLogger(EventDispatcher.name);
 
     /**
@@ -19,7 +19,7 @@ class EventDispatcher extends Debuggable {
      */
     constructor(...args) {
         super();
-
+        this.className = EventDispatcher.name;
         // 如果存在 mixin 进来的构造方法，执行
         this.construct && this.construct(...args);
     }

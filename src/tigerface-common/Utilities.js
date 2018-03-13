@@ -283,10 +283,13 @@ export default {
         }
         let key;
         for (key in ext) {
-            if (obj[key] && ext[key] && typeof obj[key] == 'object' && typeof ext[key] == 'object')
-                obj[key] = this.merge(obj[key], ext[key]);
-            else
-                obj[key] = ext[key];
+            if (ext[key]) {
+                if (obj[key] && typeof obj[key] === 'object' && typeof ext[key] === 'object')
+                    obj[key] = this.merge(obj[key], ext[key]);
+                else
+                    obj[key] = ext[key];
+            }
+
         }
         return obj;
     },

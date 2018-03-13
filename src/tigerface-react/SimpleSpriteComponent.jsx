@@ -1,15 +1,18 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import {default as Stage, Tag} from './Stage';
+import BaseComponent from "./BaseComponent";
+import StageComponent from "./Stage";
 
 /**
  * User: zyh
  * Date: 2018/3/12.
  * Time: 19:09.
  */
-class SimpleSpriteComponent extends React.Component {
+class SimpleSpriteComponent extends BaseComponent {
     constructor() {
         super();
+        this.className = SimpleSpriteComponent.name;
     }
 
     getSpriteInfo() {

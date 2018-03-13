@@ -22,9 +22,14 @@ export default class DisplayObject extends EventDispatcher {
      * @param options {Object} 属性初始值，比如：pos，origin，size ...
      */
     constructor(options) {
-        super();
+        let props = {
+            className: 'DisplayObject',
+            uuid: T.uuid(),
+        };
 
-        // 基本属性
+        super(props);
+
+        // 基本状态属性
         this.state = {
             pos: {x: 0, y: 0},
             size: {width: 320, height: 240},
@@ -35,42 +40,22 @@ export default class DisplayObject extends EventDispatcher {
             visible: true,
         };
 
+        this.props = {};
+
         // 基本信息
-        this.className = 'DisplayObject';
-        this.parent = undefined;
+        this._parent_ = undefined;
         this.layer = undefined;
         this.stage = undefined;
-
-        // 设置传入的初始值
-        Object.assign(this.state, options);
-        DisplayObject.logger.debug(`[${this.className}]:批量设置状态属性`, this.state);
-        if (options) this.setState(options);
-
-
-        // 为实例产生唯一ID
-        this.uuid = T.uuid();
 
         // 通过侦听 MOUSE_MOVE 事件，产生内部的 mouseX 和 mouseY 属性
         this.on(Event.MouseEvent.MOUSE_DOWN, e => this._onMouseDown_(e));
         this.on(Event.MouseEvent.MOUSE_MOVE, e => this._onMouseMove_(e));
+
+        // 设置传入的初始值
+        this.assign(options);
     }
 
-    /** *************************************************************************
-     *
-     * 属性方法
-     *
-     ************************************************************************* */
-
-    /**
-     * 批量设置对象属性
-     * @param props
-     */
-    setState(props) {
-        Object.assign(this, props);
-        DisplayObject.logger.debug(`[${this.className}]:批量设置状态属性`, props);
-    }
-
-    //* ****************************** pos **************************************
+    //*********************************** 坐标 **************************************
 
     set x(x) {
         this.pos = {x};
@@ -101,7 +86,7 @@ export default class DisplayObject extends EventDispatcher {
     _onPosChanged_() {
     }
 
-    //* ********************************* scale ***************************************
+    //*********************************** 缩放 **************************************
 
     set scaleX(x) {
         this.scale = {x};
@@ -132,7 +117,7 @@ export default class DisplayObject extends EventDispatcher {
     _onScaleChanged_() {
     }
 
-    //* *********************************** alpha **************************************
+    //*********************************** 透明度 **************************************
 
     set alpha(alpha) {
         this.state.alpha = alpha;
@@ -147,7 +132,7 @@ export default class DisplayObject extends EventDispatcher {
     _onAlphaChanged_() {
     }
 
-    //* ********************************** rotation ***************************************
+    //********************************** 旋转 ***************************************
 
     set rotation(rotation) {
         this.state.rotation = rotation % 360;
@@ -162,7 +147,7 @@ export default class DisplayObject extends EventDispatcher {
     _onRotationChanged_() {
     }
 
-    //* *********************************** visible **************************************
+    //*********************************** 可见 **************************************
 
     set visible(visible) {
         this.state.visible = visible;
@@ -177,7 +162,7 @@ export default class DisplayObject extends EventDispatcher {
     _onVisibleChanged_() {
     }
 
-    //* *********************************** origin **************************************
+    //*********************************** 原点 **************************************
 
     set originX(x) {
         this.origin = {x};
@@ -208,7 +193,7 @@ export default class DisplayObject extends EventDispatcher {
     _onOriginChanged_() {
     }
 
-    //* ********************************** size ***************************************
+    //********************************** 大小 ***************************************
 
     set width(width) {
         this.size = {width};
@@ -243,6 +228,8 @@ export default class DisplayObject extends EventDispatcher {
     _onSizeChanged_() {
     }
 
+    //********************************** 绘图上下文 ***************************************
+
     get graphics() {
         return this._graphics_;
     }
@@ -251,8 +238,7 @@ export default class DisplayObject extends EventDispatcher {
         this._graphics_ = v;
     }
 
-    //* *************************************************************************
-
+    //********************************** 鼠标事件 ***************************************
 
     /**
      * 鼠标移动事件侦听
@@ -261,7 +247,7 @@ export default class DisplayObject extends EventDispatcher {
     _onMouseMove_(e) {
         this._mouseX_ = e.pos.x;
         this._mouseY_ = e.pos.y;
-        // DisplayObject.logger.debug(`[${this.className}]:_onMouseMove_(): this._mouseX_=${this._mouseX_}, this._mouseY_=${this._mouseY_}`);
+        // this.logger.debug(`[${this.className}]:_onMouseMove_(): this._mouseX_=${this._mouseX_}, this._mouseY_=${this._mouseY_}`);
     }
 
     _onMouseDown_(e) {
@@ -276,6 +262,7 @@ export default class DisplayObject extends EventDispatcher {
         return {x: this._mouseX_, y: this._mouseY_};
     }
 
+    //********************************** 状态改变事件 ***************************************
 
     /**
      * 提交“已改变”状态
@@ -303,13 +290,7 @@ export default class DisplayObject extends EventDispatcher {
         return this._changed_;
     }
 
-
-    /** *************************************************************************
-     *
-     * 绘制事件，无论是否有内容，都要保留方法结构，供 _paint_ 方法调用。
-     * 子类通过覆盖这些方法，来执行绘制前后的代码
-     *
-     ************************************************************************* */
+    //********************************** 重绘事件 ***************************************
 
     /**
      * 重绘方法，需要被实现
@@ -334,7 +315,7 @@ export default class DisplayObject extends EventDispatcher {
      */
     _paint_() {
         let g = this.graphics;
-        // FrameEventGenerator.logger.debug(`[${this.className}]:重绘...`);
+        // this.logger.debug(`[${this.className}]:重绘...`);
         // 为最高效率，对象可见，才进入
         if (!this.visible) return;
 
@@ -366,20 +347,13 @@ export default class DisplayObject extends EventDispatcher {
         g && g.restore();
     }
 
-    /**
-     * 系统进入帧事件侦听器方法。
-     * 此事件由舞台发出，显示对象接收后，由自身转发相同事件.
-     * 用户通过侦听显示对象上的 Event.ENTER_FRAME 事件，执行相应的代码
-     */
+    //********************************** 进入帧事件 ***************************************
+
     _onEnterFrame_() {
         this.emit(Event.ENTER_FRAME, {target: this});
     }
 
-    /** *************************************************************************
-     *
-     * 坐标转换
-     *
-     ************************************************************************* */
+    //********************************** 坐标转换 ***************************************
 
     /**
      * 返回外部坐标
@@ -407,7 +381,7 @@ export default class DisplayObject extends EventDispatcher {
         pos.x = T.round(pos.x, digits > 0 ? digits : 0);
         pos.y = T.round(pos.y, digits > 0 ? digits : 0);
 
-        // DisplayObject.logger.debug(`[${this.className}]:getOuterPos()`, point, pos);
+        // this.logger.debug(`[${this.className}]:getOuterPos()`, point, pos);
 
         return pos;
     }
@@ -437,9 +411,27 @@ export default class DisplayObject extends EventDispatcher {
         p.x = T.round(p.x, digits > 0 ? digits : 0);
         p.y = T.round(p.y, digits > 0 ? digits : 0);
 
-        // DisplayObject.logger.debug(`[${this.className}]:getInnerPos`, point, p);
+        // this.logger.debug(`[${this.className}]:getInnerPos`, point, p);
 
         return p;
+    }
+
+    //********************************** 宿主 ***************************************
+
+    set parent(value) {
+        this._parent_ = value;
+        this._onAppendToParent_();
+    }
+
+    get parent() {
+        return this._parent_;
+    }
+
+    _onAppendToParent_() {
+        if (this.parent) {
+            this.dispatchEvent(Event.APPEND_TO_PARENT);
+            this.postChange("AppendToParent");
+        }
     }
 
     _onAppendToStage_() {

@@ -19,7 +19,7 @@ export default class Shape {
      * @private
      */
     _getBoundingRect_() {
-        Shape.logger.error("此方法必须被覆盖");
+        this.logger.error("此方法必须被覆盖");
     }
 
     /**
@@ -39,7 +39,7 @@ export default class Shape {
      * @returns {boolean}
      */
     hitTestPoint(point) {
-        Shape.logger.error("此方法必须被覆盖");
+        this.logger.error("此方法必须被覆盖");
     }
 
     /**
@@ -48,7 +48,7 @@ export default class Shape {
      * @returns {boolean}
      */
     hitTestLine(line) {
-        Shape.logger.error("此方法必须被覆盖");
+        this.logger.error("此方法必须被覆盖");
     }
 
     /**
@@ -58,7 +58,7 @@ export default class Shape {
      * @returns {boolean}
      */
     hitTestPolygon(polygon) {
-        Shape.logger.error("此方法必须被覆盖");
+        this.logger.error("此方法必须被覆盖");
     }
 
     /**
@@ -68,7 +68,7 @@ export default class Shape {
      * @returns {Shape}
      */
     rotate(radian, origin) {
-        Shape.logger.error("此方法必须被覆盖");
+        this.logger.error("此方法必须被覆盖");
     }
 
     /**
@@ -79,7 +79,7 @@ export default class Shape {
      * @returns {Shape}
      */
     move(offsetX, offsetY) {
-        Shape.logger.error("此方法必须被覆盖");
+        this.logger.error("此方法必须被覆盖");
     }
 
     /**
@@ -90,7 +90,7 @@ export default class Shape {
      * @returns {Shape}
      */
     scale(scaleX, scaleY) {
-        Shape.logger.error("此方法必须被覆盖");
+        this.logger.error("此方法必须被覆盖");
     }
 
     /**
@@ -99,6 +99,6 @@ export default class Shape {
      * @returns {Shape}
      */
     clone() {
-        Shape.logger.error("此方法必须被覆盖");
+        this.logger.error("此方法必须被覆盖");
     }
 }

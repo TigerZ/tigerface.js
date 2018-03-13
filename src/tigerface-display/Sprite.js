@@ -18,10 +18,12 @@ export default class Sprite extends DisplayObjectContainer {
      */
     constructor(options) {
 
-        super(options);
+        let props = {
+            className : Sprite.name,
+            _bounds_ : []
+        }
 
-        // 基本信息
-        this.className = Sprite.name;
+        super(props);
 
         this.on(Event.APPEND_TO_STAGE, () => {
 
@@ -32,9 +34,7 @@ export default class Sprite extends DisplayObjectContainer {
 
         this._dragging_ = false;
 
-        // 边界图形数组
-        this._bounds_ = [];
-
+        this.assign(options);
     }
 
     /***************************************************************************
@@ -98,7 +98,7 @@ export default class Sprite extends DisplayObjectContainer {
             height: 0
         };
         //console.log(this.name, rect);
-        Sprite.logger.debug("_createBoundingRect_()", this.name, boundRect);
+        this.logger.debug("_createBoundingRect_()", this.name, boundRect);
         return new Rectangle(boundRect.left, boundRect.top, boundRect.width, boundRect.height);
     }
 
@@ -131,7 +131,7 @@ export default class Sprite extends DisplayObjectContainer {
         this.parent.addEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
 
         if (!this._dragging_) {
-            Sprite.logger.debug(`_startDrag_(): mousePos=`, this.getMousePos());
+            this.logger.debug(`_startDrag_(): mousePos=`, this.getMousePos());
             this._dragging_ = true;
             let m = this.getOuterPos(this.getMousePos());
             this._dragX_ = m.x - this.x;
@@ -143,7 +143,7 @@ export default class Sprite extends DisplayObjectContainer {
 
     _endDrag_ = () => {
         if (this._dragging_) {
-            Sprite.logger.debug(`_endDrag_()`);
+            this.logger.debug(`_endDrag_()`);
             this._dragging_ = false;
             this.dispatchEvent(Event.MouseEvent.DRAG_END);
             return true;
@@ -151,7 +151,7 @@ export default class Sprite extends DisplayObjectContainer {
     };
 
     _move_ = (e) => {
-        // Sprite.logger.debug(`[${this.className}]:_move_()`);
+        // this.logger.debug(`[${this.className}]:_move_()`);
         if (this._dragging_) {
             let last = {x: this.x, y: this.y};
             this.x = e.pos.x - this._dragX_;

@@ -48,8 +48,8 @@ export default class CanvasLayer extends DomSprite {
         // 下层显示对象通过此属性识别是否是上层 CanvasContainer 对象
         this.layer = this;
 
-        //if (this.state.devicePixelRatio != 1)
-        //    this.setScale(this.state.devicePixelRatio, this.state.devicePixelRatio);
+        //if (this.props.devicePixelRatio != 1)
+        //    this.setScale(this.props.devicePixelRatio, this.props.devicePixelRatio);
 
         this.on(Event.MouseEvent.CLICK, (e) => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.DOUBLE_CLICK, (e) => this._onMouseEvents_(e));
@@ -60,15 +60,15 @@ export default class CanvasLayer extends DomSprite {
     }
 
     set devicePixelRatio(v) {
-        this.state.devicePixelRatio = v;
+        this.props.devicePixelRatio = v;
     }
 
     get devicePixelRatio() {
-        return this.state.devicePixelRatio;
+        return this.props.devicePixelRatio;
     }
 
     set retina(v) {
-        this.state.retina = v;
+        this.props.retina = v;
         if (v) {
             this.devicePixelRatio = window.devicePixelRatio || 1;
         } else {
@@ -78,39 +78,39 @@ export default class CanvasLayer extends DomSprite {
     }
 
     get retina() {
-        return this.state.retina;
+        return this.props.retina;
     }
 
     set noClear(v) {
-        this.state.noClear = v;
+        this.props.noClear = v;
     }
 
     get noClear() {
-        return this.state.noClear;
+        return this.props.noClear;
     }
 
     set useDirtyRect(v) {
-        this.state.useDirtyRect = v;
+        this.props.useDirtyRect = v;
     }
 
     get useDirtyRect() {
-        return this.state.useDirtyRect;
+        return this.props.useDirtyRect;
     }
 
     set redrawAsNeeded(v) {
-        this.state.redrawAsNeeded = v;
+        this.props.redrawAsNeeded = v;
     }
 
     get redrawAsNeeded() {
-        return this.state.redrawAsNeeded;
+        return this.props.redrawAsNeeded;
     }
 
     set useOffScreenCanvas(v) {
-        this.state.useOffScreenCanvas = v;
+        this.props.useOffScreenCanvas = v;
     }
 
     get useOffScreenCanvas() {
-        return this.state.useOffScreenCanvas;
+        return this.props.useOffScreenCanvas;
     }
 
     get graphics() {
@@ -149,7 +149,7 @@ export default class CanvasLayer extends DomSprite {
 
     _onBeforeAddChild_(child) {
         if (child.isDomSprite) {
-            DomSprite.logger.warn(`_onBeforeAddChild_(${child.name || child.className} ${child.isDomSprite}): CanvasContainer 的内部显示对象不能是 DomSprite 的实例`);
+            this.logger.warn(`_onBeforeAddChild_(${child.name || child.className} ${child.isDomSprite}): CanvasContainer 的内部显示对象不能是 DomSprite 的实例`);
             return false;
         }
         return true;
@@ -176,8 +176,8 @@ export default class CanvasLayer extends DomSprite {
     _onBeforePaint_() {
         let g = this.graphics;
         // 缩放
-        if (this.state.devicePixelRatio !== 1)
-            g.scale(this.state.devicePixelRatio, this.state.devicePixelRatio);
+        if (this.devicePixelRatio !== 1)
+            g.scale(this.devicePixelRatio, this.devicePixelRatio);
 
         g.globalAlpha = this.alpha;
     }
@@ -220,11 +220,10 @@ export default class CanvasLayer extends DomSprite {
      */
     _paint_() {
 
-        if (!this.state.redrawAsNeeded || this.isChanged()) {
+        if (!this.redrawAsNeeded || this.isChanged()) {
             if (!this._painting_) {
                 this._painting_ = true;
-                CanvasLayer
-                    .logger.debug(`${this.name ? `[${this.name}] ` : ''}开始重绘`);
+                this.logger.debug(`开始重绘`);
             }
             let start = +new Date();
 
@@ -237,14 +236,12 @@ export default class CanvasLayer extends DomSprite {
                 let s = Math.floor((time - m * 60000) / 1000);
                 let mi = time - m * 60000 - s * 1000;
                 this._paint_time_ = time;
-                CanvasLayer
-                    .logger.warn(`耗时警告：最长重绘耗时为：${m}:${s}.${mi}，超过 16 毫秒，帧数将少于 60 帧`);
+                this.logger.warn(`耗时警告：最长重绘耗时为：${m}:${s}.${mi}，超过 16 毫秒，帧数将少于 60 帧`);
             }
         } else {
             if (this._painting_) {
                 this._painting_ = false;
-                CanvasLayer
-                    .logger.debug(`${this.name ? `[${this.name}] ` : ''}已停止重绘`);
+                this.logger.debug(`已停止重绘`);
             }
         }
 
@@ -271,7 +268,7 @@ export default class CanvasLayer extends DomSprite {
      * @private
      */
     _onMouseEvents_(e) {
-        // CanvasLayer.logger.debug(`[${this.className}]:_onMouseEvents_()`, e);
+        // this.logger.debug(`[${this.className}]:_onMouseEvents_()`, e);
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
             child._onLayerMouseEvents_(e.eventName);

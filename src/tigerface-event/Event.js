@@ -85,6 +85,7 @@ module.exports = {
     MOVE: "move",
 
     STATUS_CHANGED: "Event.STATUS_CHANGED",
+    APPEND_TO_PARENT: "Event.APPEND_TO_PARENT",
     APPEND_TO_STAGE: "Event.APPEND_TO_STAGE",
     APPEND_TO_LAYER: "Event.APPEND_TO_LAYER",
 

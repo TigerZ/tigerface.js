@@ -12,25 +12,20 @@ export default class DisplayObjectContainer extends DisplayObject {
     static logger = Logger.getLogger(DisplayObjectContainer.name);
 
     constructor(options) {
-        super(options);
+        let props = {
+            className: DisplayObjectContainer.name,
+            _children_ : []
+        };
 
-        // 上级容器
-        this._parent_ = null;
+        super(props);
 
-        // 下级显示对象
-        this._children_ = [];
+        this.assign(options);
     }
 
-    set parent(value) {
-        this._parent_ = value;
-    }
 
-    get parent() {
-        return this._parent_;
-    }
 
     // set children(v) {
-    //     DisplayObjectContainer.logger.error('不允许设置或覆盖 children 属性');
+    //     this.logger.error('不允许设置或覆盖 children 属性');
     // }
 
     /**
@@ -55,7 +50,7 @@ export default class DisplayObjectContainer extends DisplayObject {
     addChild(child) {
         // 子节点添加前调用方法，可用于检查合法性
         if (this._onBeforeAddChild_(child) === false) {
-            DisplayObjectContainer.logger.info('addChild(): 下级显示对象添加失败');
+            this.logger.info('addChild(): 下级显示对象添加失败');
             return this;
         }
         // 将子节点添加至容器最后
@@ -81,7 +76,7 @@ export default class DisplayObjectContainer extends DisplayObject {
     removeChild(child) {
         // 移除前调用方法，可用于检查合法性
         if (this._onBeforeRemoveChild_(child) === false) {
-            DisplayObjectContainer.logger.debug(`[${this.className}]:removeChild 子显示对象移除失败`, child);
+            this.logger.debug(`[${this.className}]:removeChild 子显示对象移除失败`, child);
             return this;
         }
 
@@ -117,7 +112,7 @@ export default class DisplayObjectContainer extends DisplayObject {
         // 移除前调用方法，可用于检查合法性
 
         if (index < 0 || index >= this.children.length || this._onBeforeRemoveChild_(this.children[index]) === false) {
-            DisplayObjectContainer.logger.debug(`[${this.className}]:removeChildAt() 子显示对象移除失败`, index);
+            this.logger.debug(`[${this.className}]:removeChildAt() 子显示对象移除失败`, index);
             return this;
         }
 
@@ -321,7 +316,7 @@ export default class DisplayObjectContainer extends DisplayObject {
     }
 
     _onChildrenChanged_() {
-        DisplayObjectContainer.logger.debug(`[${this.className}]:子节点发生变化`, this.children);
+        this.logger.debug(`子节点发生变化`, this.children);
         this.emit(Event.NodeEvent.CHILDREN_CHANGED);
     }
 

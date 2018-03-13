@@ -124,7 +124,7 @@ export default class FrameEventGenerator extends EventDispatcher {
         this.step = this.setting.fps;
         // this.frameLength = 1000 / this.step;
 
-        FrameEventGenerator.logger.debug('启动帧事件发生器...');
+        this.logger.debug('启动帧事件发生器...');
         this._onRedraw_();
         this._onEnterFrame_();
 
@@ -136,11 +136,11 @@ export default class FrameEventGenerator extends EventDispatcher {
 
     _onRedraw_() {
         if (this._destroyed_) {
-            FrameEventGenerator.logger.debug('重绘引擎已销毁');
+            this.logger.debug('重绘引擎已销毁');
             return;
         }
 
-        // FrameEventGenerator.logger.debug('重绘事件...');
+        // this.logger.debug('重绘事件...');
 
         this.emit(Event.REDRAW);
 

@@ -20,7 +20,7 @@ export default class DomEventAdapter extends EventDispatcher {
         super();
 
         if (dom == undefined)
-            DomEventAdapter.logger.error(`[${this.className}]:对象初始化时发现参数 dom 无效。`);
+            this.logger.error(`[${this.className}]:对象初始化时发现参数 dom 无效。`);
 
         this.dom = dom;
 
@@ -33,7 +33,7 @@ export default class DomEventAdapter extends EventDispatcher {
             preventDefault: false
         }, setting);
 
-        DomEventAdapter.logger.debug(`[${this.className}]:初始化参数：`, this.setting);
+        this.logger.debug(`[${this.className}]:初始化参数：`, this.setting);
 
         // 设置 tabIndex 属性，否则不会有 focus/blur 事件
         if (T.attr(this.dom, "tabIndex") == undefined) {
@@ -107,7 +107,7 @@ export default class DomEventAdapter extends EventDispatcher {
             adapters[Event.MouseEvent.MOUSE_MOVE] = function (e) {
 
                 var pos = self._pageToDom_(e.pageX, e.pageY);
-                // DomEventAdapter.logger.debug(`系统事件：MOUSE_MOVE`, pos);
+                // this.logger.debug(`系统事件：MOUSE_MOVE`, pos);
                 self.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE, e, {
                     pos: pos
                 }, self.setting.preventDefault);
@@ -378,7 +378,7 @@ export default class DomEventAdapter extends EventDispatcher {
      * @returns {boolean}
      */
     dispatchSystemEvent(eventName, e, data, preventDefault) {
-        // DomEventAdapter.logger.debug(`dispatchSystemEvent()`, eventName, this.handler, e, data);
+        // this.logger.debug(`dispatchSystemEvent()`, eventName, this.handler, e, data);
         data || (data = {});
         data.name = eventName;
 
