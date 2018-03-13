@@ -20,13 +20,8 @@ const _default = {
     font: '12px monaco',
     speed: 3,
     style: {
-        backgroundColor: 'white',
         border: '1px solid blue'
     }
-};
-
-const StageStyle = {
-    backgroundColor: 'white'
 };
 
 class BarChartSprite extends CanvasSprite {
@@ -35,7 +30,7 @@ class BarChartSprite extends CanvasSprite {
         this.data = [];
         this.h0 = 0;
         this.config = _default;
-        this.className = 'BarChartSprite';
+        this.clazz = 'BarChartSprite';
         this.name = 'BarChart';
     }
 

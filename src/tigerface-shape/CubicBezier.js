@@ -30,7 +30,7 @@ export default class CubicBezier extends Curve {
         // 调用曲线构造器，创建实例
         this.initCurve(this._getPoints());
 
-        this.className = CubicBezier.name;
+        this.clazz = CubicBezier.name;
 
     }
 

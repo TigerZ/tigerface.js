@@ -46,7 +46,7 @@ export default class Rectangle extends Polygon {
         ];
 
         this.initPolygon(points);
-        this.className = Rectangle.name;
+        this.clazz = Rectangle.name;
     }
 
     clone() {
@@ -54,7 +54,7 @@ export default class Rectangle extends Polygon {
     }
 
     equals(rect) {
-        if (this.className === "Rectangle") {
+        if (this.clazz === "Rectangle") {
             return this.left === rect.left
                 && this.top === rect.top
                 && this.width === rect.width
@@ -93,7 +93,7 @@ export default class Rectangle extends Polygon {
 
         let rect1 = this;
 
-        if (rect2.className === "Rectangle") {
+        if (rect2.clazz === "Rectangle") {
             //console.log("hitTestRectangle", rect1, rect2);
             if ((rect1.right > rect2.left)
                 && (rect1.left < rect2.right)

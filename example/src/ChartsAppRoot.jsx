@@ -25,9 +25,6 @@ putDataToBarChart(
     {
         speed: 3,
         font: '12px Kaiti',
-        style: {
-            backgroundColor: 'rgba(255,255,0,0.2)'
-        },
         colors
     }
 );
@@ -37,9 +34,6 @@ putDataToPieChart(
     {
         speed: 3,
         font: '12px Kaiti',
-        style: {
-            backgroundColor: 'rgba(255,255,0,0.2)'
-        },
         colors
     }
 );
@@ -55,16 +49,10 @@ export default class AppRoot extends React.Component {
         const props = this.props;
         return (
             <div id={'AppRoot'}>
-                <BarChart style={Style}/>
-                <PieChart style={Style}/>
+                <BarChart className={'stage'}/>
+                <PieChart className={'stage'}/>
             </div>
         )
     }
 }
-
-const Style = {
-    float: 'left',
-    width: '400px',
-    margin: '5px'
-};
 

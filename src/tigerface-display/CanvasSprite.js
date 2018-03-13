@@ -27,7 +27,7 @@ export default class CanvasSprite extends Sprite {
     constructor(options) {
 
         let props = {
-            className: CanvasSprite.name,
+            clazz: CanvasSprite.name,
             pos: {x: 0, y: 0},
             size: {width: 100, height: 100},
             scale: {scaleX: 1, scaleY: 1},

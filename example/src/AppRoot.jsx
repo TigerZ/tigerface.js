@@ -34,8 +34,8 @@ import {Event} from "tigerface-event";
 // }
 
 class BallSprite extends CanvasSprite {
-    constructor(options) {
-        super(options);
+    constructor() {
+        super();
         this.size = {width: 100, height: 100};
         this.pos = {x: 100, y: 100};
         this.step = 1;
@@ -51,7 +51,7 @@ class BallSprite extends CanvasSprite {
     }
 
     onEnterFrame = () => {
-        // this.move();
+        this.move();
     };
 
     paint() {
@@ -84,8 +84,7 @@ export default class AppRoot extends React.Component {
     render() {
         return (
             <div>
-                <div style={Style}> 菜单</div>
-                <Stage style={Style0}>
+                <Stage fps={20} style={Style0}>
                     <Tag.Dom>
                         <Tag.Surface title={'Surface'} style={Style1}>
                             <Tag.Sprite clazz={BallSprite}/>

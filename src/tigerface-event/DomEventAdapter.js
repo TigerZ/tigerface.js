@@ -18,7 +18,7 @@ export default class DomEventAdapter extends EventDispatcher {
     constructor(dom, options, handler) {
 
         let props = {
-            className : DomEventAdapter.name,
+            clazz : DomEventAdapter.name,
             preventDefault: true
         };
 

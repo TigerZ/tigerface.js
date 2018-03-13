@@ -19,6 +19,6 @@ export default class EquilateralTriangle extends Polygon {
         points.push(new Point(x + l, y));
         points.push(new Point(x + x2, y - y2));
         super(points);
-        this.className = EquilateralTriangle.name;
+        this.clazz = EquilateralTriangle.name;
     }
 }

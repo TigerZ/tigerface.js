@@ -13,7 +13,7 @@ export default class DisplayObjectContainer extends DisplayObject {
 
     constructor(options) {
         let props = {
-            className: DisplayObjectContainer.name,
+            clazz: DisplayObjectContainer.name,
             _children_ : []
         };
 

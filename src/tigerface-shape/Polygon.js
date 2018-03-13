@@ -25,7 +25,7 @@ export default class Polygon extends Shape {
         if (points)
             this.initPolygon(points);
 
-        this.className = Polygon.name;
+        this.clazz = Polygon.name;
     }
 
     initPolygon(points) {
@@ -372,14 +372,14 @@ export default class Polygon extends Shape {
         }
 
         // 与圆形的碰撞检测
-        if (polygon.className === "Circle") {
+        if (polygon.clazz === "Circle") {
             //console.log("hit", "Circle");
             return polygon.hitTestPolygon(this);
         }
 
         // 与矩形的碰撞检测
-        //console.log("hit", this.className, polygon.className);
-        if (this.className === "Rectangle" && polygon.className === "Rectangle") {
+        //console.log("hit", this.clazz, polygon.clazz);
+        if (this.clazz === "Rectangle" && polygon.clazz === "Rectangle") {
             //console.log("hit", "Rectangle");
             return this.hitTestRectangle(polygon);
         }

@@ -23,7 +23,7 @@ export default class DisplayObject extends EventDispatcher {
      */
     constructor(options) {
         let props = {
-            className: 'DisplayObject',
+            clazz: DisplayObject.name,
             uuid: T.uuid(),
         };
 
@@ -39,8 +39,6 @@ export default class DisplayObject extends EventDispatcher {
             rotation: 0,
             visible: true,
         };
-
-        this.props = {};
 
         // 基本信息
         this._parent_ = undefined;
@@ -381,7 +379,7 @@ export default class DisplayObject extends EventDispatcher {
         pos.x = T.round(pos.x, digits > 0 ? digits : 0);
         pos.y = T.round(pos.y, digits > 0 ? digits : 0);
 
-        // this.logger.debug(`getOuterPos()`, point, pos);
+        // this.logger.debug(`[${this.clazz}]:getOuterPos()`, point, pos);
 
         return pos;
     }
@@ -411,7 +409,7 @@ export default class DisplayObject extends EventDispatcher {
         p.x = T.round(p.x, digits > 0 ? digits : 0);
         p.y = T.round(p.y, digits > 0 ? digits : 0);
 
-        // this.logger.debug(`getInnerPos`, point, p);
+        // this.logger.debug(`[${this.clazz}]:getInnerPos`, point, p);
 
         return p;
     }

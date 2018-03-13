@@ -23,13 +23,19 @@ export default class StageComponent extends BaseComponent {
 
     constructor(...args) {
         super(...args);
-        this.className = StageComponent.name;
+        this.clazz = StageComponent.name;
         this.tagName = 'canvas';
     }
 
     componentDidMount() {
         const props = this.props;
-        this._displayObject_ = new Stage({style: props.style}, this._tagRef);
+        this._displayObject_ = new Stage(
+            {
+                fps: props.fps,
+                name: props.name,
+                style: props.style,
+                className: props.className
+            }, this._tagRef);
         this._mountNode = DisplayObjectRenderer.createContainer(this._displayObject_);
         DisplayObjectRenderer.updateContainer(this.props.children, this._mountNode, this);
 
@@ -55,7 +61,7 @@ export default class StageComponent extends BaseComponent {
             <div
                 ref={ref => (this._tagRef = ref)}
                 accessKey={props.accessKey}
-                className={props.className}
+                clazz={props.clazz}
                 draggable={props.draggable}
                 role={props.role}
                 style={props.style}
@@ -78,7 +84,7 @@ const DisplayObjectRenderer = Reconciler({
     createInstance(type, props, internalInstanceHandle) {
 
         if (type === Tag.Surface)
-            return new CanvasLayer({name: props.name, style: props.style});
+            return new CanvasLayer({name: props.name, style: props.style, fps: props.fps});
         else if (type === Tag.Dom)
             return new DomSprite({name: props.name, style: props.style});
         else if (type === Tag.Sprite) {

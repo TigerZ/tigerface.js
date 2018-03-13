@@ -42,7 +42,7 @@ export default class DomSprite extends Sprite {
         }
 
         let props = {
-            className: DomSprite.name,
+            clazz: DomSprite.name,
             _dom_: dom || document.createElement('div'), // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false
         };
@@ -51,7 +51,7 @@ export default class DomSprite extends Sprite {
 
         // 定义 Dom 引擎
         this.domAdapter = new DomEventAdapter(this.dom, {
-            preventDefault: this.state.preventDefault
+            preventDefault: this.preventDefault
         }, this);
 
         // chrome 浏览器在拖拽时，鼠标指针为“I”，下面用来修复此问题
@@ -101,21 +101,19 @@ export default class DomSprite extends Sprite {
         return this.props.style || {};
     }
 
-    /**
-     * 设置样式
-     * @param v {object}
-     */
     set style(v) {
-        this.props.style = Object.assign({}, this.props.style, v);
+        this.props.style = Object.assign(this.style, v);
         this.setStyle(v);
     }
 
-    get preventDefault() {
-        return this.state.preventDefault;
+    get className() {
+        return this.props.className;
     }
 
-    set preventDefault(v) {
-        this.state.preventDefault = v;
+    set className(v) {
+        this.props.className = v;
+        T.addClass(this.dom, v);
+        this.postChange();
     }
 
     get graphics() {
@@ -131,7 +129,7 @@ export default class DomSprite extends Sprite {
     }
 
     resize() {
-        Object.assign(this.state.size, T.size(this.dom));
+        this.size = T.size(this.dom);
     }
 
     /**
@@ -220,7 +218,7 @@ export default class DomSprite extends Sprite {
         }
         // this.logger.debug('_onAddChild_(): parent =', this.dom, ' child =', child.dom);
         // this.logger.debug(`_onAddChild_(): ${parent.nodeName}[${parent.title}] =? ${this.dom.nodeName}[${this.dom.title}]`);
-        // this.logger.debug('_onAddChild_(): child =', child.name || child.className);
+        // this.logger.debug('_onAddChild_(): child =', child.name || child.clazz);
         super._onAddChild_(child);
     }
 
@@ -314,28 +312,9 @@ export default class DomSprite extends Sprite {
     _onBeforeAddChild_(child) {
         if (child.isDomSprite)
             return true;
-        this.logger.warn(`_onBeforeAddChild_(${child.name || child.className} ${child.isDomSprite}): DomSprite 类型容器的 addChild 方法只能接受同样是 DomSprite 类型的子节点`);
+        this.logger.warn(`_onBeforeAddChild_(${child.name || child.clazz} ${child.isDomSprite}): DomSprite 类型容器的 addChild 方法只能接受同样是 DomSprite 类型的子节点`);
         return false;
     }
-
-    // setLayout(layout) {
-    //     if (layout && layout.isLayout()) {
-    //         this.layout = layout;
-    //         layout.target = this;
-    //     }
-    // }
-
-    // setStyle(nameOrCss, value, autoPrefix) {
-    //     // this.logger.debug('setStyle', this.state, nameOrCss, value, autoPrefix);
-    //     if (arguments.length === 1 && typeof nameOrCss === 'object') {
-    //         this.state.style = Object.assign({}, this.state.style, nameOrCss);
-    //         T.cssMerge(this.dom, nameOrCss, autoPrefix);
-    //     } else {
-    //         this.state.style[nameOrCss] = value;
-    //         T.css(this.dom, nameOrCss, value, autoPrefix);
-    //     }
-    //     this.postChange();
-    // }
 
     /**
      *  添加样式
@@ -343,7 +322,6 @@ export default class DomSprite extends Sprite {
      * @param autoPrefix {boolean} 是否添加多浏览器前缀
      */
     setStyle(style, autoPrefix = false) {
-        // this.logger.debug('setStyle', this.state, nameOrCss, value, autoPrefix);
 
         T.cssMerge(this.dom, style, autoPrefix);
 

@@ -19,14 +19,9 @@ const _default = {
     font: '12px monaco',
     speed: 3,
     style: {
-        backgroundColor: 'white',
         border: '1px solid blue'
     },
     colors: ['red']
-};
-
-const StageStyle = {
-    backgroundColor: 'white'
 };
 
 class PieChartSprite extends CanvasSprite {
@@ -35,7 +30,7 @@ class PieChartSprite extends CanvasSprite {
         this.data = [];
         this.h0 = 0;
         this.config = _default;
-        this.className = 'PieChartSprite';
+        this.clazz = 'PieChartSprite';
     }
 
     /**

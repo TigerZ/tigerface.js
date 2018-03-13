@@ -12,7 +12,7 @@ import StageComponent from "./Stage";
 class SimpleSpriteComponent extends BaseComponent {
     constructor() {
         super();
-        this.className = SimpleSpriteComponent.name;
+        this.clazz = SimpleSpriteComponent.name;
     }
 
     getSpriteInfo() {
@@ -35,7 +35,7 @@ class SimpleSpriteComponent extends BaseComponent {
 export default function withSimpleSpriteComponent(instance, style) {
     return class extends SimpleSpriteComponent {
         getSpriteInfo() {
-            let name = instance.name ? instance.name : (instance.className ? instance.className : '');
+            let name = instance.name ? instance.name : (instance.clazz ? instance.clazz : '');
             return {instance, style, name};
         }
     };

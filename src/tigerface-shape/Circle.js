@@ -23,7 +23,7 @@ export default class Circle extends Shape {
         this.radius = radius;
         // 转换为多边形处理
         // this.initPolygon(this.getVertexes());
-        this.className = Circle.name;
+        this.clazz = Circle.name;
     }
 
     clone() {
@@ -103,7 +103,7 @@ export default class Circle extends Shape {
      * @returns {boolean}
      */
     hitTestPolygon(polygon) {
-        if (polygon.className === "Circle") {
+        if (polygon.clazz === "Circle") {
             return this.p0.getDistance(polygon.p0) <= this.radius + polygon.radius;
         }
 

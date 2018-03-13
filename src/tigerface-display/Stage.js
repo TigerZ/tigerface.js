@@ -19,8 +19,7 @@ export default class Stage extends DomSprite {
     constructor(options, dom) {
 
         let props = {
-            className : Stage.name,
-            name : Stage.name,
+            clazz : Stage.name,
             fps: 30, // 每秒30帧
             width: 400,
             height: 300,
@@ -52,6 +51,10 @@ export default class Stage extends DomSprite {
         //this.on(Event.ENTER_FRAME, ()=>console.log(this.name+" ENTER_FRAME "+new Date().getSeconds()));
 
         this.assign(options);
+
+        this.frameAdapter = new FrameEventGenerator({fps: this.fps});
+        this.frameAdapter.on(Event.REDRAW, () => this._paint_());
+        this.frameAdapter.on(Event.ENTER_FRAME, () => this._onEnterFrame_());
     }
 
     _checkFPS_(v) {
@@ -70,13 +73,12 @@ export default class Stage extends DomSprite {
         this.props.fps = this._checkFPS_(v);
         this.logger.info('舞台帧速率设置为 ' + this.fps);
 
-        if (this.frameAdapter) this.frameAdapter.destroy();
-        this.frameAdapter = new FrameEventGenerator({fps: this.fps});
-        // this.logger.debug('初始化帧事件引擎，帧速率设置为 ' + this.props.fps);
+        if(this.frameAdapter) this.frameAdapter.fps = this.fps;
 
-        this.frameAdapter.on(Event.REDRAW, () => this._paint_());
-        this.frameAdapter.on(Event.ENTER_FRAME, () => this._onEnterFrame_());
-        // this.logger.debug('注册帧事件引擎的重绘事件 [Event.REDRAW] 和进入帧事件 [Event.ENTER_FRAME] 侦听器');
+        // if (this.frameAdapter) this.frameAdapter.destroy();
+        // this.frameAdapter = new FrameEventGenerator({fps: this.fps});
+        // this.frameAdapter.on(Event.REDRAW, () => this._paint_());
+        // this.frameAdapter.on(Event.ENTER_FRAME, () => this._onEnterFrame_());
     }
 
     get fps() {

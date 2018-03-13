@@ -19,7 +19,7 @@ export default class Sprite extends DisplayObjectContainer {
     constructor(options) {
 
         let props = {
-            className : Sprite.name,
+            clazz : Sprite.name,
             _bounds_ : []
         }
 

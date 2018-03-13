@@ -35,7 +35,7 @@ describe('测试 Shape', () => {
             g.lineWidth = 1;
             g.globalAlpha = 0.5;
 
-            assert.deepEqual(c1.className, 'Circle');
+            assert.deepEqual(c1.clazz, 'Circle');
             c1 = c1.rotate(0, {x: 300, y: 200});
             g.drawCircle(c1, Graphics.DrawStyle.STROKE_FILL);
             c1 = c1.move(200, 100);
@@ -65,7 +65,7 @@ describe('测试 Shape', () => {
             g.lineWidth = 1;
             g.globalAlpha = 0.5;
 
-            assert.deepEqual(c1.className, 'Polygon');
+            assert.deepEqual(c1.clazz, 'Polygon');
             g.drawPolygon(c1, Graphics.DrawStyle.STROKE_FILL);
 
             c1 = c1.clone();
@@ -97,7 +97,7 @@ describe('测试 Shape', () => {
             g.lineWidth = 1;
             g.globalAlpha = 0.5;
 
-            assert.deepEqual(c1.className, 'Ellipse');
+            assert.deepEqual(c1.clazz, 'Ellipse');
             g.drawPolygon(c1, Graphics.DrawStyle.STROKE_FILL);
 
             c1 = c1.clone();
@@ -129,7 +129,7 @@ describe('测试 Shape', () => {
             g.lineWidth = 1;
             g.globalAlpha = 0.5;
 
-            assert.deepEqual(c1.className, 'Triangle');
+            assert.deepEqual(c1.clazz, 'Triangle');
             g.drawPolygon(c1, Graphics.DrawStyle.STROKE_FILL);
 
             c1 = c1.clone();
@@ -163,7 +163,7 @@ describe('测试 Shape', () => {
             g.lineWidth = 1;
             g.globalAlpha = 0.5;
 
-            assert.deepEqual(c1.className, 'Square');
+            assert.deepEqual(c1.clazz, 'Square');
             g.drawPolygon(c1, Graphics.DrawStyle.STROKE_FILL);
 
             c1 = c1.clone();

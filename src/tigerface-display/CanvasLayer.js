@@ -21,7 +21,7 @@ export default class CanvasLayer extends DomSprite {
      */
     constructor(options, dom = undefined) {
         let props = {
-            className: CanvasLayer.name,
+            clazz: CanvasLayer.name,
             devicePixelRatio: 1,
             width: 400,
             height: 300,
@@ -31,7 +31,7 @@ export default class CanvasLayer extends DomSprite {
             redrawAsNeeded: true,
             useOffScreenCanvas: false,
             style: {
-                backgroundColor: 'rgba(0,0,0,0.3)'
+                // backgroundColor: 'rgba(0,0,0,0.3)'
             }
         };
 
@@ -149,7 +149,7 @@ export default class CanvasLayer extends DomSprite {
 
     _onBeforeAddChild_(child) {
         if (child.isDomSprite) {
-            this.logger.warn(`_onBeforeAddChild_(${child.name || child.className} ${child.isDomSprite}): CanvasContainer 的内部显示对象不能是 DomSprite 的实例`);
+            this.logger.warn(`_onBeforeAddChild_(${child.name || child.clazz} ${child.isDomSprite}): CanvasContainer 的内部显示对象不能是 DomSprite 的实例`);
             return false;
         }
         return true;
@@ -223,7 +223,7 @@ export default class CanvasLayer extends DomSprite {
         if (!this.redrawAsNeeded || this.isChanged()) {
             if (!this._painting_) {
                 this._painting_ = true;
-                this.logger.debug(`开始重绘`);
+                CanvasLayer.logger.debug(`开始重绘`);
             }
             let start = +new Date();
 
@@ -241,7 +241,7 @@ export default class CanvasLayer extends DomSprite {
         } else {
             if (this._painting_) {
                 this._painting_ = false;
-                this.logger.debug(`已停止重绘`);
+                CanvasLayer.logger.debug(`已停止重绘`);
             }
         }
 

@@ -2,166 +2,112 @@ import EventDispatcher from './EventDispatcher';
 import Event from './Event';
 import {Logger} from 'tigerface-common';
 
-/*
- * 参考 David Geary 的代码
- */
-
-let _win = global;
-if (!_win.requestNextAnimationFrame) {
+const win = (() => {
     try {
-        _win = window;
-        _win.timeout = 0;
-        window.requestNextAnimationFrame = (function () {
-            var originalWebkitRequestAnimationFrame = undefined, wrapper = undefined,
-                geckoVersion = 0, userAgent = navigator.userAgent, index = 0, self = this;
+        return window;
+    }
+    catch (e) {
+        return global
+    }
+})();
 
-            // Workaround for Chrome 10 bug where Chrome
-            // does not pass the time to the animation function
+if (!win.requestNextAnimationFrame) {
+    win.requestNextAnimationFrame = (() => {
+        return (
+            win.requestAnimationFrame ||
+            win.webkitRequestAnimationFrame ||
+            win.mozRequestAnimationFrame ||
+            win.oRequestAnimationFrame ||
+            win.msRequestAnimationFrame ||
+            ((callback) => {
 
-            if (window.webkitRequestAnimationFrame) {
-                // Define the wrapper
+                let start, finish;
 
-                wrapper = function (time) {
-                    if (time === undefined) {
-                        time = +new Date();
-                    }
-                    self.callback(time);
-                };
-
-                // Make the switch
-
-                originalWebkitRequestAnimationFrame = window.webkitRequestAnimationFrame;
-
-                window.webkitRequestAnimationFrame = function (callback, element) {
-                    self.callback = callback;
-
-                    // Browser calls the wrapper and wrapper calls the callback
-
-                    originalWebkitRequestAnimationFrame(wrapper, element);
-                }
-            }
-
-            // Workaround for Gecko 2.0, which has a bug in
-            // mozRequestAnimationFrame() that restricts animations
-            // to 30-40 fps.
-
-            if (window.mozRequestAnimationFrame) {
-                // Check the Gecko version. Gecko is used by browsers
-                // other than Firefox. Gecko 2.0 corresponds to
-                // Firefox 4.0.
-
-                index = userAgent.indexOf('rv:');
-
-                if (userAgent.indexOf('Gecko') != -1) {
-                    geckoVersion = userAgent.substr(index + 3, 3);
-
-                    if (geckoVersion === '2.0') {
-                        // Forces the return statement to fall through
-                        // to the setTimeout() function.
-
-                        window.mozRequestAnimationFrame = undefined;
-                    }
-                }
-            }
-
-            return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame
-                || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-
-                function (callback) {
-                    var start, finish;
-
-                    window.setTimeout(function () {
-                        start = +new Date();
-                        callback(start);
-                        finish = +new Date();
-
-                        self.timeout = 1000 / 60 - (finish - start);
-
-                    }, self.timeout);
-                };
-        })();
-
-    } catch (e) {
-        _win.requestNextAnimationFrame = (function () {
-            let timeout = 0;
-            return (callback) => {
-                var start, finish;
-
-                setTimeout(() => {
+                setTimeout(function () {
                     start = +new Date();
-                    callback(start);
+                    callback();
                     finish = +new Date();
 
-                    timeout = 1000 / 60 - (finish - start);
+                    this._requestNextAnimationFrameTimeout_ = 1000 / 60 - (finish - start);
 
-                }, timeout);
-            };
-        })();
-
-    }
+                }, this._requestNextAnimationFrameTimeout_ || (1000 / 60));
+            })
+        );
+    })();
 }
-
 
 export default class FrameEventGenerator extends EventDispatcher {
     static logger = Logger.getLogger(FrameEventGenerator.name);
 
-    constructor(setting) {
-        super();
-
-        this._destroyed_ = false;
-
+    constructor(options) {
         // 缺省配置
-        var _default = {
-            fps: 30
+        let props = {
+            clazz: FrameEventGenerator.name,
+            fps: 60
         };
 
-        // 合并配置参数
-        this.setting = Object.assign(_default, setting);
+        super(props);
 
-        this.className = FrameEventGenerator.name;
-
-        this.lastTime = new Date().getTime();
-        this.step = this.setting.fps;
+        // this.lastTime = new Date().getTime();
+        // this.step = this.fps;
         // this.frameLength = 1000 / this.step;
+
+        this.assign(options);
+
+        this._running_ = true;
 
         this.logger.debug('启动帧事件发生器...');
         this._onRedraw_();
         this._onEnterFrame_();
-
     }
 
-    destroy() {
-        this._destroyed_ = true;
+    get fps() {
+        return this.props.fps;
+    }
+
+    set fps(v) {
+        this.props.fps = v;
+        if (this._running_)
+            this.logger.info(`帧速率调整为：${this.fps}`);
+    }
+
+    stop() {
+        this._running_ = false;
     }
 
     _onRedraw_() {
-        if (this._destroyed_) {
-            this.logger.debug('重绘引擎已销毁');
+        if (!this._running_) {
+            this.logger.debug('重绘引擎已停止');
             return;
         }
 
-        // this.logger.debug('重绘事件...');
-
         this.emit(Event.REDRAW);
 
-        this.requestNextAnimationFrame();
+        win.requestNextAnimationFrame(() => this._onRedraw_());
     }
 
-    requestNextAnimationFrame() {
-        _win.requestNextAnimationFrame(() => this._onRedraw_());
+    _onEnterFrame_() {
+        if (!this._running_) {
+            this.logger.debug('进入帧引擎已停止');
+            return;
+        }
+
+        this.emit(Event.ENTER_FRAME);
+
+        this._requestNextFixFrame_(() => this._onEnterFrame_());
     }
 
-    _onEnterFrame_ = () => {
-        if (this._destroyed_) return;
+    _requestNextFixFrame_ = (callback) => {
 
-        var start, finish;
+        let start, finish;
 
         setTimeout(() => {
             start = +new Date();
-            this.emit(Event.ENTER_FRAME);
+            callback(start);
             finish = +new Date();
-            this.frameTimeout = 1000 / this.step - (finish - start);
-            this._onEnterFrame_();
-        }, this.frameTimeout);
+            this._frameTimeout_ = 1000 / this.fps - (finish - start);
+        }, this._frameTimeout_ || (1000 / this.fps));
     }
+
+
 }

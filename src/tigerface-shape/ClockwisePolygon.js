@@ -37,6 +37,6 @@ export default class ClockwisePolygon extends Polygon {
         //console.log(str);
 
         this.initPolygon(npa);
-        this.className = ConvexPolygon.name;
+        this.clazz = ConvexPolygon.name;
     }
 }

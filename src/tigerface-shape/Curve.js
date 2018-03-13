@@ -18,7 +18,7 @@ export default class Curve {
     constructor(points) {
         if (points)
             this.initCurve(points);
-        this.className = Curve.name;
+        this.clazz = Curve.name;
     }
 
     initCurve(points) {

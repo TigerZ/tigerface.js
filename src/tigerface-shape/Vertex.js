@@ -10,7 +10,7 @@ import {Utilities as T} from 'tigerface-common';
 export default class Vertex extends Point {
     static convertVertex = function (point) {
         if (typeof point === 'object') {
-            if (point.className === 'Vertex')
+            if (point.clazz === 'Vertex')
                 return point;
             else if (point.x !== undefined && point.y !== undefined)
                 return new Vertex(point.x, point.y);
@@ -43,7 +43,7 @@ export default class Vertex extends Point {
 
     constructor(x, y) {
         super(x, y);
-        this.className = Vertex.name;
+        this.clazz = Vertex.name;
     }
 
     getSide() {

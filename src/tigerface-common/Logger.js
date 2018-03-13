@@ -4,9 +4,9 @@ import colors from 'colors/safe';
 
 const OFF = 0, ERROR = 1, WARN = 2, INFO = 3, DEBUG = 4, FULL = 99;
 
-function getClassLogLevel(className) {
-    return (config["class-log-level"] !== undefined && config["class-log-level"][className] !== undefined)
-        ? Logger.level[config["class-log-level"][className].toUpperCase()] : -1;
+function getClassLogLevel(clazz) {
+    return (config["class-log-level"] !== undefined && config["class-log-level"][clazz] !== undefined)
+        ? Logger.level[config["class-log-level"][clazz].toUpperCase()] : -1;
 }
 
 function now() {
@@ -55,7 +55,7 @@ export default class Logger {
 
         if (this._target_) {
             if (this._target_.name) return this._target_.name;
-            else if (this._target_.className) return this._target_.className;
+            else if (this._target_.clazz) return this._target_.clazz;
         }
 
         return '';
@@ -65,7 +65,7 @@ export default class Logger {
         if (this._name_) return this._name_;
 
         if (this._target_) {
-            if (this._target_.className) return this._target_.className;
+            if (this._target_.clazz) return this._target_.clazz;
         }
 
         return '';
