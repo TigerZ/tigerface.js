@@ -28,14 +28,10 @@ export default class StageComponent extends BaseComponent {
     }
 
     componentDidMount() {
-        const props = this.props;
+        const props = Object.assign({}, this.props);
+        delete props.children;
         this._displayObject_ = new Stage(
-            {
-                fps: props.fps,
-                name: props.name,
-                style: props.style,
-                className: props.className
-            }, this._tagRef);
+            props, this._tagRef);
         this._mountNode = DisplayObjectRenderer.createContainer(this._displayObject_);
         DisplayObjectRenderer.updateContainer(this.props.children, this._mountNode, this);
 
@@ -82,13 +78,16 @@ const DisplayObjectRenderer = Reconciler({
 
     // eslint-disable-next-line no-unused-vars
     createInstance(type, props, internalInstanceHandle) {
-
+        const _props = Object.assign({}, props);
+        delete _props.children;
         if (type === Tag.Surface)
-            return new CanvasLayer({name: props.name, style: props.style, fps: props.fps});
+            return new CanvasLayer(_props);
         else if (type === Tag.Dom)
-            return new DomSprite({name: props.name, style: props.style});
+            return new DomSprite(_props);
         else if (type === Tag.Sprite) {
-            return props.instance ? props.instance : new props.clazz({name: props.name});
+            let instance = props.instance ? props.instance : new props.clazz();
+            instance.assign(_props);
+            return instance;
         }
         this.logger.error("无效的标签");
     },

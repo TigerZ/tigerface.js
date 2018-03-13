@@ -19,6 +19,7 @@ const _default = {
     ySpace: 5,
     font: '12px monaco',
     speed: 3,
+    className: 'surface',
     style: {
         border: '1px solid blue'
     }
@@ -128,4 +129,7 @@ export const putData = (data, config) => {
     barChart.putData(data, config);
 };
 
-export default withSimpleSpriteComponent(barChart, barChart.config.style);
+export default withSimpleSpriteComponent(barChart, {
+    className: barChart.config.className,
+    style: barChart.config.style
+});

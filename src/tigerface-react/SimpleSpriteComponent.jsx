@@ -21,10 +21,10 @@ class SimpleSpriteComponent extends BaseComponent {
 
     render() {
         const props = this.props;
-        const {instance, style, name} = this.getSpriteInfo();
+        const {instance, canvasProps, name} = this.getSpriteInfo();
         return (
             <Stage {...props}>
-                <Tag.Surface style={style}>
+                <Tag.Surface {...canvasProps}>
                     <Tag.Sprite instance={instance}/>
                 </Tag.Surface>
             </Stage>
@@ -32,11 +32,11 @@ class SimpleSpriteComponent extends BaseComponent {
     }
 }
 
-export default function withSimpleSpriteComponent(instance, style) {
+export default function withSimpleSpriteComponent(instance, canvasProps) {
     return class extends SimpleSpriteComponent {
         getSpriteInfo() {
             let name = instance.name ? instance.name : (instance.clazz ? instance.clazz : '');
-            return {instance, style, name};
+            return {instance, canvasProps, name};
         }
     };
 }

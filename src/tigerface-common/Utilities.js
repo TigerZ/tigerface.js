@@ -26,8 +26,8 @@ export default {
     },
 
     cssMerge: function (dom, css, autoPrefix) {
+        let ext = Object.assign({}, css);
         if (autoPrefix) {
-            let ext = {};
             for (let key in css) {
                 ext[key] = css[key];
                 ext["-webkit-" + key] = css[key];
@@ -35,9 +35,8 @@ export default {
                 ext["-o-" + key] = css[key];
                 ext["-ms-" + key] = css[key];
             }
-            this.merge(dom.style, ext);
-        } else
-            this.merge(dom.style, css);
+        }
+        this.merge(dom.style, ext);
     },
 
     removeCss: function (dom, name, autoPrefix) {
@@ -283,13 +282,10 @@ export default {
         }
         let key;
         for (key in ext) {
-            if (ext[key]) {
-                if (obj[key] && typeof obj[key] === 'object' && typeof ext[key] === 'object')
-                    obj[key] = this.merge(obj[key], ext[key]);
-                else
-                    obj[key] = ext[key];
-            }
-
+            if (obj[key] && ext[key] && typeof obj[key] === 'object' && typeof ext[key] === 'object')
+                obj[key] = this.merge(obj[key], ext[key]);
+            else
+                obj[key] = ext[key];
         }
         return obj;
     },

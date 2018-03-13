@@ -9,6 +9,7 @@ import Logger from "./Logger";
  */
 export default class BaseObject {
     static logger = Logger.getLogger(BaseObject.name);
+
     /**
      * 构造器。debug 状态缺省设置为 true，可通过设置环境变量 process.env.NODE_ENV 为 'production' 全局关闭 debug 状态。
      */
@@ -31,8 +32,15 @@ export default class BaseObject {
     assign(...opts) {
         for (let opt of opts) {
             if (opt) {
+                this.logger.debug(`设置对象属性`, opt);
+                // 删除无效属性
+                for (let key in opt) {
+                    if (opt[key] === undefined) {
+                        delete opt[key];
+                        this.logger.debug(`无效属性：${key}`);
+                    }
+                }
                 Object.assign(this, opt);
-                BaseObject.logger.debug(`设置对象属性`, opt);
             }
         }
     }

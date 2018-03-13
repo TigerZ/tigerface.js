@@ -49,8 +49,8 @@ export default class AppRoot extends React.Component {
         const props = this.props;
         return (
             <div id={'AppRoot'}>
-                <BarChart className={'stage'}/>
-                <PieChart className={'stage'}/>
+                <BarChart className={'stage'} style={{margin: null,overflow: null}}/>
+                <PieChart className={'stage'} style={{margin: null,overflow: null}}/>
             </div>
         )
     }

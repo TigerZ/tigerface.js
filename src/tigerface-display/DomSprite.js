@@ -64,11 +64,24 @@ export default class DomSprite extends Sprite {
 
         this.isDomSprite = true;
 
+        // console.log("*************", options, T.merge({
+        //     style: {
+        //         padding: '0px', // 无内边距
+        //         margin: '0px', // 无外边距
+        //         overflow: 'hidden', // 溢出隐藏
+        //         display: 'block',
+        //         outline: 'none', // 隐藏 focus 的方框
+        //         '-webkit-user-select': 'none',
+        //         '-moz-user-select': 'none',
+        //         '-ms-user-select': 'none',
+        //         'user-select': 'none'
+        //     }
+        // }, options));
         this.assign(T.merge({
             style: {
                 padding: '0px', // 无内边距
                 margin: '0px', // 无外边距
-                // overflow: 'hidden', // 溢出隐藏
+                overflow: 'hidden', // 溢出隐藏
                 display: 'block',
                 outline: 'none', // 隐藏 focus 的方框
                 '-webkit-user-select': 'none',
@@ -103,7 +116,7 @@ export default class DomSprite extends Sprite {
 
     set style(v) {
         this.props.style = Object.assign(this.style, v);
-        this.setStyle(v);
+        this.setStyle(this.style);
     }
 
     get className() {
@@ -322,9 +335,7 @@ export default class DomSprite extends Sprite {
      * @param autoPrefix {boolean} 是否添加多浏览器前缀
      */
     setStyle(style, autoPrefix = false) {
-
         T.cssMerge(this.dom, style, autoPrefix);
-
         this.postChange();
     }
 
