@@ -36,6 +36,7 @@ import {Event} from "tigerface-event";
 class BallSprite extends CanvasSprite {
     constructor() {
         super();
+        this.clazz = BallSprite.name;
         this.size = {width: 100, height: 100};
         this.pos = {x: 100, y: 100};
         this.step = 1;

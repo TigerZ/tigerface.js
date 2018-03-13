@@ -79,13 +79,17 @@ const DisplayObjectRenderer = Reconciler({
     // eslint-disable-next-line no-unused-vars
     createInstance(type, props, internalInstanceHandle) {
         const _props = Object.assign({}, props);
-        delete _props.children;
+        let instance;
         if (type === Tag.Surface)
-            return new CanvasLayer(_props);
+            instance = new CanvasLayer();
         else if (type === Tag.Dom)
-            return new DomSprite(_props);
+            instance = new DomSprite();
         else if (type === Tag.Sprite) {
-            let instance = props.instance ? props.instance : new props.clazz();
+            instance = props.instance ? props.instance : new props.clazz();
+        }
+        if(instance) {
+            delete _props.children;
+            delete _props.clazz;
             instance.assign(_props);
             return instance;
         }
