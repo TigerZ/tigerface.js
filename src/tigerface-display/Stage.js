@@ -18,25 +18,23 @@ export default class Stage extends DomSprite {
      */
     constructor(options, dom) {
 
-        let state = Object.assign({
+        let props = {
+            className : Stage.name,
+            name : Stage.name,
             fps: 30, // 每秒30帧
-            width: 402,
-            height: 302,
+            width: 400,
+            height: 300,
             preventDefault: true,
             style: {'position': DomSprite.Position.RELATIVE}
-        }, options);
+        };
 
-        super(state, dom);
+        super(props, dom);
 
         // 缺省的相对定位
         // this.setStyle({"position", DomSprite.Position.RELATIVE);
 
         // 舞台标识
         this.stage = this;
-
-        // 基本信息
-        this.className = Stage.name;
-        this.name = Stage.name;
 
         // 如果舞台绑定的是局部 Dom 对象，那么在这个 Dom 对象里绘制签名
         // this._signing_();
@@ -52,6 +50,8 @@ export default class Stage extends DomSprite {
             });
         };
         //this.on(Event.ENTER_FRAME, ()=>console.log(this.name+" ENTER_FRAME "+new Date().getSeconds()));
+
+        this.assign(options);
     }
 
     _checkFPS_(v) {

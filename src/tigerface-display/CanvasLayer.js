@@ -20,7 +20,7 @@ export default class CanvasLayer extends DomSprite {
      * @param dom {object} Dom节点
      */
     constructor(options, dom = undefined) {
-        let state = Object.assign({
+        let props = {
             devicePixelRatio: 1,
             width: 400,
             height: 300,
@@ -32,11 +32,12 @@ export default class CanvasLayer extends DomSprite {
             style: {
                 backgroundColor: 'rgba(0,0,0,0.3)'
             }
-        }, options);
+        };
 
         let canvas = dom || document.createElement("canvas");
         // 调用 DisplayObject 的构造器
-        super(state, canvas);
+
+        super(props, canvas);
 
         this.canvas = canvas;
 
@@ -57,6 +58,7 @@ export default class CanvasLayer extends DomSprite {
         this.on(Event.MouseEvent.MOUSE_DOWN, (e) => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_UP, (e) => this._onMouseEvents_(e));
 
+        this.assign(options);
     }
 
     set devicePixelRatio(v) {

@@ -30,9 +30,6 @@ export default class StageComponent extends BaseComponent {
     componentDidMount() {
         const props = this.props;
         this._displayObject_ = new Stage({style: props.style}, this._tagRef);
-        if (props.appendToParent) {
-            props.appendToParent(this._displayObject_);
-        }
         this._mountNode = DisplayObjectRenderer.createContainer(this._displayObject_);
         DisplayObjectRenderer.updateContainer(this.props.children, this._mountNode, this);
 

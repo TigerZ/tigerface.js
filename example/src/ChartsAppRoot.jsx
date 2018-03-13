@@ -54,7 +54,7 @@ export default class AppRoot extends React.Component {
     render() {
         const props = this.props;
         return (
-            <div>
+            <div id={'AppRoot'}>
                 <BarChart style={Style}/>
                 <PieChart style={Style}/>
             </div>
@@ -64,6 +64,7 @@ export default class AppRoot extends React.Component {
 
 const Style = {
     float: 'left',
-    width: '404px'
+    width: '400px',
+    margin: '5px'
 };
 

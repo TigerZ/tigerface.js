@@ -26,19 +26,17 @@ export default class CanvasSprite extends Sprite {
      */
     constructor(options) {
 
-        const _default = {
+        let props = {
+            className: CanvasSprite.name,
             pos: {x: 0, y: 0},
             size: {width: 100, height: 100},
-            scale: {scaleX: 1, scaleY: 1}
+            scale: {scaleX: 1, scaleY: 1},
+            isCanvasSprite: true
         };
 
-        super(options, _default);
+        super(props);
 
-        // 基本信息
-        this.className = "CanvasSprite";
-
-        this.isCanvasSprite = true;
-
+        this.assign(options);
     }
 
     postChange(log) {
@@ -245,7 +243,7 @@ export default class CanvasSprite extends Sprite {
      * @param digits {number} 精度
      * @returns {Point}
      */
-    getLocalPos(globalPos, digits=0) {
+    getLocalPos(globalPos, digits = 0) {
 
         // 寻找全部祖先
         let ancestor = [];

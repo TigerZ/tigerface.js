@@ -23,15 +23,11 @@ class SimpleSpriteComponent extends BaseComponent {
         const props = this.props;
         const {instance, style, name} = this.getSpriteInfo();
         return (
-            <div {...props}>
-                <Stage>
-                    <Tag.Dom>
-                        <Tag.Surface name={name} title={'Surface'} style={style}>
-                            <Tag.Sprite instance={instance}/>
-                        </Tag.Surface>
-                    </Tag.Dom>
-                </Stage>
-            </div>
+            <Stage {...props}>
+                <Tag.Surface style={style}>
+                    <Tag.Sprite instance={instance}/>
+                </Tag.Surface>
+            </Stage>
         )
     }
 }

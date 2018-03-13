@@ -42,30 +42,12 @@ export default class DomSprite extends Sprite {
         }
 
         let props = {
+            className: DomSprite.name,
             _dom_: dom || document.createElement('div'), // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false
         };
 
         super(props);
-
-        this.assign(T.merge({
-            style: {
-                padding: '0px', // 无内边距
-                margin: '0px', // 无外边距
-                overflow: 'hidden', // 溢出隐藏
-                display: 'block',
-                outline: 'none', // 隐藏 focus 的方框
-                '-webkit-user-select': 'none',
-                '-moz-user-select': 'none',
-                '-ms-user-select': 'none',
-                'user-select': 'none'
-            }
-        }, options));
-
-        // 基本信息
-        this.className = DomSprite.name;
-
-        this.logger.debug(`[${this.className}]:初始化参数：options=`, options, 'state=', this.state);
 
         // 定义 Dom 引擎
         this.domAdapter = new DomEventAdapter(this.dom, {
@@ -81,6 +63,21 @@ export default class DomSprite extends Sprite {
         this.resize();
 
         this.isDomSprite = true;
+
+        this.assign(T.merge({
+            style: {
+                padding: '0px', // 无内边距
+                margin: '0px', // 无外边距
+                // overflow: 'hidden', // 溢出隐藏
+                display: 'block',
+                outline: 'none', // 隐藏 focus 的方框
+                '-webkit-user-select': 'none',
+                '-moz-user-select': 'none',
+                '-ms-user-select': 'none',
+                'user-select': 'none'
+            }
+        }, options));
+
     }
 
     set dom(v) {

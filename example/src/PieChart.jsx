@@ -20,8 +20,7 @@ const _default = {
     speed: 3,
     style: {
         backgroundColor: 'white',
-        border: '1px solid blue',
-        width: '100%'
+        border: '1px solid blue'
     },
     colors: ['red']
 };
@@ -155,7 +154,7 @@ class PieChartSprite extends CanvasSprite {
             // g.drawPoint(p1);
             let {width: w} = g.measureText(str);
             let left = 30 + idx % 4 * 90;
-            let top = this.height - 10 + Math.floor(idx / 4) * 20;
+            let top = 230 + Math.floor(idx / 4) * 20;
 
             g.drawRectangle(new Square(left, top, 10), g.DrawStyle.STROKE_FILL);
             g.textBaseline = 'top';
