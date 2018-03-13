@@ -20,9 +20,7 @@ export default class Stage extends DomSprite {
 
         let props = {
             clazz : Stage.name,
-            fps: 30, // 每秒30帧
-            width: 400,
-            height: 300,
+            fps: 60, // 每秒60帧
             preventDefault: true,
             style: {'position': DomSprite.Position.RELATIVE}
         };

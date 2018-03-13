@@ -44,7 +44,9 @@ export default class DomSprite extends Sprite {
         let props = {
             clazz: DomSprite.name,
             _dom_: dom || document.createElement('div'), // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
-            preventDefault: false
+            preventDefault: false,
+            width: 400,
+            height: 300
         };
 
         super(props);

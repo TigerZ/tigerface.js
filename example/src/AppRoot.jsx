@@ -91,7 +91,7 @@ export default class AppRoot extends React.Component {
                         </Tag.Surface>
                     </Tag.Dom>
                 </Stage>
-                <Stage style={Style0}>
+                <Stage fps={40} style={Style0}>
                     <Tag.Dom>
                         <Tag.Surface title={'Surface'} style={Style2}>
                             <Tag.Sprite clazz={BallSprite}/>
