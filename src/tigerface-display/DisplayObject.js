@@ -272,6 +272,11 @@ export default class DisplayObject extends EventDispatcher {
         this.dispatchEvent(Event.STATUS_CHANGED, {log});
     }
 
+    update(options) {
+        super.update(options);
+        this.postChange('update');
+    }
+
     /**
      * 清除“已改变”状态
      */

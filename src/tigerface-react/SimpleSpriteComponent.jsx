@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import {default as Stage, Tag} from './Stage';
+import {default as Stage, Tag} from './StageComponent';
 import BaseComponent from "./BaseComponent";
-import StageComponent from "./Stage";
 
 /**
  * User: zyh
@@ -25,7 +24,7 @@ class SimpleSpriteComponent extends BaseComponent {
         return (
             <Stage {...props}>
                 <Tag.Surface {...canvasProps}>
-                    <Tag.Sprite instance={instance}/>
+                    <Tag.Sprite instance={instance} {...props}/>
                 </Tag.Surface>
             </Stage>
         )

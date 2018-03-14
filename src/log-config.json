@@ -1,7 +1,7 @@
 {
-  "log-level": "debug",
+  "log-level": "warn",
   "class-log-level": {
     "EventDispatcher": "off",
-    "CanvasLayer": "off"
+    "StageComponent": "debug"
   }
 }

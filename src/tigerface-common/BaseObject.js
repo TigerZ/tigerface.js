@@ -33,15 +33,20 @@ export default class BaseObject {
         for (let opt of opts) {
             if (opt) {
                 this.logger.debug(`设置对象属性`, opt);
+                let _opt = Object.assign({}, opt);
                 // 删除无效属性
-                for (let key in opt) {
-                    if (opt[key] === undefined) {
-                        delete opt[key];
-                        this.logger.debug(`无效属性：${key}`);
+                for (let key in _opt) {
+                    if (_opt[key] === undefined) {
+                        delete _opt[key];
+                        this.logger.debug(`放弃无效属性：${key}`);
                     }
                 }
-                Object.assign(this, opt);
+                Object.assign(this, _opt);
             }
         }
+    }
+
+    update(options) {
+        this.assign(options);
     }
 }

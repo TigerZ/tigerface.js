@@ -12,32 +12,52 @@ import {Utilities as T} from 'tigerface-common';
  */
 const _default = {
     paddingLeft: 50,
-    paddingTop: 20,
+    paddingTop: 0,
     unit: 20,
     scale: 3,
     xSpace: 5,
     ySpace: 5,
     font: '12px monaco',
     speed: 3,
-    className: 'surface',
     style: {
-        border: '1px solid blue'
+        margin:'30px auto'
     }
 };
 
 class BarChartSprite extends CanvasSprite {
     constructor(options) {
         super(options);
-        this.data = [];
+        this._data_ = [];
         this.h0 = 0;
-        this.config = _default;
+        this._config_ = _default;
         this.clazz = 'BarChartSprite';
         this.name = 'BarChart';
     }
 
     putData(data, options) {
         this.data = data;
-        T.merge(this.config, options);
+        this.config = options;
+    }
+
+    set config(v) {
+        T.merge(this._config_, v);
+    }
+
+    get config() {
+        return this._config_;
+    }
+
+    set data(v) {
+        this._data_ = v;
+    }
+
+    get data() {
+        return this._data_;
+    }
+
+    update(options) {
+        super.update(options);
+        this.h0 = 0;
     }
 
     paint() {
@@ -102,6 +122,8 @@ class BarChartSprite extends CanvasSprite {
         });
 
         // 绘制图例
+        g.textBaseline = 'top';
+        g.textAlign = 'start';
         rects.forEach(([bar, name, num], idx) => {
             let str = `${name} [${num}]`;
             g.lineWidth = 1;
@@ -109,8 +131,8 @@ class BarChartSprite extends CanvasSprite {
             g.strokeStyle = g.fillStyle;
             // g.drawPoint(p1);
             let {width: w} = g.measureText(str);
-            let left = 30 + idx % 4 * 90;
-            let top = 230 + Math.floor(idx / 4) * 20;
+            let left = idx % 4 * 90;
+            let top = 205 + Math.floor(idx / 4) * 20;
 
             g.drawRectangle(new Square(left, top, 10), g.DrawStyle.STROKE_FILL);
             g.textBaseline = 'top';
@@ -133,3 +155,25 @@ export default withSimpleSpriteComponent(barChart, {
     className: barChart.config.className,
     style: barChart.config.style
 });
+
+// 以下是演示数据
+
+// const colors = ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon'];
+// const data = [
+//     {name: '何敏', num: 38},
+//     {name: '王菲丽', num: 76},
+//     {name: '张思雨', num: 25},
+//     {name: '王明清', num: 48},
+//     {name: '袁立', num: 22},
+//     {name: '邢惠珊', num: 71},
+//     {name: '李安和', num: 45}
+// ];
+//
+// putData(
+//     data,
+//     {
+//         speed: 3,
+//         font: '12px Kaiti',
+//         colors
+//     }
+// );

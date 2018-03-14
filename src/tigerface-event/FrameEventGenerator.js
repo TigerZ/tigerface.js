@@ -19,18 +19,19 @@ if (!win.requestNextAnimationFrame) {
             win.mozRequestAnimationFrame ||
             win.oRequestAnimationFrame ||
             win.msRequestAnimationFrame ||
-            ((callback) => {
+            ((callback, ctx = win) => {
 
                 let start, finish;
 
-                setTimeout(function () {
+                setTimeout(() => {
+
                     start = +new Date();
                     callback();
                     finish = +new Date();
 
-                    this._requestNextAnimationFrameTimeout_ = 1000 / 60 - (finish - start);
+                    ctx._requestNextAnimationFrameTimeout_ = 1000 / 60 - (finish - start);
 
-                }, this._requestNextAnimationFrameTimeout_ || (1000 / 60));
+                }, ctx._requestNextAnimationFrameTimeout_ || (1000 / 60));
             })
         );
     })();
@@ -47,10 +48,6 @@ export default class FrameEventGenerator extends EventDispatcher {
         };
 
         super(props);
-
-        // this.lastTime = new Date().getTime();
-        // this.step = this.fps;
-        // this.frameLength = 1000 / this.step;
 
         this.assign(options);
 
@@ -83,7 +80,7 @@ export default class FrameEventGenerator extends EventDispatcher {
 
         this.emit(Event.REDRAW);
 
-        win.requestNextAnimationFrame(() => this._onRedraw_());
+        win.requestNextAnimationFrame(() => this._onRedraw_(), this);
     }
 
     _onEnterFrame_() {

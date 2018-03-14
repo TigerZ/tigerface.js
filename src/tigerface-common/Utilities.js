@@ -81,6 +81,7 @@ export default {
 
     size: function (dom) {
         let $dom = $(dom);
+        // console.log("***********", dom.tagName, {width: $dom.width(), height: $dom.height()});
         return {width: $dom.width(), height: $dom.height()};
     },
 

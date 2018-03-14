@@ -45,8 +45,8 @@ export default class DomSprite extends Sprite {
             clazz: DomSprite.name,
             _dom_: dom || document.createElement('div'), // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
-            width: 400,
-            height: 300
+            width: '320',
+            height: '240'
         };
 
         super(props);
@@ -217,6 +217,7 @@ export default class DomSprite extends Sprite {
      */
     _onSizeChanged_() {
         //if(this.layout) return;
+        // console.log("***********", this.width + 'px', this.height + 'px');
         T.css(this.dom, 'width', this.width + 'px');
         T.css(this.dom, 'height', this.height + 'px');
     }

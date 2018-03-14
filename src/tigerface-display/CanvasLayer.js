@@ -23,8 +23,8 @@ export default class CanvasLayer extends DomSprite {
         let props = {
             clazz: CanvasLayer.name,
             devicePixelRatio: 1,
-            width: 400,
-            height: 300,
+            width: '320',
+            height: '240',
             retina: true,
             noClear: false,
             useDirtyRect: false,

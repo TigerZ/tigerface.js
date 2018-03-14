@@ -47,7 +47,7 @@ const config = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './src/index.template.html'
+            template: './template/index.template.html'
         }),
         new CleanWebpackPlugin(['./example/assets']),
         new webpack.NamedModulesPlugin(),
