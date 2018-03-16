@@ -30,9 +30,14 @@
         "power-assert"
       ],
       "plugins": [
-        ["module-resolver", {
-          "root": ["./src"]
-        }]
+        [
+          "module-resolver",
+          {
+            "root": [
+              "./packages"
+            ]
+          }
+        ]
       ]
     }
   }

@@ -1,7 +1,0 @@
-{
-  "log-level": "warn",
-  "class-log-level": {
-    "EventDispatcher": "off",
-    "StageComponent": "debug"
-  }
-}

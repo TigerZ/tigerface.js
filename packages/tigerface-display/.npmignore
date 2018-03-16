@@ -1,0 +1,9 @@
+/src/
+/.idea/
+/test/
+dev.js
+publish.sh
+.eslintrc
+.babelrc
+.gitignore
+.npmignore

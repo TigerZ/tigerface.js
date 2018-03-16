@@ -9,7 +9,7 @@ const config = {
     },
     resolve: {
         extensions: [".js", ".jsx", ".json"],
-        modules: [path.resolve(__dirname, "src"), "node_modules"]
+        modules: [__dirname, path.resolve(__dirname, "packages"), "node_modules"]
     },
     output: {
         path: path.resolve(__dirname, "./example/assets"),

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import {Logger} from 'tigerface-common';
 import {BarChart, PieChart} from 'tigerface-example';
@@ -45,7 +44,6 @@ export default class AppRoot extends React.Component {
     };
 
     render() {
-        const props = this.props;
         return (
             <div>
                 <BarChart className={'stage'} style={Style} config={this.state.options} data={this.state.data}/>
@@ -64,4 +62,4 @@ const Style = {
     border: '1px solid rgba(0,0,0,0.2)',
     backgroundColor: 'rgba(255,255,0,0.2)',
     borderBottom: '1px solid rgba(0,0,0,0.1)'
-}
+};

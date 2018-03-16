@@ -1,0 +1,24 @@
+{
+  "name": "tigerface-display",
+  "version": "0.10.3",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --require babel-core/register "
+  },
+  "author": "Tiger zhangyihu@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.3",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "colors": "^1.2.1"
+  },
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "tigerface-event": "^0.10.4",
+    "tigerface-graphic": "^0.10.0"
+  }
+}
