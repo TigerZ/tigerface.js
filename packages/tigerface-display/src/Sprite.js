@@ -51,7 +51,7 @@ export default class Sprite extends DisplayObjectContainer {
      */
     addBound(shape) {
         this._bounds_.push(shape);
-        this._boundingRect_ = this._createBoundingRect_();
+        this._createBoundingRect_();
         this.postChange('addBound');
         return this;
     }
@@ -59,7 +59,7 @@ export default class Sprite extends DisplayObjectContainer {
     removeBound(i) {
         if (this._bounds_[i]) {
             this._bounds_.splice(i, 1);
-            this._boundingRect_ = this._createBoundingRect_();
+            this._createBoundingRect_();
         }
         this.postChange('removeBound');
     }
@@ -94,21 +94,31 @@ export default class Sprite extends DisplayObjectContainer {
         } : {
             left: 0,
             top: 0,
-            width: 0,
-            height: 0
+            width: this.width,
+            height: this.height
         };
         //console.log(this.name, rect);
         this.logger.debug("_createBoundingRect_()", this.name, boundRect);
-        return new Rectangle(boundRect.left, boundRect.top, boundRect.width, boundRect.height);
+        this._boundingRect_ = new Rectangle(boundRect.left, boundRect.top, boundRect.width, boundRect.height);
+        this._onBoundingRectChanged_();
     }
 
     /**
      * 获取边界多边形的外接矩形（缓存）
      */
     get boundingRect() {
-        if (!this._boundingRect_)
-            this._boundingRect_ = this._createBoundingRect_();
+        if (!this._boundingRect_) {
+            this._createBoundingRect_();
+        }
         return this._boundingRect_;
+    }
+
+    _onSizeChanged_() {
+        super._onSizeChanged_();
+        this._createBoundingRect_();
+    }
+
+    _onBoundingRectChanged_() {
     }
 
     /***************************************************************************

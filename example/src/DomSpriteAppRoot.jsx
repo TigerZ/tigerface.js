@@ -23,11 +23,11 @@ class DemoDomSprite extends DomSprite {
 class DemoCanvasSprite extends CanvasSprite {
     constructor(opts) {
         super(opts);
-        this.addBound(new Rectangle(0, 0, this.width, this.height));
+        this.addBound(new Rectangle(0, 0, 100, 50));
+        this.initCover();
+
         this.onClick = () => {
-            let p0 = this.getStagePos({x: 0, y: 0});
-            cover.pos = p0;
-            cover.visible = true;
+            this.cover.visible = true;
         };
     }
 
@@ -60,9 +60,6 @@ export default class DomSpriteAppRoot extends React.Component {
                     <Tag.Surface width={100} height={50}>
                         <Tag.Sprite clazz={DemoCanvasSprite}/>
                     </Tag.Surface>
-                </Tag.Dom>
-                <Tag.Dom id={'cover'} instance={cover} style={CoverStyle} width={100} height={50}>
-                    <Tag.Dom clazz={'input'} style={InputStyle} onBlur={() => this.onblur()}/>
                 </Tag.Dom>
             </Stage>
         )

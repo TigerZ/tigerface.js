@@ -108,6 +108,14 @@ export default class DomSprite extends Sprite {
         return this.dom.id = v;
     }
 
+    get title() {
+        return this.dom.title;
+    }
+
+    set title(v) {
+        return this.dom.title = v;
+    }
+
     get css() {
         return this.style;
     }
@@ -216,6 +224,7 @@ export default class DomSprite extends Sprite {
      * 设置 DOM 的位置
      * @private
      */
+
     _onPosChanged_() {
         if (this.dom === document) return;
         this.setStyle({'position': DomSprite.Position.ABSOLUTE});
@@ -223,6 +232,8 @@ export default class DomSprite extends Sprite {
         let t = this.origin;
         T.css(this.dom, 'left', (this.x - t.x) + 'px');
         T.css(this.dom, 'top', (this.y - t.y) + 'px');
+
+        super._onPosChanged_();
     }
 
     /**

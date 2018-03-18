@@ -447,7 +447,7 @@ export default class DisplayObject extends EventDispatcher {
     getStagePos(localPos, digits = 0) {
         let pos = this.getOuterPos(localPos, digits);
         let parent = this.parent;
-
+        console.log("***************getGlobalPos", parent);
         // parent.layer == parent 意味着是最顶级了
         while (parent && parent.stage !== parent) {
             // 因为孩子的坐标是从origin点开始计算的，所以要先补偿origin的坐标
@@ -455,7 +455,7 @@ export default class DisplayObject extends EventDispatcher {
             pos = parent.getOuterPos(pos.move(o.x, o.y), digits);
             parent = parent.parent;
         }
-        //console.log("getGlobalPos", localPos, pos);
+        console.log("***************getGlobalPos", localPos, pos);
         return pos;
     }
 

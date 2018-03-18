@@ -7,6 +7,7 @@
 import {Utilities as T, Logger} from 'tigerface-common';
 import {Rectangle, Polygon} from 'tigerface-shape';
 import Sprite from './Sprite';
+import DomSprite from './DomSprite';
 import {Event} from 'tigerface-event';
 import {Graphics} from 'tigerface-graphic';
 
@@ -37,6 +38,71 @@ export default class CanvasSprite extends Sprite {
         super(props);
 
         this.assign(options);
+    }
+
+    initCover() {
+        if (!this._cover_) {
+            this._cover_ = new DomSprite({
+                style: {background: 'rgba(0,0,0,0.2)'},
+                visible: false,
+                title: 'cover'
+            });
+
+            let rect = this.boundingRect;
+            this._cover_.size = {width: rect.width, height: rect.height};
+
+            if (this.stage) {
+                this.stage.addChild(this._cover_);
+                this.resetCoverPos();
+            }
+
+            this.on(Event.APPEND_TO_STAGE, () => {
+                this.stage.addChild(this._cover_);
+                this.resetCoverPos();
+            });
+
+
+
+        }
+    }
+
+    resetCoverPos() {
+        let p0 = this.getStagePos({x: 0, y: 0});
+        this._cover_.pos = p0;
+    }
+
+    showCover() {
+        let p0 = this.getStagePos({x: 0, y: 0});
+        this.cover.pos = p0;
+        let rect = this.boundingRect;
+        this._cover_.size = {width: rect.width, height: rect.height};
+        this.cover.visible = true;
+    }
+
+    hideCover() {
+        this.cover.visible = false;
+    }
+
+    _onBoundingRectChanged_() {
+        super._onBoundingRectChanged_();
+        if (this._cover_) {
+            let p0 = this.getStagePos({x: 0, y: 0});
+            this._cover_.pos = p0;
+            let rect = this.boundingRect;
+            this._cover_.size = {width: rect.width, height: rect.height};
+        }
+    }
+
+    _onPosChanged_() {
+        super._onPosChanged_();
+        if (this._cover_) {
+            let p0 = this.getStagePos({x: 0, y: 0});
+            this._cover_.pos = p0;
+        }
+    }
+
+    get cover() {
+        return this._cover_;
     }
 
     postChange(log) {
@@ -213,7 +279,6 @@ export default class CanvasSprite extends Sprite {
         }
         return new Polygon(points);
     }
-
 
 
     /***************************************************************************

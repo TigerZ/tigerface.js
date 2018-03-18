@@ -406,4 +406,12 @@ export default class DisplayObjectContainer extends DisplayObject {
             child.postChange('parent change');
         }
     }
+
+    _onPosChanged_() {
+        super._onPosChanged_();
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
+            child._onPosChanged_();
+        }
+    }
 }
