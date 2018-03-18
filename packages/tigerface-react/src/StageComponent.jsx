@@ -1,5 +1,5 @@
 import React from 'react';
-import {Stage, CanvasLayer, DomSprite} from "tigerface-display";
+import {Stage, CanvasLayer, DomSprite, CanvasSprite} from "tigerface-display";
 import {Logger} from 'tigerface-common';
 import Reconciler from 'react-reconciler';
 import emptyObject from 'fbjs/lib/emptyObject';
@@ -23,7 +23,7 @@ export default class StageComponent extends BaseComponent {
 
     constructor(...args) {
         super(...args);
-        this.clazz = StageComponent.name;
+        this.clazzName = StageComponent.name;
         this.tagName = 'canvas';
     }
 
@@ -56,14 +56,14 @@ export default class StageComponent extends BaseComponent {
 
         return (
             <div key={'Stage'}
-                ref={ref => (this._tagRef = ref)}
-                accessKey={props.accessKey}
-                clazz={props.clazz}
-                draggable={props.draggable}
-                role={props.role}
-                style={props.style}
-                tabIndex={props.tabIndex}
-                title={props.title}
+                 ref={ref => (this._tagRef = ref)}
+                 accessKey={props.accessKey}
+                 className={props.className}
+                 draggable={props.draggable}
+                 role={props.role}
+                 style={props.style}
+                 tabIndex={props.tabIndex}
+                 title={props.title}
             />
         );
     }
@@ -85,16 +85,16 @@ const DisplayObjectRenderer = Reconciler({
         if (type === Tag.Surface)
             instance = new CanvasLayer();
         else if (type === Tag.Dom)
-            instance = new DomSprite();
+            instance = props.instance ? props.instance : (props.clazz ? (typeof props.clazz === 'string' ? new DomSprite({}, props.clazz) : new props.clazz()) : new DomSprite());
         else if (type === Tag.Sprite) {
-            instance = props.instance ? props.instance : new props.clazz();
+            instance = props.instance ? props.instance : (props.clazz ? new props.clazz() : new CanvasSprite());
         }
 
 
         if (instance) {
             let _props = Object.assign({}, props);
             delete _props.children;
-            delete _props.clazz;
+            delete _props.clazzName;
             delete _props.key;
             delete _props.ref;
             instance.assign(_props);
@@ -200,7 +200,7 @@ const DisplayObjectRenderer = Reconciler({
             if (instance && instance.update) {
                 let _props = Object.assign({}, newProps);
                 delete _props.children;
-                delete _props.clazz;
+                delete _props.clazzName;
                 delete _props.key;
                 delete _props.ref;
                 instance.update(_props)

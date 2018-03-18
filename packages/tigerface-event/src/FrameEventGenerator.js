@@ -43,7 +43,7 @@ export default class FrameEventGenerator extends EventDispatcher {
     constructor(options) {
         // 缺省配置
         let props = {
-            clazz: FrameEventGenerator.name,
+            clazzName: FrameEventGenerator.name,
             fps: 60
         };
 

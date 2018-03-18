@@ -21,7 +21,8 @@ export default class CanvasLayer extends DomSprite {
      */
     constructor(options, dom = undefined) {
         let props = {
-            clazz: CanvasLayer.name,
+            position: 'absolute',
+            clazzName: CanvasLayer.name,
             devicePixelRatio: 1,
             width: '320',
             height: '240',
@@ -149,7 +150,7 @@ export default class CanvasLayer extends DomSprite {
 
     _onBeforeAddChild_(child) {
         if (child.isDomSprite) {
-            this.logger.warn(`_onBeforeAddChild_(${child.name || child.clazz} ${child.isDomSprite}): CanvasContainer 的内部显示对象不能是 DomSprite 的实例`);
+            this.logger.warn(`_onBeforeAddChild_(${child.name || child.clazzName} ${child.isDomSprite}): CanvasContainer 的内部显示对象不能是 DomSprite 的实例`);
             return false;
         }
         return true;

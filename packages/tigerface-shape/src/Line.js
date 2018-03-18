@@ -35,7 +35,7 @@ export default class Line {
         this.p0 = Vertex.convertVertex(p0);
         this.p1 = Vertex.convertVertex(p1);
 
-        this.clazz = Line.name;
+        this.clazzName = Line.name;
 
     }
 

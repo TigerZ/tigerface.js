@@ -11,9 +11,9 @@ import colors from 'colors/safe';
 
 const OFF = 0, ERROR = 1, WARN = 2, INFO = 3, DEBUG = 4, FULL = 99;
 
-function getClassLogLevel(clazz) {
-    return (config["class-log-level"] !== undefined && config["class-log-level"][clazz] !== undefined)
-        ? Logger.level[config["class-log-level"][clazz].toUpperCase()] : -1;
+function getClassLogLevel(clazzName) {
+    return (config["class-log-level"] !== undefined && config["class-log-level"][clazzName] !== undefined)
+        ? Logger.level[config["class-log-level"][clazzName].toUpperCase()] : -1;
 }
 
 function now() {
@@ -61,17 +61,17 @@ export default class Logger {
 
         if (this._target_) {
             if (this._target_.name) return this._target_.name;
-            else if (this._target_.clazz) return this._target_.clazz;
+            else if (this._target_.clazzName) return this._target_.clazzName;
         }
 
         return '';
     }
 
-    get clazz() {
+    get clazzName() {
         if (this._name_) return this._name_;
 
         if (this._target_) {
-            if (this._target_.clazz) return this._target_.clazz;
+            if (this._target_.clazzName) return this._target_.clazzName;
         }
 
         return '';
@@ -125,7 +125,7 @@ export default class Logger {
             return targetLevel < level;
         }
 
-        let clazzLevel = getClassLogLevel(this.clazz);
+        let clazzLevel = getClassLogLevel(this.clazzName);
 
         if (clazzLevel >= 0) {
             return clazzLevel < level;

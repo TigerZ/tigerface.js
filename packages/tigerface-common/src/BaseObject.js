@@ -18,7 +18,7 @@ export default class BaseObject {
         this.props = {};
         this.state = {};
 
-        this.clazz = BaseObject.name;
+        this.clazzName = BaseObject.name;
 
         this.logger = Logger.getLogger(this);
 

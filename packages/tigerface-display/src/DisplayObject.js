@@ -23,7 +23,7 @@ export default class DisplayObject extends EventDispatcher {
      */
     constructor(options) {
         let props = {
-            clazz: DisplayObject.name,
+            clazzName: DisplayObject.name,
             uuid: T.uuid(),
         };
 
@@ -267,9 +267,12 @@ export default class DisplayObject extends EventDispatcher {
      * @param log
      */
     postChange(log) {
+        if (this._changed_) return;
+
         this._changed_ = true;
         // this._change_log_ = log;
         this.dispatchEvent(Event.STATUS_CHANGED, {log});
+        if (this.parent) this.parent.postChange(log);
     }
 
     update(options) {
@@ -384,7 +387,7 @@ export default class DisplayObject extends EventDispatcher {
         pos.x = T.round(pos.x, digits > 0 ? digits : 0);
         pos.y = T.round(pos.y, digits > 0 ? digits : 0);
 
-        // this.logger.debug(`[${this.clazz}]:getOuterPos()`, point, pos);
+        // this.logger.debug(`[${this.clazzName}]:getOuterPos()`, point, pos);
 
         return pos;
     }
@@ -414,9 +417,78 @@ export default class DisplayObject extends EventDispatcher {
         p.x = T.round(p.x, digits > 0 ? digits : 0);
         p.y = T.round(p.y, digits > 0 ? digits : 0);
 
-        // this.logger.debug(`[${this.clazz}]:getInnerPos`, point, p);
+        // this.logger.debug(`[${this.clazzName}]:getInnerPos`, point, p);
 
         return p;
+    }
+
+    /**
+     * 获得全局坐标
+     *
+     * @param localPos {Point} 内部坐标
+     * @param digits {number} 精度
+     * @returns {Point}
+     */
+    getGlobalPos(localPos, digits = 0) {
+        let pos = this.getOuterPos(localPos, digits);
+        let parent = this.parent;
+
+        // parent.layer == parent 意味着是最顶级了
+        while (parent && parent.layer !== parent) {
+            // 因为孩子的坐标是从origin点开始计算的，所以要先补偿origin的坐标
+            let o = parent.origin;
+            pos = parent.getOuterPos(pos.move(o.x, o.y), digits);
+            parent = parent.parent;
+        }
+        //console.log("getGlobalPos", localPos, pos);
+        return pos;
+    }
+
+    getStagePos(localPos, digits = 0) {
+        let pos = this.getOuterPos(localPos, digits);
+        let parent = this.parent;
+
+        // parent.layer == parent 意味着是最顶级了
+        while (parent && parent.stage !== parent) {
+            // 因为孩子的坐标是从origin点开始计算的，所以要先补偿origin的坐标
+            let o = parent.origin;
+            pos = parent.getOuterPos(pos.move(o.x, o.y), digits);
+            parent = parent.parent;
+        }
+        //console.log("getGlobalPos", localPos, pos);
+        return pos;
+    }
+
+    /**
+     * 获得本地坐标
+     *
+     * @param globalPos {Point} 全局坐标
+     * @param digits {number} 精度
+     * @returns {Point}
+     */
+    getLocalPos(globalPos, digits = 0) {
+
+        // 寻找全部祖先
+        let ancestor = [];
+        let parent = this.parent;
+
+        // parent.layer == parent 意味着是最顶级了
+        while (parent && parent.layer !== parent) {
+            ancestor.unshift(parent);
+            parent = parent.parent;
+        }
+
+        // 遍历全部祖先，分级转换为相对坐标
+        let pos = globalPos;
+        for (let i = 0; i < ancestor.length; i++) {
+            pos = ancestor[i].getInnerPos(pos);
+            // 因为孩子的坐标是从origin点开始计算的，所以要先偏移origin的坐标
+            let o = ancestor[i].origin;
+            pos = pos.move(-o.x, -o.y);
+        }
+
+        // 最后转换自己的相对坐标
+        return this.getInnerPos(pos, digits);
     }
 
     //********************************** 宿主 ***************************************

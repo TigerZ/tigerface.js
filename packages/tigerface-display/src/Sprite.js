@@ -19,7 +19,7 @@ export default class Sprite extends DisplayObjectContainer {
     constructor(options) {
 
         let props = {
-            clazz : Sprite.name,
+            clazzName : Sprite.name,
             _bounds_ : []
         }
 
@@ -165,5 +165,105 @@ export default class Sprite extends DisplayObjectContainer {
 
     _disableTouchMove_ = () => {
         if (this._dragging_) return false;
+    }
+
+    //********************************* Event *********************************
+
+    set onBlur(func) {
+        this.on(Event.BLUR, func);
+    }
+
+    set onFocus(func) {
+        this.on(Event.FOCUS, func);
+    }
+
+    set onResize(func) {
+        this.on(Event.SIZE_CHANGED, func);
+    }
+
+    //********************************* Key Event *********************************
+
+    set onKeyDown(func) {
+        this.on(Event.KeyEvent.KEY_DOWN, func);
+    }
+
+    set onKeyUp(func) {
+        this.on(Event.KeyEvent.KEY_UP, func);
+    }
+
+    set onKeyPress(func) {
+        this.on(Event.KeyEvent.KEY_PRESS, func);
+    }
+
+    //********************************* Mouse Event *********************************
+
+    set onMouseDown(func) {
+        this.on(Event.MouseEvent.MOUSE_DOWN, func);
+    }
+
+    set onMouseUp(func) {
+        this.on(Event.MouseEvent.MOUSE_UP, func);
+    }
+
+    set onMouseMove(func) {
+        this.on(Event.MouseEvent.MOUSE_MOVE, func);
+    }
+
+    set onMouseOut(func) {
+        this.on(Event.MouseEvent.MOUSE_OUT, func);
+    }
+
+    set onMouseOver(func) {
+        this.on(Event.MouseEvent.MOUSE_OVER, func);
+    }
+
+    set onClick(func) {
+        this.on(Event.MouseEvent.CLICK, func);
+    }
+
+    set onDoubleClick(func) {
+        this.on(Event.MouseEvent.DOUBLE_CLICK, func);
+    }
+
+    set onContextMenu(func) {
+        this.on(Event.MouseEvent.CONTEXT_MENU, func);
+    }
+
+    set onDragStart(func) {
+        this.on(Event.MouseEvent.DRAG_START, func);
+    }
+
+    set onDragEnd(func) {
+        this.on(Event.MouseEvent.DRAG_END, func);
+    }
+
+    set onDrag(func) {
+        this.on(Event.MouseEvent.DRAG, func);
+    }
+
+    //********************************* Touch Event *********************************
+
+    set onTouchStart(func) {
+        this.on(Event.TouchEvent.TOUCH_START, func);
+    }
+
+    set onTouchMove(func) {
+        this.on(Event.TouchEvent.TOUCH_MOVE, func);
+    }
+
+    set onTouchEnd(func) {
+        this.on(Event.TouchEvent.TOUCH_END, func);
+    }
+
+    set onTouchCancel(func) {
+        this.on(Event.TouchEvent.TOUCH_CANCEL, func);
+    }
+
+    set onTouchStartPinch(func) {
+        this.on(Event.TouchEvent.TOUCH_START_PINCH, func);
+    }
+
+    set onTouchMovePinch(func) {
+        this.on(Event.TouchEvent.TOUCH_MOVE_PINCH, func);
     }
 }

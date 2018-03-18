@@ -27,7 +27,7 @@ export default class CanvasSprite extends Sprite {
     constructor(options) {
 
         let props = {
-            clazz: CanvasSprite.name,
+            clazzName: CanvasSprite.name,
             pos: {x: 0, y: 0},
             size: {width: 100, height: 100},
             scale: {scaleX: 1, scaleY: 1},
@@ -214,59 +214,7 @@ export default class CanvasSprite extends Sprite {
         return new Polygon(points);
     }
 
-    /**
-     * 获得全局坐标
-     *
-     * @param localPos {Point} 内部坐标
-     * @param digits {number} 精度
-     * @returns {Point}
-     */
-    getGlobalPos(localPos, digits = 0) {
-        let pos = this.getOuterPos(localPos, digits);
-        let parent = this.parent;
 
-        // parent.layer == parent 意味着是最顶级了
-        while (parent && parent.layer !== parent) {
-            // 因为孩子的坐标是从origin点开始计算的，所以要先补偿origin的坐标
-            let o = parent.origin;
-            pos = parent.getOuterPos(pos.move(o.x, o.y), digits);
-            parent = parent.parent;
-        }
-        //console.log("getGlobalPos", localPos, pos);
-        return pos;
-    }
-
-    /**
-     * 获得本地坐标
-     *
-     * @param globalPos {Point} 全局坐标
-     * @param digits {number} 精度
-     * @returns {Point}
-     */
-    getLocalPos(globalPos, digits = 0) {
-
-        // 寻找全部祖先
-        let ancestor = [];
-        let parent = this.parent;
-
-        // parent.layer == parent 意味着是最顶级了
-        while (parent && parent.layer !== parent) {
-            ancestor.unshift(parent);
-            parent = parent.parent;
-        }
-
-        // 遍历全部祖先，分级转换为相对坐标
-        let pos = globalPos;
-        for (let i = 0; i < ancestor.length; i++) {
-            pos = ancestor[i].getInnerPos(pos);
-            // 因为孩子的坐标是从origin点开始计算的，所以要先偏移origin的坐标
-            let o = ancestor[i].origin;
-            pos = pos.move(-o.x, -o.y);
-        }
-
-        // 最后转换自己的相对坐标
-        return this.getInnerPos(pos, digits);
-    }
 
     /***************************************************************************
      *

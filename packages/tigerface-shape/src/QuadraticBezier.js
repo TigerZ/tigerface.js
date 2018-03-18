@@ -37,7 +37,7 @@ export default class QuadraticBezier extends Curve {
         // 调用曲线构造器，创建实例
         this.initCurve(this._getPoints());
 
-        this.clazz = QuadraticBezier.name;
+        this.clazzName = QuadraticBezier.name;
     }
 
     /**

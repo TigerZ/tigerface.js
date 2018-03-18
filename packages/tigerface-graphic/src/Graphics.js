@@ -268,9 +268,9 @@ export default class Graphics extends Context {
         this.beginPath();
         if (lineStyle && lineStyle !== Graphics.LineStyle.SOLID) {
             this._drawCurve(bezier.getPoints(), lineStyle);
-        } else if (bezier.clazz === "QuadraticBezier") {
+        } else if (bezier.clazzName === "QuadraticBezier") {
             this._drawQuadraticBezier_(bezier);
-        } else if (bezier.clazz === "CubicBezier") {
+        } else if (bezier.clazzName === "CubicBezier") {
             this._drawCubicBezier_(bezier);
         } else {
             this._drawCurve(bezier.getPoints());

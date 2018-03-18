@@ -28,7 +28,7 @@ export default class Point {
             this.y = y || 0;
         }
 
-        this.clazz = Point.name;
+        this.clazzName = Point.name;
     }
 
     /**

@@ -24,6 +24,6 @@ export default class Triangle extends Polygon {
         points.push(new Point(x + l1, y));
         points.push(new Point(x + x2, y - y2));
         this.initPolygon(points);
-        this.clazz = Triangle.name;
+        this.clazzName = Triangle.name;
     }
 }

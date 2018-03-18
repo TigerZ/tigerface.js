@@ -31,7 +31,7 @@ class PieChartSprite extends CanvasSprite {
         this._data_ = [];
         this.h0 = 0;
         this._config_ = _default;
-        this.clazz = 'PieChartSprite';
+        this.clazzName = 'PieChartSprite';
     }
 
     update(options) {

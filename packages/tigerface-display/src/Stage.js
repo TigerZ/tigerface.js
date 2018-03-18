@@ -19,7 +19,7 @@ export default class Stage extends DomSprite {
     constructor(options, dom) {
 
         let props = {
-            clazz : Stage.name,
+            clazzName : Stage.name,
             fps: 60, // 每秒60帧
             preventDefault: true,
             style: {'position': DomSprite.Position.RELATIVE}

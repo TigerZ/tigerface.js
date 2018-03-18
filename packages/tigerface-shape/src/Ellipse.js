@@ -18,7 +18,7 @@ export default class Ellipse extends Sector {
 
     constructor(x, y, radiusX, radiusY, precision) {
         super(x, y, radiusX, radiusY, 0, 360, precision);
-        this.clazz = Ellipse.name;
+        this.clazzName = Ellipse.name;
     }
 
     clone() {

@@ -11,7 +11,7 @@ import BaseComponent from "./BaseComponent";
 class SimpleSpriteComponent extends BaseComponent {
     constructor() {
         super();
-        this.clazz = SimpleSpriteComponent.name;
+        this.clazzName = SimpleSpriteComponent.name;
     }
 
     getSpriteInfo() {
@@ -34,7 +34,7 @@ class SimpleSpriteComponent extends BaseComponent {
 export default function withSimpleSpriteComponent(instance, canvasProps) {
     return class extends SimpleSpriteComponent {
         getSpriteInfo() {
-            let name = instance.name ? instance.name : (instance.clazz ? instance.clazz : '');
+            let name = instance.name ? instance.name : (instance.clazzName ? instance.clazzName : '');
             return {instance, canvasProps, name};
         }
     };

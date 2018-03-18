@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {AppContainer} from 'react-hot-loader'
-import AppRoot from './AppRoot';
+import AppRoot from './DomSpriteAppRoot';
 import $ from 'jquery';
 window.$ = $;
 
@@ -18,7 +18,7 @@ render(AppRoot);
 
 // Webpack Hot Module Replacement API
 if (module.hot) {
-    module.hot.accept('./AppRoot', () => {
+    module.hot.accept('./DomSpriteAppRoot', () => {
         render(AppRoot);
     })
 }

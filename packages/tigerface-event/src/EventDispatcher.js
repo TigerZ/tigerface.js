@@ -19,7 +19,7 @@ class EventDispatcher extends BaseObject {
      */
     constructor(options) {
         let props = {
-            clazz : EventDispatcher.name
+            clazzName : EventDispatcher.name
         }
         super(props);
 
@@ -172,7 +172,7 @@ export const Mixin = {
     emit(eventName, data) {
 
         let e = {
-            clazz: "Event",
+            clazzName: "Event",
             currentTarget: this,
             eventName: eventName
         };
@@ -279,7 +279,7 @@ export const Mixin = {
      */
     // dispatchEventCrossWindow(eventName, data, win) {
     //     let e = {
-    //         clazz: "Event",
+    //         clazzName: "Event",
     //         currentTarget: this,
     //         eventName: eventName
     //     };

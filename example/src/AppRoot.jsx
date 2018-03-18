@@ -36,7 +36,7 @@ import {Event} from "tigerface-event";
 class BallSprite extends CanvasSprite {
     constructor() {
         super();
-        this.clazz = BallSprite.name;
+        this.clazzName = BallSprite.name;
         this.size = {width: 100, height: 100};
         this.pos = {x: 100, y: 100};
         this.step = 1;
@@ -88,21 +88,21 @@ export default class AppRoot extends React.Component {
                 <Stage fps={20} style={Style0}>
                     <Tag.Dom>
                         <Tag.Surface title={'Surface'} style={Style1}>
-                            <Tag.Sprite clazz={BallSprite}/>
+                            <Tag.Sprite clazzName={BallSprite}/>
                         </Tag.Surface>
                     </Tag.Dom>
                 </Stage>
                 <Stage fps={40} style={Style0}>
                     <Tag.Dom>
                         <Tag.Surface title={'Surface'} style={Style2}>
-                            <Tag.Sprite clazz={BallSprite}/>
+                            <Tag.Sprite clazzName={BallSprite}/>
                         </Tag.Surface>
                     </Tag.Dom>
                 </Stage>
                 <Stage style={Style0}>
                     <Tag.Dom>
                         <Tag.Surface title={'Surface'} style={Style3}>
-                            <Tag.Sprite clazz={BallSprite}/>
+                            <Tag.Sprite clazzName={BallSprite}/>
                         </Tag.Surface>
                     </Tag.Dom>
                 </Stage>

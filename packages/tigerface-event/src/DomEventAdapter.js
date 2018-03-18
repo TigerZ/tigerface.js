@@ -39,25 +39,7 @@ function addSystemEventListener(dom, eventName, listener) {
     }
 }
 
-/**
- * 转换页面坐标为内部坐标
- * 注意：当 DOM 旋转后，得到的是外接矩形的内部坐标！！！
- * @param dom
- * @param pageX
- * @param pageY
- * @returns {{x:number, y:number}}
- * @private
- */
-function pagePosToDomPos(dom, pageX, pageY) {
-    let pos = $(dom).offset();
-    if (dom === document)
-        return {x:pageX, y:pageY};
-    else {
-        let offsetLeft = parseFloat(T.css(dom, "margin-left")) + parseFloat(T.css(dom, "padding-left"));
-        let offsetTop = parseFloat(T.css(dom, "margin-top")) + parseFloat(T.css(dom, "padding-top"));
-        return {x:pageX - pos.left + offsetLeft, y:pageY - pos.top + offsetTop};
-    }
-}
+
 
 export default class DomEventAdapter extends EventDispatcher {
     static logger = Logger.getLogger(DomEventAdapter.name);
@@ -71,7 +53,7 @@ export default class DomEventAdapter extends EventDispatcher {
     constructor(dom, options, handler) {
 
         let props = {
-            clazz: DomEventAdapter.name,
+            clazzName: DomEventAdapter.name,
             preventDefault: true
         };
 
@@ -163,7 +145,7 @@ export default class DomEventAdapter extends EventDispatcher {
             // 如果不是左键，那么放弃
             if (e.which !== undefined && e.which !== 1) return;
 
-            let pos = pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
 
             //console.log("Event.MouseEvent.MOUSE_DOWN");
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_DOWN, e, {
@@ -176,18 +158,18 @@ export default class DomEventAdapter extends EventDispatcher {
             // 如果不是左键，那么放弃
             if (e.which !== undefined && e.which !== 1) return;
 
-            let pos = pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
 
             //console.log("Event.MouseEvent.MOUSE_UP");
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, {
                 pos: pos
-            }, this.preventDefault);
+            }, false);
         });
 
         // 鼠标移动事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
         addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_MOVE, (e)=> {
 
-            let pos = pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             // this.logger.debug(`系统事件：MOUSE_MOVE`, pos);
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE, e, {
                 pos: pos
@@ -197,7 +179,7 @@ export default class DomEventAdapter extends EventDispatcher {
 
         // 鼠标移入事件
         addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_OVER, (e)=> {
-            let pos = pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_OVER, e, {
                 pos: pos
             }, this.preventDefault);
@@ -205,7 +187,7 @@ export default class DomEventAdapter extends EventDispatcher {
 
         // 鼠标移出事件
         addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_OUT, (e)=> {
-            let pos = pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_OUT, e, {
                 pos: pos
             }, this.preventDefault);
@@ -216,10 +198,10 @@ export default class DomEventAdapter extends EventDispatcher {
             // 如果不是左键，那么放弃
             if (e.which !== undefined && e.which !== 1) return;
 
-            let pos = pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.CLICK, e, {
                 pos: pos
-            }, this.preventDefault);
+            }, false);
         });
 
         // 鼠标双击事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
@@ -227,7 +209,7 @@ export default class DomEventAdapter extends EventDispatcher {
             // 如果不是左键，那么放弃
             if (e.which !== undefined && e.which !== 1) return;
 
-            let pos = pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.DOUBLE_CLICK, e, {
                 pos: pos
             }, this.preventDefault);
@@ -235,7 +217,7 @@ export default class DomEventAdapter extends EventDispatcher {
 
         // 鼠标右键单击事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
         addSystemEventListener(this.dom, Event.MouseEvent.CONTEXT_MENU, (e)=> {
-            let pos = pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.CONTEXT_MENU, e, {
                 pos: pos
             }, true);
@@ -254,7 +236,7 @@ export default class DomEventAdapter extends EventDispatcher {
             for (let i = 0; i < e.touches.length; i++) {
                 let touch = e.touches.item(i);
                 //console.log(touch.pageX, touch.pageY);
-                let pos = pagePosToDomPos(this.dom, touch.pageX, touch.pageY);
+                let pos = T.pagePosToDomPos(this.dom, touch.pageX, touch.pageY);
                 touches.push({
                     pos: pos
                 });
@@ -265,13 +247,13 @@ export default class DomEventAdapter extends EventDispatcher {
             //console.log("Event.TouchEvent.TOUCH_START");
             this.dispatchSystemEvent(Event.TouchEvent.TOUCH_START, e, {
                 touches: touches
-            }, this.preventDefault);
+            }, false);
 
             if (touches.length === 1) {
                 //console.log("TOUCH_START -> Event.MouseEvent.MOUSE_DOWN");
                 this.dispatchSystemEvent(Event.MouseEvent.MOUSE_DOWN, e, {
                     pos: touches[0].pos
-                }, this.preventDefault);
+                }, false);
             }
         });
 
@@ -280,7 +262,7 @@ export default class DomEventAdapter extends EventDispatcher {
             let touches = [];
             for (let i = 0; i < e.touches.length; i++) {
                 let touch = e.touches.item(i);
-                let pos = pagePosToDomPos(this.dom, touch.pageX, touch.pageY);
+                let pos = T.pagePosToDomPos(this.dom, touch.pageX, touch.pageY);
                 touches.push({
                     start: lastTouches[i].start,
                     pos: pos

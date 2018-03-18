@@ -3,6 +3,7 @@
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
 import Logger from './Logger';
+import $ from "jquery";
 
 const logger = Logger.getLogger('Utilities');
 
@@ -457,5 +458,36 @@ export default {
             let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
+    },
+
+    /**
+     * 转换页面坐标为内部坐标
+     * 注意：当 DOM 旋转后，得到的是外接矩形的内部坐标！！！
+     * @param dom
+     * @param pageX
+     * @param pageY
+     * @returns {{x:number, y:number}}
+     * @private
+     */
+    pagePosToDomPos: function (dom, pageX, pageY) {
+        let pos = $(dom).offset();
+        if (dom === document)
+            return {x: pageX, y: pageY};
+        else {
+            let offsetLeft = parseFloat(this.css(dom, "margin-left")) + parseFloat(this.css(dom, "padding-left"));
+            let offsetTop = parseFloat(this.css(dom, "margin-top")) + parseFloat(this.css(dom, "padding-top"));
+            return {x: pageX - pos.left + offsetLeft, y: pageY - pos.top + offsetTop};
+        }
+    },
+
+    domPosToPagePos: function (dom, domX, domY) {
+        let pos = $(dom).offset();
+        if (dom === document)
+            return {x: domX, y: domY};
+        else {
+            let offsetLeft = parseFloat(this.css(dom, "margin-left")) + parseFloat(this.css(dom, "padding-left"));
+            let offsetTop = parseFloat(this.css(dom, "margin-top")) + parseFloat(this.css(dom, "padding-top"));
+            return {x: domX + pos.left - offsetLeft, y: domY + pos.top - offsetTop};
+        }
     }
 }

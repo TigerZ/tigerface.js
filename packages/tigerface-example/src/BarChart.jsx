@@ -30,7 +30,7 @@ class BarChartSprite extends CanvasSprite {
         this._data_ = [];
         this.h0 = 0;
         this._config_ = _default;
-        this.clazz = 'BarChartSprite';
+        this.clazzName = 'BarChartSprite';
         this.name = 'BarChart';
     }
 

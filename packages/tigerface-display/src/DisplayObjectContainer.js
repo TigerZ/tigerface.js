@@ -13,7 +13,7 @@ export default class DisplayObjectContainer extends DisplayObject {
 
     constructor(options) {
         let props = {
-            clazz: DisplayObjectContainer.name,
+            clazzName: DisplayObjectContainer.name,
             _children_ : []
         };
 
@@ -397,4 +397,13 @@ export default class DisplayObjectContainer extends DisplayObject {
         }
     }
 
+    postChange(log) {
+        if(this._changed_) return;
+        super.postChange(log);
+
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
+            child.postChange('parent change');
+        }
+    }
 }

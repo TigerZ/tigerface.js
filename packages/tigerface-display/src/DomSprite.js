@@ -32,18 +32,12 @@ export default class DomSprite extends Sprite {
      * @param dom {HTMLElement} dom 节点
      */
     constructor(options, dom) {
-        try {
-            if (options instanceof HTMLElement && dom === undefined) {
-                dom = options;
-                options = {};
-            }
-        } catch (e) {
-            // eslint-disable-next-line no-empty
-        }
+
+        let _dom = typeof dom === 'string' ? document.createElement(dom) : (dom || document.createElement('div'));
 
         let props = {
-            clazz: DomSprite.name,
-            _dom_: dom || document.createElement('div'), // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
+            clazzName: DomSprite.name,
+            _dom_: _dom, // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
             width: '320',
             height: '240'
@@ -79,8 +73,10 @@ export default class DomSprite extends Sprite {
         //         'user-select': 'none'
         //     }
         // }, options));
+
         this.assign(T.merge({
             style: {
+                position: 'absolute',
                 padding: '0px', // 无内边距
                 margin: '0px', // 无外边距
                 overflow: 'hidden', // 溢出隐藏
@@ -102,6 +98,14 @@ export default class DomSprite extends Sprite {
 
     get dom() {
         return this._dom_ === document ? document.documentElement : this._dom_;
+    }
+
+    get id() {
+        return this.dom.id;
+    }
+
+    set id(v) {
+        return this.dom.id = v;
     }
 
     get css() {
@@ -134,6 +138,16 @@ export default class DomSprite extends Sprite {
     get graphics() {
         return undefined;
     }
+
+    get visible() {
+        return super.visible;
+    }
+
+    set visible(v) {
+        super.visible = v;
+        this.style = {visibility: this.visible ? 'visible' : 'hidden'};
+    }
+
 
     /**
      *
@@ -217,9 +231,9 @@ export default class DomSprite extends Sprite {
      */
     _onSizeChanged_() {
         //if(this.layout) return;
-        // console.log("***********", this.width + 'px', this.height + 'px');
-        T.css(this.dom, 'width', this.width + 'px');
-        T.css(this.dom, 'height', this.height + 'px');
+        // console.log("***********", this.width, this.height);
+        T.css(this.dom, 'width', typeof this.width === 'number' ? (this.width + 'px') : this.width);
+        T.css(this.dom, 'height', typeof this.height === 'number' ? (this.height + 'px') : this.height);
     }
 
     /**
@@ -234,7 +248,7 @@ export default class DomSprite extends Sprite {
         }
         // this.logger.debug('_onAddChild_(): parent =', this.dom, ' child =', child.dom);
         // this.logger.debug(`_onAddChild_(): ${parent.nodeName}[${parent.title}] =? ${this.dom.nodeName}[${this.dom.title}]`);
-        // this.logger.debug('_onAddChild_(): child =', child.name || child.clazz);
+        // this.logger.debug('_onAddChild_(): child =', child.name || child.clazzName);
         super._onAddChild_(child);
     }
 
@@ -328,7 +342,7 @@ export default class DomSprite extends Sprite {
     _onBeforeAddChild_(child) {
         if (child.isDomSprite)
             return true;
-        this.logger.warn(`_onBeforeAddChild_(${child.name || child.clazz} ${child.isDomSprite}): DomSprite 类型容器的 addChild 方法只能接受同样是 DomSprite 类型的子节点`);
+        this.logger.warn(`_onBeforeAddChild_(${child.name || child.clazzName} ${child.isDomSprite}): DomSprite 类型容器的 addChild 方法只能接受同样是 DomSprite 类型的子节点`);
         return false;
     }
 
@@ -422,5 +436,6 @@ export default class DomSprite extends Sprite {
             scrollLeft: dom.scrollLeft
         }
     }
+
 }
 
