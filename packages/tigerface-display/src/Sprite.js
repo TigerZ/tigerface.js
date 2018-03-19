@@ -175,7 +175,7 @@ export default class Sprite extends DisplayObjectContainer {
 
     _disableTouchMove_ = () => {
         if (this._dragging_) return false;
-    }
+    };
 
     //********************************* Event *********************************
 
