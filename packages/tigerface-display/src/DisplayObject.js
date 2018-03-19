@@ -40,10 +40,10 @@ export default class DisplayObject extends EventDispatcher {
             visible: true,
         };
 
-        // 基本信息
+        // 宿主信息
         this._parent_ = undefined;
-        this.layer = undefined;
-        this.stage = undefined;
+        this._layer_ = undefined;
+        this._stage_ = undefined;
 
         // 通过侦听 MOUSE_MOVE 事件，产生内部的 mouseX 和 mouseY 属性
         this.on(Event.MouseEvent.MOUSE_DOWN, e => this._onMouseDown_(e));
@@ -71,10 +71,15 @@ export default class DisplayObject extends EventDispatcher {
         return this.pos.y;
     }
 
+    /**
+     * 设置坐标
+     * @param pos {Point|{x:*,y:*}}
+     */
     set pos(pos) {
+        if (T.assignEqual(this.pos, pos)) return;
         Object.assign(this.state.pos, pos);
         this._onPosChanged_();
-        this.postChange('pos');
+        this.postChange('pos', this.pos);
     }
 
     get pos() {
@@ -102,10 +107,15 @@ export default class DisplayObject extends EventDispatcher {
         return this.scale.y;
     }
 
+    /**
+     * 设置缩放
+     * @param scale {Point|{x:*,y:*}}
+     */
     set scale(scale) {
+        if (T.assignEqual(this.scale, scale)) return;
         Object.assign(this.state.scale, scale);
         this._onScaleChanged_();
-        this.postChange('scale');
+        this.postChange('scale', this.scale);
     }
 
     get scale() {
@@ -117,10 +127,15 @@ export default class DisplayObject extends EventDispatcher {
 
     //*********************************** 透明度 **************************************
 
+    /**
+     * 设置透明度
+     * @param alpha {number} 0 至 1
+     */
     set alpha(alpha) {
+        if (T.assignEqual(this.alpha, alpha)) return;
         this.state.alpha = alpha;
         this._onAlphaChanged_();
-        this.postChange('setAlpha');
+        this.postChange('setAlpha', this.alpha);
     }
 
     get alpha() {
@@ -132,10 +147,15 @@ export default class DisplayObject extends EventDispatcher {
 
     //********************************** 旋转 ***************************************
 
+    /**
+     * 设置旋转角度
+     * @param rotation {number} 旋转角度
+     */
     set rotation(rotation) {
+        if (T.assignEqual(this.rotation, rotation)) return;
         this.state.rotation = rotation % 360;
         this._onRotationChanged_();
-        this.postChange('rotation');
+        this.postChange('rotation', this.rotation);
     }
 
     get rotation() {
@@ -147,10 +167,15 @@ export default class DisplayObject extends EventDispatcher {
 
     //*********************************** 可见 **************************************
 
+    /**
+     * 设置可见性
+     * @param visible {boolean} 是否可见
+     */
     set visible(visible) {
+        if (T.assignEqual(this.visible, visible)) return;
         this.state.visible = visible;
         this._onVisibleChanged_();
-        this.postChange('visible');
+        this.postChange('visible', this.visible);
     }
 
     get visible() {
@@ -178,10 +203,15 @@ export default class DisplayObject extends EventDispatcher {
         return this.origin.y;
     }
 
+    /**
+     * 设置原点
+     * @param origin {Point|{x:*,y:*}}
+     */
     set origin(origin) {
+        if (T.assignEqual(this.origin, origin)) return;
         Object.assign(this.state.origin, origin);
         this._onOriginChanged_();
-        this.postChange('origin');
+        this.postChange('origin', this.origin);
     }
 
     get origin() {
@@ -209,14 +239,16 @@ export default class DisplayObject extends EventDispatcher {
         return this.size.height;
     }
 
+    /**
+     * 设置大小
+     * @param size {{width:*,height:*}} 大小
+     */
     set size(size) {
-        const old = this.size;
+        if (T.assignEqual(this.size, size)) return;
         Object.assign(this.state.size, size);
         this._onSizeChanged_();
-        this.postChange('size');
-        if (this.state.size.width !== old.width || this.state.size.height !== old.height) {
-            this.dispatchEvent(Event.SIZE_CHANGED);
-        }
+        this.postChange('size', this.size);
+        this.dispatchEvent(Event.SIZE_CHANGED);
     }
 
     get size() {
@@ -248,6 +280,10 @@ export default class DisplayObject extends EventDispatcher {
         // this.logger.debug(`_onMouseMove_(): this._mouseX_=${this._mouseX_}, this._mouseY_=${this._mouseY_}`);
     }
 
+    /**
+     * 鼠标按下事件
+     * @param e
+     */
     _onMouseDown_(e) {
         this._onMouseMove_(e);
     }
@@ -265,18 +301,25 @@ export default class DisplayObject extends EventDispatcher {
     /**
      * 提交“已改变”状态
      * @param log
+     * @return {boolean}
      */
-    postChange(log) {
-        if (this._changed_) return;
+    postChange(...log) {
+        if(this.isChanged) return false;
 
         this._changed_ = true;
-        // this._change_log_ = log;
-        this.dispatchEvent(Event.STATUS_CHANGED, {log});
-        if (this.parent) this.parent.postChange(log);
+        this.dispatchEvent(Event.STATUS_CHANGED);
+        if (log.length && log[0]) this.logger.debug('状态改变', ...log);
+        if (this.parent) this.parent.postChange();
+        return true;
     }
 
+    /**
+     * 再次传入属性值，更新状态
+     * @param options
+     */
     update(options) {
         super.update(options);
+        // 强制重绘
         this.postChange('update');
     }
 
@@ -285,14 +328,13 @@ export default class DisplayObject extends EventDispatcher {
      */
     clearChange() {
         this._changed_ = false;
-        // this._change_log_ = undefined;
     }
 
     /**
      * 是否已改变
      * @returns {boolean|*|DisplayObject._changed_}
      */
-    isChanged() {
+    get isChanged() {
         return this._changed_;
     }
 
@@ -300,24 +342,24 @@ export default class DisplayObject extends EventDispatcher {
 
     /**
      * 重绘方法，需要被实现
-     *
      */
     paint() {
     }
 
     /**
-     * 绘制前准备环境：缩放、旋转
-     *
+     * 绘制前处理
      */
     _onBeforePaint_() {
     }
 
+    /**
+     * 绘制后处理
+     */
     _onAfterPaint_() {
     }
 
     /**
      * 完整绘制方法，此方法会被主循环调用
-     *
      */
     _paint_() {
         let g = this.graphics;
@@ -423,13 +465,13 @@ export default class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 获得全局坐标
+     * 获得层坐标，用于检测层内投影碰撞，原名为 getGlobalPos
      *
      * @param localPos {Point} 内部坐标
      * @param digits {number} 精度
-     * @returns {Point}
+     * @returns {Point} 坐标
      */
-    getGlobalPos(localPos, digits = 0) {
+    getLayerPos(localPos, digits = 0) {
         let pos = this.getOuterPos(localPos, digits);
         let parent = this.parent;
 
@@ -440,14 +482,18 @@ export default class DisplayObject extends EventDispatcher {
             pos = parent.getOuterPos(pos.move(o.x, o.y), digits);
             parent = parent.parent;
         }
-        //console.log("getGlobalPos", localPos, pos);
         return pos;
     }
 
+    /**
+     * 获得舞台坐标
+     * @param localPos {Point|{x:number,y:number}} 内部坐标
+     * @param digits number 精度
+     * @returns {Point} 坐标
+     */
     getStagePos(localPos, digits = 0) {
         let pos = this.getOuterPos(localPos, digits);
         let parent = this.parent;
-        console.log("***************getGlobalPos", parent);
         // parent.layer == parent 意味着是最顶级了
         while (parent && parent.stage !== parent) {
             // 因为孩子的坐标是从origin点开始计算的，所以要先补偿origin的坐标
@@ -455,7 +501,6 @@ export default class DisplayObject extends EventDispatcher {
             pos = parent.getOuterPos(pos.move(o.x, o.y), digits);
             parent = parent.parent;
         }
-        console.log("***************getGlobalPos", localPos, pos);
         return pos;
     }
 
@@ -493,8 +538,9 @@ export default class DisplayObject extends EventDispatcher {
 
     //********************************** 宿主 ***************************************
 
-    set parent(value) {
-        this._parent_ = value;
+    set parent(v) {
+        if(this.parent === v) return;
+        this._parent_ = v;
         this._onAppendToParent_();
     }
 
@@ -503,22 +549,52 @@ export default class DisplayObject extends EventDispatcher {
     }
 
     _onAppendToParent_() {
-        if (this.parent) {
-            this.dispatchEvent(Event.APPEND_TO_PARENT);
-            this.postChange("AppendToParent");
+        if (!this.parent) return;
+        this.dispatchEvent(Event.APPEND_TO_PARENT);
+        this.postChange("AppendToParent");
+        this._onAppendToLayer_();
+        this._onAppendToStage_();
+    }
+
+    get stage() {
+        if (!this._stage_) {
+            // 通过 parent 的 get 方法向上遍历
+            if (this.parent) this._stage_ = this.parent.stage;
         }
+        return this._stage_;
+    }
+
+    set stage(v) {
+        if (this.stage === v) return;
+        this._stage_ = v;
     }
 
     _onAppendToStage_() {
-        if (this.stage && this.stage !== this) {
+        if (!this._stage_ && this.stage && this.stage !== this) {
             this.dispatchEvent(Event.APPEND_TO_STAGE);
             this.postChange("AppendToStage");
         }
     }
 
+    get layer() {
+        if (!this._layer_) {
+            // 通过 parent 的 get 方法向上遍历
+            if (this.parent) this._layer_ = this.parent.layer;
+        }
+        return this._layer_;
+    }
+
+    /**
+     * 设置 Layer
+     * @param v {CanvasLayer}
+     */
+    set layer(v) {
+        if (this.layer === v) return;
+        this._layer_ = v;
+    }
+
     _onAppendToLayer_() {
-        this.getLayer();
-        if (this.layer) {
+        if (!this._layer_ && this.layer && this.layer !== this) {
             this.dispatchEvent(Event.APPEND_TO_LAYER);
             this.postChange("AppendToLayer");
         }

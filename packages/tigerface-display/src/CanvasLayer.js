@@ -144,7 +144,6 @@ export default class CanvasLayer extends DomSprite {
         super.addChild(child);
         child.graphics = this.graphics;
         child.layer = this;
-        child._onAppendToLayer_();
         return this;
     }
 
@@ -221,7 +220,7 @@ export default class CanvasLayer extends DomSprite {
      */
     _paint_() {
 
-        if (!this.redrawAsNeeded || this.isChanged()) {
+        if (!this.redrawAsNeeded || this.isChanged) {
             if (!this._painting_) {
                 this._painting_ = true;
                 CanvasLayer.logger.debug(`开始重绘`);

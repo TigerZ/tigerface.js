@@ -235,21 +235,37 @@ export default {
             return obj;
     },
 
-    isEqual: function (a, b) {
+    deepEqual: function (a, b) {
         if (typeof a === typeof b) {
             if (typeof a === "object") {
                 for (let key in a) {
-                    if (!this.isEqual(a[key], b[key])) return false;
+                    if (!this.deepEqual(a[key], b[key])) return false;
                 }
                 for (let key in b) {
-                    if (!this.isEqual(a[key], b[key])) return false;
+                    if (!this.deepEqual(a[key], b[key])) return false;
                 }
             } else if (this.isArray(a)) {
                 if (a.length != b.length) return false;
                 for (let i = 0; i < a.length; i++) {
-                    if (!this.isEqual(a[i], b[i])) return false;
+                    if (!this.deepEqual(a[i], b[i])) return false;
                 }
             } else if (a != b) return false;
+            return true;
+        }
+        return false;
+    },
+
+    assignEqual: function (a, b) {
+        if (typeof a === typeof b) {
+            if (typeof a === "object") {
+                for (let key in b) {
+                    if (a[key] !== b[key]) return false;
+                }
+            } else if (this.isArray(a)) {
+                for (let i = 0; i < Math.min(a.length, b.length); i++) {
+                    if (a[i]!== b[i]) return false;
+                }
+            } else if (a !== b) return false;
             return true;
         }
         return false;

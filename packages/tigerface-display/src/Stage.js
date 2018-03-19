@@ -31,7 +31,7 @@ export default class Stage extends DomSprite {
         // this.setStyle({"position", DomSprite.Position.RELATIVE);
 
         // 舞台标识
-        this.stage = this;
+        this._stage_ = this;
 
         // 如果舞台绑定的是局部 Dom 对象，那么在这个 Dom 对象里绘制签名
         // this._signing_();

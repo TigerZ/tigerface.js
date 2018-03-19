@@ -14,14 +14,13 @@ export default class DisplayObjectContainer extends DisplayObject {
     constructor(options) {
         let props = {
             clazzName: DisplayObjectContainer.name,
-            _children_ : []
+            _children_: []
         };
 
         super(props);
 
         this.assign(options);
     }
-
 
 
     // set children(v) {
@@ -333,35 +332,6 @@ export default class DisplayObjectContainer extends DisplayObject {
 
     }
 
-    /**
-     * 通过向祖先的递归遍历，获得 stage 对象
-     */
-    get stage() {
-        if (!this._stage_) {
-            let ancestors = [];
-            let parent = this.parent;
-            while (parent) {
-                // 直到找到个知道stage的上级
-                if (parent.stage) {
-                    this.stage = parent.stage;
-                    // 顺便把stage赋给全部没定义stage的上级
-                    for (let i = 0; i < ancestors.length; i++) {
-                        ancestors[i].stage = this._stage_;
-                    }
-                    break;
-                } else {
-                    ancestors.push(parent);
-                }
-                parent = parent.parent;
-            }
-        }
-        return this._stage_;
-    }
-
-    set stage(v) {
-        this._stage_ = v;
-    }
-
     get graphics() {
         if (this._graphics_ === undefined) {
             if (this.parent && this.parent.graphics) {
@@ -381,12 +351,10 @@ export default class DisplayObjectContainer extends DisplayObject {
      */
     _onAddChild_(child) {
         this.emit(Event.NodeEvent.CHILD_ADDED, child);
-        child._onAppendToStage_();
     }
 
     /**
-     * 判断是否已添加至 stage 链，如果能获得 stage 对象，那么发送 APPEND_TO_STAGE 事件
-     * @private
+     * 覆盖超类方法，增加遍历孩子
      */
     _onAppendToStage_() {
         super._onAppendToStage_();
@@ -397,21 +365,103 @@ export default class DisplayObjectContainer extends DisplayObject {
         }
     }
 
-    postChange(log) {
-        if(this._changed_) return;
-        super.postChange(log);
+    /**
+     * 覆盖超类方法，增加遍历孩子
+     */
+    _onAppendToLayer_() {
+        super._onAppendToLayer_();
 
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
-            child.postChange('parent change');
+            child._onAppendToLayer_();
         }
     }
 
+    /**
+     * 覆盖超类方法，增加遍历孩子
+     */
+    postChange(...log) {
+        if (!super.postChange(...log)) return;
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
+            child.postChange();
+        }
+    }
+
+    /**
+     * 覆盖超类方法，增加遍历孩子
+     */
     _onPosChanged_() {
         super._onPosChanged_();
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
             child._onPosChanged_();
+        }
+    }
+
+    /**
+     * 覆盖超类方法，增加遍历孩子
+     */
+    _onScaleChanged_() {
+        super._onScaleChanged_();
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
+            child._onScaleChanged_();
+        }
+    }
+
+    /**
+     * 覆盖超类方法，增加遍历孩子
+     */
+    _onAlphaChanged_() {
+        super._onAlphaChanged_();
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
+            child._onAlphaChanged_();
+        }
+    }
+
+    /**
+     * 覆盖超类方法，增加遍历孩子
+     */
+    _onRotationChanged_() {
+        super._onRotationChanged_();
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
+            child._onRotationChanged_();
+        }
+    }
+
+    /**
+     * 覆盖超类方法，增加遍历孩子
+     */
+    _onVisibleChanged_() {
+        super._onVisibleChanged_();
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
+            child._onVisibleChanged_();
+        }
+    }
+
+    /**
+     * 覆盖超类方法，增加遍历孩子
+     */
+    _onOriginChanged_() {
+        super._onOriginChanged_();
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
+            child._onOriginChanged_();
+        }
+    }
+
+    /**
+     * 覆盖超类方法，增加遍历孩子
+     */
+    _onSizeChanged_() {
+        super._onSizeChanged_();
+        for (let i = this.children.length - 1; i >= 0; i--) {
+            let child = this.children[i];
+            child._onSizeChanged_();
         }
     }
 }

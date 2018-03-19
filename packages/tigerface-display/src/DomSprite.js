@@ -140,7 +140,7 @@ export default class DomSprite extends Sprite {
     set className(v) {
         this.props.className = v;
         T.addClass(this.dom, v);
-        this.postChange();
+        this.postChange('dom class', v);
     }
 
     get graphics() {
@@ -363,8 +363,9 @@ export default class DomSprite extends Sprite {
      * @param autoPrefix {boolean} 是否添加多浏览器前缀
      */
     setStyle(style, autoPrefix = false) {
+        if (T.assignEqual(this.dom.style, style)) return;
         T.cssMerge(this.dom, style, autoPrefix);
-        this.postChange();
+        this.postChange('dom style', style);
     }
 
     /**

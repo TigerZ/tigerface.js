@@ -105,13 +105,8 @@ export default class CanvasSprite extends Sprite {
         return this._cover_;
     }
 
-    postChange(log) {
-        super.postChange(log);
-
-        // 继续向上层传播
-        if (this.getLayer()) {
-            this.getLayer().postChange("ChildChanged");
-        }
+    postChange(...log) {
+        super.postChange(...log);
     }
 
     /**
@@ -155,31 +150,7 @@ export default class CanvasSprite extends Sprite {
         }
     }
 
-    /**
-     * 通过向上层对象的递归，找到 CanvasLayer 对象的实例
-     * @returns {CanvasLayer}
-     */
-    getLayer() {
-        if (!this.layer) {
-            let ancestors = [];
-            let parent = this.parent;
-            while (parent) {
-                // 直到找到个知道stage的上级
-                if (parent.layer) {
-                    this.layer = parent.layer;
-                    // 顺便把stage赋给全部没定义stage的上级
-                    for (let i = 0; i < ancestors.length; i++) {
-                        ancestors[i].layer = this.layer;
-                    }
-                    break;
-                } else {
-                    ancestors.push(parent);
-                }
-                parent = parent.parent;
-            }
-        }
-        return this.layer;
-    }
+
 
     /**
      * 绘制自身前处理：缩放，旋转，平移原点
@@ -248,23 +219,22 @@ export default class CanvasSprite extends Sprite {
         // 通过感应区的外边框的坐标变换，来计算投影的旋转和缩放
         for (let i = 0; i < this.bounds.length; i++) {
             let bound = this.bounds[i];
-            shadow.addBound(this._shapeToGlobal_(bound));
+            shadow.addBound(this._shapeToLayer_(bound));
         }
         return shadow;
     }
 
     _onAddChild_(child) {
         super._onAddChild_(child);
-        child._onAppendToLayer_();
     }
 
-    _shapeToGlobal_(shape) {
+    _shapeToLayer_(shape) {
         let vertexes = shape.getVertexes();
         let points = [];
         for (let i = 0; i < vertexes.length; i++) {
-            points.push(this.getGlobalPos(vertexes[i]));
+            points.push(this.getLayerPos(vertexes[i]));
         }
-        //console.log("_shapeToGlobal_", shape, new Rectangle(points), new Polygon(points));
+        //console.log("_shapeToLayer_", shape, new Rectangle(points), new Polygon(points));
         if (Rectangle.isRectangle(points)) {
             return new Rectangle(points);
         }

@@ -141,7 +141,7 @@ export default class Sprite extends DisplayObjectContainer {
         this.parent.addEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
 
         if (!this._dragging_) {
-            this.logger.debug(`_startDrag_(): mousePos=`, this.getMousePos());
+            this.logger.debug(`开始拖拽 _startDrag_(): mousePos=`, this.getMousePos());
             this._dragging_ = true;
             let m = this.getOuterPos(this.getMousePos());
             this._dragX_ = m.x - this.x;
@@ -153,7 +153,7 @@ export default class Sprite extends DisplayObjectContainer {
 
     _endDrag_ = () => {
         if (this._dragging_) {
-            this.logger.debug(`_endDrag_()`);
+            this.logger.debug(`停止拖拽 _endDrag_()`);
             this._dragging_ = false;
             this.dispatchEvent(Event.MouseEvent.DRAG_END);
             return true;

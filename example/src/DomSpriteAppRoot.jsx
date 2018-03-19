@@ -26,7 +26,7 @@ class DemoCanvasSprite extends CanvasSprite {
         this.addBound(new Rectangle(0, 0, 100, 50));
         this.initCover();
 
-        this.onClick = () => {
+        this.onDoubleClick = () => {
             this.cover.visible = true;
         };
     }
