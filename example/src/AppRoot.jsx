@@ -18,7 +18,6 @@ import {Event} from "tigerface-event";
 //     }
 //
 //     _createDisplayObject_(dom) {
-//         // console.log("**********", dom, props);
 //         let sprite = new DomSprite({}, dom);
 //         // sprite.on(Event.NodeEvent.CHILDREN_CHANGED, ()=>{
 //         //     console.log("子节点发生变化", sprite.children);

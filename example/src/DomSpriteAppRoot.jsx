@@ -7,15 +7,23 @@ const cover = new DomSprite({visible: false});
 
 class DemoDomSprite extends DomSprite {
     constructor(opts) {
-        super(opts);
+        super({
+            clazzName: 'DemoDomSprite'
+        });
+        this.assign(opts);
         this.enableDrag();
-        // this.origin = {x:50, y:25};
+        this.origin = {x: 0, y: 15};
         this.pos = {x: 200, y: 150};
-        // this.on(Event.MouseEvent.MOUSE_UP, (e)=>{
-        //     this.pos = {x:this.pos.x-this.origin.x+e.pos.x, y:this.pos.y-this.origin.y+e.pos.y};
-        //     this.origin = e.pos;
-        //     this.postChange();
-        // })
+        this.scale = {x:1.8, y:0.8};
+        // this.step = 1;
+        this.rotation=90;
+    }
+
+    paint() {
+        // if (this.originX > this.width || this.originX < 0)
+        //     this.step = -this.step;
+        // this.originX += this.step;
+        this.rotation+=0.1;
     }
 }
 
@@ -34,8 +42,6 @@ class DemoCanvasSprite extends CanvasSprite {
     paint() {
         let g = this.graphics;
         g.drawPoint(this.parent.parent.origin, 5, g.PointStyle.DEFAULT);
-        // this.postChange();
-
     }
 }
 
@@ -64,23 +70,6 @@ export default class DomSpriteAppRoot extends React.Component {
             </Stage>
         )
     }
-}
-
-const CoverStyle = {
-    background: 'rgba(0,0,0,0.2)'
-}
-
-const InputStyle = {
-    position: 'absolute',
-    width: '100%',
-    height: '26px',
-    marginTop: '-13px',
-    top: '50%',
-    border: 0,
-    '-webkit-user-select': null,
-    '-moz-user-select': null,
-    '-ms-user-select': null,
-    'user-select': null
 }
 
 const StageStyle = {

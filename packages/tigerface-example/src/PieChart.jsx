@@ -67,12 +67,10 @@ class PieChartSprite extends CanvasSprite {
             let percent = 0
             if (idx === (data.length - 1)) {
                 percent = 100 - count;
-                // console.log("*******", percent, count);
             }
             else {
                 percent = Math.round(num / sum * 100);
                 count += percent;
-                // console.log("*******", num / sum, percent);
             }
             this._data_.push({num, name, percent});
         });

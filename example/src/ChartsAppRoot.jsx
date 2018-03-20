@@ -40,7 +40,6 @@ export default class AppRoot extends React.Component {
         else
             data = Object.assign([],demoData);
         this.setState({data: data});
-        // console.log("***************");
     };
 
     render() {

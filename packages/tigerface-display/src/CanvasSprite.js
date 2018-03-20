@@ -48,34 +48,42 @@ export default class CanvasSprite extends Sprite {
                 title: 'cover'
             });
 
-            let rect = this.boundingRect;
-            this._cover_.size = {width: rect.width, height: rect.height};
+            this.resetCover();
 
             if (this.stage) {
                 this.stage.addChild(this._cover_);
-                this.resetCoverPos();
+                this.resetCover();
             }
 
             this.on(Event.APPEND_TO_STAGE, () => {
                 this.stage.addChild(this._cover_);
-                this.resetCoverPos();
+                this.resetCover();
             });
-
-
-
         }
     }
 
-    resetCoverPos() {
-        let p0 = this.getStagePos({x: 0, y: 0});
-        this._cover_.pos = p0;
+    getBoundRectShadow() {
+        let p0 = this.getStagePos(this.pos);
+        let rect = this.boundingRect;
+        return {
+            pos: p0,
+            size: {width: rect.width, height: rect.height},
+            rotation: this.getStageRotation(),
+            origin: this.getStageOrigin(),
+            scale: this.getStageScale()
+        };
+    }
+
+    resetCover() {
+        if (!this._cover_ || !this._cover_.visible) return;
+        let props = this.getBoundRectShadow();
+        this.logger.debug('resetCover', props);
+        this._cover_.assign(props);
+        this.logger.debug('重置封面Dom');
     }
 
     showCover() {
-        let p0 = this.getStagePos({x: 0, y: 0});
-        this.cover.pos = p0;
-        let rect = this.boundingRect;
-        this._cover_.size = {width: rect.width, height: rect.height};
+        this.resetCover();
         this.cover.visible = true;
     }
 
@@ -83,30 +91,13 @@ export default class CanvasSprite extends Sprite {
         this.cover.visible = false;
     }
 
-    _onBoundingRectChanged_() {
-        super._onBoundingRectChanged_();
-        if (this._cover_) {
-            let p0 = this.getStagePos({x: 0, y: 0});
-            this._cover_.pos = p0;
-            let rect = this.boundingRect;
-            this._cover_.size = {width: rect.width, height: rect.height};
-        }
-    }
-
-    _onPosChanged_() {
-        super._onPosChanged_();
-        if (this._cover_) {
-            let p0 = this.getStagePos({x: 0, y: 0});
-            this._cover_.pos = p0;
-        }
+    _onStateChanged_() {
+        super._onStateChanged_();
+        this.resetCover();
     }
 
     get cover() {
         return this._cover_;
-    }
-
-    postChange(...log) {
-        super.postChange(...log);
     }
 
     /**
@@ -149,7 +140,6 @@ export default class CanvasSprite extends Sprite {
             this.dispatchEvent(eventName, {pos: mouse});
         }
     }
-
 
 
     /**
@@ -335,6 +325,5 @@ export default class CanvasSprite extends Sprite {
         }
         return this._offScreenContext_;
     }
-
 
 }

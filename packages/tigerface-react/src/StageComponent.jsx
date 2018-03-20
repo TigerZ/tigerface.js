@@ -92,6 +92,7 @@ const DisplayObjectRenderer = Reconciler({
 
 
         if (instance) {
+
             let _props = Object.assign({}, props);
             delete _props.children;
             delete _props.clazzName;

@@ -380,8 +380,9 @@ export default class DisplayObjectContainer extends DisplayObject {
     /**
      * 覆盖超类方法，增加遍历孩子
      */
-    postChange(...log) {
-        if (!super.postChange(...log)) return;
+    _onStateChanged_() {
+        super._onStateChanged_();
+
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
             child.postChange();
@@ -448,6 +449,7 @@ export default class DisplayObjectContainer extends DisplayObject {
      */
     _onOriginChanged_() {
         super._onOriginChanged_();
+
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
             child._onOriginChanged_();

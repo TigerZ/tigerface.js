@@ -259,7 +259,7 @@ export default {
         if (typeof a === typeof b) {
             if (typeof a === "object") {
                 for (let key in b) {
-                    if (a[key] !== b[key]) return false;
+                    if (!this.assignEqual(a[key], b[key])) return false;
                 }
             } else if (this.isArray(a)) {
                 for (let i = 0; i < Math.min(a.length, b.length); i++) {

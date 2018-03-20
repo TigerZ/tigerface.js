@@ -60,23 +60,10 @@ export default class DomSprite extends Sprite {
 
         this.isDomSprite = true;
 
-        // console.log("*************", options, T.merge({
-        //     style: {
-        //         padding: '0px', // 无内边距
-        //         margin: '0px', // 无外边距
-        //         overflow: 'hidden', // 溢出隐藏
-        //         display: 'block',
-        //         outline: 'none', // 隐藏 focus 的方框
-        //         '-webkit-user-select': 'none',
-        //         '-moz-user-select': 'none',
-        //         '-ms-user-select': 'none',
-        //         'user-select': 'none'
-        //     }
-        // }, options));
-
         this.assign(T.merge({
             style: {
                 position: 'absolute',
+                'transform-origin': '0px 0px 0px',
                 padding: '0px', // 无内边距
                 margin: '0px', // 无外边距
                 overflow: 'hidden', // 溢出隐藏
@@ -88,6 +75,8 @@ export default class DomSprite extends Sprite {
                 'user-select': 'none'
             }
         }, options));
+
+        this.logger.debug('初始化完成');
 
     }
 
@@ -125,12 +114,11 @@ export default class DomSprite extends Sprite {
     }
 
     get style() {
-        return this.props.style || {};
+        return this.dom.style || {};
     }
 
     set style(v) {
-        this.props.style = Object.assign(this.style, v);
-        this.setStyle(this.style);
+        this.setStyle(v);
     }
 
     get className() {
@@ -264,7 +252,7 @@ export default class DomSprite extends Sprite {
     }
 
     _onDomChanged_() {
-        // this.logger.debug('_onDomChanged_(): children =', this.children);
+        this.logger.debug('_onDomChanged_()', this.dom);
         for (let child of this.children) {
             let parent = child.dom.parentNode;
             if (parent !== this.dom) {
@@ -297,16 +285,15 @@ export default class DomSprite extends Sprite {
         this._onPosChanged_();
         this._setTransformOrigin_();
         this._setTransform_();
+
+        super._onOriginChanged_();
     }
 
     _onRotationChanged_() {
-        if (this.rotation === 0) return;
         this._setTransform_();
     }
 
     _onScaleChanged_() {
-        let scale = this.scale;
-        if (scale.x === 1 && scale.y === 1) return;
         this._setTransform_();
     }
 

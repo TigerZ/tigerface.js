@@ -274,4 +274,9 @@ export default class CanvasLayer extends DomSprite {
             child._onLayerMouseEvents_(e.eventName);
         }
     }
+
+    layerChanged() {
+        if (this.isChanged) return;
+        this._changed_ = true;
+    }
 }

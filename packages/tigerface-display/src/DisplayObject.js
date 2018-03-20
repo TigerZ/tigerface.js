@@ -219,6 +219,7 @@ export default class DisplayObject extends EventDispatcher {
     }
 
     _onOriginChanged_() {
+
     }
 
     //********************************** 大小 ***************************************
@@ -298,19 +299,20 @@ export default class DisplayObject extends EventDispatcher {
 
     //********************************** 状态改变事件 ***************************************
 
+    _onStateChanged_() {
+        if (this.layer) this.layer.layerChanged();
+    }
     /**
      * 提交“已改变”状态
      * @param log
      * @return {boolean}
      */
     postChange(...log) {
-        if(this.isChanged) return false;
-
+        if (log.length && log[0]) this.logger.debug('状态改变', ...log);
+        if (this.isChanged) return;
         this._changed_ = true;
         this.dispatchEvent(Event.STATUS_CHANGED);
-        if (log.length && log[0]) this.logger.debug('状态改变', ...log);
-        if (this.parent) this.parent.postChange();
-        return true;
+        this._onStateChanged_();
     }
 
     /**
@@ -503,6 +505,40 @@ export default class DisplayObject extends EventDispatcher {
         }
         return pos;
     }
+
+    getStageRotation() {
+        let rotation = this.rotation;
+        let parent = this.parent;
+        // parent.layer == parent 意味着是最顶级了
+        while (parent && parent.stage !== parent) {
+            rotation += parent.rotation;
+            parent = parent.parent;
+        }
+        return rotation%360;
+    }
+
+    getStageOrigin() {
+        let origin = this.origin;
+        let parent = this.parent;
+        // parent.layer == parent 意味着是最顶级了
+        while (parent && parent.stage !== parent) {
+            origin = {x:origin.x+parent.origin.x, y:origin.y+parent.origin.y};
+            parent = parent.parent;
+        }
+        return origin;
+    }
+
+    getStageScale() {
+        let scale = this.scale;
+        let parent = this.parent;
+        // parent.layer == parent 意味着是最顶级了
+        while (parent && parent.stage !== parent) {
+            scale = {x:scale.x*parent.scale.x, y:scale.y*parent.scale.y};
+            parent = parent.parent;
+        }
+        return scale;
+    }
+
 
     /**
      * 获得本地坐标
