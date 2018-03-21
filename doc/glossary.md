@@ -1,7 +1,7 @@
 # 基础知识
 
 * [ES6、类和属性](#es6类和属性)
-* 事件
+* [事件](#事件)
 * 舞台、重绘引擎、帧引擎、系统事件接口
 * 层、DomLayer、CanvasLayer
 * 显示对象、容器、精灵、CanvasSprite、DomSprite
@@ -18,7 +18,7 @@
 tigerface.js 架构整体使用 ECMAScript 6 语法编写，部分地方使用了更新的
 stage-1 阶段语法。
 
-架构的源代码依赖 babel 进行转码。使用 tigerface-cli 工具最新版本初始化的范例项目结构，
+架构的源代码依赖 babel 进行转码。使用 tigerface-cli 工具初始化的范例项目结构，
 就是tigerface.js 的标准开发项目，开发者可以查看项目里的 .babelrc 配置文件。
 在调试和发布时，架构使用 webpack 进行打包和压缩，请查看项目里的 webpack.config.js 文件。
 
@@ -44,7 +44,7 @@ ES6 终于带给 JavaScript 形式上的 Class，现在可以像服务器端面�
 ```javascript
 export default class DisplayObject extends EventDispatcher {
 
-    // 静态 Logger，多用于记录架构中的调试信息，例如：消息的分发，更低层和详细，但方便屏蔽
+    // 静态 Logger，用于记录架构中的调试信息，例如：消息的分发，更详细，开发时方便屏蔽
     static logger = Logger.getLogger(DisplayObject.name);
 
     // 第一参数用于传入可选参数
@@ -169,3 +169,17 @@ tigerface-display 包里每个类都接收一个选项参数，用于传入用�
 ```
 从上面的代码可见，为了开发方便，DisplayObject 的位置属性，同时提供 x, y, pos，多种赋值方式，
 利用 ES6 的 setter 语法，通过属性赋值的形式执行方法体，存取同一属性，设置状态改变，发布事件。
+
+## 事件
+
+从前面的代码可以看到`class DisplayObject extends EventDispatcher`。
+tigerface-display 包里每个类都是 EventDispatcher 的子类。EventDispatcher 是事件分发器类，
+也就是说包里每个类都是事件分发器，可以通过 addEventDispatcher 或新的 on 方法来注册事件侦听器函数。
+
+事件发布和事件侦听是观察者模式的一个简单实现，开发者将对象的各种变化发布为自定义事件，
+然后侦听此事件，做响应的处理。这样使得对象间的代码依赖变得更松散。
+
+EventDispatcher 属于 tigerface-event 包。包内还有 DomEventAdapter 类，用于转发系统交互事件；
+FrameEventGenerator 类，用于生成重绘事件和帧事件。
+
+(待续)
