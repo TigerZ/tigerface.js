@@ -31,7 +31,7 @@ export default class DomSprite extends Sprite {
      * @param options {object|HTMLElement} 选项
      * @param dom {HTMLElement} dom 节点
      */
-    constructor(options, dom) {
+    constructor(options = undefined, dom = undefined) {
 
         let _dom = typeof dom === 'string' ? document.createElement(dom) : (dom || document.createElement('div'));
 

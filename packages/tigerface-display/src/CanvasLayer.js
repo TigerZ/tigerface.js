@@ -19,7 +19,7 @@ export default class CanvasLayer extends DomSprite {
      * @param options {object} 选项
      * @param dom {object} Dom节点
      */
-    constructor(options, dom = undefined) {
+    constructor(options = undefined, dom = undefined) {
         let props = {
             position: 'absolute',
             clazzName: CanvasLayer.name,

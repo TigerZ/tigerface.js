@@ -36,7 +36,7 @@ const MAX_LISTENERS = 100;
  */
 export const Mixin = {
     /**
-     * 构造器。内部缺省事件侦听器最大数量限制为 100，可通过设置环境变量 MAX_EVENT_LISTENERS 来改变此限制。
+     * 构造器
      */
     construct() {
     },

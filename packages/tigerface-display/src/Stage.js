@@ -16,7 +16,7 @@ export default class Stage extends DomSprite {
      * @param options 可选项
      * @param dom 舞台节点, 缺省是 document
      */
-    constructor(options, dom) {
+    constructor(options = undefined, dom = undefined) {
 
         let props = {
             clazzName : Stage.name,

@@ -16,7 +16,7 @@ export default class Sprite extends DisplayObjectContainer {
      *
      * @param options 选项
      */
-    constructor(options) {
+    constructor(options = undefined) {
 
         let props = {
             clazzName : Sprite.name,

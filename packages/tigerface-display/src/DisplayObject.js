@@ -21,7 +21,7 @@ export default class DisplayObject extends EventDispatcher {
      * 构造器。
      * @param options {Object} 属性初始值，比如：pos，origin，size ...
      */
-    constructor(options) {
+    constructor(options = undefined) {
         let props = {
             clazzName: DisplayObject.name,
             uuid: T.uuid(),
@@ -302,6 +302,7 @@ export default class DisplayObject extends EventDispatcher {
     _onStateChanged_() {
         if (this.layer) this.layer.layerChanged();
     }
+
     /**
      * 提交“已改变”状态
      * @param log
@@ -413,7 +414,7 @@ export default class DisplayObject extends EventDispatcher {
      * @returns {Point} 外部坐标
      */
     getOuterPos(point, digits = 0) {
-        if (undefined === point) return undefined;
+        if (point === undefined) return undefined;
         point = new Point(point.x, point.y);
 
         const o = this.origin;
@@ -469,20 +470,29 @@ export default class DisplayObject extends EventDispatcher {
     /**
      * 获得层坐标，用于检测层内投影碰撞，原名为 getGlobalPos
      *
-     * @param localPos {Point} 内部坐标
+     * @param localPos {Point|{x:*, y:*}} 内部坐标
      * @param digits {number} 精度
      * @returns {Point} 坐标
      */
-    getLayerPos(localPos, digits = 0) {
-        let pos = this.getOuterPos(localPos, digits);
-        let parent = this.parent;
+    // getLayerPos(localPos, digits = 0) {
+    //     let pos = this.getOuterPos(localPos, digits);
+    //     let parent = this.parent;
+    //
+    //     // parent.layer == parent 意味着是最顶级了
+    //     while (parent && parent.layer !== parent) {
+    //         // 因为孩子的坐标是从origin点开始计算的，所以要先补偿origin的坐标
+    //         let o = parent.origin;
+    //         pos = parent.getOuterPos(pos.move(o.x, o.y), digits);
+    //         parent = parent.parent;
+    //     }
+    //     return pos;
+    // }
 
-        // parent.layer == parent 意味着是最顶级了
-        while (parent && parent.layer !== parent) {
-            // 因为孩子的坐标是从origin点开始计算的，所以要先补偿origin的坐标
-            let o = parent.origin;
-            pos = parent.getOuterPos(pos.move(o.x, o.y), digits);
-            parent = parent.parent;
+    getLayerPos(localPos = {x: 0, y: 0}, digits = 0) {
+        let pos = this.getOuterPos({x: localPos.x + this.origin.x, y: localPos.y + this.origin.y}, digits);
+
+        if (this.parent && !this.parent.isLayer) {
+            pos = this.parent.getLayerPos(pos, digits);
         }
         return pos;
     }
@@ -493,48 +503,37 @@ export default class DisplayObject extends EventDispatcher {
      * @param digits number 精度
      * @returns {Point} 坐标
      */
-    getStagePos(localPos, digits = 0) {
-        let pos = this.getOuterPos(localPos, digits);
-        let parent = this.parent;
-        // parent.layer == parent 意味着是最顶级了
-        while (parent && parent.stage !== parent) {
-            // 因为孩子的坐标是从origin点开始计算的，所以要先补偿origin的坐标
-            let o = parent.origin;
-            pos = parent.getOuterPos(pos.move(o.x, o.y), digits);
-            parent = parent.parent;
+    getStagePos(localPos = {x: 0, y: 0}, digits = 0) {
+        let pos = this.getOuterPos({x: localPos.x + this.origin.x, y: localPos.y + this.origin.y}, digits);
+        if (this.parent && !this.parent.isStage) {
+            pos = this.parent.getStagePos(pos, digits);
         }
         return pos;
     }
 
     getStageRotation() {
         let rotation = this.rotation;
-        let parent = this.parent;
-        // parent.layer == parent 意味着是最顶级了
-        while (parent && parent.stage !== parent) {
-            rotation += parent.rotation;
-            parent = parent.parent;
-        }
-        return rotation%360;
+        if (this.parent && !this.parent.isStage)
+            rotation += this.parent.getStageRotation();
+        return rotation % 360;
     }
 
     getStageOrigin() {
         let origin = this.origin;
-        let parent = this.parent;
-        // parent.layer == parent 意味着是最顶级了
-        while (parent && parent.stage !== parent) {
-            origin = {x:origin.x+parent.origin.x, y:origin.y+parent.origin.y};
-            parent = parent.parent;
+
+        if (this.parent && !this.parent.isStage) {
+            let parentStageOrigin = this.parent.getStageOrigin();
+            origin = {x: origin.x + parentStageOrigin.x, y: origin.y + parentStageOrigin.y};
         }
         return origin;
     }
 
     getStageScale() {
         let scale = this.scale;
-        let parent = this.parent;
-        // parent.layer == parent 意味着是最顶级了
-        while (parent && parent.stage !== parent) {
-            scale = {x:scale.x*parent.scale.x, y:scale.y*parent.scale.y};
-            parent = parent.parent;
+
+        if (this.parent && !this.parent.isStage) {
+            let parentStageScale = this.parent.getStageScale();
+            scale = {x: scale.x * parentStageScale.x, y: scale.y * parentStageScale.y};
         }
         return scale;
     }
@@ -574,8 +573,16 @@ export default class DisplayObject extends EventDispatcher {
 
     //********************************** 宿主 ***************************************
 
+    get isStage() {
+        return this._stage_ === this;
+    }
+
+    get isLayer() {
+        return this._layer_ === this;
+    }
+
     set parent(v) {
-        if(this.parent === v) return;
+        if (this.parent === v) return;
         this._parent_ = v;
         this._onAppendToParent_();
     }
@@ -622,7 +629,7 @@ export default class DisplayObject extends EventDispatcher {
 
     /**
      * 设置 Layer
-     * @param v {CanvasLayer}
+     * @param v {*}
      */
     set layer(v) {
         if (this.layer === v) return;

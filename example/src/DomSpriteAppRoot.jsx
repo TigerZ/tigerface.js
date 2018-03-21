@@ -12,18 +12,21 @@ class DemoDomSprite extends DomSprite {
         });
         this.assign(opts);
         this.enableDrag();
-        this.origin = {x: 0, y: 15};
+        this.origin = {x: 50, y: 25};
         this.pos = {x: 200, y: 150};
-        this.scale = {x:1.8, y:0.8};
+        // this.scale = {x:1.8, y:0.8};
         // this.step = 1;
-        this.rotation=90;
+        this.rotation = 90;
+        this.num = 500;
     }
 
     paint() {
         // if (this.originX > this.width || this.originX < 0)
         //     this.step = -this.step;
         // this.originX += this.step;
-        this.rotation+=0.1;
+        if (--this.num > 0)
+            this.rotation += 0.1;
+
     }
 }
 

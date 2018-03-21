@@ -25,7 +25,7 @@ export default class CanvasSprite extends Sprite {
      *
      * @param options 选项
      */
-    constructor(options) {
+    constructor(options = undefined) {
 
         let props = {
             clazzName: CanvasSprite.name,
@@ -63,7 +63,7 @@ export default class CanvasSprite extends Sprite {
     }
 
     getBoundRectShadow() {
-        let p0 = this.getStagePos(this.pos);
+        let p0 = this.getStagePos();
         let rect = this.boundingRect;
         return {
             pos: p0,

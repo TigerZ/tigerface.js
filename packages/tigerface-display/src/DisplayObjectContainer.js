@@ -11,7 +11,7 @@ import DisplayObject from './DisplayObject';
 export default class DisplayObjectContainer extends DisplayObject {
     static logger = Logger.getLogger(DisplayObjectContainer.name);
 
-    constructor(options) {
+    constructor(options = undefined) {
         let props = {
             clazzName: DisplayObjectContainer.name,
             _children_: []
