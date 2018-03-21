@@ -3,21 +3,17 @@ import DomSprite from './DomSprite';
 import {Event} from 'tigerface-event';
 import {Graphics} from 'tigerface-graphic';
 
-/********************************************************************************************************
- *
- * Stage 是架构中显示对象的根容器，即舞台。
- * Stage 类在0.7版本后被简化，管理层的责任交给 DomContainer 和 CanvasContainer 处理。
- *
- *******************************************************************************************************/
-
-export default class CanvasLayer extends DomSprite {
+/**
+ * 画布层
+ */
+class CanvasLayer extends DomSprite {
     static logger = Logger.getLogger(CanvasLayer.name);
 
     /**
-     * 初始化舞台
+     * 初始化画布层
      *
      * @param options {object} 选项
-     * @param dom {object} Dom节点
+     * @param dom {object} Dom
      */
     constructor(options = undefined, dom = undefined) {
         let props = {
@@ -31,9 +27,6 @@ export default class CanvasLayer extends DomSprite {
             useDirtyRect: false,
             redrawAsNeeded: true,
             useOffScreenCanvas: false,
-            style: {
-                // backgroundColor: 'rgba(0,0,0,0.3)'
-            }
         };
 
         let canvas = dom || document.createElement("canvas");
@@ -57,7 +50,11 @@ export default class CanvasLayer extends DomSprite {
         this.on(Event.MouseEvent.MOUSE_DOWN, (e) => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_UP, (e) => this._onMouseEvents_(e));
 
-        this.assign(options);
+        this.assign(T.merge({
+            style: {
+                backgroundColor: 'rgba(255,255,255,0.3)'
+            }
+        }, options));
     }
 
     set devicePixelRatio(v) {
@@ -280,3 +277,5 @@ export default class CanvasLayer extends DomSprite {
         this._changed_ = true;
     }
 }
+
+export default CanvasLayer;

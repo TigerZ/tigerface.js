@@ -8,7 +8,7 @@ import {Logger} from 'tigerface-common';
 import {Event} from 'tigerface-event';
 import {Rectangle} from 'tigerface-shape';
 
-export default class Sprite extends DisplayObjectContainer {
+class Sprite extends DisplayObjectContainer {
     static logger = Logger.getLogger(Sprite.name);
 
     /**
@@ -277,3 +277,5 @@ export default class Sprite extends DisplayObjectContainer {
         this.on(Event.TouchEvent.TOUCH_MOVE_PINCH, func);
     }
 }
+
+export default Sprite;

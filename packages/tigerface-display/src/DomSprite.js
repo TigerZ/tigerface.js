@@ -15,7 +15,7 @@ import {Event, DomEventAdapter} from 'tigerface-event';
  *
  *******************************************************************************************************/
 
-export default class DomSprite extends Sprite {
+class DomSprite extends Sprite {
     static logger = Logger.getLogger(DomSprite.name);
 
     static Position = {
@@ -369,7 +369,7 @@ export default class DomSprite extends Sprite {
 
     /**
      *  添加 tween
-     * @param {{prop string, duration integer, effect string, delay integer}} prop
+     * @param {{prop:string, duration:number, effect:string, delay:number}} prop
      */
     addTween(prop) {
         if (T.isArray(prop)) {
@@ -387,8 +387,8 @@ export default class DomSprite extends Sprite {
     /**
      *
      * @param prop {string}
-     * @param duration {integer}
-     * @param delay {integer}
+     * @param duration {number}
+     * @param delay {number}
      * @param effect {string}
      * @returns {string}
      * @private
@@ -437,4 +437,6 @@ export default class DomSprite extends Sprite {
     }
 
 }
+
+export default DomSprite;
 

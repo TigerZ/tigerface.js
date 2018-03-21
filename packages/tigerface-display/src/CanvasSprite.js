@@ -17,7 +17,7 @@ import {Graphics} from 'tigerface-graphic';
  *
  *******************************************************************************************************/
 
-export default class CanvasSprite extends Sprite {
+class CanvasSprite extends Sprite {
     static logger = Logger.getLogger(CanvasSprite.logger);
 
     /**
@@ -68,9 +68,9 @@ export default class CanvasSprite extends Sprite {
         return {
             pos: p0,
             size: {width: rect.width, height: rect.height},
-            rotation: this.getStageRotation(),
-            origin: this.getStageOrigin(),
-            scale: this.getStageScale()
+            rotation: this._getStageRotation_(),
+            origin: this._getStageOrigin_(),
+            scale: this._getStageScale_()
         };
     }
 
@@ -327,3 +327,5 @@ export default class CanvasSprite extends Sprite {
     }
 
 }
+
+export default CanvasSprite;

@@ -8,7 +8,7 @@ import {Utilities as T, Logger} from 'tigerface-common';
 import DomSprite from './DomSprite';
 import {Event, FrameEventGenerator} from 'tigerface-event';
 
-export default class Stage extends DomSprite {
+class Stage extends DomSprite {
     static logger = Logger.getLogger(Stage.name);
 
     /**
@@ -114,3 +114,5 @@ export default class Stage extends DomSprite {
     }
 
 }
+
+export default Stage;

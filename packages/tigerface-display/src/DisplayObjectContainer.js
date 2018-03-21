@@ -8,7 +8,7 @@ import {Event} from 'tigerface-event';
 import {Logger} from 'tigerface-common';
 import DisplayObject from './DisplayObject';
 
-export default class DisplayObjectContainer extends DisplayObject {
+class DisplayObjectContainer extends DisplayObject {
     static logger = Logger.getLogger(DisplayObjectContainer.name);
 
     constructor(options = undefined) {
@@ -29,7 +29,7 @@ export default class DisplayObjectContainer extends DisplayObject {
 
     /**
      *
-     * @returns {[DisplayObject]}
+     * @returns [DisplayObject]
      */
     get children() {
         return this._children_;
@@ -467,3 +467,5 @@ export default class DisplayObjectContainer extends DisplayObject {
         }
     }
 }
+
+export default DisplayObjectContainer;

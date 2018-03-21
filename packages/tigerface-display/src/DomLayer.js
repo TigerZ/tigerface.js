@@ -6,10 +6,12 @@
 
 import DomSprite from './DomSprite';
 
-export default class DomLayer extends DomSprite {
+class DomLayer extends DomSprite {
     constructor(options = undefined, dom = undefined) {
         super({}, dom);
         this.layer = this;
         this.assign(options)
     }
 }
+
+export default DomLayer;

@@ -8,13 +8,13 @@ import {Utilities as T, Logger} from 'tigerface-common';
 
 /**
  * DisplayObject 是最底层显示对象，是其他现实对象的超类。
- * 职责：
+ * 职责：<br>sudo
  * 1、定义显示相关基本属性，比如：坐标、尺寸、原点、缩放、旋转、透明度 ...
  * 2、实现 setState 和 postChange 机制
  * 3、由 _paint_ 主绘制方法串起来的 paint 方法组，子类通过覆盖各阶段方法实现多态，应用类仅实现 paint 方法
  * 4、基本的内外部坐标转换方法：getOuterPos 和 getInnerPos
  */
-export default class DisplayObject extends EventDispatcher {
+class DisplayObject extends EventDispatcher {
     static logger = Logger.getLogger(DisplayObject.name);
 
     /**
@@ -259,21 +259,18 @@ export default class DisplayObject extends EventDispatcher {
     _onSizeChanged_() {
     }
 
-    //********************************** 绘图上下文 ***************************************
-
+    /**
+     * 获得画笔对象
+     * @return {*}
+     */
     get graphics() {
         return this._graphics_;
     }
 
-    set graphics(v) {
-        this._graphics_ = v;
-    }
-
-    //********************************** 鼠标事件 ***************************************
-
     /**
      * 鼠标移动事件侦听
      * @param e
+     * @private
      */
     _onMouseMove_(e) {
         this._mouseX_ = e.pos.x;
@@ -284,6 +281,7 @@ export default class DisplayObject extends EventDispatcher {
     /**
      * 鼠标按下事件
      * @param e
+     * @private
      */
     _onMouseDown_(e) {
         this._onMouseMove_(e);
@@ -304,7 +302,7 @@ export default class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 提交“已改变”状态
+     * 提交状态改变
      * @param log
      * @return {boolean}
      */
@@ -351,18 +349,21 @@ export default class DisplayObject extends EventDispatcher {
 
     /**
      * 绘制前处理
+     * @private
      */
     _onBeforePaint_() {
     }
 
     /**
      * 绘制后处理
+     * @private
      */
     _onAfterPaint_() {
     }
 
     /**
      * 完整绘制方法，此方法会被主循环调用
+     * @private
      */
     _paint_() {
         let g = this.graphics;
@@ -398,13 +399,13 @@ export default class DisplayObject extends EventDispatcher {
         g && g.restore();
     }
 
-    //********************************** 进入帧事件 ***************************************
-
+    /**
+     * 进入帧事件
+     * @private
+     */
     _onEnterFrame_() {
         this.emit(Event.ENTER_FRAME, {target: this});
     }
-
-    //********************************** 坐标转换 ***************************************
 
     /**
      * 返回外部坐标
@@ -474,20 +475,6 @@ export default class DisplayObject extends EventDispatcher {
      * @param digits {number} 精度
      * @returns {Point} 坐标
      */
-    // getLayerPos(localPos, digits = 0) {
-    //     let pos = this.getOuterPos(localPos, digits);
-    //     let parent = this.parent;
-    //
-    //     // parent.layer == parent 意味着是最顶级了
-    //     while (parent && parent.layer !== parent) {
-    //         // 因为孩子的坐标是从origin点开始计算的，所以要先补偿origin的坐标
-    //         let o = parent.origin;
-    //         pos = parent.getOuterPos(pos.move(o.x, o.y), digits);
-    //         parent = parent.parent;
-    //     }
-    //     return pos;
-    // }
-
     getLayerPos(localPos = {x: 0, y: 0}, digits = 0) {
         let pos = this.getOuterPos({x: localPos.x + this.origin.x, y: localPos.y + this.origin.y}, digits);
 
@@ -498,10 +485,11 @@ export default class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 获得舞台坐标
+     * 获得舞台投影的坐标
      * @param localPos {Point|{x:number,y:number}} 内部坐标
      * @param digits number 精度
      * @returns {Point} 坐标
+     * @private
      */
     getStagePos(localPos = {x: 0, y: 0}, digits = 0) {
         let pos = this.getOuterPos({x: localPos.x + this.origin.x, y: localPos.y + this.origin.y}, digits);
@@ -511,28 +499,43 @@ export default class DisplayObject extends EventDispatcher {
         return pos;
     }
 
-    getStageRotation() {
+    /**
+     * 获得舞台投影的旋转角度
+     * @return {number}
+     * @private
+     */
+    _getStageRotation_() {
         let rotation = this.rotation;
         if (this.parent && !this.parent.isStage)
-            rotation += this.parent.getStageRotation();
+            rotation += this.parent._getStageRotation_();
         return rotation % 360;
     }
 
-    getStageOrigin() {
+    /**
+     * 获得舞台投影的原点
+     * @return {*}
+     * @private
+     */
+    _getStageOrigin_() {
         let origin = this.origin;
 
         if (this.parent && !this.parent.isStage) {
-            let parentStageOrigin = this.parent.getStageOrigin();
+            let parentStageOrigin = this.parent._getStageOrigin_();
             origin = {x: origin.x + parentStageOrigin.x, y: origin.y + parentStageOrigin.y};
         }
         return origin;
     }
 
-    getStageScale() {
+    /**
+     * 获得舞台投影的缩放
+     * @return {*}
+     * @private
+     */
+    _getStageScale_() {
         let scale = this.scale;
 
         if (this.parent && !this.parent.isStage) {
-            let parentStageScale = this.parent.getStageScale();
+            let parentStageScale = this.parent._getStageScale_();
             scale = {x: scale.x * parentStageScale.x, y: scale.y * parentStageScale.y};
         }
         return scale;
@@ -542,11 +545,11 @@ export default class DisplayObject extends EventDispatcher {
     /**
      * 获得本地坐标
      *
-     * @param globalPos {Point} 全局坐标
+     * @param layerPos {Point} 层坐标
      * @param digits {number} 精度
      * @returns {Point}
      */
-    getLocalPos(globalPos, digits = 0) {
+    getLocalPos(layerPos, digits = 0) {
 
         // 寻找全部祖先
         let ancestor = [];
@@ -559,7 +562,7 @@ export default class DisplayObject extends EventDispatcher {
         }
 
         // 遍历全部祖先，分级转换为相对坐标
-        let pos = globalPos;
+        let pos = layerPos;
         for (let i = 0; i < ancestor.length; i++) {
             pos = ancestor[i].getInnerPos(pos);
             // 因为孩子的坐标是从origin点开始计算的，所以要先偏移origin的坐标
@@ -571,26 +574,44 @@ export default class DisplayObject extends EventDispatcher {
         return this.getInnerPos(pos, digits);
     }
 
-    //********************************** 宿主 ***************************************
-
+    /**
+     * 是否是舞台
+     * @return {boolean}
+     */
     get isStage() {
         return this._stage_ === this;
     }
 
+    /**
+     * 是否是层
+     * @return {boolean}
+     */
     get isLayer() {
         return this._layer_ === this;
     }
 
+    /**
+     * 设置上级
+     * @param v 上级对象
+     */
     set parent(v) {
         if (this.parent === v) return;
         this._parent_ = v;
         this._onAppendToParent_();
     }
 
+    /**
+     * 获取上级
+     * @return {*} 上级对象
+     */
     get parent() {
         return this._parent_;
     }
 
+    /**
+     * 添加至上级
+     * @private
+     */
     _onAppendToParent_() {
         if (!this.parent) return;
         this.dispatchEvent(Event.APPEND_TO_PARENT);
@@ -599,6 +620,10 @@ export default class DisplayObject extends EventDispatcher {
         this._onAppendToStage_();
     }
 
+    /**
+     * 获取舞台
+     * @return {*} 舞台对象
+     */
     get stage() {
         if (!this._stage_) {
             // 通过 parent 的 get 方法向上遍历
@@ -607,11 +632,19 @@ export default class DisplayObject extends EventDispatcher {
         return this._stage_;
     }
 
+    /**
+     * 设置舞台
+     * @param v 舞台对象
+     */
     set stage(v) {
         if (this.stage === v) return;
         this._stage_ = v;
     }
 
+    /**
+     * 添加至舞台
+     * @private
+     */
     _onAppendToStage_() {
         if (!this._stage_ && this.stage && this.stage !== this) {
             this.dispatchEvent(Event.APPEND_TO_STAGE);
@@ -619,6 +652,10 @@ export default class DisplayObject extends EventDispatcher {
         }
     }
 
+    /**
+     * 获取层
+     * @return {*} 层对象
+     */
     get layer() {
         if (!this._layer_) {
             // 通过 parent 的 get 方法向上遍历
@@ -628,14 +665,18 @@ export default class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 设置 Layer
-     * @param v {*}
+     * 设置层
+     * @param v {*} 层对象
      */
     set layer(v) {
         if (this.layer === v) return;
         this._layer_ = v;
     }
 
+    /**
+     * 添加至层
+     * @private
+     */
     _onAppendToLayer_() {
         if (!this._layer_ && this.layer && this.layer !== this) {
             this.dispatchEvent(Event.APPEND_TO_LAYER);
@@ -643,3 +684,5 @@ export default class DisplayObject extends EventDispatcher {
         }
     }
 }
+
+export default DisplayObject;
