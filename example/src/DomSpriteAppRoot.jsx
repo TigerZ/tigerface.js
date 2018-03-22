@@ -1,19 +1,19 @@
 import React from 'react';
-import {DomSprite, CanvasSprite} from 'tigerface-display';
-import {Stage, Tag} from 'tigerface-react';
-import {Rectangle} from 'tigerface-shape';
+import { DomSprite, CanvasSprite } from 'tigerface-display';
+import { Stage, Tag } from 'tigerface-react';
+import { Rectangle } from 'tigerface-shape';
 
-const cover = new DomSprite({visible: false});
+const cover = new DomSprite({ visible: false });
 
 class DemoDomSprite extends DomSprite {
     constructor(opts) {
         super({
-            clazzName: 'DemoDomSprite'
+            clazzName: 'DemoDomSprite',
         });
         this.assign(opts);
         this.enableDrag();
-        this.origin = {x: 50, y: 25};
-        this.pos = {x: 200, y: 150};
+        this.origin = { x: 50, y: 25 };
+        this.pos = { x: 200, y: 150 };
         // this.scale = {x:1.8, y:0.8};
         // this.step = 1;
         this.rotation = 90;
@@ -24,9 +24,10 @@ class DemoDomSprite extends DomSprite {
         // if (this.originX > this.width || this.originX < 0)
         //     this.step = -this.step;
         // this.originX += this.step;
-        if (--this.num > 0)
+        this.num += -1;
+        if (this.num > 0) {
             this.rotation += 0.1;
-
+        }
     }
 }
 
@@ -43,42 +44,41 @@ class DemoCanvasSprite extends CanvasSprite {
     }
 
     paint() {
-        let g = this.graphics;
+        const g = this.graphics;
         g.drawPoint(this.parent.parent.origin, 5, g.PointStyle.DEFAULT);
     }
 }
+
+const StageStyle = {
+    backgroundColor: 'rgba(255,255,0,0.3)',
+};
+
+const DomStyle = {
+    backgroundColor: 'rgba(255,0,0,0.3)',
+};
 
 /**
  * User: zyh
  * Date: 2018/3/18.
  * Time: 13:29.
  */
-export default class DomSpriteAppRoot extends React.Component {
-    constructor() {
-        super();
-    }
-
+class DomSpriteAppRoot extends React.Component {
     onblur = () => {
         cover.visible = false;
     };
 
     render() {
         return (
-            <Stage id={'stage'} style={StageStyle} width={640} height={480}>
+            <Stage id="stage" style={StageStyle} width={640} height={480}>
                 <Tag.Dom style={DomStyle} clazz={DemoDomSprite} width={100} height={50}>
                     <Tag.Surface width={100} height={50}>
-                        <Tag.Sprite clazz={DemoCanvasSprite}/>
+                        <Tag.Sprite clazz={DemoCanvasSprite} />
                     </Tag.Surface>
                 </Tag.Dom>
             </Stage>
-        )
+        );
     }
 }
 
-const StageStyle = {
-    backgroundColor: 'rgba(255,255,0,0.3)'
-}
+export default DomSpriteAppRoot;
 
-const DomStyle = {
-    backgroundColor: 'rgba(255,0,0,0.3)'
-}
