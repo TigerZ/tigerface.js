@@ -41,5 +41,5 @@ tigerface.js 是一个 javascript 开发架构，用于更简便地实现高度�
     ```
 
 1. 在浏览器中会显示运行效果：
-![范例](./doc/example.png "范例")
+![范例](./tutorials/example.png "范例")
 _说明：此范例是两个图表，点击"**刷新**"按钮_，更新演示数据，重绘图表
