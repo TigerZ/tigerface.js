@@ -2,7 +2,7 @@
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
 import $ from 'jquery';
-import {Utilities as T, Logger} from 'tigerface-common';
+import { Utilities as T, Logger } from 'tigerface-common';
 import EventDispatcher from './EventDispatcher';
 import Event from './Event';
 
@@ -13,7 +13,7 @@ import Event from './Event';
  */
 function isSupportTouch() {
     try {
-        return "ontouchstart" in window;
+        return 'ontouchstart' in window;
     } catch (e) {
         return false;
     }
@@ -25,10 +25,12 @@ function isSupportTouch() {
  * @private
  */
 function stopPropagation(e) {
-    if (e && e.preventDefault)
+    if (e && e.preventDefault) {
         e.preventDefault();
-    if (e && e.stopPropagation)
+    }
+    if (e && e.stopPropagation) {
         e.stopPropagation();
+    }
 }
 
 /**
@@ -42,12 +44,15 @@ function addSystemEventListener(dom, eventName, listener) {
     if (dom.addEventListener) {
         dom.addEventListener(eventName, listener, false);
     } else if (dom.attachEvent) {
-        dom.attachEvent('on' + eventName, listener);
+        dom.attachEvent(`on${eventName}`, listener);
     }
 }
 
 
-
+/**
+ * @memberof module:tigerface-event
+ * @extends EventDispatcher
+ */
 class DomEventAdapter extends EventDispatcher {
     static logger = Logger.getLogger(DomEventAdapter.name);
 
@@ -58,23 +63,23 @@ class DomEventAdapter extends EventDispatcher {
      * @param handler 事件接收对象
      */
     constructor(dom, options, handler) {
-
-        let props = {
+        const props = {
             clazzName: DomEventAdapter.name,
-            preventDefault: true
+            preventDefault: true,
         };
 
         super(props);
 
-        if (dom === undefined)
-            this.logger.error(`对象初始化时发现参数 dom 无效。`);
+        if (dom === undefined) {
+            this.logger.error('对象初始化时发现参数 dom 无效。');
+        }
 
         this.dom = dom;
         this.handler = handler;
 
         // 设置 tabIndex 属性，否则不会有 focus/blur 事件
-        if (T.attr(this.dom, "tabIndex") === undefined) {
-            T.attr(this.dom, "tabIndex", 1);
+        if (T.attr(this.dom, 'tabIndex') === undefined) {
+            T.attr(this.dom, 'tabIndex', 1);
         }
 
         this.assign(options);
@@ -86,7 +91,6 @@ class DomEventAdapter extends EventDispatcher {
         this.bindTouchEventListener();
 
         this.bindOtherEventListener();
-
     }
 
     /**
@@ -99,10 +103,10 @@ class DomEventAdapter extends EventDispatcher {
      */
     dispatchSystemEvent(eventName, e, data, preventDefault) {
         // this.logger.debug(`dispatchSystemEvent()`, eventName, this.handler, e, data);
-        data || (data = {});
-        data.name = eventName;
+        const _data = data || {};
+        _data.name = eventName;
 
-        data["_OriginalEvent_"] = e;
+        _data._OriginalEvent_ = e;
 
         let ret;
         if (this.handler) {
@@ -112,7 +116,7 @@ class DomEventAdapter extends EventDispatcher {
         }
 
         // 下面几句会导致触摸屏页面不能滚动，根据需要设置。
-        //if (preventDefault === true && ret === false) {
+        // if (preventDefault === true && ret === false) {
 
         // 当事件任何一个侦听器返回false，会导致系统终止缺省的事件传递
         if (preventDefault || ret === false) {
@@ -120,113 +124,112 @@ class DomEventAdapter extends EventDispatcher {
             stopPropagation(e);
             return false;
         }
+
+        return true;
     }
 
     bindKeyEventListener() {
-
         // 键盘按下事件，数据：按键的 keyCode
-        addSystemEventListener(window, Event.KeyEvent.KEY_DOWN, (e)=> {
+        addSystemEventListener(window, Event.KeyEvent.KEY_DOWN, (e) => {
             this.dispatchSystemEvent(Event.KeyEvent.KEY_DOWN, e, {
-                keyCode: e.keyCode
+                keyCode: e.keyCode,
             }, false);
         });
 
         // 键盘松开事件，数据：按键的 keyCode
-        addSystemEventListener(window, Event.KeyEvent.KEY_UP, (e)=> {
+        addSystemEventListener(window, Event.KeyEvent.KEY_UP, (e) => {
             this.dispatchSystemEvent(Event.KeyEvent.KEY_UP, e, {
-                keyCode: e.keyCode
+                keyCode: e.keyCode,
             }, false);
         });
 
         // 键盘持续按下事件，数据：按键的 keyCode
-        addSystemEventListener(window, Event.KeyEvent.KEY_PRESS, (e)=> {
+        addSystemEventListener(window, Event.KeyEvent.KEY_PRESS, (e) => {
             this.dispatchSystemEvent(Event.KeyEvent.KEY_PRESS, e, {
-                keyCode: e.keyCode
+                keyCode: e.keyCode,
             }, false);
         });
     }
 
     bindMouseEventListener() {
         // 鼠标键按下事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
-        addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_DOWN, (e)=> {
+        addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_DOWN, (e) => {
             // 如果不是左键，那么放弃
             if (e.which !== undefined && e.which !== 1) return;
 
-            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
 
-            //console.log("Event.MouseEvent.MOUSE_DOWN");
+            // console.log('Event.MouseEvent.MOUSE_DOWN');
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_DOWN, e, {
-                pos: pos
+                pos,
             }, this.preventDefault);
         });
 
         // 鼠标键松开事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
-        addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_UP, (e)=> {
+        addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_UP, (e) => {
             // 如果不是左键，那么放弃
             if (e.which !== undefined && e.which !== 1) return;
 
-            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
 
-            //console.log("Event.MouseEvent.MOUSE_UP");
+            // console.log('Event.MouseEvent.MOUSE_UP');
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, {
-                pos: pos
+                pos,
             }, false);
         });
 
         // 鼠标移动事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
-        addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_MOVE, (e)=> {
-
-            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
+        addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_MOVE, (e) => {
+            const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             // this.logger.debug(`系统事件：MOUSE_MOVE`, pos);
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE, e, {
-                pos: pos
+                pos,
             }, this.preventDefault);
-
         });
 
         // 鼠标移入事件
-        addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_OVER, (e)=> {
-            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
+        addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_OVER, (e) => {
+            const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_OVER, e, {
-                pos: pos
+                pos,
             }, this.preventDefault);
         });
 
         // 鼠标移出事件
-        addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_OUT, (e)=> {
-            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
+        addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_OUT, (e) => {
+            const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_OUT, e, {
-                pos: pos
+                pos,
             }, this.preventDefault);
         });
 
         // 鼠标单击事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
-        addSystemEventListener(this.dom, Event.MouseEvent.CLICK, (e)=> {
+        addSystemEventListener(this.dom, Event.MouseEvent.CLICK, (e) => {
             // 如果不是左键，那么放弃
             if (e.which !== undefined && e.which !== 1) return;
 
-            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.CLICK, e, {
-                pos: pos
+                pos,
             }, false);
         });
 
         // 鼠标双击事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
-        addSystemEventListener(this.dom, Event.MouseEvent.DOUBLE_CLICK, (e)=> {
+        addSystemEventListener(this.dom, Event.MouseEvent.DOUBLE_CLICK, (e) => {
             // 如果不是左键，那么放弃
             if (e.which !== undefined && e.which !== 1) return;
 
-            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.DOUBLE_CLICK, e, {
-                pos: pos
+                pos,
             }, this.preventDefault);
         });
 
         // 鼠标右键单击事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
-        addSystemEventListener(this.dom, Event.MouseEvent.CONTEXT_MENU, (e)=> {
-            let pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
+        addSystemEventListener(this.dom, Event.MouseEvent.CONTEXT_MENU, (e) => {
+            const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.CONTEXT_MENU, e, {
-                pos: pos
+                pos,
             }, true);
         });
     }
@@ -237,122 +240,121 @@ class DomEventAdapter extends EventDispatcher {
         let lastTouches = [];
 
         // 触摸开始事件，操作：转换触摸点坐标，数据：触摸点（多个）坐标（数组）
-        addSystemEventListener(this.dom, Event.TouchEvent.TOUCH_START, (e)=> {
-            let touches = [];
+        addSystemEventListener(this.dom, Event.TouchEvent.TOUCH_START, (e) => {
+            const touches = [];
             lastTouches = [];
-            for (let i = 0; i < e.touches.length; i++) {
-                let touch = e.touches.item(i);
-                //console.log(touch.pageX, touch.pageY);
-                let pos = T.pagePosToDomPos(this.dom, touch.pageX, touch.pageY);
+            for (let i = 0; i < e.touches.length; i += 1) {
+                const touch = e.touches.item(i);
+                // console.log(touch.pageX, touch.pageY);
+                const pos = T.pagePosToDomPos(this.dom, touch.pageX, touch.pageY);
                 touches.push({
-                    pos: pos
+                    pos,
                 });
                 lastTouches.push({
-                    start: pos
+                    start: pos,
                 });
             }
-            //console.log("Event.TouchEvent.TOUCH_START");
+            // console.log('Event.TouchEvent.TOUCH_START');
             this.dispatchSystemEvent(Event.TouchEvent.TOUCH_START, e, {
-                touches: touches
+                touches,
             }, false);
 
             if (touches.length === 1) {
-                //console.log("TOUCH_START -> Event.MouseEvent.MOUSE_DOWN");
+                // console.log('TOUCH_START -> Event.MouseEvent.MOUSE_DOWN');
                 this.dispatchSystemEvent(Event.MouseEvent.MOUSE_DOWN, e, {
-                    pos: touches[0].pos
+                    pos: touches[0].pos,
                 }, false);
             }
         });
 
         // 触摸点移动事件，操作：转换触摸点坐标，数据：触摸点（多个）坐标（数组）
-        addSystemEventListener(this.dom, Event.TouchEvent.TOUCH_MOVE, (e)=> {
-            let touches = [];
-            for (let i = 0; i < e.touches.length; i++) {
-                let touch = e.touches.item(i);
-                let pos = T.pagePosToDomPos(this.dom, touch.pageX, touch.pageY);
+        addSystemEventListener(this.dom, Event.TouchEvent.TOUCH_MOVE, (e) => {
+            const touches = [];
+            for (let i = 0; i < e.touches.length; i += 1) {
+                const touch = e.touches.item(i);
+                const pos = T.pagePosToDomPos(this.dom, touch.pageX, touch.pageY);
                 touches.push({
                     start: lastTouches[i].start,
-                    pos: pos
+                    pos,
                 });
-                lastTouches[i]["move"] = pos;
+                lastTouches[i].move = pos;
             }
-            //console.log("Event.TouchEvent.TOUCH_MOVE");
+            // console.log('Event.TouchEvent.TOUCH_MOVE');
             this.dispatchSystemEvent(Event.TouchEvent.TOUCH_MOVE, e, {
-                touches: touches
+                touches,
             }, this.preventDefault);
             if (touches.length === 1) {
-                //console.log("MOUSE_MOVE -> Event.MouseEvent.MOUSE_MOVE");
+                // console.log('MOUSE_MOVE -> Event.MouseEvent.MOUSE_MOVE');
                 this.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE, e, {
-                    pos: touches[0].pos
+                    pos: touches[0].pos,
                 }, this.preventDefault);
             }
-
         });
 
         // 触摸结束事件
-        addSystemEventListener(this.dom, Event.TouchEvent.TOUCH_END, (e)=> {
-            let touches = [];
-            for (let i = 0; i < lastTouches.length; i++) {
-                let touch = lastTouches[i];
+        addSystemEventListener(this.dom, Event.TouchEvent.TOUCH_END, (e) => {
+            const touches = [];
+            for (let i = 0; i < lastTouches.length; i += 1) {
+                const touch = lastTouches[i];
                 touches.push({
                     start: touch.start,
-                    pos: touch.move
+                    pos: touch.move,
                 });
             }
-            //console.log("Event.TouchEvent.TOUCH_END");
+            // console.log('Event.TouchEvent.TOUCH_END');
             this.dispatchSystemEvent(Event.TouchEvent.TOUCH_END, e, {
-                touches: touches
+                touches,
             }, this.preventDefault);
 
             if (touches.length === 1) {
-                //console.log("TOUCH_END -> Event.MouseEvent.MOUSE_UP");
+                // console.log('TOUCH_END -> Event.MouseEvent.MOUSE_UP');
                 this.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, {}, this.preventDefault);
 
                 if ((!touches[0].pos || touches[0].pos.getDistance(touches[0].start) < 1) &&
                     +new Date() - touches[0].startTime < 500) {
-                    //console.log("TOUCH_END -> Event.MouseEvent.CLICK");
+                    // console.log('TOUCH_END -> Event.MouseEvent.CLICK');
                     this.dispatchSystemEvent(Event.MouseEvent.CLICK, e, {
-                        pos: touches[0].pos || touches[0].start
+                        pos: touches[0].pos || touches[0].start,
                     }, this.preventDefault);
                 }
             }
         });
 
         // 触摸取消事件
-        addSystemEventListener(this.dom, Event.TouchEvent.TOUCH_CANCEL, (e)=> {
-            //console.log("Event.TouchEvent.TOUCH_CANCEL");
+        addSystemEventListener(this.dom, Event.TouchEvent.TOUCH_CANCEL, (e) => {
+            // console.log('Event.TouchEvent.TOUCH_CANCEL');
             this.dispatchSystemEvent(Event.TouchEvent.TOUCH_CANCEL, e, {}, this.preventDefault);
         });
     }
 
     bindOtherEventListener() {
         // 获得焦点事件。注意：页面元素如要获得焦点，需要设置tab
-        addSystemEventListener(this.dom, Event.FOCUS, (e)=> {
+        addSystemEventListener(this.dom, Event.FOCUS, (e) => {
             this.dispatchSystemEvent(Event.FOCUS, e, {}, false);
         });
 
         // 失去焦点事件
-        addSystemEventListener(this.dom, Event.BLUR, (e)=> {
+        addSystemEventListener(this.dom, Event.BLUR, (e) => {
             this.dispatchSystemEvent(Event.BLUR, e, {}, false);
         });
 
         //
-        addSystemEventListener(this.dom, Event.TRANSITION_END, (e)=> {
-            this.dispatchSystemEvent(Event.TRANSITION_END, e, {propertyName: e.propertyName}, false);
+        addSystemEventListener(this.dom, Event.TRANSITION_END, (e) => {
+            this.dispatchSystemEvent(Event.TRANSITION_END, e, { propertyName: e.propertyName }, false);
         });
 
         // 滚动条事件
-        addSystemEventListener(this.dom, Event.SCROLL, (e)=> {
-            let $dom = $(this.dom);
+        addSystemEventListener(this.dom, Event.SCROLL, (e) => {
+            const $dom = $(this.dom);
 
-            if ($dom.data("_scrollTop_") === undefined) {
-                $dom.data("_scrollTop_", this.dom.scrollTop);
-                $dom.data("_scrollLeft_", this.dom.scrollLeft);
+            if ($dom.data('_scrollTop_') === undefined) {
+                $dom.data('_scrollTop_', this.dom.scrollTop);
+                $dom.data('_scrollLeft_', this.dom.scrollLeft);
             }
-            let last = {scrollTop: $dom.data("_scrollTop_"), scrollLeft: $dom.data("_scrollLeft_")};
+            const last = { scrollTop: $dom.data('_scrollTop_'), scrollLeft: $dom.data('_scrollLeft_') };
             this.dispatchSystemEvent(Event.SCROLL, e, {
                 scrollTop: $dom.scrollTop(),
-                scrollLeft: $dom.scrollLeft()
+                scrollLeft: $dom.scrollLeft(),
             }, false);
             if (this.dom.scrollLeft !== last.scrollLeft) {
                 if (this.dom.clientWidth + this.dom.scrollLeft >= this.dom.scrollWidth) {
@@ -361,7 +363,7 @@ class DomEventAdapter extends EventDispatcher {
                 if (this.dom.scrollLeft <= 0) {
                     this.dispatchSystemEvent(Event.SCROLL_LEFT, e, {}, false);
                 }
-                $dom.data("_scrollLeft_", this.dom.scrollLeft);
+                $dom.data('_scrollLeft_', this.dom.scrollLeft);
             }
             if (this.dom.scrollTop !== last.scrollTop) {
                 if (this.dom.clientHeight + this.dom.scrollTop >= this.dom.scrollHeight) {
@@ -370,16 +372,16 @@ class DomEventAdapter extends EventDispatcher {
                 if (this.dom.scrollTop <= 0) {
                     this.dispatchSystemEvent(Event.SCROLL_TOP, e, {}, false);
                 }
-                $dom.data("_scrollTop_", this.dom.scrollTop);
+                $dom.data('_scrollTop_', this.dom.scrollTop);
             }
         });
 
         // 尺寸变化事件
-        addSystemEventListener(this.dom, Event.SIZE_CHANGED, (e)=> {
-            let $dom = $(this.dom);
+        addSystemEventListener(this.dom, Event.SIZE_CHANGED, (e) => {
+            const $dom = $(this.dom);
             this.dispatchSystemEvent(Event.SIZE_CHANGED, e, {
                 width: $dom.width(),
-                height: $dom.height()
+                height: $dom.height(),
             }, false);
         });
     }

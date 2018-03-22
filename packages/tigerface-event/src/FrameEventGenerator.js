@@ -1,50 +1,50 @@
+import { Logger } from 'tigerface-common';
 import EventDispatcher from './EventDispatcher';
 import Event from './Event';
-import {Logger} from 'tigerface-common';
 
 const win = (() => {
     try {
         return window;
-    }
-    catch (e) {
-        return global
+    } catch (e) {
+        return global;
     }
 })();
 
 if (!win.requestNextAnimationFrame) {
-    win.requestNextAnimationFrame = (() => {
-        return (
-            win.requestAnimationFrame ||
-            win.webkitRequestAnimationFrame ||
-            win.mozRequestAnimationFrame ||
-            win.oRequestAnimationFrame ||
-            win.msRequestAnimationFrame ||
-            ((callback, ctx = win) => {
+    win.requestNextAnimationFrame = (() =>
+            (
+                win.requestAnimationFrame ||
+                win.webkitRequestAnimationFrame ||
+                win.mozRequestAnimationFrame ||
+                win.oRequestAnimationFrame ||
+                win.msRequestAnimationFrame ||
+                ((callback, ctx = win) => {
+                    let start;
+                    let finish;
 
-                let start, finish;
-
-                setTimeout(() => {
-
-                    start = +new Date();
-                    callback();
-                    finish = +new Date();
-
-                    ctx._requestNextAnimationFrameTimeout_ = 1000 / 60 - (finish - start);
-
-                }, ctx._requestNextAnimationFrameTimeout_ || (1000 / 60));
-            })
-        );
-    })();
+                    setTimeout(() => {
+                        start = +new Date();
+                        callback();
+                        finish = +new Date();
+                        ctx._requestNextAnimationFrameTimeout_ = (1000 / 60) - (finish - start);
+                    }, ctx._requestNextAnimationFrameTimeout_ || (1000 / 60));
+                })
+            )
+    )();
 }
 
+/**
+ * @memberof module:tigerface-event
+ * @extends EventDispatcher
+ */
 class FrameEventGenerator extends EventDispatcher {
     static logger = Logger.getLogger(FrameEventGenerator.name);
 
     constructor(options) {
         // 缺省配置
-        let props = {
+        const props = {
             clazzName: FrameEventGenerator.name,
-            fps: 60
+            fps: 60,
         };
 
         super(props);
@@ -64,8 +64,9 @@ class FrameEventGenerator extends EventDispatcher {
 
     set fps(v) {
         this.props.fps = v;
-        if (this._running_)
+        if (this._running_) {
             this.logger.info(`帧速率调整为：${this.fps}`);
+        }
     }
 
     stop() {
@@ -95,18 +96,16 @@ class FrameEventGenerator extends EventDispatcher {
     }
 
     _requestNextFixFrame_ = (callback) => {
-
-        let start, finish;
+        let start;
+        let finish;
 
         setTimeout(() => {
             start = +new Date();
             callback(start);
             finish = +new Date();
-            this._frameTimeout_ = 1000 / this.fps - (finish - start);
+            this._frameTimeout_ = (1000 / this.fps) - (finish - start);
         }, this._frameTimeout_ || (1000 / this.fps));
-    }
-
-
+    };
 }
 
 export default FrameEventGenerator;

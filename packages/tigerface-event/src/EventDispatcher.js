@@ -1,5 +1,5 @@
-import EventEmitter from "events";
-import {withMix, BaseObject, Logger} from 'tigerface-common';
+import EventEmitter from 'events';
+import { withMix, BaseObject, Logger } from 'tigerface-common';
 import Event from './Event';
 
 /**
@@ -10,6 +10,9 @@ import Event from './Event';
  * 2. 广播事件
  * 3. 注册侦听器时的缺省数据, 请在侦听函数内部自己实现
  * 4. 注册侦听器时指定 this 对象, 请使用箭头函数或使用 bind(this)
+ *
+ * @memberof module:tigerface-event
+ * @extends BaseObject
  */
 class EventDispatcher extends BaseObject {
     static logger = Logger.getLogger(EventDispatcher.name);
@@ -18,13 +21,14 @@ class EventDispatcher extends BaseObject {
      * 构造器
      */
     constructor(options) {
-        let props = {
-            clazzName : EventDispatcher.name
-        }
+        const props = {
+            clazzName: EventDispatcher.name,
+        };
         super(props);
 
         this.assign(options);
         // 如果存在 mixin 进来的构造方法，执行
+        // eslint-disable-next-line no-unused-expressions
         this.construct && this.construct(options);
     }
 }
@@ -33,6 +37,7 @@ const MAX_LISTENERS = 100;
 
 /**
  * 导出 EventDispatcher 的基本功能，是为了让其他类可以不从 EventDispatcher 继承，而使用 mixin 方式集成事件
+ * @memberof module:tigerface-event
  */
 export const Mixin = {
     /**
@@ -50,12 +55,13 @@ export const Mixin = {
         if (!this._eventEmitter_) {
             this._eventEmitter_ = new EventEmitter();
 
-            let maxNum = (process.env.MAX_LISTENERS && process.env.MAX_LISTENERS > MAX_LISTENERS) ? process.env.MAX_LISTENERS : MAX_LISTENERS;
+            const maxNum = (process.env.MAX_LISTENERS && process.env.MAX_LISTENERS > MAX_LISTENERS) ? process.env.MAX_LISTENERS : MAX_LISTENERS;
 
             if (process.env.MAX_LISTENERS) {
                 EventDispatcher.logger.info(`环境变量 MAX_LISTENERS = ${process.env.MAX_LISTENERS}`);
-                if (process.env.MAX_LISTENERS < MAX_LISTENERS)
+                if (process.env.MAX_LISTENERS < MAX_LISTENERS) {
                     EventDispatcher.logger.info(`环境变量 MAX_LISTENERS <= 缺省设置(${MAX_LISTENERS})，被忽略`);
+                }
             }
 
             this._eventEmitter_.setMaxListeners(maxNum);
@@ -81,7 +87,7 @@ export const Mixin = {
     addEventSubscriber(subscriber) {
         if (!this.getEventSubscribers().includes(subscriber)) {
             this.getEventSubscribers().push(subscriber);
-            EventDispatcher.logger.debug(`添加事件订阅者`, subscriber, this.getEventSubscribers());
+            EventDispatcher.logger.debug('添加事件订阅者', subscriber, this.getEventSubscribers());
         }
     },
 
@@ -111,7 +117,7 @@ export const Mixin = {
      */
     addEventListener(eventName, listener) {
         if (!eventName) EventDispatcher.logger.error(`注册事件侦听器时，事件名称不能为 ${eventName}`);
-        if (!listener || typeof listener !== 'function') EventDispatcher.logger.error(`注册事件侦听器时，必须传入有效的 function 类型的侦听器`);
+        if (!listener || typeof listener !== 'function') EventDispatcher.logger.error('注册事件侦听器时，必须传入有效的 function 类型的侦听器');
         this.on(eventName, listener);
     },
 
@@ -155,10 +161,13 @@ export const Mixin = {
      */
     dispatchEvent(eventName, data) {
         this.emit(eventName, data);
-        if (this.debugging && this.getEventSubscribers().length > 0)
+        if (this.debugging && this.getEventSubscribers().length > 0) {
             EventDispatcher.logger.debug(`向事件 ${this.getEventSubscribers().length} 个订阅者转发事件`);
-        this.getEventSubscribers().map((subscriber) => {
-            subscriber.dispatchEvent && subscriber.dispatchEvent(eventName, data);
+        }
+        this.getEventSubscribers().forEach((subscriber) => {
+            if (subscriber.dispatchEvent) {
+                subscriber.dispatchEvent(eventName, data);
+            }
         });
     },
 
@@ -170,17 +179,17 @@ export const Mixin = {
      * @param data
      */
     emit(eventName, data) {
-
-        let e = {
-            clazzName: "Event",
+        const e = {
+            clazzName: 'Event',
             currentTarget: this,
-            eventName: eventName
+            eventName,
         };
         Object.assign(e, data);
         this._getEmitter_().emit(eventName, e);
 
-        if (this.debugging && !this._isNoise_(eventName))
+        if (this.debugging && !this._isNoise_(eventName)) {
             EventDispatcher.logger.debug(`已执行发送事件 [${eventName}]`, data);
+        }
     },
 
     /**
@@ -197,7 +206,7 @@ export const Mixin = {
             Event.STATUS_CHANGED,
             Event.ENTER_FRAME,
             Event.MOVE,
-            ...Object.values(Event.MouseEvent)
+            ...Object.values(Event.MouseEvent),
         ].includes(eventName);
     },
 
@@ -279,14 +288,14 @@ export const Mixin = {
      */
     // dispatchEventCrossWindow(eventName, data, win) {
     //     let e = {
-    //         clazzName: "Event",
+    //         clazzName: 'Event',
     //         currentTarget: this,
     //         eventName: eventName
     //     };
     //     Object.assign(e, data);
-    //     win.postMessage(JSON.stringify(e), "*");
+    //     win.postMessage(JSON.stringify(e), '*');
     //     EventDispatcher.logger.debug(`发送跨窗口事件 [${eventName}]`, data);
     // }
-}
+};
 
 export default withMix(EventDispatcher, Mixin);
