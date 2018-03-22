@@ -6,6 +6,11 @@ import {Utilities as T, Logger} from 'tigerface-common';
 import EventDispatcher from './EventDispatcher';
 import Event from './Event';
 
+/**
+ * 判断是否支持触摸
+ * @return {boolean}
+ * @private
+ */
 function isSupportTouch() {
     try {
         return "ontouchstart" in window;
@@ -17,6 +22,7 @@ function isSupportTouch() {
 /**
  * 终止事件传播
  * @param e
+ * @private
  */
 function stopPropagation(e) {
     if (e && e.preventDefault)
@@ -30,6 +36,7 @@ function stopPropagation(e) {
  * @param dom
  * @param eventName
  * @param listener
+ * @private
  */
 function addSystemEventListener(dom, eventName, listener) {
     if (dom.addEventListener) {
@@ -41,7 +48,7 @@ function addSystemEventListener(dom, eventName, listener) {
 
 
 
-export default class DomEventAdapter extends EventDispatcher {
+class DomEventAdapter extends EventDispatcher {
     static logger = Logger.getLogger(DomEventAdapter.name);
 
     /**
@@ -377,3 +384,5 @@ export default class DomEventAdapter extends EventDispatcher {
         });
     }
 }
+
+export default DomEventAdapter;

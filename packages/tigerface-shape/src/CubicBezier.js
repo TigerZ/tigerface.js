@@ -5,11 +5,13 @@
  */
 import {Utilities as T, Logger} from 'tigerface-common';
 import Curve from './Curve';
+import Vertex from './Vertex';
+import Point from './Point';
 /**
  * 三次贝塞尔曲线<br>
  * 为了高效，曲线在初始化时就已经确定了采样点，以后不会再次计算。如果要改变采样精度，调用refresh方法
  */
-export default class CubicBezier extends Curve {
+class CubicBezier extends Curve {
     /**
      * 三次贝塞尔曲线构造器
      * @param startPoint 开始点
@@ -20,10 +22,10 @@ export default class CubicBezier extends Curve {
      */
     constructor(startPoint, controlPoint1, controlPoint2, endPoint, precision) {
         super();
-        this.p0 = convertVertex(startPoint);
-        this.p1 = convertVertex(controlPoint1);
-        this.p2 = convertVertex(controlPoint2);
-        this.p3 = convertVertex(endPoint);
+        this.p0 = Vertex.convertVertex(startPoint);
+        this.p1 = Vertex.convertVertex(controlPoint1);
+        this.p2 = Vertex.convertVertex(controlPoint2);
+        this.p3 = Vertex.convertVertex(endPoint);
         this.precision = precision ? precision : T.round((this.p0.getDistance(this.p1)
             + this.p1.getDistance(this.p2) + this.p2.getDistance(this.p3)) / 10);
 
@@ -52,10 +54,10 @@ export default class CubicBezier extends Curve {
 
     /**
      * 得到三次曲线的点数组
-     * @returns {Array}
+     * @returns {array}
      * @private
      */
-    _getPoints(precision) {
+    _getPoints() {
         var points = [];
         var dt = 1 / (this.precision - 1);
         for (var i = 0; i < this.precision; i++)
@@ -66,7 +68,7 @@ export default class CubicBezier extends Curve {
 
     /**
      * 改变精度，重新计算曲线
-     * @param precision
+     * @param precision {number} 精度
      */
     refresh(precision) {
         this.precision = precision ? precision : T.round((this.p0.getDistance(this.p1)
@@ -74,4 +76,6 @@ export default class CubicBezier extends Curve {
         this.points = this._getPoints();
         this.segments = this._getSegments();
     }
-};
+}
+
+export default CubicBezier;

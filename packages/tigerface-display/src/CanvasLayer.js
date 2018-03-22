@@ -4,14 +4,16 @@ import {Event} from 'tigerface-event';
 import {Graphics} from 'tigerface-graphic';
 
 /**
- * 画布层
+ * Canvas 层
+ *
+ * @extends DomSprite
+ * @author 张翼虎 <zhangyihu@gmail.com>
+ * @memberof module:tigerface-display
  */
 class CanvasLayer extends DomSprite {
     static logger = Logger.getLogger(CanvasLayer.name);
 
     /**
-     * 初始化画布层
-     *
      * @param options {object} 选项
      * @param dom {object} Dom
      */

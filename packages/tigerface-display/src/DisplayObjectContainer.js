@@ -1,16 +1,20 @@
-/**
- * User: zyh
- * Date: 2018/2/27.
- * Time: 14:13.
- */
-
 import {Event} from 'tigerface-event';
 import {Logger} from 'tigerface-common';
 import DisplayObject from './DisplayObject';
 
+/**
+ * 显示对象容器
+ *
+ * @extends DisplayObject
+ * @author 张翼虎 <zhangyihu@gmail.com>
+ * @memberof module:tigerface-display
+ */
 class DisplayObjectContainer extends DisplayObject {
     static logger = Logger.getLogger(DisplayObjectContainer.name);
 
+    /**
+     * @param options {object} 可选初始属性
+     */
     constructor(options = undefined) {
         let props = {
             clazzName: DisplayObjectContainer.name,

@@ -14,8 +14,7 @@ import Point from './Point';
  * 二次贝塞尔曲线<br>
  * 为了高效，曲线在初始化时就已经确定了采样点，以后不会再次计算。如果要改变采样精度，调用refresh方法
  */
-export default class QuadraticBezier extends Curve {
-    static logger = Logger.getLogger(QuadraticBezier.name);
+class QuadraticBezier extends Curve {
     /**
      * 二次贝塞尔曲线构造器
      * @param startPoint 开始点
@@ -26,6 +25,7 @@ export default class QuadraticBezier extends Curve {
     constructor(startPoint, controlPoint, endPoint, precision) {
 
         super([startPoint, controlPoint, endPoint]);
+        this.clazzName = QuadraticBezier.name;
 
         this.p0 = Vertex.convertVertex(startPoint);
         this.p1 = Vertex.convertVertex(controlPoint);
@@ -36,8 +36,6 @@ export default class QuadraticBezier extends Curve {
 
         // 调用曲线构造器，创建实例
         this.initCurve(this._getPoints());
-
-        this.clazzName = QuadraticBezier.name;
     }
 
     /**
@@ -77,3 +75,5 @@ export default class QuadraticBezier extends Curve {
         this.segments = this._getSegments();
     }
 }
+
+export default QuadraticBezier;

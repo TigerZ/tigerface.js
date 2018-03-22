@@ -1,13 +1,15 @@
-/**
- * User: zyh
- * Date: 2018/2/27.
- * Time: 14:16.
- */
 import DisplayObjectContainer from "./DisplayObjectContainer";
 import {Logger} from 'tigerface-common';
 import {Event} from 'tigerface-event';
 import {Rectangle} from 'tigerface-shape';
 
+/**
+ * 精灵类，有交互能力的显示对象
+ *
+ * @extends DisplayObjectContainer
+ * @author 张翼虎 <zhangyihu@gmail.com>
+ * @memberof module:tigerface-display
+ */
 class Sprite extends DisplayObjectContainer {
     static logger = Logger.getLogger(Sprite.name);
 

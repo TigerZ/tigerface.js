@@ -10,14 +10,17 @@ import Polygon from './Polygon';
  *
  * @type {*|void}
  */
-export default class RightTriangle extends Polygon {
+class RightTriangle extends Polygon {
     constructor(x, y, l1, l2) {
         super();
+        this.clazzName = RightTriangle.name;
+
         let points = [];
         points.push(new Point(x, y));
         points.push(new Point(x, y - l2));
         points.push(new Point(x + l1, y));
         this.initPolygon(points);
-        this.clazzName = RightTriangle.name;
     }
 }
+
+export default RightTriangle;

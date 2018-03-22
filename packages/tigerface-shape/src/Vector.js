@@ -6,7 +6,7 @@
 /**
  * 向量，向量是在X轴和Y轴上的有方向的力
  */
-export default class Vector {
+class Vector {
     static byRadian(radian, magnitude) {
         if (magnitude == undefined)
             magnitude = 1;
@@ -56,7 +56,7 @@ export default class Vector {
     /**
      * 向量大小（矩形对角线，勾股定理）
      *
-     * @returns
+     * @returns {number}
      */
     getMagnitude() {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
@@ -188,3 +188,5 @@ export default class Vector {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
 }
+
+export default Vector;

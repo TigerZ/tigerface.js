@@ -9,8 +9,7 @@ import {Utilities as T, Logger} from 'tigerface-common';
  * Point类，描述一个点坐标
  */
 
-export default class Point {
-    static logger = Logger.getLogger(Point.name);
+class Point {
 
     /**
      * 点构造器
@@ -29,6 +28,7 @@ export default class Point {
         }
 
         this.clazzName = Point.name;
+        this.logger = Logger.getLogger(this);
     }
 
     /**
@@ -56,7 +56,7 @@ export default class Point {
      * 计算与另一点之间的距离
      *
      * @param p
-     * @returns
+     * @returns {number}
      */
     getDistance(p) {
         p || (p = new Point(0, 0));
@@ -122,3 +122,5 @@ export default class Point {
         return "{x:" + this.x + ",y:" + this.y + "}";
     }
 }
+
+export default Point;

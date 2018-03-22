@@ -15,7 +15,7 @@ import {Utilities as T} from "tigerface-common";
  *     多边形类是其它图形的基类
  */
 
-export default class Polygon extends Shape {
+class Polygon extends Shape {
     /**
      * 多边形构造器
      * @param points 多边形顶点数组（注意：必须按连线顺序）
@@ -129,7 +129,7 @@ export default class Polygon extends Shape {
     /**
      * 顶点数
      *
-     * @returns
+     * @returns {number}
      */
     countVertexes() {
         return this.getVertexes().length;
@@ -169,7 +169,7 @@ export default class Polygon extends Shape {
     /**
      * 边数
      *
-     * @returns
+     * @returns {number}
      */
     countSides() {
         return this.getSides().length;
@@ -957,3 +957,6 @@ export default class Polygon extends Shape {
      }
      */
 }
+
+
+export default Polygon;

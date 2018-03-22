@@ -18,7 +18,7 @@ export const Tag = {
  * Date: 2018/3/6.
  * Time: 19:39.
  */
-export default class StageComponent extends BaseComponent {
+class StageComponent extends BaseComponent {
     static logger = Logger.getLogger(StageComponent.name);
 
     constructor(...args) {
@@ -222,3 +222,5 @@ const DisplayObjectRenderer = Reconciler({
         },
     }
 });
+
+export default StageComponent;

@@ -37,7 +37,7 @@ if (!win.requestNextAnimationFrame) {
     })();
 }
 
-export default class FrameEventGenerator extends EventDispatcher {
+class FrameEventGenerator extends EventDispatcher {
     static logger = Logger.getLogger(FrameEventGenerator.name);
 
     constructor(options) {
@@ -108,3 +108,5 @@ export default class FrameEventGenerator extends EventDispatcher {
 
 
 }
+
+export default FrameEventGenerator;

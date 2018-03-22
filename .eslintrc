@@ -6,7 +6,8 @@
   },
 //  "extends": "eslint-config-airbnb",
   "extends": [
-    "eslint:recommended",
+//    "eslint:recommended",
+    "eslint-config-airbnb",
     "plugin:react/recommended",
     "plugin:import/errors",
     "plugin:import/warnings"
@@ -14,6 +15,11 @@
   "parser": "babel-eslint",
   "plugins": ["import", "jsx-a11y"],
   "rules": {
+    "indent":0,
+    "react/jsx-indent":0,
+    "max-len": 0,
+    "no-bitwise": ["error", { "int32Hint": true }],
+    "no-underscore-dangle":0,
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
     "import/no-unresolved": [2, {"commonjs": true, "amd": true}],

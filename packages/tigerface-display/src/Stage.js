@@ -1,18 +1,20 @@
-/**
- * User: zyh
- * Date: 2018/2/27.
- * Time: 14:12.
- */
-
 import {Utilities as T, Logger} from 'tigerface-common';
 import DomSprite from './DomSprite';
 import {Event, FrameEventGenerator} from 'tigerface-event';
 
+/**
+ * 舞台
+ *
+ * @extends DomSprite
+ * @author 张翼虎 <zhangyihu@gmail.com>
+ * @memberof module:tigerface-display
+ */
 class Stage extends DomSprite {
     static logger = Logger.getLogger(Stage.name);
 
     /**
      * 构建舞台
+     * @constructor
      * @param options 可选项
      * @param dom 舞台节点, 缺省是 document
      */

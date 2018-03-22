@@ -5,11 +5,12 @@ import {Logger} from 'tigerface-common';
  * Date: 2018/2/27.
  * Time: 13:03.
  */
-export default class Shape {
+class Shape {
     static logger = Logger.getLogger(Shape.logger);
 
     constructor() {
         this.clazzName = Shape.name;
+        this.logger = Logger.getLogger(this);
     }
 
     /**
@@ -102,3 +103,5 @@ export default class Shape {
         this.logger.error("此方法必须被覆盖");
     }
 }
+
+export default Shape;

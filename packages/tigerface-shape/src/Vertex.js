@@ -7,7 +7,7 @@ import Point from './Point';
 import Line from './Line';
 import {Utilities as T} from 'tigerface-common';
 
-export default class Vertex extends Point {
+class Vertex extends Point {
     static convertVertex = function (point) {
         if (typeof point === 'object') {
             if (point.clazzName === 'Vertex')
@@ -53,3 +53,5 @@ export default class Vertex extends Point {
         return undefined;
     }
 }
+
+export default Vertex;

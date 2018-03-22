@@ -1,26 +1,26 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const webpack = require('webpack'); //to access built-in plugins
+const webpack = require('webpack'); // to access built-in plugins
 const path = require('path');
 
 const config = {
     entry: {
-        main: ['babel-polyfill', 'react-hot-loader/patch', './example/src/main.js']
+        main: ['babel-polyfill', 'react-hot-loader/patch', './example/src/main.jsx'],
     },
     resolve: {
-        extensions: [".js", ".jsx", ".json"],
-        modules: [__dirname, path.resolve(__dirname, "packages"), "node_modules"]
+        extensions: ['.js', '.jsx', '.json'],
+        modules: [__dirname, path.resolve(__dirname, 'packages'), 'node_modules'],
     },
     output: {
-        path: path.resolve(__dirname, "./example/assets"),
-        filename: "[name].js"
+        path: path.resolve(__dirname, './example/assets'),
+        filename: '[name].js',
     },
     devServer: {
-        contentBase: path.resolve(__dirname, "./example/assets"),
+        contentBase: path.resolve(__dirname, './example/assets'),
         hot: true,
         compress: true,
         port: 9000,
-        host: "0.0.0.0"
+        host: '0.0.0.0',
     },
     module: {
         exprContextCritical: false,
@@ -41,13 +41,13 @@ const config = {
             //     }
             // },
             // // 结合 .babelrc 文件，此处就只需要简单指定使用 babel-loader
-            {test: /\.(js|jsx)$/, exclude: /node_modules/, use: 'babel-loader'},
-            {test: /\.json$/, loader: 'json-loader'}
-        ]
+            { test: /\.(js|jsx)$/, exclude: /node_modules/, use: 'babel-loader' },
+            { test: /\.json$/, loader: 'json-loader' },
+        ],
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './template/index.template.html'
+            template: './template/index.template.html',
         }),
         new CleanWebpackPlugin(['./example/assets']),
         new webpack.NamedModulesPlugin(),
@@ -57,8 +57,8 @@ const config = {
                 // NODE_ENV: '"production"',
                 // LOG_LEVEL: '"error"',
                 // MAX_LISTENERS:100
-            }
-        })
+            },
+        }),
     ],
 };
 

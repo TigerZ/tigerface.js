@@ -8,7 +8,7 @@ import {Utilities as T} from 'tigerface-common';
  *
  *
  */
-export default class Circle extends Shape {
+class Circle extends Shape {
     /**
      * 圆构造器
      *
@@ -18,11 +18,11 @@ export default class Circle extends Shape {
      */
     constructor(x, y, radius) {
         super();
+        this.clazzName = Circle.name;
         this.p0 = new Point(x, y);
         this.radius = radius;
         // 转换为多边形处理
         // this.initPolygon(this.getVertexes());
-        this.clazzName = Circle.name;
     }
 
     clone() {
@@ -149,3 +149,5 @@ export default class Circle extends Shape {
         return new Circle(this.p0.x, this.p0.y, this.radius * Math.max(scaleX, scaleY));
     }
 }
+
+export default Circle;

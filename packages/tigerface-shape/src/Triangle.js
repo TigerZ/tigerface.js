@@ -11,7 +11,7 @@ import {Utilities as T, Logger} from 'tigerface-common';
  *
  * @type {*|void}
  */
-export default class Triangle extends Polygon {
+class Triangle extends Polygon {
     static logger = Logger.getLogger(Triangle.name);
     constructor(x, y, l1, l2, angle) {
         super();
@@ -27,3 +27,5 @@ export default class Triangle extends Polygon {
         this.clazzName = Triangle.name;
     }
 }
+
+export default Triangle;

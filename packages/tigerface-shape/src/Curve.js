@@ -9,7 +9,7 @@ import Vertex from './Vertex';
 /**
  * 曲线基类
  */
-export default class Curve {
+class Curve {
     /**
      * 曲线构造器<br>
      *
@@ -110,3 +110,5 @@ export default class Curve {
         this.segments = this._getSegments();
     }
 }
+
+export default Curve;

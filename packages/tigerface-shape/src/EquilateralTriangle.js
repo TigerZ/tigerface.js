@@ -4,12 +4,14 @@
  * Time: 22:46.
  */
 import Polygon from './Polygon';
+import Point from './Point';
+import {Utilities as T} from 'tigerface-common';
 /**
  * 等边三角形
  *
  * @type {*|void}
  */
-export default class EquilateralTriangle extends Polygon {
+class EquilateralTriangle extends Polygon {
     constructor(x, y, l) {
         var radian = T.degreeToRadian(60);
         var x2 = Math.cos(radian) * l;
@@ -22,3 +24,5 @@ export default class EquilateralTriangle extends Polygon {
         this.clazzName = EquilateralTriangle.name;
     }
 }
+
+export default EquilateralTriangle;

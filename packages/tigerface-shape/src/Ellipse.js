@@ -4,8 +4,6 @@
  * Time: 12:58.
  */
 
-import Point from './Point';
-import {Utilities as T, Logger} from 'tigerface-common';
 import Sector from "./Sector";
 
 /**
@@ -13,8 +11,7 @@ import Sector from "./Sector";
  *
  * @type {*|void}
  */
-export default class Ellipse extends Sector {
-    static logger = Logger.getLogger(Ellipse.name);
+class Ellipse extends Sector {
 
     constructor(x, y, radiusX, radiusY, precision) {
         super(x, y, radiusX, radiusY, 0, 360, precision);
@@ -27,7 +24,7 @@ export default class Ellipse extends Sector {
 
     /**
      * 点碰撞
-     * @param point 碰撞点
+     * @param p 碰撞点
      * @returns {boolean}
      */
     hitTestPoint(p) {
@@ -38,3 +35,5 @@ export default class Ellipse extends Sector {
         return Math.pow(p.x - this.p0.x, 2) / Math.pow(this.radiusX, 2) + Math.pow(p.y - this.p0.y, 2) / Math.pow(this.radiusY, 2) <= 1;
     }
 }
+
+export default Ellipse;

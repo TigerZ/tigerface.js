@@ -1,20 +1,15 @@
-/**
- * User: zyh
- * Date: 2018/2/27.
- * Time: 14:11.
- */
 import {Utilities as T, Logger} from 'tigerface-common';
 import {Rectangle, Point} from 'tigerface-shape';
 import Sprite from './Sprite';
 import {Event, DomEventAdapter} from 'tigerface-event';
 
-/********************************************************************************************************
+/**
+ * 基于 Dom 的 Sprite
  *
- * Stage 是架构中显示对象的根容器，即舞台。TigerFace 类的职责是提供重绘和进入帧事件。
- * Stage 类在0.7版本后被简化，管理层的责任交给 DomContainer 和 CanvasContainer 处理。
- *
- *******************************************************************************************************/
-
+ * @extends Sprite
+ * @author 张翼虎 <zhangyihu@gmail.com>
+ * @memberof module:tigerface-display
+ */
 class DomSprite extends Sprite {
     static logger = Logger.getLogger(DomSprite.name);
 

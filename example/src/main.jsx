@@ -1,17 +1,19 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import {AppContainer} from 'react-hot-loader'
-import AppRoot from './DomSpriteAppRoot';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import $ from 'jquery';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { AppContainer } from 'react-hot-loader';
+import AppRoot from './ChartsAppRoot';
+
 window.$ = $;
 
 const render = (Component) => {
     ReactDOM.render(
         <AppContainer>
-            <Component/>
+            <Component />
         </AppContainer>,
         document.getElementById('root'),
-    )
+    );
 };
 
 render(AppRoot);
@@ -20,6 +22,6 @@ render(AppRoot);
 if (module.hot) {
     module.hot.accept('./DomSpriteAppRoot', () => {
         render(AppRoot);
-    })
+    });
 }
 

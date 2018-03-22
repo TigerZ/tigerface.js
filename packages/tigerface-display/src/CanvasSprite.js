@@ -1,9 +1,3 @@
-/**
- * User: zyh
- * Date: 2018/3/2.
- * Time: 22:24.
- */
-
 import {Utilities as T, Logger} from 'tigerface-common';
 import {Rectangle, Polygon} from 'tigerface-shape';
 import Sprite from './Sprite';
@@ -11,12 +5,12 @@ import DomSprite from './DomSprite';
 import {Event} from 'tigerface-event';
 import {Graphics} from 'tigerface-graphic';
 
-/********************************************************************************************************
- *
- * Context2DSprite 是画布内显示对象类，是 0.6.X 版本中的 Sprite
- *
- *******************************************************************************************************/
-
+/**
+ * 在 Canvas 上绘制的 Sprite
+ * @extends Sprite
+ * @author 张翼虎 <zhangyihu@gmail.com>
+ * @memberof module:tigerface-display
+ */
 class CanvasSprite extends Sprite {
     static logger = Logger.getLogger(CanvasSprite.logger);
 

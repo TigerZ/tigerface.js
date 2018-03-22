@@ -1,25 +1,31 @@
-/**
- * Tiger zhangyihu@gmail.com MIT Licensed.
- */
 import {EventDispatcher, Event} from 'tigerface-event';
 import {Point} from 'tigerface-shape';
 import {Utilities as T, Logger} from 'tigerface-common';
 
-
 /**
  * DisplayObject 是最底层显示对象，是其他现实对象的超类。
- * 职责：<br>sudo
+ * 职责：
  * 1、定义显示相关基本属性，比如：坐标、尺寸、原点、缩放、旋转、透明度 ...
  * 2、实现 setState 和 postChange 机制
  * 3、由 _paint_ 主绘制方法串起来的 paint 方法组，子类通过覆盖各阶段方法实现多态，应用类仅实现 paint 方法
  * 4、基本的内外部坐标转换方法：getOuterPos 和 getInnerPos
+ *
+ * @extends EventDispatcher
+ * @author 张翼虎 <zhangyihu@gmail.com>
+ * @memberof module:tigerface-display
  */
 class DisplayObject extends EventDispatcher {
     static logger = Logger.getLogger(DisplayObject.name);
 
     /**
-     * 构造器。
-     * @param options {Object} 属性初始值，比如：pos，origin，size ...
+     * @param options {object} 可选初始属性，属性缺省值
+     * {pos: {x: 0, y: 0},
+     * size: {width: 320, height: 240},
+     * scale: {x: 1, y: 1},
+     * origin: {x: 0, y: 0},
+     * alpha: 1,
+     * rotation: 0,
+     * visible: true}
      */
     constructor(options = undefined) {
         let props = {

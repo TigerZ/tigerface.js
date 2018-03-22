@@ -8,7 +8,7 @@ import Point from "./Point";
 import {Utilities as T} from "tigerface-common";
 import Polygon from "./Polygon";
 
-export default class Sector extends Polygon {
+class Sector extends Polygon {
     constructor(x, y, radiusX, radiusY, startAngle, endAngle, precision) {
         super();
         this.p0 = new Point(x, y);
@@ -53,3 +53,5 @@ export default class Sector extends Polygon {
         return this.move(x, y);
     }
 }
+
+export default Sector;

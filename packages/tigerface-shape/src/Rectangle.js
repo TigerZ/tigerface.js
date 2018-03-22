@@ -12,7 +12,7 @@ import {Utilities as T} from 'tigerface-common';
  *
  * @type {*|void}
  */
-export default class Rectangle extends Polygon {
+class Rectangle extends Polygon {
     static isRectangle = function (points) {
         return points.length === 4 && points[0].getDistance(points[1]) === points[2].getDistance(points[3])
             && points[0].getDistance(points[2]) === points[1].getDistance(points[3])
@@ -21,6 +21,8 @@ export default class Rectangle extends Polygon {
     
     constructor(left, top, width, height) {
         super();
+        this.clazzName = Rectangle.name;
+
         if (arguments.length === 1 && T.isArray(left)) {
             this.left = Math.min(left[0].x, left[1].x, left[2].x, left[3].x);
             this.top = Math.min(left[0].y, left[1].y, left[2].y, left[3].y);
@@ -46,7 +48,7 @@ export default class Rectangle extends Polygon {
         ];
 
         this.initPolygon(points);
-        this.clazzName = Rectangle.name;
+
     }
 
     clone() {
@@ -116,3 +118,5 @@ export default class Rectangle extends Polygon {
     }
 
 }
+
+export default Rectangle;

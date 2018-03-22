@@ -10,6 +10,12 @@ import {Utilities as T} from 'tigerface-common';
  * Date: 2018/3/11.
  * Time: 11:03.
  */
+
+/**
+ * 缺省配置
+ * @type {{paddingLeft: number, paddingTop: number, unit: number, scale: number, xSpace: number, ySpace: number, font: string, speed: number, style: {margin: string}}}
+ * @private
+ */
 const _default = {
     paddingLeft: 50,
     paddingTop: 0,

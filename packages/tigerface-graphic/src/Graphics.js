@@ -5,7 +5,7 @@ import {Utilities as T} from 'tigerface-common';
 import {Point, Line} from 'tigerface-shape';
 import Context from './Context';
 
-export default class Graphics extends Context {
+class Graphics extends Context {
     static PointStyle = {
         SOLID: "solid_circle", // 实心圆
         HOLLOW: "hollow_circle", // 空心圆
@@ -477,4 +477,6 @@ export default class Graphics extends Context {
         this.scale(-1, 1);
     }
 }
+
+export default Graphics;
 

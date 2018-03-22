@@ -1,49 +1,48 @@
 /* eslint-disable no-console */
-const path = require("path");
-let config = {};
-if(isBrowserEnv()) {
-    config = require('log-config.json');
-} else {
-    config = require(path.join(process.cwd(),'log-config.json'));
-}
-
 import colors from 'colors/safe';
 
-const OFF = 0, ERROR = 1, WARN = 2, INFO = 3, DEBUG = 4, FULL = 99;
-
-function getClassLogLevel(clazzName) {
-    return (config["class-log-level"] !== undefined && config["class-log-level"][clazzName] !== undefined)
-        ? Logger.level[config["class-log-level"][clazzName].toUpperCase()] : -1;
+function isBrowserEnv() {
+    return typeof window !== 'undefined' && window === global;
 }
 
+const config = require('../log-config.json');
+
+const OFF = 0;
+const ERROR = 1;
+const WARN = 2;
+const INFO = 3;
+const DEBUG = 4;
+const FULL = 99;
+
+const Level = {
+    OFF,
+    ERROR,
+    WARN,
+    INFO,
+    DEBUG,
+    FULL,
+};
+
 function now() {
-    let d = new Date();
+    const d = new Date();
     return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}.${d.getMilliseconds()}`;
 }
 
-function isBrowserEnv() {
-    return typeof window !== "undefined" && window === global;
+function getClassLogLevel(clazzName) {
+    return (config['class-log-level'] !== undefined && config['class-log-level'][clazzName] !== undefined)
+        ? Level[config['class-log-level'][clazzName].toUpperCase()] : -1;
 }
 
 /**
- * User: zyh
- * Date: 2018/2/27.
- * Time: 23:26.
+ * 日志类
+ *
+ * @author 张翼虎 <zhangyihu@gmail.com>
+ * @memberof module:tigerface-common
  */
-export default class Logger {
+class Logger {
     static getLogger(arg) {
         return new Logger(arg);
     }
-
-
-    static level = {
-        OFF: OFF,
-        ERROR: ERROR,
-        WARN: WARN,
-        INFO: INFO,
-        DEBUG: DEBUG,
-        FULL: FULL
-    };
 
     constructor(arg) {
         this._debugging_ = true;
@@ -94,23 +93,29 @@ export default class Logger {
     }
 
     static get LOG_LEVEL() {
-        let envLevel = process.env.LOG_LEVEL ? Logger.level[process.env.LOG_LEVEL.toUpperCase()] : FULL;
-        let localLevel = config["log-level"] ? Logger.level[config["log-level"].toUpperCase()] : FULL;
+        const envLevel = process.env.LOG_LEVEL ?
+            Level[process.env.LOG_LEVEL.toUpperCase()] : FULL;
+        const localLevel = config['log-level'] ? Level[config['log-level'].toUpperCase()] : FULL;
         return Math.min(envLevel, localLevel);
     }
 
 
     info(msg) {
         if (this._isForbidden_(INFO)) return;
-        isBrowserEnv() ?
-            console.info(`%c${now()} [INFO] ${this.target}: ${msg}`, 'color:green') :
+        if (isBrowserEnv()) {
+            console.info(`%c${now()} [INFO] ${this.target}: ${msg}`, 'color:green');
+        } else {
             console.info(colors.green(`${now()} [INFO] ${this.target}: ${msg}`));
+        }
     }
 
     warn(msg) {
         if (this._isForbidden_(WARN)) return;
-        isBrowserEnv() ? console.warn(`%c${now()} [WARN] ${this.target}: ${msg}`, 'color:orange') :
+        if (isBrowserEnv()) {
+            console.warn(`%c${now()} [WARN] ${this.target}: ${msg}`, 'color:orange');
+        } else {
             console.warn(colors.yellow(`${now()} [WARN] ${this.target}: ${msg}`));
+        }
     }
 
     error(msg) {
@@ -119,13 +124,13 @@ export default class Logger {
     }
 
     _isForbidden_(level) {
-        let targetLevel = getClassLogLevel(this.target);
+        const targetLevel = getClassLogLevel(this.target);
 
         if (targetLevel >= 0) {
             return targetLevel < level;
         }
 
-        let clazzLevel = getClassLogLevel(this.clazzName);
+        const clazzLevel = getClassLogLevel(this.clazzName);
 
         if (clazzLevel >= 0) {
             return clazzLevel < level;
@@ -136,12 +141,16 @@ export default class Logger {
 
     debug(...msg) {
         if (this._isForbidden_(DEBUG)) return;
-        isBrowserEnv() ? console.debug(`%c${now()} [DEBUG] ${this.target}:`, 'color:blue', ...msg) :
+        if (isBrowserEnv()) {
+            console.debug(`%c${now()} [DEBUG] ${this.target}:`, 'color:blue', ...msg);
+        } else {
             console.debug(colors.blue(`${now()} [DEBUG] ${this.target}:`), ...msg);
+        }
     }
 
     debugTimingReset() {
-        let t = 0, n = new Date().getTime();
+        let t = 0;
+        const n = new Date().getTime();
         if (this._last_debug_time_) {
             t = n - this._last_debug_time_;
         }
@@ -151,8 +160,11 @@ export default class Logger {
 
     debugTiming(...msg) {
         if (this._isForbidden_(DEBUG)) return;
-        isBrowserEnv() ? console.log(`%c${now()} (+${this.debugTimingReset()}) [DEBUG] ${this.target}:`, 'color:blue;font-weight:bold', ...msg) :
+        if (isBrowserEnv()) {
+            console.log(`%c${now()} (+${this.debugTimingReset()}) [DEBUG] ${this.target}:`, 'color:blue;font-weight:bold', ...msg);
+        } else {
             console.log(colors.blue.bold(`${now()} (+${this.debugTimingReset()}) [DEBUG] ${this.target}:`), ...msg);
+        }
     }
 
     debugTimingBegin(...msg) {
@@ -165,3 +177,5 @@ export default class Logger {
         this.debugTimingReset();
     }
 }
+
+export default Logger;

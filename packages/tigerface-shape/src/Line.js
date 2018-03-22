@@ -6,10 +6,11 @@
 import Point from './Point';
 import Vertex from './Vertex';
 import Vector from './Vector';
+import {Logger} from 'tigerface-common';
 /**
  * Line类，由两点坐标描述一个直线段
  */
-export default class Line {
+class Line {
     static byPoint(p0, p1) {
         return new Line(p0, p1);
     }
@@ -36,7 +37,7 @@ export default class Line {
         this.p1 = Vertex.convertVertex(p1);
 
         this.clazzName = Line.name;
-
+        this.logger = Logger.getLogger(this);
     }
 
     toString() {
@@ -55,7 +56,7 @@ export default class Line {
     /**
      * 计算线段长度，用的算法是两点间距离
      *
-     * @returns
+     * @returns {number}
      */
     getLength() {
         return this.p0.getDistance(this.p1);
@@ -150,7 +151,7 @@ export default class Line {
      *     注意：如果线段不存在与线段的直角垂线，那么距离就是到最近顶点的距离
      *
      * @param p
-     * @returns
+     * @returns {number}
      */
     getDistance(p) {
         // 算法来自网络，有修改。经测试，确实比较快，海量运算情况下，有优势
@@ -182,7 +183,7 @@ export default class Line {
      *     注意：如果线段不存在与线段的直角垂线，那么距离就是到最近顶点的距离
      *
      * @param p
-     * @returns
+     * @returns {number}
      */
     getDistance_method2(p) {
         // 本算法比较容易理解，但慢
@@ -207,7 +208,7 @@ export default class Line {
     /**
      * 求线段斜率（单位以弧度表示）
      *
-     * @returns {Number}
+     * @returns {number}
      */
     getSlope() {
         if (!this.slope) {
@@ -228,3 +229,5 @@ export default class Line {
         return new Point(x, y);
     }
 }
+
+export default Line;

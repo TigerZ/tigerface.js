@@ -1,4 +1,5 @@
 # .gitignore_global
+doc
 lib
 package-lock.json
 ####################################

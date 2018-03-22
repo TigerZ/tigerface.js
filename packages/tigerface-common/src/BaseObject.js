@@ -1,20 +1,18 @@
-import Logger from "./Logger";
+import Logger from './Logger';
 
 /**
- * User: zyh
- * Date: 2018/2/27.
- * Time: 14:08.
+ * 最底层功能基础类
  *
- * Debuggable 最底层功能基础类，用来读取环境或设置 debug 标识
+ * @author 张翼虎 <zhangyihu@gmail.com>
+ * @memberof module:tigerface-common
  */
-export default class BaseObject {
+class BaseObject {
     static logger = Logger.getLogger(BaseObject.name);
 
     /**
-     * 构造器。debug 状态缺省设置为 true，可通过设置环境变量 process.env.NODE_ENV 为 'production' 全局关闭 debug 状态。
+     * @param options {object} 可选初始属性
      */
     constructor(options) {
-
         this.props = {};
         this.state = {};
 
@@ -27,26 +25,28 @@ export default class BaseObject {
 
     /**
      * 批量设置对象属性
-     * @param props
+     * @param opts
      */
     assign(...opts) {
-        for (let opt of opts) {
+        opts.forEach((opt) => {
             if (opt) {
-                this.logger.debug(`设置对象属性`, opt);
-                let _opt = Object.assign({}, opt);
+                this.logger.debug('设置对象属性', opt);
+                const filtered = { ...opt };
                 // 删除无效属性
-                for (let key in _opt) {
-                    if (_opt[key] === undefined || _opt[key] === null) {
-                        delete _opt[key];
+                Object.keys(filtered).forEach((key) => {
+                    if (filtered[key] === undefined || filtered[key] === null) {
+                        delete filtered[key];
                         this.logger.debug(`放弃无效属性：${key}`);
                     }
-                }
-                Object.assign(this, _opt);
+                });
+                Object.assign(this, filtered);
             }
-        }
+        });
     }
 
     update(options) {
         this.assign(options);
     }
 }
+
+export default BaseObject;

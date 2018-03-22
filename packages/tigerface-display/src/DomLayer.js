@@ -1,11 +1,12 @@
-/**
- * User: zyh
- * Date: 2018/3/21.
- * Time: 07:59.
- */
-
 import DomSprite from './DomSprite';
 
+/**
+ * Dom 层
+ *
+ * @extends DomSprite
+ * @author 张翼虎 <zhangyihu@gmail.com>
+ * @memberof module:tigerface-display
+ */
 class DomLayer extends DomSprite {
     constructor(options = undefined, dom = undefined) {
         super({}, dom);
