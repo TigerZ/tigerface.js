@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import $ from 'jquery';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { AppContainer } from 'react-hot-loader';
-import AppRoot from './ChartsAppRoot';
+import AppRoot from './DomSpriteAppRoot';
 
 window.$ = $;
 
@@ -20,7 +20,7 @@ render(AppRoot);
 
 // Webpack Hot Module Replacement API
 if (module.hot) {
-    module.hot.accept('./ChartsAppRoot', () => {
+    module.hot.accept('./DomSpriteAppRoot', () => {
         render(AppRoot);
     });
 }

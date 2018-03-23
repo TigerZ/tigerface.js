@@ -1,7 +1,9 @@
-import DisplayObjectContainer from "./DisplayObjectContainer";
-import {Logger} from 'tigerface-common';
-import {Event} from 'tigerface-event';
-import {Rectangle} from 'tigerface-shape';
+/* eslint-disable class-methods-use-this */
+
+import { Logger } from 'tigerface-common';
+import { Event } from 'tigerface-event';
+import { Rectangle } from 'tigerface-shape';
+import DisplayObjectContainer from './DisplayObjectContainer';
 
 /**
  * 精灵类，有交互能力的显示对象
@@ -19,19 +21,16 @@ class Sprite extends DisplayObjectContainer {
      * @param options 选项
      */
     constructor(options = undefined) {
-
-        let props = {
-            clazzName : Sprite.name,
-            _bounds_ : []
-        }
+        const props = {
+            clazzName: Sprite.name,
+            _bounds_: [],
+        };
 
         super(props);
 
         this.on(Event.APPEND_TO_STAGE, () => {
-
             // 拖拽时，移动设备的缺省触摸事件会干扰显示对象的移动，所以用下面侦听器，在拖拽时禁止缺省的 TOUCH_MOVE 事件传递。
-            this.stage.on(Event.TouchEvent.TOUCH_MOVE, this._disableTouchMove_)
-
+            this.stage.on(Event.TouchEvent.TOUCH_MOVE, this._disableTouchMove_);
         });
 
         this._dragging_ = false;
@@ -39,11 +38,11 @@ class Sprite extends DisplayObjectContainer {
         this.assign(options);
     }
 
-    /***************************************************************************
+    /** *************************************************************************
      *
      * 边界
      *
-     **************************************************************************/
+     ************************************************************************* */
 
     /**
      * 添加边界多边形<br>
@@ -75,10 +74,13 @@ class Sprite extends DisplayObjectContainer {
      * @private
      */
     _createBoundingRect_() {
-        let left = 100000, top = 100000, right = -100000, bottom = -100000;
+        let left = 100000;
+        let top = 100000;
+        let right = -100000;
+        let bottom = -100000;
         let changed = false;
-        for (let i = 0; i < this.bounds.length; i++) {
-            let rect = this.bounds[i].getBoundingRect();
+        for (let i = 0; i < this.bounds.length; i += 1) {
+            const rect = this.bounds[i].getBoundingRect();
             rect.right = rect.left + rect.width;
             rect.bottom = rect.top + rect.height;
 
@@ -88,19 +90,19 @@ class Sprite extends DisplayObjectContainer {
             bottom = rect.bottom > bottom ? rect.bottom : bottom;
             changed = true;
         }
-        let boundRect = changed ? {
-            left: left,
-            top: top,
+        const boundRect = changed ? {
+            left,
+            top,
             width: right - left,
-            height: bottom - top
+            height: bottom - top,
         } : {
             left: 0,
             top: 0,
             width: this.width,
-            height: this.height
+            height: this.height,
         };
-        //console.log(this.name, rect);
-        this.logger.debug("_createBoundingRect_()", this.name, boundRect);
+        // console.log(this.name, rect);
+        this.logger.debug('_createBoundingRect_()', this.name, boundRect);
         this._boundingRect_ = new Rectangle(boundRect.left, boundRect.top, boundRect.width, boundRect.height);
         this._onBoundingRectChanged_();
     }
@@ -123,11 +125,105 @@ class Sprite extends DisplayObjectContainer {
     _onBoundingRectChanged_() {
     }
 
-    /***************************************************************************
+    /** *************************************************************************
+     *
+     * 碰撞测试
+     *
+     ************************************************************************* */
+
+    /**
+     * 返回点与感应区的碰撞测试结果
+     *
+     * @param point 测试点
+     * @returns boolean 测试结果
+     */
+    _pointInBounds_(point) {
+        // 先做外接矩形碰撞测试，排除远点
+        if (this.boundingRect.hitTestPoint(point)) {
+            // 如果没定义边界图形，那么说明 boundingRect 从孩子获取，直接返回true，主要用于图纸等用途
+            // this.logger.debug('_pointInBounds_', this.boundingRect, point, this._bounds_.length);
+            if (this._bounds_.length === 0) {
+                return true;
+            }
+            for (let i = 0; i < this.bounds.length; i += 1) {
+                if (this.bounds[i].hitTestPoint(point)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 鼠标按下事件
+     * @param e
+     * @private
+     */
+    _onMouseDown_(e) {
+        // this._onMouseMove_(e);
+    }
+
+    /**
+     * 获得鼠标坐标
+     * @returns {{x: *, y: *}}
+     */
+    getMousePos() {
+        return { x: this._mouseX_, y: this._mouseY_ };
+    }
+
+    _onStateChanged_() {
+        super._onStateChanged_();
+        if (this.parent) {
+            this._onStageMouseMove_(this.parent.getMousePos(), 2);
+        }
+    }
+
+    _checkMouseInside_(mouse) {
+        // 记录之前的状态，用来判断是否第一次进入
+        const beforeInside = this._mouseInside_;
+        // this.logger.debug('舞台指针移动', mouse, beforeInside, this._mouseInside_);
+        // 根据边界形状，判断鼠标是否在本对象范围内
+        this._mouseInside_ = this._pointInBounds_(mouse);
+
+        if (this._mouseInside_) {
+            // 当前鼠标在范围内
+            if (!beforeInside) {
+                // 如果之前不在范围内，发送鼠标进入事件
+                this.logger.debug('鼠标指针进入边界');
+                this.dispatchEvent(Event.MouseEvent.MOUSE_OVER);
+            }
+            // 发送鼠标移动事件
+            this.logger.debug('鼠标指针移动', mouse, this);
+            this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: mouse });
+        } else if (beforeInside) {
+            // 当前鼠标不在范围内, 如果之前在范围内，发送鼠标移出事件
+            this.logger.debug('鼠标指针移出边界', mouse);
+            this.dispatchEvent(Event.MouseEvent.MOUSE_OUT);
+        }
+    }
+
+    _onStageMouseMove_(pos, digits) {
+        // 把全局坐标，转化为本级坐标
+        // const mouse = this.getStageLocalPos(pos, digits);
+        const mouse = this.getInnerPos(pos, digits);
+        this._mouseX_ = mouse.x;
+        this._mouseY_ = mouse.y;
+
+        this._checkMouseInside_(mouse);
+
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            const child = this.children[i];
+            if (child instanceof Sprite) {
+                child._onStageMouseMove_(mouse, 2);
+            }
+        }
+    }
+
+    /** *************************************************************************
      *
      * 拖拽
      *
-     **************************************************************************/
+     ************************************************************************* */
 
     enableDrag() {
         this.addEventListener(Event.MouseEvent.MOUSE_DOWN, this._startDrag_);
@@ -143,43 +239,47 @@ class Sprite extends DisplayObjectContainer {
         this.parent.addEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
 
         if (!this._dragging_) {
-            this.logger.debug(`开始拖拽 _startDrag_(): mousePos=`, this.getMousePos());
+            this.logger.debug('开始拖拽 _startDrag_(): mousePos=', this.getMousePos());
             this._dragging_ = true;
-            let m = this.getOuterPos(this.getMousePos());
+            const m = this.getOuterPos(this.getMousePos());
             this._dragX_ = m.x - this.x;
             this._dragY_ = m.y - this.y;
             this.dispatchEvent(Event.MouseEvent.DRAG_START);
             return true;
         }
+
+        return false;
     };
 
     _endDrag_ = () => {
         if (this._dragging_) {
-            this.logger.debug(`停止拖拽 _endDrag_()`);
+            this.logger.debug('停止拖拽 _endDrag_()');
             this._dragging_ = false;
             this.dispatchEvent(Event.MouseEvent.DRAG_END);
             return true;
         }
+        return false;
     };
 
     _move_ = (e) => {
         // this.logger.debug(`_move_()`);
         if (this._dragging_) {
-            let last = {x: this.x, y: this.y};
+            const last = { x: this.x, y: this.y };
             this.x = e.pos.x - this._dragX_;
             this.y = e.pos.y - this._dragY_;
             this.dispatchEvent(Event.MouseEvent.DRAG, {
-                pos: {x: this.x, y: this.y},
-                offset: {x: this.x - last.x, y: this.y - last.y}
+                pos: { x: this.x, y: this.y },
+                offset: { x: this.x - last.x, y: this.y - last.y },
             });
         }
     };
 
     _disableTouchMove_ = () => {
         if (this._dragging_) return false;
+        return true;
     };
 
-    //********************************* Event *********************************
+    //* ******************************** Event *********************************
 
     set onBlur(func) {
         this.on(Event.BLUR, func);
@@ -193,7 +293,7 @@ class Sprite extends DisplayObjectContainer {
         this.on(Event.SIZE_CHANGED, func);
     }
 
-    //********************************* Key Event *********************************
+    //* ******************************** Key Event *********************************
 
     set onKeyDown(func) {
         this.on(Event.KeyEvent.KEY_DOWN, func);
@@ -207,7 +307,7 @@ class Sprite extends DisplayObjectContainer {
         this.on(Event.KeyEvent.KEY_PRESS, func);
     }
 
-    //********************************* Mouse Event *********************************
+    //* ******************************** Mouse Event *********************************
 
     set onMouseDown(func) {
         this.on(Event.MouseEvent.MOUSE_DOWN, func);
@@ -253,7 +353,7 @@ class Sprite extends DisplayObjectContainer {
         this.on(Event.MouseEvent.DRAG, func);
     }
 
-    //********************************* Touch Event *********************************
+    //* ******************************** Touch Event *********************************
 
     set onTouchStart(func) {
         this.on(Event.TouchEvent.TOUCH_START, func);

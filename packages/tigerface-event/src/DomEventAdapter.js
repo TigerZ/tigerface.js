@@ -181,7 +181,6 @@ class DomEventAdapter extends EventDispatcher {
         // 鼠标移动事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
         addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_MOVE, (e) => {
             const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
-            // this.logger.debug(`系统事件：MOUSE_MOVE`, pos);
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE, e, {
                 pos,
             }, this.preventDefault);

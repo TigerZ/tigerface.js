@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef,no-trailing-spaces */
 /**
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
@@ -29,9 +29,8 @@ const Utilities = {
                 $(dom).css(`-o-${name}`, value);
                 $(dom).css(`-ms-${name}`, value);
             }
-        } else {
-            $(dom).css(name);
         }
+        return $(dom).css(name);
     },
 
     cssMerge(dom, css, autoPrefix) {
@@ -458,6 +457,7 @@ const Utilities = {
 
         const offsetLeft = parseFloat(this.css(dom, 'margin-left')) + parseFloat(this.css(dom, 'padding-left'));
         const offsetTop = parseFloat(this.css(dom, 'margin-top')) + parseFloat(this.css(dom, 'padding-top'));
+        // this.logger.debug('pagePosToDomPos', pageX, pageY, pos, offsetLeft, offsetTop);
         return { x: (pageX - pos.left) + offsetLeft, y: (pageY - pos.top) + offsetTop };
     },
 

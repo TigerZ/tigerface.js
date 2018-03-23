@@ -1,6 +1,7 @@
-import {EventDispatcher, Event} from 'tigerface-event';
-import {Point} from 'tigerface-shape';
-import {Utilities as T, Logger} from 'tigerface-common';
+/* eslint-disable class-methods-use-this */
+import { EventDispatcher, Event } from 'tigerface-event';
+import { Utilities as T, Logger } from 'tigerface-common';
+import { Point } from 'tigerface-shape';
 
 /**
  * DisplayObject 是最底层显示对象，是其他现实对象的超类。
@@ -28,7 +29,7 @@ class DisplayObject extends EventDispatcher {
      * visible: true}
      */
     constructor(options = undefined) {
-        let props = {
+        const props = {
             clazzName: DisplayObject.name,
             uuid: T.uuid(),
         };
@@ -37,10 +38,10 @@ class DisplayObject extends EventDispatcher {
 
         // 基本状态属性
         this.state = {
-            pos: {x: 0, y: 0},
-            size: {width: 320, height: 240},
-            scale: {x: 1, y: 1},
-            origin: {x: 0, y: 0},
+            pos: { x: 0, y: 0 },
+            size: { width: 320, height: 240 },
+            scale: { x: 1, y: 1 },
+            origin: { x: 0, y: 0 },
             alpha: 1,
             rotation: 0,
             visible: true,
@@ -51,18 +52,16 @@ class DisplayObject extends EventDispatcher {
         this._layer_ = undefined;
         this._stage_ = undefined;
 
-        // 通过侦听 MOUSE_MOVE 事件，产生内部的 mouseX 和 mouseY 属性
-        this.on(Event.MouseEvent.MOUSE_DOWN, e => this._onMouseDown_(e));
-        this.on(Event.MouseEvent.MOUSE_MOVE, e => this._onMouseMove_(e));
+
 
         // 设置传入的初始值
         this.assign(options);
     }
 
-    //*********************************** 坐标 **************************************
+    //* ********************************** 坐标 **************************************
 
     set x(x) {
-        this.pos = {x};
+        this.pos = { x };
     }
 
     get x() {
@@ -70,7 +69,7 @@ class DisplayObject extends EventDispatcher {
     }
 
     set y(y) {
-        this.pos = {y};
+        this.pos = { y };
     }
 
     get y() {
@@ -95,10 +94,10 @@ class DisplayObject extends EventDispatcher {
     _onPosChanged_() {
     }
 
-    //*********************************** 缩放 **************************************
+    //* ********************************** 缩放 **************************************
 
     set scaleX(x) {
-        this.scale = {x};
+        this.scale = { x };
     }
 
     get scaleX() {
@@ -106,7 +105,7 @@ class DisplayObject extends EventDispatcher {
     }
 
     set scaleY(y) {
-        this.scale = {y};
+        this.scale = { y };
     }
 
     get scaleY() {
@@ -131,7 +130,7 @@ class DisplayObject extends EventDispatcher {
     _onScaleChanged_() {
     }
 
-    //*********************************** 透明度 **************************************
+    //* ********************************** 透明度 **************************************
 
     /**
      * 设置透明度
@@ -151,7 +150,7 @@ class DisplayObject extends EventDispatcher {
     _onAlphaChanged_() {
     }
 
-    //********************************** 旋转 ***************************************
+    //* ********************************* 旋转 ***************************************
 
     /**
      * 设置旋转角度
@@ -171,7 +170,7 @@ class DisplayObject extends EventDispatcher {
     _onRotationChanged_() {
     }
 
-    //*********************************** 可见 **************************************
+    //* ********************************** 可见 **************************************
 
     /**
      * 设置可见性
@@ -191,10 +190,10 @@ class DisplayObject extends EventDispatcher {
     _onVisibleChanged_() {
     }
 
-    //*********************************** 原点 **************************************
+    //* ********************************** 原点 **************************************
 
     set originX(x) {
-        this.origin = {x};
+        this.origin = { x };
     }
 
     get originX() {
@@ -202,7 +201,7 @@ class DisplayObject extends EventDispatcher {
     }
 
     set originY(y) {
-        this.origin = {y};
+        this.origin = { y };
     }
 
     get originY() {
@@ -228,10 +227,10 @@ class DisplayObject extends EventDispatcher {
 
     }
 
-    //********************************** 大小 ***************************************
+    //* ********************************* 大小 ***************************************
 
     set width(width) {
-        this.size = {width};
+        this.size = { width };
     }
 
     get width() {
@@ -239,7 +238,7 @@ class DisplayObject extends EventDispatcher {
     }
 
     set height(height) {
-        this.size = {height};
+        this.size = { height };
     }
 
     get height() {
@@ -273,38 +272,12 @@ class DisplayObject extends EventDispatcher {
         return this._graphics_;
     }
 
-    /**
-     * 鼠标移动事件侦听
-     * @param e
-     * @private
-     */
-    _onMouseMove_(e) {
-        this._mouseX_ = e.pos.x;
-        this._mouseY_ = e.pos.y;
-        // this.logger.debug(`_onMouseMove_(): this._mouseX_=${this._mouseX_}, this._mouseY_=${this._mouseY_}`);
-    }
 
-    /**
-     * 鼠标按下事件
-     * @param e
-     * @private
-     */
-    _onMouseDown_(e) {
-        this._onMouseMove_(e);
-    }
 
-    /**
-     * 获得鼠标坐标
-     * @returns {{x: *, y: *}}
-     */
-    getMousePos() {
-        return {x: this._mouseX_, y: this._mouseY_};
-    }
-
-    //********************************** 状态改变事件 ***************************************
+    //* ********************************* 状态改变事件 ***************************************
 
     _onStateChanged_() {
-        if (this.layer) this.layer.layerChanged();
+        if (this.layer) this.layer.involvedChange();
     }
 
     /**
@@ -316,8 +289,14 @@ class DisplayObject extends EventDispatcher {
         if (log.length && log[0]) this.logger.debug('状态改变', ...log);
         if (this.isChanged) return;
         this._changed_ = true;
-        this.dispatchEvent(Event.STATUS_CHANGED);
+        this.dispatchEvent(Event.STATE_CHANGED);
         this._onStateChanged_();
+    }
+
+    involvedChange(...log) {
+        if (log.length && log[0]) this.logger.debug('牵连状态改变', ...log);
+        if (this.isChanged) return;
+        this._changed_ = true;
     }
 
     /**
@@ -345,7 +324,7 @@ class DisplayObject extends EventDispatcher {
         return this._changed_;
     }
 
-    //********************************** 重绘事件 ***************************************
+    //* ********************************* 重绘事件 ***************************************
 
     /**
      * 重绘方法，需要被实现
@@ -372,7 +351,7 @@ class DisplayObject extends EventDispatcher {
      * @private
      */
     _paint_() {
-        let g = this.graphics;
+        const g = this.graphics;
         // this.logger.debug(`重绘...`);
         // 为最高效率，对象可见，才进入
         if (!this.visible) return;
@@ -381,28 +360,36 @@ class DisplayObject extends EventDispatcher {
         this.clearChange();
 
         // 保存一次上下文
-        g && g.save();
+        if (g) {
+            g.save();
+        }
 
         // 先调用绘制前处理
         this._onBeforePaint_();
-        this.dispatchEvent(Event.BEFORE_REDRAW, {target: this, context: g});
+        this.dispatchEvent(Event.BEFORE_REDRAW, { target: this, context: g });
 
         // 保存二次上下文
-        g && g.save();
+        if (g) {
+            g.save();
+        }
 
         // 再调用自身绘制
         this.paint();
-        this.dispatchEvent(Event.REDRAW, {target: this, context: g});
+        this.dispatchEvent(Event.REDRAW, { target: this, context: g });
 
         // 最后调用绘制后处理
         this._onAfterPaint_();
-        this.dispatchEvent(Event.AFTER_REDRAW, {target: this, context: g});
+        this.dispatchEvent(Event.AFTER_REDRAW, { target: this, context: g });
 
         // 恢复二次上下文
-        g && g.restore();
+        if (g) {
+            g.restore();
+        }
 
         // 恢复一次上下文
-        g && g.restore();
+        if (g) {
+            g.restore();
+        }
     }
 
     /**
@@ -410,7 +397,7 @@ class DisplayObject extends EventDispatcher {
      * @private
      */
     _onEnterFrame_() {
-        this.emit(Event.ENTER_FRAME, {target: this});
+        this.emit(Event.ENTER_FRAME, { target: this });
     }
 
     /**
@@ -422,15 +409,13 @@ class DisplayObject extends EventDispatcher {
      */
     getOuterPos(point, digits = 0) {
         if (point === undefined) return undefined;
-        point = new Point(point.x, point.y);
 
         const o = this.origin;
         const r = this.rotation;
         const s = this.scale;
 
         // 抵消原点 > 旋转 > 缩放 > 移动
-        const pos = point
-            .move(-o.x, -o.y)
+        const pos = new Point(point).move(-o.x, -o.y)
             .rotate(T.degreeToRadian(r))
             .scale(s.x, s.y)
             .move(this.x, this.y);
@@ -454,24 +439,22 @@ class DisplayObject extends EventDispatcher {
     getInnerPos(point, digits = 0) {
         if (undefined === point) return undefined;
 
-        point = new Point(point.x, point.y);
-
         const o = this.origin;
         const r = this.rotation;
         const s = this.scale;
 
-        const p = point.move(-this.x, -this.y) // 偏移本地位置
+        const pos = new Point(point).move(-this.x, -this.y) // 偏移本地位置
             .scale(1 / s.x, 1 / s.y) // 缩放
             .rotate(T.degreeToRadian(-r)) // 旋转
             .move(o.x, o.y); // 偏移原点
 
         // 除非指定小数位数，缺省取整
-        p.x = T.round(p.x, digits > 0 ? digits : 0);
-        p.y = T.round(p.y, digits > 0 ? digits : 0);
+        pos.x = T.round(pos.x, digits > 0 ? digits : 0);
+        pos.y = T.round(pos.y, digits > 0 ? digits : 0);
 
-        // this.logger.debug(`[${this.clazzName}]:getInnerPos`, point, p);
+        // this.logger.debug(`[${this.clazzName}]:getInnerPos`, point, pos);
 
-        return p;
+        return pos;
     }
 
     /**
@@ -481,8 +464,12 @@ class DisplayObject extends EventDispatcher {
      * @param digits {number} 精度
      * @returns {Point} 坐标
      */
-    getLayerPos(localPos = {x: 0, y: 0}, digits = 0) {
-        let pos = this.getOuterPos({x: localPos.x + this.origin.x, y: localPos.y + this.origin.y}, digits);
+    getLayerPos(localPos = { x: 0, y: 0 }, digits = 0) {
+        if (this.isLayer) {
+            return localPos;
+        }
+
+        let pos = this.getOuterPos({ x: localPos.x + this.origin.x, y: localPos.y + this.origin.y }, digits);
 
         if (this.parent && !this.parent.isLayer) {
             pos = this.parent.getLayerPos(pos, digits);
@@ -497,8 +484,8 @@ class DisplayObject extends EventDispatcher {
      * @returns {Point} 坐标
      * @private
      */
-    getStagePos(localPos = {x: 0, y: 0}, digits = 0) {
-        let pos = this.getOuterPos({x: localPos.x + this.origin.x, y: localPos.y + this.origin.y}, digits);
+    getStagePos(localPos = { x: 0, y: 0 }, digits = 0) {
+        let pos = this.getOuterPos({ x: localPos.x + this.origin.x, y: localPos.y + this.origin.y }, digits);
         if (this.parent && !this.parent.isStage) {
             pos = this.parent.getStagePos(pos, digits);
         }
@@ -511,10 +498,10 @@ class DisplayObject extends EventDispatcher {
      * @private
      */
     _getStageRotation_() {
-        let rotation = this.rotation;
-        if (this.parent && !this.parent.isStage)
-            rotation += this.parent._getStageRotation_();
-        return rotation % 360;
+        if (this.parent && !this.parent.isStage) {
+            return (this.rotation + this.parent._getStageRotation_()) % 360;
+        }
+        return this.rotation % 360;
     }
 
     /**
@@ -523,13 +510,11 @@ class DisplayObject extends EventDispatcher {
      * @private
      */
     _getStageOrigin_() {
-        let origin = this.origin;
-
         if (this.parent && !this.parent.isStage) {
-            let parentStageOrigin = this.parent._getStageOrigin_();
-            origin = {x: origin.x + parentStageOrigin.x, y: origin.y + parentStageOrigin.y};
+            const parentStageOrigin = this.parent._getStageOrigin_();
+            return { x: this.origin.x + parentStageOrigin.x, y: this.origin.y + parentStageOrigin.y };
         }
-        return origin;
+        return this.origin;
     }
 
     /**
@@ -538,13 +523,11 @@ class DisplayObject extends EventDispatcher {
      * @private
      */
     _getStageScale_() {
-        let scale = this.scale;
-
         if (this.parent && !this.parent.isStage) {
-            let parentStageScale = this.parent._getStageScale_();
-            scale = {x: scale.x * parentStageScale.x, y: scale.y * parentStageScale.y};
+            const parentStageScale = this.parent._getStageScale_();
+            return { x: this.scale.x * parentStageScale.x, y: this.scale.y * parentStageScale.y };
         }
-        return scale;
+        return this.scale;
     }
 
 
@@ -555,29 +538,48 @@ class DisplayObject extends EventDispatcher {
      * @param digits {number} 精度
      * @returns {Point}
      */
-    getLocalPos(layerPos, digits = 0) {
-
-        // 寻找全部祖先
-        let ancestor = [];
-        let parent = this.parent;
-
-        // parent.layer == parent 意味着是最顶级了
-        while (parent && parent.layer !== parent) {
-            ancestor.unshift(parent);
-            parent = parent.parent;
-        }
-
-        // 遍历全部祖先，分级转换为相对坐标
-        let pos = layerPos;
-        for (let i = 0; i < ancestor.length; i++) {
-            pos = ancestor[i].getInnerPos(pos);
+    getLayerLocalPos(layerPos, digits = 0) {
+        if (this.parent && !this.parent.isLayer) {
+            const pos = this.getInnerPos(this.parent.getLayerLocalPos(layerPos, digits));
             // 因为孩子的坐标是从origin点开始计算的，所以要先偏移origin的坐标
-            let o = ancestor[i].origin;
-            pos = pos.move(-o.x, -o.y);
+            const o = this.parent.origin;
+            return pos.move(-o.x, -o.y);
         }
+        return this.getInnerPos(layerPos, digits);
+    }
 
-        // 最后转换自己的相对坐标
-        return this.getInnerPos(pos, digits);
+    // getLayerLocalPos(layerPos, digits = 0) {
+    //     // 寻找全部祖先
+    //     const ancestor = [];
+    //     let parent = this.parent;
+    //
+    //     // parent.layer == parent 意味着是最顶级了
+    //     while (parent && parent.layer !== parent) {
+    //         ancestor.unshift(parent);
+    //         parent = parent.parent;
+    //     }
+    //
+    //     // 遍历全部祖先，分级转换为相对坐标
+    //     let pos = layerPos;
+    //     for (let i = 0; i < ancestor.length; i += 1) {
+    //         pos = ancestor[i].getInnerPos(pos);
+    //         // 因为孩子的坐标是从origin点开始计算的，所以要先偏移origin的坐标
+    //         const o = ancestor[i].origin;
+    //         pos = pos.move(-o.x, -o.y);
+    //     }
+    //
+    //     // 最后转换自己的相对坐标
+    //     return this.getInnerPos(pos, digits);
+    // }
+
+    getStageLocalPos(layerPos, digits = 0) {
+        if (this.parent && !this.parent.isStage) {
+            const pos = this.getInnerPos(this.parent.getStageLocalPos(layerPos, digits));
+            // 因为孩子的坐标是从origin点开始计算的，所以要先偏移origin的坐标
+            const o = this.parent.origin;
+            return pos.move(-o.x, -o.y);
+        }
+        return this.getInnerPos(layerPos, digits);
     }
 
     /**
@@ -621,7 +623,7 @@ class DisplayObject extends EventDispatcher {
     _onAppendToParent_() {
         if (!this.parent) return;
         this.dispatchEvent(Event.APPEND_TO_PARENT);
-        this.postChange("AppendToParent");
+        this.postChange('AppendToParent');
         this._onAppendToLayer_();
         this._onAppendToStage_();
     }
@@ -654,7 +656,7 @@ class DisplayObject extends EventDispatcher {
     _onAppendToStage_() {
         if (!this._stage_ && this.stage && this.stage !== this) {
             this.dispatchEvent(Event.APPEND_TO_STAGE);
-            this.postChange("AppendToStage");
+            this.postChange('AppendToStage');
         }
     }
 
@@ -686,7 +688,7 @@ class DisplayObject extends EventDispatcher {
     _onAppendToLayer_() {
         if (!this._layer_ && this.layer && this.layer !== this) {
             this.dispatchEvent(Event.APPEND_TO_LAYER);
-            this.postChange("AppendToLayer");
+            this.postChange('AppendToLayer');
         }
     }
 }

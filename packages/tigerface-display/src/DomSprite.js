@@ -1,7 +1,7 @@
-import {Utilities as T, Logger} from 'tigerface-common';
-import {Rectangle, Point} from 'tigerface-shape';
+import { Utilities as T, Logger } from 'tigerface-common';
+import { Rectangle, Point } from 'tigerface-shape';
 import Sprite from './Sprite';
-import {Event, DomEventAdapter} from 'tigerface-event';
+import { Event, DomEventAdapter } from 'tigerface-event';
 
 /**
  * 基于 Dom 的 Sprite
@@ -43,7 +43,7 @@ class DomSprite extends Sprite {
         // 定义 Dom 引擎
         this.domAdapter = new DomEventAdapter(this.dom, {
             preventDefault: this.preventDefault
-        }, this);
+        });
 
         // chrome 浏览器在拖拽时，鼠标指针为“I”，下面用来修复此问题
         this.addEventListener(Event.MouseEvent.DRAG, function (e) {
@@ -72,7 +72,6 @@ class DomSprite extends Sprite {
         }, options));
 
         this.logger.debug('初始化完成');
-
     }
 
     set dom(v) {
@@ -136,7 +135,7 @@ class DomSprite extends Sprite {
 
     set visible(v) {
         super.visible = v;
-        this.style = {visibility: this.visible ? 'visible' : 'hidden'};
+        this.style = { visibility: this.visible ? 'visible' : 'hidden' };
     }
 
 
@@ -158,8 +157,7 @@ class DomSprite extends Sprite {
      */
     get bounds() {
         if (this._bounds_.length === 0) {
-            let size = this.size;
-            return [new Rectangle(0, 0, size.width, size.height)];
+            return [new Rectangle(0, 0, this.size.width, this.size.height)];
         }
         return this._bounds_;
     }
@@ -191,17 +189,16 @@ class DomSprite extends Sprite {
      *
      * @returns {Point|{x:*,y:*}}
      */
-    getMousePos() {
-
-        let pos = super.getMousePos();
-        // this.logger.debug('getMousePos(): pos=', pos);
-
-        // 坐标系转换
-        let rect = this.getDomBoundingRect();
-        pos = this.getInnerPos(new Point(pos).move(rect.left, rect.top), 2);
-
-        return pos;
-    }
+    // getMousePos() {
+    //     let pos = super.getMousePos();
+    //     // this.logger.debug('getMousePos(): pos=', pos);
+    //
+    //     // 坐标系转换
+    //     let rect = this.getDomBoundingRect();
+    //     pos = this.getInnerPos(new Point(pos).move(rect.left, rect.top), 2);
+    //
+    //     return pos;
+    // }
 
     /**
      * 设置 DOM 的位置
@@ -210,7 +207,7 @@ class DomSprite extends Sprite {
 
     _onPosChanged_() {
         if (this.dom === document) return;
-        this.setStyle({'position': DomSprite.Position.ABSOLUTE});
+        this.setStyle({ 'position': DomSprite.Position.ABSOLUTE });
 
         let t = this.origin;
         T.css(this.dom, 'left', (this.x - t.x) + 'px');
@@ -270,9 +267,9 @@ class DomSprite extends Sprite {
 
     _onVisibleChanged_() {
         if (this.visible) {
-            this.setStyle({'display': 'block'});
+            this.setStyle({ 'display': 'block' });
         } else {
-            this.setStyle({'display': 'none'});
+            this.setStyle({ 'display': 'none' });
         }
     }
 
@@ -322,7 +319,7 @@ class DomSprite extends Sprite {
         if (this.children.length > 1)
             for (let i = 0; i < this.children.length; i++) {
                 let child = this.children[i];
-                child.setStyle({'z-index': i * 10 + 10});
+                child.setStyle({ 'z-index': i * 10 + 10 });
             }
     }
 
@@ -373,9 +370,9 @@ class DomSprite extends Sprite {
                 if (str) str = str + ', ';
                 str = str + this._covertTween_(prop[i].prop, prop[i].duration, prop[i].delay, prop[i].effect);
             }
-            this.setStyle({'transition': str}, true);
+            this.setStyle({ 'transition': str }, true);
         } else {
-            this.setStyle({'transition': this._covertTween_(prop.prop, prop.duration, prop.delay, prop.effect)}, true);
+            this.setStyle({ 'transition': this._covertTween_(prop.prop, prop.duration, prop.delay, prop.effect) }, true);
         }
     }
 
@@ -427,10 +424,21 @@ class DomSprite extends Sprite {
             scrollWidth: dom.scrollWidth,
             scrollHeight: dom.scrollHeight,
             scrollTop: dom.scrollTop,
-            scrollLeft: dom.scrollLeft
-        }
+            scrollLeft: dom.scrollLeft,
+        };
     }
 
+    getBoundRectShadow() {
+        let p0 = this.getStagePos();
+        let rect = this.boundingRect;
+        return {
+            pos: p0,
+            size: { width: rect.width, height: rect.height },
+            rotation: this._getStageRotation_(),
+            origin: this._getStageOrigin_(),
+            scale: this._getStageScale_()
+        };
+    }
 }
 
 export default DomSprite;

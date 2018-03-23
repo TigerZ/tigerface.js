@@ -3,32 +3,33 @@
  * Date: 2018/2/27.
  * Time: 13:05.
  */
-import {Utilities as T, Logger} from 'tigerface-common';
+import { Utilities as T, Logger } from 'tigerface-common';
 
 /**
  * Point类，描述一个点坐标
  */
 
 class Point {
-
     /**
-     * 点构造器
      *
-     * @param x X轴坐标
-     * @param y Y轴坐标
+     * @param args {[number]|{x:number, y:number}}
      */
-    constructor(x, y) {
+    constructor(...args) {
+        this.clazzName = Point.name;
+        this.logger = Logger.getLogger(this);
         // 支持对象参数
-        if ((arguments.length == 1) && typeof x == 'object') {
-            this.x = x.x || 0;
-            this.y = x.y || 0;
+        if ((args.length === 1)) {
+            if (typeof args[0] !== 'object') {
+                this.logger.error('初始化 Point 对象');
+            }
+            const { x, y } = args[0];
+            this.x = x || 0;
+            this.y = y || 0;
         } else {
+            const [x, y] = args;
             this.x = x || 0;
             this.y = y || 0;
         }
-
-        this.clazzName = Point.name;
-        this.logger = Logger.getLogger(this);
     }
 
     /**
@@ -46,10 +47,8 @@ class Point {
      * @param p 比较点
      * @returns {Boolean}
      */
-    equals(p, precision) {
-        if (precision == undefined) precision = 0.01;
+    equals(p, precision = 0.01) {
         return (Math.abs(this.x - p.x) < precision && Math.abs(this.y - p.y) < precision);
-        //return this.x == p.x && this.y == p.y;
     }
 
     /**
@@ -58,14 +57,13 @@ class Point {
      * @param p
      * @returns {number}
      */
-    getDistance(p) {
-        p || (p = new Point(0, 0));
-        //if (this.x == p.x) return Math.abs(this.y - p.y);
-        //if (this.y == p.y) return Math.abs(this.x - p.x);
-        //// 原理：勾股定理
-        //var dx = this.x - p.x;
-        //var dy = this.y - p.y;
-        //return Math.sqrt(dx * dx + dy * dy);
+    getDistance(p = new Point(0, 0)) {
+        // if (this.x == p.x) return Math.abs(this.y - p.y);
+        // if (this.y == p.y) return Math.abs(this.x - p.x);
+        // // 原理：勾股定理
+        // var dx = this.x - p.x;
+        // var dy = this.y - p.y;
+        // return Math.sqrt(dx * dx + dy * dy);
 
         return T.distance(this, p);
     }
@@ -88,17 +86,16 @@ class Point {
      * @param origin 指定原点。可选，缺省为（0，0）
      * @returns {Point} 返回旋转后的坐标点
      */
-    rotate(radian, origin) {
-        origin || (origin = new Point(0, 0));
+    rotate(radian, origin = new Point(0, 0)) {
         // 坐标到原点的距离
-        var radius = this.getDistance(new Point(origin.x, origin.y));
+        const radius = this.getDistance(new Point(origin.x, origin.y));
 
         // 当前的角度（斜度）
-        var slope = Math.atan2(this.y - origin.y, this.x - origin.x);
+        const slope = Math.atan2(this.y - origin.y, this.x - origin.x);
 
         // 计算mouse坐标反向补偿后的坐标，加上原点坐标，作为测试点
-        var newX = Math.cos(radian + slope) * radius + origin.x;
-        var newY = Math.sin(radian + slope) * radius + origin.y;
+        const newX = (Math.cos(radian + slope) * radius) + origin.x;
+        const newY = (Math.sin(radian + slope) * radius) + origin.y;
 
         return new Point(newX, newY);
     }
@@ -115,11 +112,11 @@ class Point {
     }
 
     toString() {
-        return "Point(" + this.x + ", " + this.y + ")";
+        return `Point(${this.x}, ${this.y})`;
     }
 
     toJSON() {
-        return "{x:" + this.x + ",y:" + this.y + "}";
+        return `{x:${this.x},y:${this.y}}`;
     }
 }
 

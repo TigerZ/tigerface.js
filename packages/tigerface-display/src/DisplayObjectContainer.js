@@ -1,5 +1,5 @@
-import {Event} from 'tigerface-event';
-import {Logger} from 'tigerface-common';
+import { Event } from 'tigerface-event';
+import { Logger } from 'tigerface-common';
 import DisplayObject from './DisplayObject';
 
 /**
@@ -389,7 +389,7 @@ class DisplayObjectContainer extends DisplayObject {
 
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
-            child.postChange();
+            child.involvedChange();
         }
     }
 
@@ -470,6 +470,8 @@ class DisplayObjectContainer extends DisplayObject {
             child._onSizeChanged_();
         }
     }
+
+
 }
 
 export default DisplayObjectContainer;

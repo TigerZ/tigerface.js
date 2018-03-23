@@ -203,7 +203,7 @@ export const Mixin = {
             Event.BEFORE_REDRAW,
             Event.REDRAW,
             Event.AFTER_REDRAW,
-            Event.STATUS_CHANGED,
+            Event.STATE_CHANGED,
             Event.ENTER_FRAME,
             Event.MOVE,
             ...Object.values(Event.MouseEvent),

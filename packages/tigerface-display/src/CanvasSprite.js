@@ -1,9 +1,9 @@
-import {Utilities as T, Logger} from 'tigerface-common';
-import {Rectangle, Polygon} from 'tigerface-shape';
+import { Utilities as T, Logger } from 'tigerface-common';
+import { Rectangle, Polygon } from 'tigerface-shape';
+import { Event } from 'tigerface-event';
+import { Graphics } from 'tigerface-graphic';
 import Sprite from './Sprite';
 import DomSprite from './DomSprite';
-import {Event} from 'tigerface-event';
-import {Graphics} from 'tigerface-graphic';
 
 /**
  * 在 Canvas 上绘制的 Sprite
@@ -20,13 +20,12 @@ class CanvasSprite extends Sprite {
      * @param options 选项
      */
     constructor(options = undefined) {
-
-        let props = {
+        const props = {
             clazzName: CanvasSprite.name,
-            pos: {x: 0, y: 0},
-            size: {width: 100, height: 100},
-            scale: {scaleX: 1, scaleY: 1},
-            isCanvasSprite: true
+            pos: { x: 0, y: 0 },
+            size: { width: 100, height: 100 },
+            scale: { scaleX: 1, scaleY: 1 },
+            isCanvasSprite: true,
         };
 
         super(props);
@@ -37,9 +36,9 @@ class CanvasSprite extends Sprite {
     initCover() {
         if (!this._cover_) {
             this._cover_ = new DomSprite({
-                style: {background: 'rgba(0,0,0,0.2)'},
+                style: { background: 'rgba(0,0,0,0.2)' },
                 visible: false,
-                title: 'cover'
+                title: 'cover',
             });
 
             this.resetCover();
@@ -57,20 +56,20 @@ class CanvasSprite extends Sprite {
     }
 
     getBoundRectShadow() {
-        let p0 = this.getStagePos();
-        let rect = this.boundingRect;
+        const p0 = this.getStagePos();
+        const rect = this.boundingRect;
         return {
             pos: p0,
-            size: {width: rect.width, height: rect.height},
+            size: { width: rect.width, height: rect.height },
             rotation: this._getStageRotation_(),
             origin: this._getStageOrigin_(),
-            scale: this._getStageScale_()
+            scale: this._getStageScale_(),
         };
     }
 
     resetCover() {
         if (!this._cover_ || !this._cover_.visible) return;
-        let props = this.getBoundRectShadow();
+        const props = this.getBoundRectShadow();
         this.logger.debug('resetCover', props);
         this._cover_.assign(props);
         this.logger.debug('重置封面Dom');
@@ -94,46 +93,50 @@ class CanvasSprite extends Sprite {
         return this._cover_;
     }
 
-    /**
-     * 转换 Canvas 的鼠标坐标，为内部坐标，然后判断是否在本对象的范围内，根据判断结果，发送内部 MOUSE_OVER MOUSE_OUT MOUSE_MOVE事件。
-     * CanvasLayer 收到 Canvas Dom 的 MOUSE_MOVE 事件，
-     * 将坐标转换为 Canvas 的内部坐标后，遍历全部内部 Context2DSprint 对象，调用此方法。
-     * @param pos
-     * @param digits
-     * @private
-     */
-    _onLayerMouseMove_(pos, digits) {
-        // 把全局坐标，转化为本级坐标
-        let mouse = this.getLocalPos(pos, digits);
-
-        // 记录之前的状态，用来判断是否第一次进入
-        let before = this._mouseInside_;
-        // 根据边界形状，判断鼠标是否在本对象范围内
-        this._mouseInside_ = this._pointInBounds_(mouse);
-
-        if (this._mouseInside_) {
-            // 当前鼠标在范围内
-            if (!before) {
-                // 如果之前不在范围内，发送鼠标进入事件
-                this.dispatchEvent(Event.MouseEvent.MOUSE_OVER);
-            }
-            // 发送鼠标移动事件
-            this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, {pos: mouse});
-        } else {
-            // 当前鼠标不在范围内
-            if (before) {
-                // 如果之前在范围内，发送鼠标移出事件
-                this.dispatchEvent(Event.MouseEvent.MOUSE_OUT);
-            }
-        }
-    }
-
-    _onLayerMouseEvents_(eventName) {
-        let mouse = this.getMousePos();
-        if (this._mouseInside_) {
-            this.dispatchEvent(eventName, {pos: mouse});
-        }
-    }
+    // /**
+    //  * 转换 Canvas 的鼠标坐标，为内部坐标，然后判断是否在本对象的范围内，根据判断结果，发送内部 MOUSE_OVER MOUSE_OUT MOUSE_MOVE事件。
+    //  * CanvasLayer 收到 Canvas Dom 的 MOUSE_MOVE 事件，
+    //  * 将坐标转换为 Canvas 的内部坐标后，遍历全部内部 Context2DSprint 对象，调用此方法。
+    //  * @param pos
+    //  * @param digits
+    //  * @private
+    //  */
+    // _onLayerMouseMove_(pos, digits) {
+    //     // 把全局坐标，转化为本级坐标
+    //     const mouse = this.getLayerLocalPos(pos, digits);
+    //
+    //     // 记录之前的状态，用来判断是否第一次进入
+    //     const beforeInside = this._mouseInside_;
+    //     this.logger.debug('画布指针移动', beforeInside, this._mouseInside_);
+    //     // 根据边界形状，判断鼠标是否在本对象范围内
+    //     this._mouseInside_ = this._pointInBounds_(mouse);
+    //
+    //     if (this._mouseInside_) {
+    //         this.logger.debug('鼠标指针进入边界');
+    //         // 当前鼠标在范围内
+    //         if (!beforeInside) {
+    //             // 如果之前不在范围内，发送鼠标进入事件
+    //             this.dispatchEvent(Event.MouseEvent.MOUSE_OVER);
+    //         }
+    //         // 发送鼠标移动事件
+    //         this.logger.debug('鼠标指针移动', mouse);
+    //         this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: mouse });
+    //     } else if (beforeInside) {
+    //         // 当前鼠标不在范围内, 如果之前在范围内，发送鼠标移出事件
+    //         this.logger.debug('鼠标指针移出边界', mouse);
+    //         this.dispatchEvent(Event.MouseEvent.MOUSE_OUT);
+    //     }
+    // }
+    //
+    // _onLayerMouseEvents_(e) {
+    //     const mouse = this.getMousePos();
+    //     this.logger.debug('_onLayerMouseEvents_', e);
+    //     if (e.eventName === Event.MouseEvent.MOUSE_OVER) {
+    //         this._onLayerMouseMove_(mouse);
+    //     } else if (this._mouseInside_) {
+    //         this.dispatchEvent(e, { pos: mouse });
+    //     }
+    // }
 
 
     /**
@@ -141,10 +144,11 @@ class CanvasSprite extends Sprite {
      * @private
      */
     _onBeforePaint_() {
-        let g = this.graphics;
+        const g = this.graphics;
         // 缩放
-        if (this.scaleX !== 1 || this.scaleY !== 1)
+        if (this.scaleX !== 1 || this.scaleY !== 1) {
             g.scale(this.scaleX, this.scaleY);
+        }
 
         // 旋转
         g.rotate(T.degreeToRadian(this.rotation % 360));
@@ -152,7 +156,7 @@ class CanvasSprite extends Sprite {
         // 平移坐标系至原点
         g.translate(-this.originX, -this.originY);
 
-        g.globalCompositeOperation = "source-over";
+        g.globalCompositeOperation = 'source-over';
     }
 
     /**
@@ -160,16 +164,16 @@ class CanvasSprite extends Sprite {
      * @private
      */
     _onAfterPaint_() {
-        let g = this.graphics;
+        const g = this.graphics;
         g.save();
         // 还原原点平移
         g.translate(this.originX, this.originY);
         // 绘制顺序为后绘制的在上层
-        g.globalCompositeOperation = "source-over";
+        g.globalCompositeOperation = 'source-over';
 
         // 遍历孩子，顺序与globalCompositeOperation的设置要匹配，这是的效果是后添加的在上面
-        for (let i = 0; i < this.children.length; i++) {
-            let child = this.children[i];
+        for (let i = 0; i < this.children.length; i += 1) {
+            const child = this.children[i];
             // 子元件可见才绘制
             if (child.visible) {
                 // 孩子会坐标转换、缩放及旋转，所以先保存上下文
@@ -189,20 +193,20 @@ class CanvasSprite extends Sprite {
         g.restore();
     }
 
-    /***************************************************************************
+    /** *************************************************************************
      *
      * 坐标转换
      *
-     **************************************************************************/
+     ************************************************************************* */
 
     /**
      * 将感应区投影到全局坐标系
      */
     mirror() {
-        let shadow = new CanvasSprite();
+        const shadow = new CanvasSprite();
         // 通过感应区的外边框的坐标变换，来计算投影的旋转和缩放
-        for (let i = 0; i < this.bounds.length; i++) {
-            let bound = this.bounds[i];
+        for (let i = 0; i < this.bounds.length; i += 1) {
+            const bound = this.bounds[i];
             shadow.addBound(this._shapeToLayer_(bound));
         }
         return shadow;
@@ -213,12 +217,12 @@ class CanvasSprite extends Sprite {
     }
 
     _shapeToLayer_(shape) {
-        let vertexes = shape.getVertexes();
-        let points = [];
-        for (let i = 0; i < vertexes.length; i++) {
+        const vertexes = shape.getVertexes();
+        const points = [];
+        for (let i = 0; i < vertexes.length; i += 1) {
             points.push(this.getLayerPos(vertexes[i]));
         }
-        //console.log("_shapeToLayer_", shape, new Rectangle(points), new Polygon(points));
+        // console.log("_shapeToLayer_", shape, new Rectangle(points), new Polygon(points));
         if (Rectangle.isRectangle(points)) {
             return new Rectangle(points);
         }
@@ -226,42 +230,20 @@ class CanvasSprite extends Sprite {
     }
 
     _shapeToOuter_(shape) {
-        let vertexes = shape.getVertexes();
-        let points = [];
-        for (let i = 0; i < vertexes.length; i++) {
+        const vertexes = shape.getVertexes();
+        const points = [];
+        for (let i = 0; i < vertexes.length; i += 1) {
             points.push(this.getOuterPos(vertexes[i]));
         }
         return new Polygon(points);
     }
 
 
-    /***************************************************************************
+    /** *************************************************************************
      *
      * 碰撞
      *
-     **************************************************************************/
-
-    /**
-     * 返回点与感应区的碰撞测试结果
-     *
-     * @param point 测试点
-     * @returns boolean 测试结果
-     */
-    _pointInBounds_(point) {
-        // 先做外接矩形碰撞测试，排除远点
-        if (this.boundingRect.hitTestPoint(point)) {
-            // 如果没定义边界图形，那么说明 boundingRect 从孩子获取，直接返回true，主要用于图纸等用途
-            if (this._bounds_.length === 0) {
-                return true;
-            }
-            for (let i = 0; i < this.bounds.length; i++) {
-                if (this.bounds[i].hitTestPoint(point)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+     ************************************************************************* */
 
     /**
      * 点碰撞测试，用边界形状做碰撞测试。<br>
@@ -280,16 +262,16 @@ class CanvasSprite extends Sprite {
      * @returns {boolean}
      */
     hitTestObject(target) {
-        let a = this.mirror();
-        let b = target.mirror();
+        const a = this.mirror();
+        const b = target.mirror();
 
         if (a.boundingRect.hitTestRectangle(b.boundingRect)) {
-            for (let i = 0; i < a.bounds.length; i++) {
-                let shape1 = a.bounds[i];
-                for (let j = 0; j < b.bounds.length; j++) {
-                    let shape2 = b.bounds[j];
+            for (let i = 0; i < a.bounds.length; i += 1) {
+                const shape1 = a.bounds[i];
+                for (let j = 0; j < b.bounds.length; j += 1) {
+                    const shape2 = b.bounds[j];
                     if (shape1.hitTestPolygon(shape2)) {
-                        //console.log("hit", i, j);
+                        // console.log("hit", i, j);
                         return true;
                     }
                 }
@@ -298,18 +280,16 @@ class CanvasSprite extends Sprite {
         return false;
     }
 
-    /***************************************************************************
+    /** *************************************************************************
      *
      * 离线画布
      *
-     **************************************************************************/
+     ************************************************************************* */
 
     _createOffScreenContext_(width, height) {
-        let g = new Graphics();
-        let size = this.size;
-        let scale = this.scale;
-        g.canvas.width = width || Math.ceil(size.width / scale.x);
-        g.canvas.height = height || Math.ceil(size.height / scale.y);
+        const g = new Graphics();
+        g.canvas.width = width || Math.ceil(this.size.width / this.scale.x);
+        g.canvas.height = height || Math.ceil(this.size.height / this.scale.y);
         return g;
     }
 
@@ -319,7 +299,6 @@ class CanvasSprite extends Sprite {
         }
         return this._offScreenContext_;
     }
-
 }
 
 export default CanvasSprite;

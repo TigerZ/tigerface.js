@@ -30,7 +30,7 @@ describe('测试显示对象 DisplayObject', () => {
             assert.deepEqual(d.visible, false);
             assert.deepEqual(d.isChanged, true);
 
-            d.addEventListener(Event.STATUS_CHANGED, (e) => {
+            d.addEventListener(Event.STATE_CHANGED, (e) => {
                 console.log(++num, e.log);
             });
             d.setState(opt);

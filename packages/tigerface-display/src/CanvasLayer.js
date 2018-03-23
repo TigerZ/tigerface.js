@@ -51,11 +51,13 @@ class CanvasLayer extends DomSprite {
         this.on(Event.MouseEvent.CONTEXT_MENU, (e) => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_DOWN, (e) => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_UP, (e) => this._onMouseEvents_(e));
+        // this.on(Event.MouseEvent.MOUSE_OUT, (e) => this._onMouseEvents_(e));
+        // this.on(Event.MouseEvent.MOUSE_OVER, (e) => this._onMouseEvents_(e));
 
         this.assign(T.merge({
             style: {
-                backgroundColor: 'rgba(255,255,255,0.3)'
-            }
+                backgroundColor: 'rgba(255,255,255,0.3)',
+            },
         }, options));
     }
 
@@ -247,36 +249,26 @@ class CanvasLayer extends DomSprite {
     }
 
     /**
-     * 接收 Canvas Dom 的鼠标移动事件，并且遍历内部 Context2DSprite 对象，调用其 _onLayerMouseMove_ 方法，间接触发内部鼠标移动相关事件
-     * @param e {object}
-     */
-    _onMouseMove_(e) {
-        // 调用 DisplayObject 的同名方法，转换坐标为内部坐标。
-        // 注意：Canvas 不能旋转缩放，否则坐标为外界矩形内部坐标，如果 DomSprite 已实现坐标转换，请删除此行注释。
-        super._onMouseMove_(e);
-
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
-            child._onLayerMouseMove_(this.getMousePos(), 2);
-        }
-    }
-
-    /**
      * 接收 Canvas Dom 的鼠标单击事件，遍历内部对象，调用 _onLayerMouseClick_ 方法，由其自己判断是否发送内部鼠标单击事件
      * @param e {object}
      * @private
      */
     _onMouseEvents_(e) {
-        // this.logger.debug(`_onMouseEvents_()`, e);
+        this.logger.debug(`_onMouseEvents_()`, e);
+        switch(e.eventName) {
+            case Event.MouseEvent.MOUSE_OVER:
+                this._mouseInside_ = true;
+                this._checkingMouse_ = false;
+                break;
+            case Event.MouseEvent.MOUSE_OUT:
+                this._mouseInside_ = false;
+                this._checkingMouse_ = true;
+                break;
+        }
         for (let i = this.children.length - 1; i >= 0; i--) {
             let child = this.children[i];
             child._onLayerMouseEvents_(e.eventName);
         }
-    }
-
-    layerChanged() {
-        if (this.isChanged) return;
-        this._changed_ = true;
     }
 }
 
