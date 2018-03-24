@@ -11,7 +11,7 @@ import { Point } from 'tigerface-shape';
  * * 由 _paint_ 主绘制方法串起来的 paint 方法组，子类通过覆盖各阶段方法实现多态，应用类仅实现 paint 方法
  * * 基本的内外部坐标转换方法：getOuterPos 和 getInnerPos
  *
- * @extends EventDispatcher
+ * @extends module:tigerface-event.EventDispatcher
  * @author 张翼虎 <zhangyihu@gmail.com>
  * @memberof module:tigerface-display
  */
