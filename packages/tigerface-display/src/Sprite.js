@@ -227,7 +227,8 @@ class Sprite extends DisplayObjectContainer {
     }
 
     _onStageMouseEvents_(e, digits = 2) {
-        if (this._checkMouseInside_(e.pos, digits)) {
+        if (e.eventName === Event.MouseEvent.MOUSE_OUT || this._checkMouseInside_(e.pos, digits)) {
+            if (e.eventName === Event.MouseEvent.MOUSE_OUT) this._mouseInside_ = false;
             this.dispatchEvent(e.eventName, { pos: this.mousePos });
             this.logger.debug('_onMouseEvents_()', e);
             for (let i = this.children.length - 1; i >= 0; i -= 1) {

@@ -64,12 +64,14 @@ class Stage extends DomSprite {
         this.frameAdapter.on(Event.REDRAW, () => this._paint_());
         this.frameAdapter.on(Event.ENTER_FRAME, () => this._onEnterFrame_());
 
+
         this.on(Event.MouseEvent.MOUSE_MOVE, e => this._onMouseMove_(e));
         this.on(Event.MouseEvent.CLICK, e => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.DOUBLE_CLICK, e => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.CONTEXT_MENU, e => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_DOWN, e => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_UP, e => this._onMouseEvents_(e));
+        this.on(Event.MouseEvent.MOUSE_OUT, e => this._onMouseEvents_(e));
     }
 
     _onMouseMove_(e) {
