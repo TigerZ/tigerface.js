@@ -1,4 +1,4 @@
 #!/bin/sh
-rm -rf ./doc/
-#jsdoc ./packages/ -t ./node_modules/docdash -a all -d doc
-jsdoc ./packages/ -r -d doc -t ./node_modules/docdash
+rm -rf ./apidoc/
+#jsdoc ./packages/ -r -d apidoc -t ./node_modules/docdash -c ./jsdoc.json -a all
+jsdoc ./packages/ -r -d apidoc -t ./node_modules/docdash -c ./jsdoc.json

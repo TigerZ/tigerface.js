@@ -5,30 +5,35 @@ import { Point } from 'tigerface-shape';
 
 /**
  * DisplayObject 是最底层显示对象，是其他现实对象的超类。
- * 职责：
- * 1、定义显示相关基本属性，比如：坐标、尺寸、原点、缩放、旋转、透明度 ...
- * 2、实现 setState 和 postChange 机制
- * 3、由 _paint_ 主绘制方法串起来的 paint 方法组，子类通过覆盖各阶段方法实现多态，应用类仅实现 paint 方法
- * 4、基本的内外部坐标转换方法：getOuterPos 和 getInnerPos
+ * **职责**：
+ * * 定义显示相关基本属性，比如：坐标、尺寸、原点、缩放、旋转、透明度 ...
+ * * 实现 setState 和 postChange 机制
+ * * 由 _paint_ 主绘制方法串起来的 paint 方法组，子类通过覆盖各阶段方法实现多态，应用类仅实现 paint 方法
+ * * 基本的内外部坐标转换方法：getOuterPos 和 getInnerPos
  *
  * @extends EventDispatcher
  * @author 张翼虎 <zhangyihu@gmail.com>
  * @memberof module:tigerface-display
  */
 class DisplayObject extends EventDispatcher {
+    // 静态日志
     static logger = Logger.getLogger(DisplayObject.name);
 
     /**
-     * @param options {object} 可选初始属性，属性缺省值
-     * {pos: {x: 0, y: 0},
-     * size: {width: 320, height: 240},
-     * scale: {x: 1, y: 1},
-     * origin: {x: 0, y: 0},
-     * alpha: 1,
-     * rotation: 0,
-     * visible: true}
+     * @param [options] {object} 可选初始属性，属性缺省值
+     * ```
+     *  {
+     *      pos: {x: 0, y: 0},
+     *      size: {width: 320, height: 240},
+     *      scale: {x: 1, y: 1},
+     *      origin: {x: 0, y: 0},
+     *      alpha: 1,
+     *      rotation: 0,
+     *      visible: true
+     *  }
+     * ```
      */
-    constructor(options = undefined) {
+    constructor(options) {
         const props = {
             clazzName: DisplayObject.name,
             uuid: T.uuid(),
@@ -59,6 +64,10 @@ class DisplayObject extends EventDispatcher {
 
     //* ********************************** 坐标 **************************************
 
+    /**
+     * X 轴位置坐标
+     * @member {number}
+     */
     set x(x) {
         this.pos = { x };
     }
@@ -67,6 +76,10 @@ class DisplayObject extends EventDispatcher {
         return this.pos.x;
     }
 
+    /**
+     * Y 轴位置坐标
+     * @member {number}
+     */
     set y(y) {
         this.pos = { y };
     }
@@ -76,8 +89,8 @@ class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 设置坐标
-     * @param pos {Point|{x:*,y:*}}
+     * 坐标
+     * @member {(module:tigerface-shape.Point|{x: number, y: number})}
      */
     set pos(pos) {
         if (T.assignEqual(this.pos, pos)) return;
@@ -90,11 +103,19 @@ class DisplayObject extends EventDispatcher {
         return this.state.pos;
     }
 
+    /**
+     * 位置改变的处理
+     * @package
+     */
     _onPosChanged_() {
     }
 
     //* ********************************** 缩放 **************************************
 
+    /**
+     * X 轴缩放
+     * @member {number}
+     */
     set scaleX(x) {
         this.scale = { x };
     }
@@ -103,6 +124,10 @@ class DisplayObject extends EventDispatcher {
         return this.scale.x;
     }
 
+    /**
+     * Y 轴缩放
+     * @member {number}
+     */
     set scaleY(y) {
         this.scale = { y };
     }
@@ -112,8 +137,8 @@ class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 设置缩放
-     * @param scale {Point|{x:*,y:*}}
+     * 缩放
+     * @member {{x:number,y:number}}
      */
     set scale(scale) {
         if (T.assignEqual(this.scale, scale)) return;
@@ -126,14 +151,18 @@ class DisplayObject extends EventDispatcher {
         return this.state.scale;
     }
 
+    /**
+     * 缩放改变的处理
+     * @package
+     */
     _onScaleChanged_() {
     }
 
     //* ********************************** 透明度 **************************************
 
     /**
-     * 设置透明度
-     * @param alpha {number} 0 至 1
+     * 透明度 (0-1)
+     * @member {number}
      */
     set alpha(alpha) {
         if (T.assignEqual(this.alpha, alpha)) return;
@@ -146,14 +175,18 @@ class DisplayObject extends EventDispatcher {
         return this.state.alpha;
     }
 
+    /**
+     * 透明度改变的处理
+     * @package
+     */
     _onAlphaChanged_() {
     }
 
     //* ********************************* 旋转 ***************************************
 
     /**
-     * 设置旋转角度
-     * @param rotation {number} 旋转角度
+     * 旋转角度 (0-360)
+     * @member {number}
      */
     set rotation(rotation) {
         if (T.assignEqual(this.rotation, rotation)) return;
@@ -166,14 +199,18 @@ class DisplayObject extends EventDispatcher {
         return this.state.rotation;
     }
 
+    /**
+     * 旋转角度改变的处理
+     * @package
+     */
     _onRotationChanged_() {
     }
 
     //* ********************************** 可见 **************************************
 
     /**
-     * 设置可见性
-     * @param visible {boolean} 是否可见
+     * 可见性
+     * @member {boolean}
      */
     set visible(visible) {
         if (T.assignEqual(this.visible, visible)) return;
@@ -186,11 +223,19 @@ class DisplayObject extends EventDispatcher {
         return this.state.visible;
     }
 
+    /**
+     * 可见性改变的处理
+     * @package
+     */
     _onVisibleChanged_() {
     }
 
     //* ********************************** 原点 **************************************
 
+    /**
+     * X 轴原点
+     * @member {number}
+     */
     set originX(x) {
         this.origin = { x };
     }
@@ -199,6 +244,10 @@ class DisplayObject extends EventDispatcher {
         return this.origin.x;
     }
 
+    /**
+     * Y 轴原点
+     * @member {number}
+     */
     set originY(y) {
         this.origin = { y };
     }
@@ -208,8 +257,8 @@ class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 设置原点
-     * @param origin {Point|{x:*,y:*}}
+     * 原点
+     * @member {(module:tigerface-shape.Point|{x:number,y:number})}
      */
     set origin(origin) {
         if (T.assignEqual(this.origin, origin)) return;
@@ -222,12 +271,20 @@ class DisplayObject extends EventDispatcher {
         return this.state.origin;
     }
 
+    /**
+     * 原点改变的处理
+     * @package
+     */
     _onOriginChanged_() {
 
     }
 
     //* ********************************* 大小 ***************************************
 
+    /**
+     * 宽度
+     * @member {number}
+     */
     set width(width) {
         this.size = { width };
     }
@@ -236,6 +293,10 @@ class DisplayObject extends EventDispatcher {
         return this.size.width;
     }
 
+    /**
+     * 高度
+     * @member {number}
+     */
     set height(height) {
         this.size = { height };
     }
@@ -245,8 +306,8 @@ class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 设置大小
-     * @param size {{width:*,height:*}} 大小
+     * 尺寸
+     * @member {{width:*,height:*}}
      */
     set size(size) {
         if (T.assignEqual(this.size, size)) return;
@@ -260,12 +321,16 @@ class DisplayObject extends EventDispatcher {
         return this.state.size;
     }
 
+    /**
+     * 尺寸改变的处理
+     * @package
+     */
     _onSizeChanged_() {
     }
 
     /**
-     * 获得画笔对象
-     * @return {*}
+     * 画笔
+     * @member {module:tigerface-graphic.Graphics}
      */
     get graphics() {
         return this._graphics_;
@@ -273,14 +338,17 @@ class DisplayObject extends EventDispatcher {
 
     //* ********************************* 状态改变事件 ***************************************
 
+    /**
+     * 状态改变的处理
+     * @package
+     */
     _onStateChanged_() {
         if (this.layer) this.layer.involvedChange();
     }
 
     /**
      * 提交状态改变
-     * @param log
-     * @return {boolean}
+     * @param [log] {...string} 状态改变原因
      */
     postChange(...log) {
         if (log.length && log[0]) this.logger.debug('状态改变', ...log);
@@ -290,6 +358,10 @@ class DisplayObject extends EventDispatcher {
         this._onStateChanged_();
     }
 
+    /**
+     * 牵连状态改变
+     * @param [log] {...string} 状态改变原因
+     */
     involvedChange(...log) {
         if (log.length && log[0]) this.logger.debug('牵连状态改变', ...log);
         if (this.isChanged) return;
@@ -297,8 +369,8 @@ class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 再次传入属性值，更新状态
-     * @param options
+     * 更新，再次读取可选初始属性
+     * @param [options] {object} 可选初始属性
      */
     update(options) {
         super.update(options);
@@ -307,15 +379,15 @@ class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 清除“已改变”状态
+     * 清除状态改变
      */
     clearChange() {
         this._changed_ = false;
     }
 
     /**
-     * 是否已改变
-     * @returns {boolean|*|DisplayObject._changed_}
+     * 是否状态改变
+     * @member {boolean}
      */
     get isChanged() {
         return this._changed_;
@@ -327,18 +399,19 @@ class DisplayObject extends EventDispatcher {
      * 重绘方法，需要被实现
      */
     paint() {
+        this.logger.error('paint 方法必须实现');
     }
 
     /**
      * 绘制前处理
-     * @private
+     * @package
      */
     _onBeforePaint_() {
     }
 
     /**
      * 绘制后处理
-     * @private
+     * @package
      */
     _onAfterPaint_() {
     }
@@ -391,22 +464,20 @@ class DisplayObject extends EventDispatcher {
 
     /**
      * 进入帧事件
-     * @private
+     * @package
      */
     _onEnterFrame_() {
         this.emit(Event.ENTER_FRAME, { target: this });
     }
 
     /**
-     * 返回外部坐标
+     * 计算外部坐标
      *
-     * @param point {Point|{x: *, y: *}} 内部坐标
-     * @param digits {number} 结果小数位数（精确度）
-     * @returns {Point} 外部坐标
+     * @param point {(module:tigerface-shape.Point|{x: number, y: number})} 内部坐标
+     * @param [digits=0] {number} 结果小数位数（精确度）
+     * @returns {module:tigerface-shape.Point} 外部坐标
      */
     getOuterPos(point, digits = 0) {
-        if (point === undefined) return undefined;
-
         const o = this.origin;
         const r = this.rotation;
         const s = this.scale;
@@ -427,14 +498,13 @@ class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 返回内部坐标
+     * 计算内部坐标
      *
-     * @param point {Point} 外部坐标
-     * @param digits {number} 精度
-     * @returns {Point} 内部坐标
+     * @param point {module:tigerface-shape.Point} 外部坐标
+     * @param [digits = 0] {number} 精度
+     * @returns {module:tigerface-shape.Point} 内部坐标
      */
     getInnerPos(point, digits = 0) {
-        if (point === undefined) return undefined;
 
         const o = this.origin;
         const r = this.rotation;
@@ -457,11 +527,11 @@ class DisplayObject extends EventDispatcher {
     /**
      * 获得层坐标，用于检测层内投影碰撞，原名为 getGlobalPos
      *
-     * @param localPos {Point|{x:*, y:*}} 内部坐标
-     * @param digits {number} 精度
-     * @returns {Point} 坐标
+     * @param localPos {(module:tigerface-shape.Point|{x:number, y:number})} 内部坐标
+     * @param [digits = 0] {number} 精度
+     * @returns {module:tigerface-shape.Point} 坐标
      */
-    getLayerPos(localPos = { x: 0, y: 0 }, digits = 0) {
+    getLayerPos(localPos, digits = 0) {
         if (this.isLayer) {
             return localPos;
         }
@@ -476,12 +546,12 @@ class DisplayObject extends EventDispatcher {
 
     /**
      * 获得舞台投影的坐标
-     * @param localPos {Point|{x:number,y:number}} 内部坐标
-     * @param digits number 精度
-     * @returns {Point} 坐标
-     * @private
+     * @param localPos {(module:tigerface-shape.Point|{x:number,y:number})} 内部坐标
+     * @param [digits = 0] number 精度
+     * @returns {module:tigerface-shape.Point} 坐标
+     * @package
      */
-    getStagePos(localPos = { x: 0, y: 0 }, digits = 0) {
+    getStagePos(localPos, digits = 0) {
         let pos = this.getOuterPos({ x: localPos.x + this.origin.x, y: localPos.y + this.origin.y }, digits);
         if (this.parent && !this.parent.isStage) {
             pos = this.parent.getStagePos(pos, digits);
@@ -492,7 +562,7 @@ class DisplayObject extends EventDispatcher {
     /**
      * 获得舞台投影的旋转角度
      * @return {number}
-     * @private
+     * @package
      */
     _getStageRotation_() {
         if (this.parent && !this.parent.isStage) {
@@ -504,7 +574,7 @@ class DisplayObject extends EventDispatcher {
     /**
      * 获得舞台投影的原点
      * @return {*}
-     * @private
+     * @package
      */
     _getStageOrigin_() {
         if (this.parent && !this.parent.isStage) {
@@ -516,8 +586,8 @@ class DisplayObject extends EventDispatcher {
 
     /**
      * 获得舞台投影的缩放
-     * @return {*}
-     * @private
+     * @return {{x:number,y:number}}
+     * @package
      */
     _getStageScale_() {
         if (this.parent && !this.parent.isStage) {
@@ -529,11 +599,11 @@ class DisplayObject extends EventDispatcher {
 
 
     /**
-     * 获得本地坐标
+     * 层坐标转换本地坐标
      *
-     * @param layerPos {Point} 层坐标
-     * @param digits {number} 精度
-     * @returns {Point}
+     * @param layerPos {(module:tigerface-shape.Point|{x:number, y:number})} 层坐标
+     * @param [digits = 0] {number} 精度
+     * @returns {module:tigerface-shape.Point} 内部坐标
      */
     getLayerLocalPos(layerPos, digits = 0) {
         if (this.parent && !this.parent.isLayer) {
@@ -569,19 +639,26 @@ class DisplayObject extends EventDispatcher {
     //     return this.getInnerPos(pos, digits);
     // }
 
-    getStageLocalPos(layerPos, digits = 0) {
+    /**
+     * 舞台坐标转换内部坐标
+     *
+     * @param stagePos {(module:tigerface-shape.Point|{x:number, y:number})} 舞台坐标
+     * @param [digits = 0] {number} 精度
+     * @returns {module:tigerface-shape.Point} 内部坐标
+     */
+    getStageLocalPos(stagePos, digits = 0) {
         if (this.parent && !this.parent.isStage) {
-            const pos = this.getInnerPos(this.parent.getStageLocalPos(layerPos, digits));
+            const pos = this.getInnerPos(this.parent.getStageLocalPos(stagePos, digits));
             // 因为孩子的坐标是从origin点开始计算的，所以要先偏移origin的坐标
             const o = this.parent.origin;
             return pos.move(-o.x, -o.y);
         }
-        return this.getInnerPos(layerPos, digits);
+        return this.getInnerPos(stagePos, digits);
     }
 
     /**
      * 是否是舞台
-     * @return {boolean}
+     * @member {boolean}
      */
     get isStage() {
         return this._stage_ === this;
@@ -589,15 +666,15 @@ class DisplayObject extends EventDispatcher {
 
     /**
      * 是否是层
-     * @return {boolean}
+     * @member {boolean}
      */
     get isLayer() {
         return this._layer_ === this;
     }
 
     /**
-     * 设置上级
-     * @param v 上级对象
+     * 上级
+     * @member {module:tigerface-display.DisplayObjectContainer}
      */
     set parent(v) {
         if (this.parent === v) return;
@@ -605,17 +682,13 @@ class DisplayObject extends EventDispatcher {
         this._onAppendToParent_();
     }
 
-    /**
-     * 获取上级
-     * @return {*} 上级对象
-     */
     get parent() {
         return this._parent_;
     }
 
     /**
      * 添加至上级
-     * @private
+     * @package
      */
     _onAppendToParent_() {
         if (!this.parent) return;
@@ -626,8 +699,8 @@ class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 获取舞台
-     * @return {*} 舞台对象
+     * 舞台
+     * @member {module:tigerface-display.Stage}
      */
     get stage() {
         if (!this._stage_) {
@@ -637,10 +710,6 @@ class DisplayObject extends EventDispatcher {
         return this._stage_;
     }
 
-    /**
-     * 设置舞台
-     * @param v 舞台对象
-     */
     set stage(v) {
         if (this.stage === v) return;
         this._stage_ = v;
@@ -648,7 +717,7 @@ class DisplayObject extends EventDispatcher {
 
     /**
      * 添加至舞台
-     * @private
+     * @package
      */
     _onAppendToStage_() {
         if (!this._stage_ && this.stage && this.stage !== this) {
@@ -657,10 +726,6 @@ class DisplayObject extends EventDispatcher {
         }
     }
 
-    /**
-     * 获取层
-     * @return {*} 层对象
-     */
     get layer() {
         if (!this._layer_) {
             // 通过 parent 的 get 方法向上遍历
@@ -670,8 +735,8 @@ class DisplayObject extends EventDispatcher {
     }
 
     /**
-     * 设置层
-     * @param v {*} 层对象
+     * 层
+     * @member {(module:tigerface-display.DomSprite|module:tigerface-display.CanvasLayer)}
      */
     set layer(v) {
         if (this.layer === v) return;
@@ -680,7 +745,7 @@ class DisplayObject extends EventDispatcher {
 
     /**
      * 添加至层
-     * @private
+     * @package
      */
     _onAppendToLayer_() {
         if (!this._layer_ && this.layer && this.layer !== this) {
