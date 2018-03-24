@@ -8,7 +8,7 @@ tigerface.js 架构整体使用 ECMAScript 6 语法编写，部分地方使用�
 就是tigerface.js 的标准开发项目，开发者可以查看项目里的 .babelrc 配置文件。
 在调试和发布时，架构使用 webpack 进行打包和压缩，请查看项目里的 webpack.config.js 文件。
 
-架构采用面向对象方式的设计方法，底层基类实现基本的公共属性和方法，并通过多次继承实现对象的多样性。
+架构采用面向对象的设计方法，底层基类实现基本的公共属性和方法，并通过多次继承实现对象的多样性。
 tigerface.js 的早期版本，还是用 JavaScript 早期的版本实现，类似这样的语法：
 ```javascript
 var Person = Class.extend({
@@ -164,8 +164,8 @@ ES6 的 setter 语法，方便实现自动设置状态改变，发布事件。
 
 ### 纯 JavaScript 或 React
 
-tigerface.js 架构首先是纯 JavaScript 架构, 仅在 dom 节点的 css 操作中使用了 jquery。
-对于使用 React 架构前端项目，tigerface.js 也提供了 React 接口方便用于整合。
+tigerface.js 架构是纯 JavaScript 架构，仅在 dom 节点的 css 操作中使用了 jquery（在后续版本里会去掉 jquery 依赖）。
+对于使用 React 架构的前端项目，tigerface.js 也提供了 React 接口方便用于整合。
 在范例中会看到这两种方式的实现。
 
 [下一章 日志](logger.md)

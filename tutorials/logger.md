@@ -25,8 +25,14 @@ INFO、DEBUG 五个级别。在生产环境下，自动全局关闭。
     // ...
     
     // 静态初始化
-    const logger = Logger.getLogger('');
+    const logger = Logger.getLogger('类名');
+  
+    // 或类构造器里进行实例初始化
+    this.logger = Logger.getLogger(this);
     ```
+    实例初始化的 logger ，输出时如果有 name 属性，那么 name 会作为源名称，
+否则用 clazzName 作为源名称，没有定义 clazzName，就使用基类的 clazzName 作为源名称。
+
 
 输出:
 ![DEBUG 日志输出图例](./img/debug.png "DEBUG 日志输出图例")
@@ -62,7 +68,7 @@ this.logger.error('Hi, 这是红色的错误');
 ```
 输出效果：
 
-![Chrome 日志输出](./img/chrome_log_color.png "Chrome 日志输出")
+![Chrome 日志输出](./img/chrome_log_color1.png "Chrome 日志输出")
 
 注意：error 方法直接抛出错误异常，运行终止。如果不希望终止运行，需要 `try{...}catch(e){...};`
 
@@ -88,7 +94,7 @@ log-config.json 是 Logger 的配置文件，放在项目根目录。编辑此�
   "class-log-level": {
     "EventDispatcher":"off",
     "CanvasLayer":"off",
-    "DemoDomSprite":"debug"
+    "CanvasSprite":"debug"
   }
 }
 ```
@@ -99,10 +105,33 @@ log-config.json 是 Logger 的配置文件，放在项目根目录。编辑此�
 {
   "log-level": "off", 
   "class-log-level": {
-    "DemoDomSprite":"debug"
+    "CanvasSprite":"debug"
   }
 }
 ```
+
+如果没有指定自己的类名，日志会使用基类的类名，例如`CanvasSprite`。所以应该指定自己的类名，例如：
+```javascript
+class Bar extends CanvasSprite {
+    constructor() {
+        super({
+            clazzName: Bar.name,
+        });
+        // ...
+```
+`log-level` 配置文件里就可以用 "Bar" 作为类名来管理：
+```json
+{
+  "log-level": "off", 
+  "class-log-level": {
+    "Bar":"debug"
+  }
+}
+```
+输出也会改变：
+
+![Chrome 日志输出](./img/chrome_log_color2.png "Chrome 日志输出")
+
 
 
 [下一章 事件](event.md)
