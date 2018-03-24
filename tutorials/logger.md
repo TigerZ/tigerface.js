@@ -74,7 +74,8 @@ this.logger.error('Hi, 这是红色的错误');
 
 ![Chrome 日志输出级别](./img/chrome_log_level.png "Chrome 日志输出级别")
 
-    或者关键字过滤：
+或者关键字过滤：
+    
 ![Chrome 日志过滤](./img/chrome_log_filter.png "Chrome 日志过滤")
 
 * 配置 log-config.json 文件
