@@ -51,7 +51,9 @@ Logger 有 5 种日志输出级别分别是：
 如果设置为 `DEBUG` 将输出全部日志。
 
 ### 日志输出
+
 Logger 输出直接使用对应的方法名：
+
 ```javascript
 this.logger.debug('Hi, 这是蓝色的调试日志');
 this.logger.info('Hi, 这是绿色的信息日志');
@@ -59,19 +61,26 @@ this.logger.warn('Hi, 这是橙色的警告日志');
 this.logger.error('Hi, 这是红色的错误');
 ```
 输出效果：
+
 ![Chrome 日志输出](./img/chrome_log_color.png "Chrome 日志输出")
-注意：error 级别直接抛出错误异常，运行终止。如果不希望终止运行，需要 `try{...}catch(e){...};`
+
+注意：error 方法直接抛出错误异常，运行终止。如果不希望终止运行，需要 `try{...}catch(e){...};`
 
 ### 日志的定位
+
 在海量的日志里，寻找有效的信息可用以下几种方法：
+
 * 在浏览器控制台里对输出进行级别过滤：
+
 ![Chrome 日志输出级别](./img/chrome_log_level.png "Chrome 日志输出级别")
 
     或者关键字过滤：
 ![Chrome 日志过滤](./img/chrome_log_filter.png "Chrome 日志过滤")
 
 * 配置 log-config.json 文件
+
 log-config.json 是 Logger 的配置文件，放在项目根目录。编辑此文件，可以更精确的控制日志输出。
+
 ```json
 {
   "log-level": "warn", 
@@ -82,7 +91,9 @@ log-config.json 是 Logger 的配置文件，放在项目根目录。编辑此�
   }
 }
 ```
+
 `log-level` 是全局日志级别，`class-log-level` 为具体的类指定日志级别，优先级高于全局日志级别。例如：可以关闭全局日志，仅打印指定某类的日志。
+
 ```json
 {
   "log-level": "off", 
