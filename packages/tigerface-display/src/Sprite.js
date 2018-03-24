@@ -227,13 +227,24 @@ class Sprite extends DisplayObjectContainer {
     }
 
     _onStageMouseEvents_(e, digits = 2) {
+        // 如果鼠标移出 stage，那么向全体下级推送 MOUSE_OUT 事件。因为 canvas 或 sprite 可能大于 stage。
         if (e.eventName === Event.MouseEvent.MOUSE_OUT || this._checkMouseInside_(e.pos, digits)) {
-            if (e.eventName === Event.MouseEvent.MOUSE_OUT) this._mouseInside_ = false;
+            // 上级推送的 MOUSE_OUT 事件，需要自己恢复状态
+            if (e.eventName === Event.MouseEvent.MOUSE_OUT) {
+                this.mousePos = { x: -1, y: -1 };
+                this._mouseInside_ = false;
+            }
+
+            // 本级事件转发
             this.dispatchEvent(e.eventName, { pos: this.mousePos });
             this.logger.debug('_onMouseEvents_()', e);
+
+            // 向下级传播
             for (let i = this.children.length - 1; i >= 0; i -= 1) {
                 const child = this.children[i];
-                child._onStageMouseEvents_(e);
+                if (child instanceof Sprite) {
+                    child._onStageMouseEvents_(e);
+                }
             }
         }
     }

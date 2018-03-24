@@ -1,9 +1,9 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars,no-mixed-operators */
 import React from 'react';
-import {Sector, Line, Square} from "tigerface-shape";
-import {CanvasSprite} from "tigerface-display";
-import {withSimpleSpriteComponent} from 'tigerface-react';
-import {Utilities as T} from 'tigerface-common';
+import { Sector, Line, Square } from 'tigerface-shape';
+import { CanvasSprite } from 'tigerface-display';
+import { withSimpleSpriteComponent } from 'tigerface-react';
+import { Utilities as T } from 'tigerface-common';
 
 /**
  * User: zyh
@@ -26,9 +26,9 @@ const _default = {
     font: '12px monaco',
     speed: 3,
     style: {
-        margin: '30px auto 0'
+        margin: '30px auto 0',
     },
-    colors: ['red']
+    colors: ['red'],
 };
 
 class PieChartSprite extends CanvasSprite {
@@ -65,20 +65,17 @@ class PieChartSprite extends CanvasSprite {
 
     set data(data) {
         this._data_ = [];
-        let sum = data.reduce((a, b) => {
-            return {num: a.num + b.num};
-        }).num;
+        const sum = data.reduce((a, b) => ({ num: a.num + b.num })).num;
         let count = 0;
-        data.forEach(({num, name}, idx) => {
-            let percent = 0
+        data.forEach(({ num, name }, idx) => {
+            let percent = 0;
             if (idx === (data.length - 1)) {
                 percent = 100 - count;
-            }
-            else {
+            } else {
                 percent = Math.round(num / sum * 100);
                 count += percent;
             }
-            this._data_.push({num, name, percent});
+            this._data_.push({ num, name, percent });
         });
 
         this.unitAngle = 360 / sum;
@@ -89,37 +86,37 @@ class PieChartSprite extends CanvasSprite {
     }
 
     paint() {
-        let g = this.graphics;
+        const g = this.graphics;
 
         let finish = true;
-        let shapes = [];
+        const shapes = [];
         let n = 0;
-        let names = [];
-        let count = 20;
-        let p0 = {x: 160, y: 100};
-        let r = 4;
+        const names = [];
+        const count = 20;
+        const p0 = { x: 160, y: 100 };
+        const r = 4;
 
         // 生成图形
-        for (; n < count; n++) {
+        for (; n < count; n += 1) {
             let last = 0;
-            this.data.forEach(({num, name, percent}) => {
-                let b = num * this.unitAngle;
+            // eslint-disable-next-line no-loop-func
+            this.data.forEach((item) => {
+                const { num, name, percent } = item;
+                const b = num * this.unitAngle;
                 if (b > this.h0) finish = false;
-                let b0 = Math.min(this.h0, b);
+                const b0 = Math.min(this.h0, b);
 
-                shapes.push(
-                    new Sector(p0.x, p0.y - n, r * 16, r * 9, last, last + b0)
-                );
+                shapes.push(new Sector(p0.x, p0.y - n, r * 16, r * 9, last, last + b0));
 
                 if (n === count - 1) {
-                    let c = last + Math.abs(b) / 2;
-                    let p1 = {
+                    const c = last + Math.abs(b) / 2;
+                    const p1 = {
                         x: Math.cos(T.degreeToRadian(c)) * (r + 1) * 16 + p0.x,
-                        y: Math.sin(T.degreeToRadian(c)) * (r + 4) * 9 + p0.y - n + count / 2
+                        y: Math.sin(T.degreeToRadian(c)) * (r + 4) * 9 + p0.y - n + count / 2,
                     };
-                    let p2 = {
+                    const p2 = {
                         x: Math.cos(T.degreeToRadian(c)) * r * 16 + p0.x,
-                        y: Math.sin(T.degreeToRadian(c)) * r * 9 + p0.y - n
+                        y: Math.sin(T.degreeToRadian(c)) * r * 9 + p0.y - n,
                     };
                     names.push([p1, p2, name, num, percent]);
                 }
@@ -131,7 +128,7 @@ class PieChartSprite extends CanvasSprite {
         // g.drawPoint({x: 150, y: 120});
         g.lineWidth = 1;
         shapes.forEach((pie, idx) => {
-            let t = idx % this.data.length;
+            const t = idx % this.data.length;
 
             g.fillStyle = this.config.colors[t < this.config.colors.length ? t : this.config.colors.length - 1];
             g.strokeStyle = 'rgba(0,0,0,0.2)';
@@ -142,43 +139,40 @@ class PieChartSprite extends CanvasSprite {
         if (finish) {
             // 绘制标签
             names.forEach(([p1, p2, name, num, percent], idx) => {
-                let str = `${name}[${percent}%]`;
+                const str = `${name}[${percent}%]`;
                 g.lineWidth = 1;
                 g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
                 g.strokeStyle = g.fillStyle;
                 // g.drawPoint(p1);
-                let w = g.measureText(str).width;
+                const w = g.measureText(str).width;
                 if (p1.x < p0.x) {
                     g.textAlign = 'end';
-                    g.drawLine(new Line(p1, {x: p1.x - w, y: p1.y}))
-                }
-                else {
+                    g.drawLine(new Line(p1, { x: p1.x - w, y: p1.y }));
+                } else {
                     g.textAlign = 'start';
-                    g.drawLine(new Line(p1, {x: p1.x + w, y: p1.y}))
+                    g.drawLine(new Line(p1, { x: p1.x + w, y: p1.y }));
                 }
                 g.drawLine(new Line(p1, p2));
                 g.textBaseline = 'bottom';
                 g.drawText(str, p1, this.config.font, g.DrawStyle.FILL);
-
             });
         }
         // 绘制图例
         g.textBaseline = 'top';
         g.textAlign = 'start';
         names.forEach(([p1, p2, name, num], idx) => {
-            let str = `${name} [${num}]`;
+            const str = `${name} [${num}]`;
             g.lineWidth = 1;
             g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
             g.strokeStyle = g.fillStyle;
             // g.drawPoint(p1);
-            let {width: w} = g.measureText(str);
-            let left = this.config.paddingLeft + idx % 4 * 90;
-            let top = this.config.paddingTop + Math.floor(idx / 4) * 20;
+            const { width: w } = g.measureText(str);
+            const left = this.config.paddingLeft + idx % 4 * 90;
+            const top = this.config.paddingTop + Math.floor(idx / 4) * 20;
 
             g.drawRectangle(new Square(left, top, 10), g.DrawStyle.STROKE_FILL);
 
-            g.drawText(str, {x: left + 10 + this.config.xSpace, y: top}, this.config.font, g.DrawStyle.FILL);
-
+            g.drawText(str, { x: left + 10 + this.config.xSpace, y: top }, this.config.font, g.DrawStyle.FILL);
         });
 
         this.h0 += this.config.speed;
@@ -194,20 +188,20 @@ export const putData = (data, config) => {
 
 export default withSimpleSpriteComponent(pieChart, {
     className: pieChart.config.className,
-    style: pieChart.config.style
+    style: pieChart.config.style,
 });
 
 // 以下是演示数据
 
 const colors = ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon'];
 const data = [
-    {name: '何敏', num: 38},
-    {name: '王菲丽', num: 76},
-    {name: '张思雨', num: 25},
-    {name: '王明清', num: 48},
-    {name: '袁立', num: 22},
-    {name: '邢惠珊', num: 71},
-    {name: '李安和', num: 45}
+    { name: '何敏', num: 38 },
+    { name: '王菲丽', num: 76 },
+    { name: '张思雨', num: 25 },
+    { name: '王明清', num: 48 },
+    { name: '袁立', num: 22 },
+    { name: '邢惠珊', num: 71 },
+    { name: '李安和', num: 45 },
 ];
 
 // putData(

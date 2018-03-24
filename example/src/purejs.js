@@ -17,6 +17,7 @@ const stage = new Stage({
 let speed = 1;
 let mouseInCanvas = false;
 
+// 外部设置方式
 const surface = new CanvasLayer();
 surface.enableDrag();
 surface.on(Event.MouseEvent.MOUSE_MOVE, () => {
@@ -31,14 +32,17 @@ surface.on(Event.ENTER_FRAME, () => {
     }
 });
 
+// 继承的方式
 class Panel extends CanvasSprite {
     paint() {
         const g = this.graphics;
         g.textAlign = 'right';
-        g.drawText(speed, { x: 200, y: 200 }, '12px monaco', g.DrawStyle.FILL);
+        g.textBaseline = 'bottom';
+        g.drawText(`V:${speed}`, { x: 200, y: 200 }, '12px monaco', g.DrawStyle.FILL);
     }
 }
 
+// 嵌套两层
 class Windmill extends CanvasSprite {
     constructor() {
         super({

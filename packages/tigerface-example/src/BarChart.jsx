@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import {Rectangle, Square} from "tigerface-shape";
-import {CanvasSprite} from "tigerface-display";
-import {withSimpleSpriteComponent} from 'tigerface-react';
-import {Utilities as T} from 'tigerface-common';
+import { Rectangle, Square } from 'tigerface-shape';
+import { CanvasSprite } from 'tigerface-display';
+import { withSimpleSpriteComponent } from 'tigerface-react';
+import { Utilities as T } from 'tigerface-common';
 
 /**
  * User: zyh
@@ -26,8 +26,8 @@ const _default = {
     font: '12px monaco',
     speed: 3,
     style: {
-        margin:'30px auto'
-    }
+        margin: '30px auto',
+    },
 };
 
 class BarChartSprite extends CanvasSprite {
@@ -67,15 +67,15 @@ class BarChartSprite extends CanvasSprite {
     }
 
     paint() {
-        let g = this.graphics;
+        const g = this.graphics;
         // g.flipH(this.height);
 
-        let rects = [];
-        let fonts = [];
+        const rects = [];
+        const fonts = [];
         let finish = true;
 
-        this.data.forEach(({name, num}, idx) => {
-            let length = this.config.scale * num;
+        this.data.forEach(({ name, num }, idx) => {
+            const length = this.config.scale * num;
             if (length > this.h0) finish = false;
             // rects.push(
             //     new Rectangle(
@@ -85,18 +85,16 @@ class BarChartSprite extends CanvasSprite {
             //         Math.min(this.h0, length)
             //     )
             // );
-            rects.push(
-                [
-                    new Rectangle(
-                        this.config.xSpace + this.config.paddingLeft,
-                        idx * (this.config.unit + this.config.ySpace) + this.config.ySpace + this.config.paddingTop,
-                        Math.min(this.h0, length),
-                        this.config.unit
-                    ),
-                    name,
-                    num
-                ]
-            );
+            rects.push([
+                new Rectangle(
+                    this.config.xSpace + this.config.paddingLeft,
+                    ((idx * (this.config.unit + this.config.ySpace)) + this.config.ySpace) + this.config.paddingTop,
+                    Math.min(this.h0, length),
+                    this.config.unit,
+                ),
+                name,
+                num,
+            ]);
         });
 
         g.textBaseline = 'middle';
@@ -111,18 +109,20 @@ class BarChartSprite extends CanvasSprite {
             g.textAlign = 'right';
             g.drawText(name, {
                 x: this.config.paddingLeft,
-                y: bar.top + this.config.unit / 2
+                y: bar.top + (this.config.unit / 2),
             }, this.config.font, g.DrawStyle.FILL);
 
-            g.drawRectangle(bar,
-                g.DrawStyle.STROKE_FILL);
+            g.drawRectangle(
+                bar,
+                g.DrawStyle.STROKE_FILL,
+            );
             g.lineWidth = 2;
             // g.save();
             // g.flipH(this.height);
             g.textAlign = 'left';
             g.drawText(num, {
-                x: bar.left + bar.width + this.config.xSpace * 2,
-                y: bar.top + this.config.unit / 2
+                x: bar.left + (bar.width + (this.config.xSpace * 2)),
+                y: bar.top + (this.config.unit / 2),
             }, this.config.font, g.DrawStyle.FILL);
             // g.restore();
         });
@@ -131,19 +131,18 @@ class BarChartSprite extends CanvasSprite {
         g.textBaseline = 'top';
         g.textAlign = 'start';
         rects.forEach(([bar, name, num], idx) => {
-            let str = `${name} [${num}]`;
+            const str = `${name} [${num}]`;
             g.lineWidth = 1;
             g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
             g.strokeStyle = g.fillStyle;
             // g.drawPoint(p1);
-            let {width: w} = g.measureText(str);
-            let left = idx % 4 * 90;
-            let top = 205 + Math.floor(idx / 4) * 20;
+            const { width: w } = g.measureText(str);
+            const left = (idx % 4) * 90;
+            const top = 205 + (Math.floor(idx / 4) * 20);
 
             g.drawRectangle(new Square(left, top, 10), g.DrawStyle.STROKE_FILL);
             g.textBaseline = 'top';
-            g.drawText(str, {x: left + 10 + this.config.xSpace, y: top}, this.config.font, g.DrawStyle.FILL);
-
+            g.drawText(str, { x: left + 10 + this.config.xSpace, y: top }, this.config.font, g.DrawStyle.FILL);
         });
 
         this.h0 += this.config.speed;
@@ -159,7 +158,7 @@ export const putData = (data, config) => {
 
 export default withSimpleSpriteComponent(barChart, {
     className: barChart.config.className,
-    style: barChart.config.style
+    style: barChart.config.style,
 });
 
 // 以下是演示数据
