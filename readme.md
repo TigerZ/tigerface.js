@@ -11,7 +11,7 @@ tigerface.js 是一个 javascript 开发架构，用于更简便地实现高度�
 
 **怎么开始？**
 
-在开始前先理解一些本架构，请[[阅读教程](tutorials/readme.md)]
+在开始前先理解一些 tigerface.js 架构的基础知识吧，请[[阅读教程](tutorials/readme.md)]。
 
 建议使用 tigerface-cli 工具搭建项目脚手架，先运行范例，看到效果后，再开始写自己的模块。
 由于我的环境是 mac，如果你使用 windows 可能略有不同。
@@ -43,5 +43,5 @@ tigerface.js 是一个 javascript 开发架构，用于更简便地实现高度�
     ```
 
 1. 在浏览器中会显示运行效果：
-![范例](./tutorials/example.png "范例")
+![范例](./tutorials/img/example.png "范例")
 _说明：此范例是两个图表，点击"**刷新**"按钮_，更新演示数据，重绘图表

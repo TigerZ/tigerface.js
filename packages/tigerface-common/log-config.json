@@ -1,6 +1,8 @@
 {
-  "log-level": "debug",
+  "log-level": "off",
   "class-log-level": {
-    "DemoDomSprite":"off"
+    "EventDispatcher":"off",
+    "CanvasLayer":"off",
+    "Bar":"debug"
   }
 }

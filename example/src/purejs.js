@@ -6,7 +6,6 @@ import { Utilities as T } from 'tigerface-common';
 const dom = document.getElementById('root');
 
 const stage = new Stage({
-    fps: 60,
     width: 200,
     height: 200,
     style: {
@@ -19,7 +18,9 @@ surface.enableDrag();
 
 class Bar extends CanvasSprite {
     constructor() {
-        super();
+        super({
+            clazzName: Bar.name,
+        });
 
         this.x = 100;
         this.y = 100;
@@ -46,10 +47,19 @@ class Bar extends CanvasSprite {
             this.postChange();
         });
         this.on(Event.ENTER_FRAME, () => this.onEnterFrame());
+
+        this.foo('Hello World');
+    }
+
+    foo() {
+        this.logger.debug('Hi, 这是蓝色的调试日志');
+        this.logger.info('Hi, 这是绿色的信息日志');
+        this.logger.warn('Hi, 这是橙色的警告日志');
+        this.logger.error('Hi, 这是红色的错误');
     }
 
     onEnterFrame() {
-        this.rotation += -1;
+        // this.rotation += -1;
     }
 
     paint() {
