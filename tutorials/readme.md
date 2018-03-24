@@ -5,7 +5,7 @@
 * [事件](event.md)
 * [舞台](stage.md)
 * [层](layer.md)
-* [显示对象](display-object.md)
+* [显示对象](displayobject.md)
 * [绘制](paint.md)
 * [状态](state.md)
 * [坐标系](coordinate.md)
