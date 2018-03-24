@@ -1,5 +1,5 @@
 import React from 'react';
-import {Logger} from 'tigerface-common';
+import { Logger } from 'tigerface-common';
 
 /**
  * User: zyh

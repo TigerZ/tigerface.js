@@ -155,30 +155,40 @@ class Sprite extends DisplayObjectContainer {
     }
 
     /**
-     * 鼠标按下事件
-     * @param e
-     * @private
+     * 获得鼠标坐标
+     * @returns {Point|{x: *, y: *}}
      */
-    _onMouseDown_(e) {
-        // this._onMouseMove_(e);
+    get mousePos() {
+        return { x: this._mouseX_, y: this._mouseY_ };
     }
 
     /**
-     * 获得鼠标坐标
-     * @returns {{x: *, y: *}}
+     *
+     * @param pos {Point|{x: *, y: *}}
      */
-    getMousePos() {
-        return { x: this._mouseX_, y: this._mouseY_ };
+    set mousePos(pos) {
+        this._mouseX_ = pos.x;
+        this._mouseY_ = pos.y;
+    }
+
+    get mouseX() {
+        return this._mouseX_;
+    }
+
+    get mouseY() {
+        return this._mouseY_;
     }
 
     _onStateChanged_() {
         super._onStateChanged_();
         if (this.parent) {
-            this._onStageMouseMove_(this.parent.getMousePos(), 2);
+            this._onStageMouseMove_(this.parent.mousePos, 2);
         }
     }
 
-    _checkMouseInside_(mouse) {
+    _checkMouseInside_(pos, digits) {
+        const mouse = this.getInnerPos(pos, digits);
+        this.mousePos = mouse;
         // 记录之前的状态，用来判断是否第一次进入
         const beforeInside = this._mouseInside_;
         // this.logger.debug('舞台指针移动', mouse, beforeInside, this._mouseInside_);
@@ -192,29 +202,37 @@ class Sprite extends DisplayObjectContainer {
                 this.logger.debug('鼠标指针进入边界');
                 this.dispatchEvent(Event.MouseEvent.MOUSE_OVER);
             }
-            // 发送鼠标移动事件
-            this.logger.debug('鼠标指针移动', mouse, this);
-            this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: mouse });
+            return true;
         } else if (beforeInside) {
             // 当前鼠标不在范围内, 如果之前在范围内，发送鼠标移出事件
             this.logger.debug('鼠标指针移出边界', mouse);
             this.dispatchEvent(Event.MouseEvent.MOUSE_OUT);
         }
+        return false;
     }
 
-    _onStageMouseMove_(pos, digits) {
-        // 把全局坐标，转化为本级坐标
-        // const mouse = this.getStageLocalPos(pos, digits);
-        const mouse = this.getInnerPos(pos, digits);
-        this._mouseX_ = mouse.x;
-        this._mouseY_ = mouse.y;
-
-        this._checkMouseInside_(mouse);
+    _onStageMouseMove_(pos, digits = 2) {
+        if (this._checkMouseInside_(pos, digits)) {
+            // 发送鼠标移动事件
+            this.logger.debug('鼠标指针移动', this.mousePos, this);
+            this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
+        }
 
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
             const child = this.children[i];
             if (child instanceof Sprite) {
-                child._onStageMouseMove_(mouse, 2);
+                child._onStageMouseMove_(this.mousePos, 2);
+            }
+        }
+    }
+
+    _onStageMouseEvents_(e, digits = 2) {
+        if (this._checkMouseInside_(e.pos, digits)) {
+            this.dispatchEvent(e.eventName, { pos: this.mousePos });
+            this.logger.debug('_onMouseEvents_()', e);
+            for (let i = this.children.length - 1; i >= 0; i -= 1) {
+                const child = this.children[i];
+                child._onStageMouseEvents_(e);
             }
         }
     }
@@ -239,9 +257,9 @@ class Sprite extends DisplayObjectContainer {
         this.parent.addEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
 
         if (!this._dragging_) {
-            this.logger.debug('开始拖拽 _startDrag_(): mousePos=', this.getMousePos());
+            this.logger.debug('开始拖拽 _startDrag_(): mousePos=', this.mousePos);
             this._dragging_ = true;
-            const m = this.getOuterPos(this.getMousePos());
+            const m = this.getOuterPos(this.mousePos);
             this._dragX_ = m.x - this.x;
             this._dragY_ = m.y - this.y;
             this.dispatchEvent(Event.MouseEvent.DRAG_START);

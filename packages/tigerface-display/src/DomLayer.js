@@ -11,7 +11,7 @@ class DomLayer extends DomSprite {
     constructor(options = undefined, dom = undefined) {
         super({}, dom);
         this.layer = this;
-        this.assign(options)
+        this.assign(options);
     }
 }
 

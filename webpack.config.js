@@ -5,7 +5,12 @@ const path = require('path');
 
 const config = {
     entry: {
-        main: ['babel-polyfill', 'react-hot-loader/patch', './example/src/main.jsx'],
+        main: [
+            'babel-polyfill',
+            'react-hot-loader/patch',
+            // './example/src/main.jsx',
+            './example/src/purejs.js',
+        ],
     },
     resolve: {
         extensions: ['.js', '.jsx', '.json'],

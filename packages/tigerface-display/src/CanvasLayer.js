@@ -1,7 +1,8 @@
-import {Utilities as T, Logger} from 'tigerface-common';
+import { Utilities as T, Logger } from 'tigerface-common';
+import { Event } from 'tigerface-event';
+import { Graphics } from 'tigerface-graphic';
 import DomSprite from './DomSprite';
-import {Event} from 'tigerface-event';
-import {Graphics} from 'tigerface-graphic';
+
 
 /**
  * Canvas 层
@@ -18,8 +19,8 @@ class CanvasLayer extends DomSprite {
      * @param dom {object} Dom
      */
     constructor(options = undefined, dom = undefined) {
-        let props = {
-            position: 'absolute',
+        const props = {
+            // position: 'absolute',
             clazzName: CanvasLayer.name,
             devicePixelRatio: 1,
             width: '320',
@@ -31,7 +32,7 @@ class CanvasLayer extends DomSprite {
             useOffScreenCanvas: false,
         };
 
-        let canvas = dom || document.createElement("canvas");
+        const canvas = dom || document.createElement('canvas');
         // 调用 DisplayObject 的构造器
 
         super(props, canvas);
@@ -43,14 +44,14 @@ class CanvasLayer extends DomSprite {
         // 下层显示对象通过此属性识别是否是上层 CanvasContainer 对象
         this.layer = this;
 
-        //if (this.props.devicePixelRatio != 1)
+        // if (this.props.devicePixelRatio != 1)
         //    this.setScale(this.props.devicePixelRatio, this.props.devicePixelRatio);
 
-        this.on(Event.MouseEvent.CLICK, (e) => this._onMouseEvents_(e));
-        this.on(Event.MouseEvent.DOUBLE_CLICK, (e) => this._onMouseEvents_(e));
-        this.on(Event.MouseEvent.CONTEXT_MENU, (e) => this._onMouseEvents_(e));
-        this.on(Event.MouseEvent.MOUSE_DOWN, (e) => this._onMouseEvents_(e));
-        this.on(Event.MouseEvent.MOUSE_UP, (e) => this._onMouseEvents_(e));
+        // this.on(Event.MouseEvent.CLICK, e => this._onMouseEvents_(e));
+        // this.on(Event.MouseEvent.DOUBLE_CLICK, e => this._onMouseEvents_(e));
+        // this.on(Event.MouseEvent.CONTEXT_MENU, e => this._onMouseEvents_(e));
+        // this.on(Event.MouseEvent.MOUSE_DOWN, e => this._onMouseEvents_(e));
+        // this.on(Event.MouseEvent.MOUSE_UP, e => this._onMouseEvents_(e));
         // this.on(Event.MouseEvent.MOUSE_OUT, (e) => this._onMouseEvents_(e));
         // this.on(Event.MouseEvent.MOUSE_OVER, (e) => this._onMouseEvents_(e));
 
@@ -129,12 +130,12 @@ class CanvasLayer extends DomSprite {
      */
     _onSizeChanged_() {
         // retina 属性设置为 true，效果是：尺寸指定为 devicePixelRatio 倍，再用 css 缩至原始尺寸
-        T.attr(this.dom, "width", this.width * this.devicePixelRatio + "px");
-        T.attr(this.dom, "height", this.height * this.devicePixelRatio + "px");
+        T.attr(this.dom, 'width', `${this.width * this.devicePixelRatio}px`);
+        T.attr(this.dom, 'height', `${this.height * this.devicePixelRatio}px`);
 
         // 用 css 约束尺寸
-        T.css(this.dom, "width", this.width + "px");
-        T.css(this.dom, "height", this.height + "px");
+        T.css(this.dom, 'width', `${this.width}px`);
+        T.css(this.dom, 'height', `${this.height}px`);
     }
 
     /**
@@ -175,10 +176,11 @@ class CanvasLayer extends DomSprite {
      * @private
      */
     _onBeforePaint_() {
-        let g = this.graphics;
+        const g = this.graphics;
         // 缩放
-        if (this.devicePixelRatio !== 1)
+        if (this.devicePixelRatio !== 1) {
             g.scale(this.devicePixelRatio, this.devicePixelRatio);
+        }
 
         g.globalAlpha = this.alpha;
     }
@@ -188,14 +190,14 @@ class CanvasLayer extends DomSprite {
      * @private
      */
     _onAfterPaint_() {
-        let g = this.graphics;
+        const g = this.graphics;
         g.save();
         // 绘制顺序为后绘制的在上层
-        g.globalCompositeOperation = "source-over";
+        g.globalCompositeOperation = 'source-over';
 
         // 遍历孩子，顺序与globalCompositeOperation的设置要匹配，这里的效果是后添加的在上面
-        for (let i = 0; i < this.children.length; i++) {
-            let child = this.children[i];
+        for (let i = 0; i < this.children.length; i += 1) {
+            const child = this.children[i];
             // 子元件可见才绘制
             if (child.visible) {
                 // 孩子会坐标转换、缩放及旋转，所以先保存上下文
@@ -220,32 +222,28 @@ class CanvasLayer extends DomSprite {
      * @private
      */
     _paint_() {
-
         if (!this.redrawAsNeeded || this.isChanged) {
             if (!this._painting_) {
                 this._painting_ = true;
-                CanvasLayer.logger.debug(`开始重绘`);
+                CanvasLayer.logger.debug('开始重绘');
             }
-            let start = +new Date();
+            const start = +new Date();
 
             this.graphics.clearRect(0, 0, this.canvas.width, this.canvas.height);
             super._paint_();
 
-            let time = +new Date() - start;
+            const time = +new Date() - start;
             if (time > 16 && time > (this._paint_time_ || 0)) {
-                let m = Math.floor(time / 60000);
-                let s = Math.floor((time - m * 60000) / 1000);
-                let mi = time - m * 60000 - s * 1000;
+                const m = Math.floor(time / 60000);
+                const s = Math.floor((time - (m * 60000)) / 1000);
+                const mi = (time - (m * 60000)) - (s * 1000);
                 this._paint_time_ = time;
                 this.logger.warn(`耗时警告：最长重绘耗时为：${m}:${s}.${mi}，超过 16 毫秒，帧数将少于 60 帧`);
             }
-        } else {
-            if (this._painting_) {
-                this._painting_ = false;
-                CanvasLayer.logger.debug(`已停止重绘`);
-            }
+        } else if (this._painting_) {
+            this._painting_ = false;
+            CanvasLayer.logger.debug('已停止重绘');
         }
-
     }
 
     /**
@@ -253,23 +251,25 @@ class CanvasLayer extends DomSprite {
      * @param e {object}
      * @private
      */
-    _onMouseEvents_(e) {
-        this.logger.debug(`_onMouseEvents_()`, e);
-        switch(e.eventName) {
-            case Event.MouseEvent.MOUSE_OVER:
-                this._mouseInside_ = true;
-                this._checkingMouse_ = false;
-                break;
-            case Event.MouseEvent.MOUSE_OUT:
-                this._mouseInside_ = false;
-                this._checkingMouse_ = true;
-                break;
-        }
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
-            child._onLayerMouseEvents_(e.eventName);
-        }
-    }
+    // _onMouseEvents_(e) {
+    //     this.logger.debug('_onMouseEvents_()', e);
+    //     switch (e.eventName) {
+    //         case Event.MouseEvent.MOUSE_OVER:
+    //             this._mouseInside_ = true;
+    //             this._checkingMouse_ = false;
+    //             break;
+    //         case Event.MouseEvent.MOUSE_OUT:
+    //             this._mouseInside_ = false;
+    //             this._checkingMouse_ = true;
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    //     for (let i = this.children.length - 1; i >= 0; i -= 1) {
+    //         const child = this.children[i];
+    //         child._onLayerMouseEvents_(e.eventName);
+    //     }
+    // }
 }
 
 export default CanvasLayer;

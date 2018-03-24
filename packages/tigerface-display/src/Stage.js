@@ -2,6 +2,7 @@ import { Utilities as T, Logger } from 'tigerface-common';
 import { Event, FrameEventGenerator } from 'tigerface-event';
 import DomSprite from './DomSprite';
 import Sprite from './Sprite';
+import { DomEventAdapter } from "../../tigerface-event";
 
 /**
  * 舞台
@@ -29,7 +30,12 @@ class Stage extends DomSprite {
 
         super(props, dom);
 
-        this.domAdapter.handler = this;
+        this.assign(options);
+
+        // 定义 Dom 引擎
+        this.domAdapter = new DomEventAdapter(this.dom, {
+            preventDefault: this.preventDefault,
+        }, this);
 
         // 缺省的相对定位
         // this.setStyle({"position", DomSprite.Position.RELATIVE);
@@ -52,23 +58,38 @@ class Stage extends DomSprite {
         };
         // this.on(Event.ENTER_FRAME, ()=>console.log(this.name+" ENTER_FRAME "+new Date().getSeconds()));
 
-        this.assign(options);
+
 
         this.frameAdapter = new FrameEventGenerator({ fps: this.fps });
         this.frameAdapter.on(Event.REDRAW, () => this._paint_());
         this.frameAdapter.on(Event.ENTER_FRAME, () => this._onEnterFrame_());
 
         this.on(Event.MouseEvent.MOUSE_MOVE, e => this._onMouseMove_(e));
+        this.on(Event.MouseEvent.CLICK, e => this._onMouseEvents_(e));
+        this.on(Event.MouseEvent.DOUBLE_CLICK, e => this._onMouseEvents_(e));
+        this.on(Event.MouseEvent.CONTEXT_MENU, e => this._onMouseEvents_(e));
+        this.on(Event.MouseEvent.MOUSE_DOWN, e => this._onMouseEvents_(e));
+        this.on(Event.MouseEvent.MOUSE_UP, e => this._onMouseEvents_(e));
     }
 
     _onMouseMove_(e) {
-        this._mouseX_ = e.pos.x;
-        this._mouseY_ = e.pos.y;
+        this.mousePos = e.pos;
 
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
             const child = this.children[i];
             if (child instanceof Sprite) {
                 child._onStageMouseMove_(e.pos, 2);
+            }
+        }
+    }
+
+    _onMouseEvents_(e) {
+        this.mousePos = e.pos;
+
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            const child = this.children[i];
+            if (child instanceof Sprite) {
+                child._onStageMouseEvents_(e, 2);
             }
         }
     }

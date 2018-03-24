@@ -8,7 +8,7 @@ import Vertex from './Vertex'
 import Line from './Line';
 import Point from './Point';
 import QuadraticBezier from './QuadraticBezier';
-import {Utilities as T} from "tigerface-common";
+import { Utilities as T } from "tigerface-common";
 
 /**
  * 多边形类<br>
@@ -75,7 +75,6 @@ class Polygon extends Shape {
             height: bottom - top
         };
     }
-
 
 
     /**
@@ -476,7 +475,7 @@ class Polygon extends Shape {
         for (let i in sides) {
             let p = sides[i].getIntersection(line);
             if (p) {
-                ips.push({side: sides[i], point: p});
+                ips.push({ side: sides[i], point: p });
             }
         }
         // 按与 line 起点的距离排序交点
@@ -493,11 +492,11 @@ class Polygon extends Shape {
      * @returns {Polygon}
      */
     rotate(radian, origin) {
-        let points = this.getVertexes();
-        let newPoints = [];
-        for (let i in points) {
-            newPoints.push(points[i].rotate(radian, origin));
-        }
+        const points = this.getVertexes();
+        const newPoints = [];
+        points.forEach((point) => {
+            newPoints.push(point.rotate(radian, origin));
+        })
         return new Polygon(newPoints);
         // this.initPolygon(newPoints);
         // return this;
@@ -576,7 +575,6 @@ class Polygon extends Shape {
             if (g) g.drawPoint(v);
             return true;
         };
-
 
 
         // 本该先检测两多边形碰撞，但后面要先获得最远没碰撞点，所以就省了

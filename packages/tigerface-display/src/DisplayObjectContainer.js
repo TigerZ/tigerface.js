@@ -16,9 +16,9 @@ class DisplayObjectContainer extends DisplayObject {
      * @param options {object} 可选初始属性
      */
     constructor(options = undefined) {
-        let props = {
+        const props = {
             clazzName: DisplayObjectContainer.name,
-            _children_: []
+            _children_: [],
         };
 
         super(props);
@@ -39,11 +39,11 @@ class DisplayObjectContainer extends DisplayObject {
         return this._children_;
     }
 
-    /***************************************************************************
+    /** *************************************************************************
      *
      * 容器方法
      *
-     **************************************************************************/
+     ************************************************************************* */
 
     /**
      * 添加子显示对象
@@ -79,7 +79,7 @@ class DisplayObjectContainer extends DisplayObject {
     removeChild(child) {
         // 移除前调用方法，可用于检查合法性
         if (this._onBeforeRemoveChild_(child) === false) {
-            this.logger.debug(`removeChild 子显示对象移除失败`, child);
+            this.logger.debug('removeChild 子显示对象移除失败', child);
             return this;
         }
 
@@ -91,7 +91,7 @@ class DisplayObjectContainer extends DisplayObject {
         this._onChildrenChanged_();
 
         // 状态已改变
-        this.postChange("removeChild");
+        this.postChange('removeChild');
 
         return this;
     }
@@ -102,7 +102,7 @@ class DisplayObjectContainer extends DisplayObject {
      * @private
      */
     _removeChild_(child) {
-        let index = this.getChildIndex(child);
+        const index = this.getChildIndex(child);
         this._removeChildAt_(index);
     }
 
@@ -115,11 +115,11 @@ class DisplayObjectContainer extends DisplayObject {
         // 移除前调用方法，可用于检查合法性
 
         if (index < 0 || index >= this.children.length || this._onBeforeRemoveChild_(this.children[index]) === false) {
-            this.logger.debug(`removeChildAt() 子显示对象移除失败`, index);
+            this.logger.debug('removeChildAt() 子显示对象移除失败', index);
             return this;
         }
 
-        let child = this.children[index];
+        const child = this.children[index];
 
         // 执行移除
         this._removeChildAt_(index);
@@ -129,14 +129,15 @@ class DisplayObjectContainer extends DisplayObject {
         this._onChildrenChanged_();
 
         // 状态已改变
-        this.postChange("removeChildAt");
+        this.postChange('removeChildAt');
 
         return this;
     }
 
     _removeChildAt_(index) {
-        if (index > -1)
+        if (index > -1) {
             this.children.splice(index, 1);
+        }
     }
 
     /**
@@ -145,15 +146,11 @@ class DisplayObjectContainer extends DisplayObject {
      * @param endIndex
      * @returns {DisplayObjectContainer}
      */
-    removeChildren(startIndex, endIndex) {
-        if (startIndex === undefined)
-            startIndex = 0;
-        if (endIndex === undefined)
-            endIndex = this.children.length - 1;
-        this.children.splice(startIndex, endIndex - startIndex + 1);
+    removeChildren(startIndex = 0, endIndex = this.children.length - 1) {
+        this.children.splice(startIndex, (endIndex - startIndex) + 1);
 
         this._onChildrenChanged_();
-        this.postChange("removeChildren");
+        this.postChange('removeChildren');
         return this;
     }
 
@@ -175,11 +172,11 @@ class DisplayObjectContainer extends DisplayObject {
         return this.children.indexOf(child);
     }
 
-    /***************************************************************************
+    /** *************************************************************************
      *
      * 子节点顺序方法
      *
-     **************************************************************************/
+     ************************************************************************* */
 
     /**
      * 交换两个指定位置的子对象
@@ -188,11 +185,11 @@ class DisplayObjectContainer extends DisplayObject {
      * @returns {DisplayObjectContainer}
      */
     swapChildrenAt(index1, index2) {
-        let tmp = this.children[index1];
+        const tmp = this.children[index1];
         this.children[index1] = this.children[index2];
         this.children[index2] = tmp;
         this._onChildrenChanged_();
-        this.postChange("swapChildrenAt");
+        this.postChange('swapChildrenAt');
         return this;
     }
 
@@ -203,11 +200,11 @@ class DisplayObjectContainer extends DisplayObject {
      * @returns {DisplayObjectContainer}
      */
     swapChildren(child1, child2) {
-        let index1 = this.getChildIndex(child1);
-        let index2 = this.getChildIndex(child2);
+        const index1 = this.getChildIndex(child1);
+        const index2 = this.getChildIndex(child2);
         this.swapChildrenAt(index1, index2);
         this._onChildrenChanged_();
-        this.postChange("swapChildren");
+        this.postChange('swapChildren');
         return this;
     }
 
@@ -220,15 +217,16 @@ class DisplayObjectContainer extends DisplayObject {
     setChildIndex(child, index) {
         this._removeChild_(child);
 
-        if (index >= this.children.length)
+        if (index >= this.children.length) {
             this.children.push(child);
-        else if (index <= 0)
+        } else if (index <= 0) {
             this.children.unshift(child);
-        else
+        } else {
             this.children.splice(index, 0, child);
+        }
 
         this._onChildrenChanged_();
-        this.postChange("setChildIndex");
+        this.postChange('setChildIndex');
         return this;
     }
 
@@ -241,14 +239,15 @@ class DisplayObjectContainer extends DisplayObject {
     setTop(child, neighbor) {
         if (child === neighbor) return this;
         if (neighbor) {
-            let n1 = this.getChildIndex(neighbor);
-            let n0 = this.getChildIndex(child);
+            const n1 = this.getChildIndex(neighbor);
+            const n0 = this.getChildIndex(child);
             this.setChildIndex(child, n0 < n1 ? n1 : n1 + 1);
-        } else
+        } else {
             this.setChildIndex(child, this.children.length - 1);
+        }
         //
         this._onChildrenChanged_();
-        this.postChange("setTop");
+        this.postChange('setTop');
         return this;
     }
 
@@ -261,22 +260,23 @@ class DisplayObjectContainer extends DisplayObject {
     setBottom(child, neighbor) {
         if (child === neighbor) return this;
         if (neighbor) {
-            let n0 = this.getChildIndex(child);
-            let n1 = this.getChildIndex(neighbor);
+            const n0 = this.getChildIndex(child);
+            const n1 = this.getChildIndex(neighbor);
             this.setChildIndex(child, n0 > n1 ? n1 : n1 - 1);
-        } else
+        } else {
             this.setChildIndex(child, 0);
+        }
         this._onChildrenChanged_();
-        this.postChange("setBottom");
+        this.postChange('setBottom');
 
         return this;
     }
 
-    /***************************************************************************
+    /** *************************************************************************
      *
      * 事件方法
      *
-     **************************************************************************/
+     ************************************************************************* */
 
     /**
      * 子节点添加前调用的方法
@@ -286,7 +286,7 @@ class DisplayObjectContainer extends DisplayObject {
      * @returns {boolean} 如果精确返回 false, 会导致添加失败
      * @private
      */
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars,class-methods-use-this
     _onBeforeAddChild_(child) {
         return true;
     }
@@ -297,8 +297,8 @@ class DisplayObjectContainer extends DisplayObject {
      * @private
      */
     _onAfterPaint_() {
-        for (let i = 0; i < this.children.length; i++) {
-            let child = this.children[i];
+        for (let i = 0; i < this.children.length; i += 1) {
+            const child = this.children[i];
             child._paint_();
         }
     }
@@ -319,7 +319,7 @@ class DisplayObjectContainer extends DisplayObject {
     }
 
     _onChildrenChanged_() {
-        this.logger.debug(`子节点发生变化`, this.children);
+        this.logger.debug('子节点发生变化', this.children);
         this.emit(Event.NodeEvent.CHILDREN_CHANGED);
     }
 
@@ -329,11 +329,9 @@ class DisplayObjectContainer extends DisplayObject {
      */
     _onEnterFrame_() {
         super._onEnterFrame_();
-
-        for (let child of this.children) {
+        this.children.forEach((child) => {
             child._onEnterFrame_();
-        }
-
+        });
     }
 
     get graphics() {
@@ -363,9 +361,8 @@ class DisplayObjectContainer extends DisplayObject {
     _onAppendToStage_() {
         super._onAppendToStage_();
 
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
-            child._onAppendToStage_();
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            this.children[i]._onAppendToStage_();
         }
     }
 
@@ -375,9 +372,8 @@ class DisplayObjectContainer extends DisplayObject {
     _onAppendToLayer_() {
         super._onAppendToLayer_();
 
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
-            child._onAppendToLayer_();
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            this.children[i]._onAppendToLayer_();
         }
     }
 
@@ -387,9 +383,8 @@ class DisplayObjectContainer extends DisplayObject {
     _onStateChanged_() {
         super._onStateChanged_();
 
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
-            child.involvedChange();
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            this.children[i].involvedChange();
         }
     }
 
@@ -398,8 +393,8 @@ class DisplayObjectContainer extends DisplayObject {
      */
     _onPosChanged_() {
         super._onPosChanged_();
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            const child = this.children[i];
             child._onPosChanged_();
         }
     }
@@ -409,8 +404,8 @@ class DisplayObjectContainer extends DisplayObject {
      */
     _onScaleChanged_() {
         super._onScaleChanged_();
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            const child = this.children[i];
             child._onScaleChanged_();
         }
     }
@@ -420,9 +415,8 @@ class DisplayObjectContainer extends DisplayObject {
      */
     _onAlphaChanged_() {
         super._onAlphaChanged_();
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
-            child._onAlphaChanged_();
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            this.children[i]._onAlphaChanged_();
         }
     }
 
@@ -431,9 +425,8 @@ class DisplayObjectContainer extends DisplayObject {
      */
     _onRotationChanged_() {
         super._onRotationChanged_();
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
-            child._onRotationChanged_();
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            this.children[i]._onRotationChanged_();
         }
     }
 
@@ -442,9 +435,8 @@ class DisplayObjectContainer extends DisplayObject {
      */
     _onVisibleChanged_() {
         super._onVisibleChanged_();
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
-            child._onVisibleChanged_();
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            this.children[i]._onVisibleChanged_();
         }
     }
 
@@ -454,8 +446,8 @@ class DisplayObjectContainer extends DisplayObject {
     _onOriginChanged_() {
         super._onOriginChanged_();
 
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            const child = this.children[i];
             child._onOriginChanged_();
         }
     }
@@ -465,13 +457,10 @@ class DisplayObjectContainer extends DisplayObject {
      */
     _onSizeChanged_() {
         super._onSizeChanged_();
-        for (let i = this.children.length - 1; i >= 0; i--) {
-            let child = this.children[i];
-            child._onSizeChanged_();
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            this.children[i]._onSizeChanged_();
         }
     }
-
-
 }
 
 export default DisplayObjectContainer;

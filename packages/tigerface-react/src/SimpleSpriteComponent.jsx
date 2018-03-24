@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import {default as Stage, Tag} from './StageComponent';
-import BaseComponent from "./BaseComponent";
+import BaseComponent from './BaseComponent';
+import Stage, { Tag } from './StageComponent';
 
 /**
  * User: zyh
@@ -19,23 +19,27 @@ class SimpleSpriteComponent extends BaseComponent {
     }
 
     render() {
-        const props = this.props;
-        const {instance, canvasProps, name} = this.getSpriteInfo();
+        const { props } = this;
+        const { instance, canvasProps, name } = this.getSpriteInfo();
         return (
             <Stage {...props}>
                 <Tag.Surface {...canvasProps}>
-                    <Tag.Sprite instance={instance} {...props}/>
+                    <Tag.Sprite instance={instance} {...props} />
                 </Tag.Surface>
             </Stage>
-        )
+        );
     }
 }
 
 export default function withSimpleSpriteComponent(instance, canvasProps) {
     return class extends SimpleSpriteComponent {
         getSpriteInfo() {
-            let name = instance.name ? instance.name : (instance.clazzName ? instance.clazzName : '');
-            return {instance, canvasProps, name};
+            let name;
+            // eslint-disable-next-line prefer-destructuring
+            if (instance.name) name = instance.name;
+            else if (instance.clazzName) name = instance.clazzName;
+            else name = '';
+            return { instance, canvasProps, name };
         }
     };
 }

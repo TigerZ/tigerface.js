@@ -53,7 +53,6 @@ class DisplayObject extends EventDispatcher {
         this._stage_ = undefined;
 
 
-
         // 设置传入的初始值
         this.assign(options);
     }
@@ -272,8 +271,6 @@ class DisplayObject extends EventDispatcher {
         return this._graphics_;
     }
 
-
-
     //* ********************************* 状态改变事件 ***************************************
 
     _onStateChanged_() {
@@ -437,7 +434,7 @@ class DisplayObject extends EventDispatcher {
      * @returns {Point} 内部坐标
      */
     getInnerPos(point, digits = 0) {
-        if (undefined === point) return undefined;
+        if (point === undefined) return undefined;
 
         const o = this.origin;
         const r = this.rotation;

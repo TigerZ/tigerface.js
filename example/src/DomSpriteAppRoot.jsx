@@ -13,9 +13,9 @@ class DemoDomSprite extends DomSprite {
         });
         this.assign(opts);
         this.enableDrag();
-        // this.origin = { x: 50, y: 25 };
+        this.origin = { x: 50, y: 25 };
         this.pos = { x: 200, y: 150 };
-        // this.scale = {x:1.8, y:0.8};
+        // this.scale = { x: 2, y: 1 };
         // this.step = 1;
         this.rotation = 45;
         this.num = 900000;
@@ -67,7 +67,7 @@ class DemoCanvasSprite extends CanvasSprite {
             g.fillStyle = 'rgba(255,255,0,0.8)';
         }
         g.drawRectangle(this.boundingRect, g.DrawStyle.FILL);
-        g.drawPoint(this.getMousePos(), 5, g.PointStyle.DEFAULT);
+        g.drawPoint(this.mousePos, 5, g.PointStyle.DEFAULT);
     }
 }
 

@@ -129,7 +129,7 @@ class CanvasSprite extends Sprite {
     // }
     //
     // _onLayerMouseEvents_(e) {
-    //     const mouse = this.getMousePos();
+    //     const mouse = this.mousePos;
     //     this.logger.debug('_onLayerMouseEvents_', e);
     //     if (e.eventName === Event.MouseEvent.MOUSE_OVER) {
     //         this._onLayerMouseMove_(mouse);

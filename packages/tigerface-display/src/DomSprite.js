@@ -1,7 +1,8 @@
 import { Utilities as T, Logger } from 'tigerface-common';
-import { Rectangle, Point } from 'tigerface-shape';
-import Sprite from './Sprite';
+import { Rectangle } from 'tigerface-shape';
 import { Event, DomEventAdapter } from 'tigerface-event';
+import Sprite from './Sprite';
+
 
 /**
  * 基于 Dom 的 Sprite
@@ -17,7 +18,7 @@ class DomSprite extends Sprite {
         STATIC: 'static',
         RELATIVE: 'relative',
         ABSOLUTE: 'absolute',
-        FIXED: 'fixed'
+        FIXED: 'fixed',
     };
 
     /**
@@ -27,26 +28,20 @@ class DomSprite extends Sprite {
      * @param dom {HTMLElement} dom 节点
      */
     constructor(options = undefined, dom = undefined) {
+        const _dom = typeof dom === 'string' ? document.createElement(dom) : (dom || document.createElement('div'));
 
-        let _dom = typeof dom === 'string' ? document.createElement(dom) : (dom || document.createElement('div'));
-
-        let props = {
+        const props = {
             clazzName: DomSprite.name,
             _dom_: _dom, // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
             width: '320',
-            height: '240'
+            height: '240',
         };
 
         super(props);
 
-        // 定义 Dom 引擎
-        this.domAdapter = new DomEventAdapter(this.dom, {
-            preventDefault: this.preventDefault
-        });
-
         // chrome 浏览器在拖拽时，鼠标指针为“I”，下面用来修复此问题
-        this.addEventListener(Event.MouseEvent.DRAG, function (e) {
+        this.addEventListener(Event.MouseEvent.DRAG, (e) => {
             T.css(e.currentTarget.dom, 'cursor', 'default');
         });
 
@@ -57,7 +52,7 @@ class DomSprite extends Sprite {
 
         this.assign(T.merge({
             style: {
-                position: 'absolute',
+                // position: 'absolute',
                 'transform-origin': '0px 0px 0px',
                 padding: '0px', // 无内边距
                 margin: '0px', // 无外边距
@@ -67,8 +62,8 @@ class DomSprite extends Sprite {
                 '-webkit-user-select': 'none',
                 '-moz-user-select': 'none',
                 '-ms-user-select': 'none',
-                'user-select': 'none'
-            }
+                'user-select': 'none',
+            },
         }, options));
 
         this.logger.debug('初始化完成');
@@ -88,7 +83,7 @@ class DomSprite extends Sprite {
     }
 
     set id(v) {
-        return this.dom.id = v;
+        this.dom.id = v;
     }
 
     get title() {
@@ -96,7 +91,7 @@ class DomSprite extends Sprite {
     }
 
     set title(v) {
-        return this.dom.title = v;
+        this.dom.title = v;
     }
 
     get css() {
@@ -138,17 +133,17 @@ class DomSprite extends Sprite {
         this.style = { visibility: this.visible ? 'visible' : 'hidden' };
     }
 
-
-    /**
-     *
-     * @param v {*}
-     */
-    set graphics(v) {
-        // do nothing
-    }
-
     resize() {
         this.size = T.size(this.dom);
+    }
+
+    set pos(pos) {
+        super.pos = pos;
+        this.style = { position: 'absolute' };
+    }
+
+    get pos() {
+        return super.pos;
     }
 
     /**
@@ -165,18 +160,18 @@ class DomSprite extends Sprite {
     /**
      * Dom 的外接矩形，对应于 Context2DSprite 的 outer 外接矩形。
      * 此方法返回的矩形，就是 Dom 的 MOUSE_MOVE 事件直接返回的坐标系，原点在左上角。
-     * getMousePos 方法通过此方法，将直接得到的鼠标坐标，经过偏移得到外部坐标，再转换为内部坐标，得到准确的内部鼠标坐标投影。
+     * mousePos 得到的鼠标坐标，经过偏移得到外部坐标，再转换为内部坐标，得到准确的内部鼠标坐标投影。
      * @returns {Shape.Rectangle}
      * @private
      */
     getDomBoundingRect() {
         // 实例化图形对象，用于计算
-        let size = this.size;
-        let rect = new Rectangle(0, 0, size.width, size.height);
+        const { size } = this;
+        const rect = new Rectangle(0, 0, size.width, size.height);
 
-        let vertexes = rect.getVertexes();
-        let points = [];
-        for (let i = 0; i < vertexes.length; i++) {
+        const vertexes = rect.getVertexes();
+        const points = [];
+        for (let i = 0; i < vertexes.length; i += 1) {
             points.push(this.getOuterPos(vertexes[i]));
         }
         return new Rectangle(points);
@@ -189,7 +184,7 @@ class DomSprite extends Sprite {
      *
      * @returns {Point|{x:*,y:*}}
      */
-    // getMousePos() {
+    // getMousePos {
     //     let pos = super.getMousePos();
     //     // this.logger.debug('getMousePos(): pos=', pos);
     //
@@ -207,11 +202,11 @@ class DomSprite extends Sprite {
 
     _onPosChanged_() {
         if (this.dom === document) return;
-        this.setStyle({ 'position': DomSprite.Position.ABSOLUTE });
+        this.setStyle({ position: DomSprite.Position.ABSOLUTE });
 
-        let t = this.origin;
-        T.css(this.dom, 'left', (this.x - t.x) + 'px');
-        T.css(this.dom, 'top', (this.y - t.y) + 'px');
+        const t = this.origin;
+        T.css(this.dom, 'left', `${this.x - t.x}px`);
+        T.css(this.dom, 'top', `${this.y - t.y}px`);
 
         super._onPosChanged_();
     }
@@ -221,10 +216,10 @@ class DomSprite extends Sprite {
      * @private
      */
     _onSizeChanged_() {
-        //if(this.layout) return;
+        // if(this.layout) return;
         // console.log("***********", this.width, this.height);
-        T.css(this.dom, 'width', typeof this.width === 'number' ? (this.width + 'px') : this.width);
-        T.css(this.dom, 'height', typeof this.height === 'number' ? (this.height + 'px') : this.height);
+        T.css(this.dom, 'width', typeof this.width === 'number' ? (`${this.width}px`) : this.width);
+        T.css(this.dom, 'height', typeof this.height === 'number' ? (`${this.height}px`) : this.height);
     }
 
     /**
@@ -234,8 +229,8 @@ class DomSprite extends Sprite {
      * @private
      */
     _onAddChild_(child) {
-        if (child['dom'] && child['dom'].parentNode !== this.dom) {
-            this.dom.appendChild(child['dom']);
+        if (child.dom && child.dom.parentNode !== this.dom) {
+            this.dom.appendChild(child.dom);
         }
         // this.logger.debug('_onAddChild_(): parent =', this.dom, ' child =', child.dom);
         // this.logger.debug(`_onAddChild_(): ${parent.nodeName}[${parent.title}] =? ${this.dom.nodeName}[${this.dom.title}]`);
@@ -245,31 +240,31 @@ class DomSprite extends Sprite {
 
     _onDomChanged_() {
         this.logger.debug('_onDomChanged_()', this.dom);
-        for (let child of this.children) {
-            let parent = child.dom.parentNode;
+        this.children.forEach((child) => {
+            const parent = child.dom.parentNode;
             if (parent !== this.dom) {
                 this.dom.appendChild(child.dom);
             }
-        }
+        });
     }
 
     _onAlphaChanged_() {
-        let alpha = this.alpha;
-        let style = {
-            'filter': 'alpha(opacity=' + (alpha * 10) + ')',
+        const { alpha } = this;
+        const style = {
+            filter: `alpha(opacity=${alpha * 10})`,
             '-moz-opacity': alpha,
             '-webkit-opacity': alpha,
             '-o-opacity': alpha,
-            'opacity': alpha
+            opacity: alpha,
         };
         this.setStyle(style);
     }
 
     _onVisibleChanged_() {
         if (this.visible) {
-            this.setStyle({ 'display': 'block' });
+            this.setStyle({ display: 'block' });
         } else {
-            this.setStyle({ 'display': 'none' });
+            this.setStyle({ display: 'none' });
         }
     }
 
@@ -290,37 +285,38 @@ class DomSprite extends Sprite {
     }
 
     _setTransformOrigin_() {
-        let t = this.origin;
-        let style = {
-            'transform-origin': t.x + 'px ' + t.y + 'px',
-            '-ms-transform-origin': t.x + 'px ' + t.y + 'px', /* IE 9 */
-            '-webkit-transform-origin': t.x + 'px ' + t.y + 'px', /* Safari and Chrome */
-            '-o-transform-origin': t.x + 'px ' + t.y + 'px', /* Opera */
-            '-moz-transform-origin': t.x + 'px ' + t.y + 'px' /* Firefox */
+        const t = this.origin;
+        const style = {
+            'transform-origin': `${t.x}px ${t.y}px`,
+            '-ms-transform-origin': `${t.x}px ${t.y}px`, /* IE 9 */
+            '-webkit-transform-origin': `${t.x}px ${t.y}px`, /* Safari and Chrome */
+            '-o-transform-origin': `${t.x}px ${t.y}px`, /* Opera */
+            '-moz-transform-origin': `${t.x}px ${t.y}px`, /* Firefox */
         };
         this.setStyle(style);
     }
 
     _setTransform_() {
-        let s = this.scale;
-        let r = this.rotation;
-        let style = {
-            'transform': ' scale(' + s.x + ',' + s.y + ') rotate(' + r + 'deg' + ')',
-            '-ms-transform': ' scale(' + s.x + ',' + s.y + ') rotate(' + r + 'deg' + ')', /* IE 9 */
-            '-webkit-transform': ' scale(' + s.x + ',' + s.y + ') rotate(' + r + 'deg' + ')', /* Safari and Chrome */
-            '-o-transform': ' scale(' + s.x + ',' + s.y + ') rotate(' + r + 'deg' + ')', /* Opera */
-            '-moz-transform': ' scale(' + s.x + ',' + s.y + ') rotate(' + r + 'deg' + ')' /* Firefox */
+        const s = this.scale;
+        const r = this.rotation;
+        const style = {
+            transform: ` scale(${s.x},${s.y}) rotate(${r}deg)`,
+            '-ms-transform': ` scale(${s.x},${s.y}) rotate(${r}deg)`, /* IE 9 */
+            '-webkit-transform': ` scale(${s.x},${s.y}) rotate(${r}deg)`, /* Safari and Chrome */
+            '-o-transform': ` scale(${s.x},${s.y}) rotate(${r}deg)`, /* Opera */
+            '-moz-transform': ` scale(${s.x},${s.y}) rotate(${r}deg)`, /* Firefox */
         };
         this.setStyle(style);
     }
 
     _onChildrenChanged_() {
         super._onChildrenChanged_();
-        if (this.children.length > 1)
-            for (let i = 0; i < this.children.length; i++) {
-                let child = this.children[i];
-                child.setStyle({ 'z-index': i * 10 + 10 });
+        if (this.children.length > 1) {
+            for (let i = 0; i < this.children.length; i += 1) {
+                const child = this.children[i];
+                child.setStyle({ 'z-index': (i * 10) + 10 });
             }
+        }
     }
 
     /**
@@ -330,8 +326,9 @@ class DomSprite extends Sprite {
      * @private
      */
     _onBeforeAddChild_(child) {
-        if (child.isDomSprite)
+        if (child.isDomSprite) {
             return true;
+        }
         this.logger.warn(`_onBeforeAddChild_(${child.name || child.clazzName} ${child.isDomSprite}): DomSprite 类型容器的 addChild 方法只能接受同样是 DomSprite 类型的子节点`);
         return false;
     }
@@ -352,27 +349,25 @@ class DomSprite extends Sprite {
      * @param data {object}
      */
     addData(data) {
-        let key;
-        for (key in data) {
+        Object.keys(data).forEach((key) => {
             T.data(this.dom, key, data[key]);
-        }
-
+        });
     }
 
     /**
      *  添加 tween
      * @param {{prop:string, duration:number, effect:string, delay:number}} prop
      */
-    addTween(prop) {
-        if (T.isArray(prop)) {
-            let str = "";
-            for (let i in prop) {
-                if (str) str = str + ', ';
-                str = str + this._covertTween_(prop[i].prop, prop[i].duration, prop[i].delay, prop[i].effect);
-            }
-            this.setStyle({ 'transition': str }, true);
+    addTween(props) {
+        if (T.isArray(props)) {
+            let str = '';
+            props.forEach((prop) => {
+                if (str) str += ', ';
+                str += this._covertTween_(prop.prop, prop.duration, prop.delay, prop.effect);
+            });
+            this.setStyle({ transition: str }, true);
         } else {
-            this.setStyle({ 'transition': this._covertTween_(prop.prop, prop.duration, prop.delay, prop.effect) }, true);
+            this.setStyle({ transition: this._covertTween_(props.prop, props.duration, props.delay, props.effect) }, true);
         }
     }
 
@@ -386,7 +381,7 @@ class DomSprite extends Sprite {
      * @private
      */
     _covertTween_(prop, duration, delay, effect) {
-        return (duration || '1') + 's ' + (delay || '0') + 's ' + (prop || "") + ' ' + (effect || 'linear');
+        return `${duration || '1'}s ${delay || '0'}s ${prop || ''} ${effect || 'linear'}`;
     }
 
     clearTween() {
@@ -394,10 +389,10 @@ class DomSprite extends Sprite {
     }
 
     getScroll() {
-        let dom = this.dom;
+        const { dom } = this;
         return {
             scrollTop: T.scrollTop(dom),
-            scrollLeft: T.scrollLeft(dom)
+            scrollLeft: T.scrollLeft(dom),
         };
     }
 
@@ -415,7 +410,7 @@ class DomSprite extends Sprite {
     }
 
     getDomInfo() {
-        let dom = this.dom;
+        const { dom } = this;
         return {
             clientWidth: dom.clientWidth,
             clientHeight: dom.clientHeight,
@@ -429,14 +424,14 @@ class DomSprite extends Sprite {
     }
 
     getBoundRectShadow() {
-        let p0 = this.getStagePos();
-        let rect = this.boundingRect;
+        const p0 = this.getStagePos();
+        const rect = this.boundingRect;
         return {
             pos: p0,
             size: { width: rect.width, height: rect.height },
             rotation: this._getStageRotation_(),
             origin: this._getStageOrigin_(),
-            scale: this._getStageScale_()
+            scale: this._getStageScale_(),
         };
     }
 }
