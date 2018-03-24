@@ -1,20 +1,6 @@
-# 基础知识
+[返回目录](contents.md)
 
-* [ES6、类和属性](#es6类和属性)
-* 纯 JavaScript 或 React
-* [事件](#事件)
-* 舞台、重绘引擎、帧引擎、系统事件接口
-* 层、DomLayer、CanvasLayer
-* 显示对象、容器、精灵、CanvasSprite、DomSprite
-* 绘制
-* 状态改变
-* 坐标系、原点
-* 边界
-* 交互（鼠标事件和触摸事件）
-* 动画（重绘事件和帧事件）
-* 补间
-
-## ES6、类和属性
+## 代码风格
 
 tigerface.js 架构整体使用 ECMAScript 6 语法编写，部分地方使用了 stage-1 阶段语法。
 
@@ -176,35 +162,10 @@ tigerface-display 包里每个类都接收一个选项参数，用于传入用�
 从上面的代码可见，架构为了方便开发者，同一属性提供了多种赋值，允许部分赋值。
 ES6 的 setter 语法，方便实现自动设置状态改变，发布事件。
 
-## 纯 JavaScript 或 React
+### 纯 JavaScript 或 React
 
 tigerface.js 架构首先是纯 JavaScript 架构, 仅在 dom 节点的 css 操作中使用了 jquery。
 对于使用 React 架构前端项目，tigerface.js 也提供了 React 接口方便用于整合。
 在范例中会看到这两种方式的实现。
 
-## 事件
-
-从前面的代码可以看到`class DisplayObject extends EventDispatcher`。
-tigerface-display 包里每个类都是 EventDispatcher 的子类。EventDispatcher 是事件分发器类，
-也就是说包里每个类都是事件分发器，可以通过 addEventDispatcher 或 on 方法来注册事件侦听器函数。
-
-事件发布和事件侦听是观察者模式的一个简单实现，开发者将对象的各种变化发布为自定义事件，
-然后侦听此事件，做响应的处理。这样使得对象间的代码依赖变得更松散。
-
-EventDispatcher 属于 tigerface-event 包。包内还有 DomEventAdapter 类，用于转发系统交互事件；
-FrameEventGenerator 类，用于生成重绘事件和帧事件。
-
-## 舞台 Stage
-
-Stage 是一切的基础，每个项目都是从新建舞台开始。
-舞台的职责是：
-* 包含和管理多个 Layer 容器
-* 嵌入页面，转发 Dom 事件
-* 初始化重绘和帧引擎，转发重绘和帧事件
-
-### 初始化舞台
-
-```javascript
-
-```
-
+[下一章 日志](logger.md)
