@@ -8,8 +8,9 @@ const config = {
         main: [
             'babel-polyfill',
             'react-hot-loader/patch',
-            // './example/src/main.jsx',
-            './example/src/purejs.js',
+            './example/src/demo.jsx',
+            // './example/src/charts.jsx',
+            // './example/src/purejs.js',
         ],
     },
     resolve: {
