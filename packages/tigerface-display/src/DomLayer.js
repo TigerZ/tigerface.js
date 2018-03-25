@@ -10,7 +10,7 @@ import DomSprite from './DomSprite';
 class DomLayer extends DomSprite {
     constructor(options = undefined, dom = undefined) {
         super({}, dom);
-        this.layer = this;
+        this._layer_ = this;
         this.assign(options);
     }
 }

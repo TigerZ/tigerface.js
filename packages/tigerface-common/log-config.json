@@ -2,7 +2,7 @@
   "log-level": "debug",
   "class-log-level": {
     "EventDispatcher":"off",
-    "CanvasSprite":"off",
-    "Bar":"debug"
+    "Bar":"debug",
+    "Windmill":"off"
   }
 }

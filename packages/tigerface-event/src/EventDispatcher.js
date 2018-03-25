@@ -160,6 +160,7 @@ export const Mixin = {
      * @param data 提交给事件的数据
      */
     dispatchEvent(eventName, data) {
+        if (!this._isNoise_(eventName)) this.logger.debug(`发布事件 ${eventName}`, data || '');
         this.emit(eventName, data);
         if (this.debugging && this.getEventSubscribers().length > 0) {
             EventDispatcher.logger.debug(`向事件 ${this.getEventSubscribers().length} 个订阅者转发事件`);
@@ -206,7 +207,8 @@ export const Mixin = {
             Event.STATE_CHANGED,
             Event.ENTER_FRAME,
             Event.MOVE,
-            ...Object.values(Event.MouseEvent),
+            Event.MouseEvent.MOUSE_MOVE,
+            // ...Object.values(Event.MouseEvent),
         ].includes(eventName);
     },
 

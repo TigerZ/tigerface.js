@@ -3,7 +3,7 @@ import { Rectangle, Polygon } from 'tigerface-shape';
 import { Event } from 'tigerface-event';
 import { Graphics } from 'tigerface-graphic';
 import Sprite from './Sprite';
-import DomSprite from './DomSprite';
+import DomCover from './DomCover';
 
 /**
  * 在 Canvas 上绘制的 Sprite
@@ -35,7 +35,7 @@ class CanvasSprite extends Sprite {
 
     initCover() {
         if (!this._cover_) {
-            this._cover_ = new DomSprite({
+            this._cover_ = new DomCover({
                 style: { background: 'rgba(0,0,0,0.2)' },
                 visible: false,
                 title: 'cover',
@@ -44,12 +44,12 @@ class CanvasSprite extends Sprite {
             this.resetCover();
 
             if (this.stage) {
-                this.stage.addChild(this._cover_);
+                this.stage.addCover(this._cover_);
                 this.resetCover();
             }
 
             this.on(Event.APPEND_TO_STAGE, () => {
-                this.stage.addChild(this._cover_);
+                this.stage.addCover(this._cover_);
                 this.resetCover();
             });
         }

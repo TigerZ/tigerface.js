@@ -19,7 +19,7 @@ let mouseInCanvas = false;
 
 // 外部设置方式
 const surface = new CanvasLayer();
-surface.enableDrag();
+
 surface.on(Event.MouseEvent.MOUSE_MOVE, () => {
     mouseInCanvas = true;
 });
@@ -34,6 +34,10 @@ surface.on(Event.ENTER_FRAME, () => {
 
 // 继承的方式
 class Panel extends CanvasSprite {
+    constructor(opt) {
+        super(opt);
+        this.enableDrag();
+    }
     paint() {
         const g = this.graphics;
         g.textAlign = 'right';

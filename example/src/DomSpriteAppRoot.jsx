@@ -1,12 +1,10 @@
 import React from 'react';
-import { DomSprite, CanvasSprite } from 'tigerface-display';
+import { DomLayer, CanvasLayer, CanvasSprite } from 'tigerface-display';
 import { Stage, Tag } from 'tigerface-react';
 import { Rectangle } from 'tigerface-shape';
 import { Event } from 'tigerface-event';
 
-const cover = new DomSprite({ visible: false });
-
-class DemoDomSprite extends DomSprite {
+class DemoLayer extends DomLayer {
     constructor(opts) {
         super({
             clazzName: 'DemoDomSprite',
@@ -40,10 +38,10 @@ class DemoCanvasSprite extends CanvasSprite {
         });
         this.assign(opts);
         this.addBound(new Rectangle(0, 0, 100, 50));
-        // this.initCover();
+        this.initCover();
 
         this.onDoubleClick = () => {
-            this.cover.visible = true;
+            // this.cover.visible = true;
         };
         // this.mouseInside = false;
         this.on(Event.MouseEvent.MOUSE_OVER, () => {
@@ -85,18 +83,15 @@ const DomStyle = {
  * Time: 13:29.
  */
 class DomSpriteAppRoot extends React.Component {
-    onblur = () => {
-        cover.visible = false;
-    };
 
     render() {
         return (
             <Stage id="stage" style={StageStyle} width={640} height={480}>
-                <Tag.Dom style={DomStyle} clazz={DemoDomSprite} width={100} height={50}>
+                <Tag.Layer style={DomStyle} width={100} height={50} clazz={DemoLayer}>
                     <Tag.Surface width={100} height={50} style={{ backgroundColor: 'rgba(0,255,255,1)' }}>
-                        <Tag.Sprite clazz={DemoCanvasSprite} />
+                        <Tag.Sprite width={100} height={50} clazz={DemoCanvasSprite} />
                     </Tag.Surface>
-                </Tag.Dom>
+                </Tag.Layer>
             </Stage>
         );
     }

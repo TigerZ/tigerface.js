@@ -5,23 +5,13 @@ import $ from 'jquery';
 import { AppContainer } from 'react-hot-loader';
 import AppRoot from './DomSpriteAppRoot';
 
-window.$ = $;
 
 const render = (Component) => {
     ReactDOM.render(
-        <AppContainer>
-            <Component />
-        </AppContainer>,
+            <Component />,
         document.getElementById('root'),
     );
 };
 
 render(AppRoot);
-
-// Webpack Hot Module Replacement API
-if (module.hot) {
-    module.hot.accept('./DomSpriteAppRoot', () => {
-        render(AppRoot);
-    });
-}
 

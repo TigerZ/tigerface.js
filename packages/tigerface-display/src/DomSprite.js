@@ -52,7 +52,7 @@ class DomSprite extends Sprite {
 
         this.assign(T.merge({
             style: {
-                // position: 'absolute',
+                position: 'relative',
                 'transform-origin': '0px 0px 0px',
                 padding: '0px', // 无内边距
                 margin: '0px', // 无外边距
@@ -433,6 +433,9 @@ class DomSprite extends Sprite {
             origin: this._getStageOrigin_(),
             scale: this._getStageScale_(),
         };
+    }
+
+    paint() {
     }
 }
 

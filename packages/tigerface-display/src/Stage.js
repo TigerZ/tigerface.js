@@ -32,6 +32,8 @@ class Stage extends DomSprite {
 
         this.assign(options);
 
+        this._covers_ = [];
+
         // 定义 Dom 引擎
         this.domAdapter = new DomEventAdapter(this.dom, {
             preventDefault: this.preventDefault,
@@ -59,7 +61,6 @@ class Stage extends DomSprite {
         // this.on(Event.ENTER_FRAME, ()=>console.log(this.name+" ENTER_FRAME "+new Date().getSeconds()));
 
 
-
         this.frameAdapter = new FrameEventGenerator({ fps: this.fps });
         this.frameAdapter.on(Event.REDRAW, () => this._paint_());
         this.frameAdapter.on(Event.ENTER_FRAME, () => this._onEnterFrame_());
@@ -74,9 +75,16 @@ class Stage extends DomSprite {
         this.on(Event.MouseEvent.MOUSE_OUT, e => this._onMouseEvents_(e));
     }
 
+    _onBeforeAddChild_(child) {
+        if (!child.isLayer) {
+            this.logger.warn('添加失败，Stage 上只能放置 DomLayer 或者 Canvas Layer 的实例');
+            return false;
+        }
+        return true;
+    }
+
     _onMouseMove_(e) {
         this.mousePos = e.pos;
-
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
             const child = this.children[i];
             if (child instanceof Sprite) {
@@ -87,11 +95,10 @@ class Stage extends DomSprite {
 
     _onMouseEvents_(e) {
         this.mousePos = e.pos;
-
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
             const child = this.children[i];
             if (child instanceof Sprite) {
-                child._onStageMouseEvents_(e, 2);
+                child._onStageMouseEvents_(e.eventName, e.pos);
             }
         }
     }
@@ -123,6 +130,23 @@ class Stage extends DomSprite {
     get fps() {
         return this.props.fps;
     }
+
+    addCover(cover) {
+        if (cover.isCover) {
+            this._covers_.push(cover);
+        }
+    }
+
+    _onCoversChanged_() {
+        super._onChildrenChanged_();
+        if (this.children.length > 1) {
+            for (let i = 0; i < this.children.length; i += 1) {
+                const child = this.children[i];
+                child.setStyle({ 'z-index': (i * 10) + 10 });
+            }
+        }
+    }
+
 
     _signing_() {
         const sign = 'Paint by TigerFace.js 0.10 - tigerface.org';

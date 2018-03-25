@@ -214,7 +214,7 @@ class Sprite extends DisplayObjectContainer {
     _onStageMouseMove_(pos, digits = 2) {
         if (this._checkMouseInside_(pos, digits)) {
             // 发送鼠标移动事件
-            this.logger.debug('鼠标指针移动', this.mousePos, this);
+            // this.logger.debug('鼠标指针移动', this.mousePos, this);
             this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
         }
 
@@ -226,24 +226,25 @@ class Sprite extends DisplayObjectContainer {
         }
     }
 
-    _onStageMouseEvents_(e, digits = 2) {
+    _onStageMouseEvents_(eventName, data) {
         // 如果鼠标移出 stage，那么向全体下级推送 MOUSE_OUT 事件。因为 canvas 或 sprite 可能大于 stage。
-        if (e.eventName === Event.MouseEvent.MOUSE_OUT || this._checkMouseInside_(e.pos, digits)) {
+        if (eventName === Event.MouseEvent.MOUSE_OUT || data.pos === undefined || this._checkMouseInside_(data.pos, 2)) {
             // 上级推送的 MOUSE_OUT 事件，需要自己恢复状态
-            if (e.eventName === Event.MouseEvent.MOUSE_OUT) {
+            if (eventName === Event.MouseEvent.MOUSE_OUT) {
+                this.logger.debug('鼠标移出舞台');
                 this.mousePos = { x: -1, y: -1 };
                 this._mouseInside_ = false;
             }
 
             // 本级事件转发
-            this.dispatchEvent(e.eventName, { pos: this.mousePos });
-            this.logger.debug('_onMouseEvents_()', e);
+            this.dispatchEvent(eventName, { pos: this.mousePos });
 
             // 向下级传播
             for (let i = this.children.length - 1; i >= 0; i -= 1) {
                 const child = this.children[i];
                 if (child instanceof Sprite) {
-                    child._onStageMouseEvents_(e);
+                    this.logger.debug('_onStageMouseEvents_', eventName, data.pos, child);
+                    child._onStageMouseEvents_(eventName, { pos: this.mousePos });
                 }
             }
         }

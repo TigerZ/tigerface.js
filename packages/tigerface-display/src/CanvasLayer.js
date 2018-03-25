@@ -1,17 +1,16 @@
 import { Utilities as T, Logger } from 'tigerface-common';
-import { Event } from 'tigerface-event';
 import { Graphics } from 'tigerface-graphic';
-import DomSprite from './DomSprite';
+import DomLayer from './DomLayer';
 
 
 /**
  * Canvas 层
  *
- * @extends DomSprite
+ * @extends DomLayer
  * @author 张翼虎 <zhangyihu@gmail.com>
  * @memberof module:tigerface-display
  */
-class CanvasLayer extends DomSprite {
+class CanvasLayer extends DomLayer {
     static logger = Logger.getLogger(CanvasLayer.name);
 
     /**
@@ -151,7 +150,7 @@ class CanvasLayer extends DomSprite {
 
     _onBeforeAddChild_(child) {
         if (child.isDomSprite) {
-            this.logger.warn(`_onBeforeAddChild_(${child.name || child.clazzName} ${child.isDomSprite}): CanvasContainer 的内部显示对象不能是 DomSprite 的实例`);
+            this.logger.error('添加失败，CanvasLayer 上不能放置 DomSprite 的实例');
             return false;
         }
         return true;

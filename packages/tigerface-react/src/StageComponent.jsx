@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define,no-nested-ternary,new-cap */
 import React from 'react';
-import { Stage, CanvasLayer, DomSprite, CanvasSprite } from 'tigerface-display';
+import { Stage, CanvasLayer, DomSprite, CanvasSprite, DomLayer } from 'tigerface-display';
 import { Logger } from 'tigerface-common';
 import Reconciler from 'react-reconciler';
 import emptyObject from 'fbjs/lib/emptyObject';
@@ -10,6 +10,7 @@ import BaseComponent from './BaseComponent';
 export const Tag = {
     Sprite: 'CanvasSprite',
     Surface: 'CanvasLayer',
+    Layer: 'DomLayer',
     Dom: 'DomSprite',
 };
 
@@ -85,9 +86,11 @@ const DisplayObjectRenderer = Reconciler({
 
         let instance;
         if (type === Tag.Surface) {
-            instance = new CanvasLayer();
+            instance = props.instance ? props.instance : (props.clazz ? (typeof props.clazz === 'string' ? new CanvasLayer({}, props.clazz) : new props.clazz()) : new CanvasLayer());
         } else if (type === Tag.Dom) {
             instance = props.instance ? props.instance : (props.clazz ? (typeof props.clazz === 'string' ? new DomSprite({}, props.clazz) : new props.clazz()) : new DomSprite());
+        } else if (type === Tag.Layer) {
+            instance = props.instance ? props.instance : (props.clazz ? (typeof props.clazz === 'string' ? new DomLayer({}, props.clazz) : new props.clazz()) : new DomLayer());
         } else if (type === Tag.Sprite) {
             instance = props.instance ? props.instance : (props.clazz ? new props.clazz() : new CanvasSprite());
         }
@@ -203,7 +206,8 @@ const DisplayObjectRenderer = Reconciler({
             if (instance && instance.update) {
                 const _props = Object.assign({}, newProps);
                 delete _props.children;
-                delete _props.clazzName;
+                delete _props.clazz;
+                delete _props.instance;
                 delete _props.key;
                 delete _props.ref;
                 instance.update(_props);

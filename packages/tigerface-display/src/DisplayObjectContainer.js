@@ -3,9 +3,14 @@ import { Logger } from 'tigerface-common';
 import DisplayObject from './DisplayObject';
 
 /**
- * 显示对象容器
+ * 显示对象容器。
+ * DisplayObjectContainer 在 DisplayObject 的基础上增加了 children 容器
+ * * 支持子对象的添加、删除和位置变换
+ * * 重构了部分事件方法，增加向子对象转发
  *
- * @extends DisplayObject
+ * 子对象添加后的显示顺序是后添加的在**上层**
+ *
+ * @extends module:tigerface-display.DisplayObject
  * @author 张翼虎 <zhangyihu@gmail.com>
  * @memberof module:tigerface-display
  */
@@ -18,22 +23,22 @@ class DisplayObjectContainer extends DisplayObject {
     constructor(options = undefined) {
         const props = {
             clazzName: DisplayObjectContainer.name,
-            _children_: [],
         };
 
         super(props);
 
         this.assign(options);
+
+        this._children_ = [];
     }
 
-
-    // set children(v) {
-    //     this.logger.error('不允许设置或覆盖 children 属性');
-    // }
+    set children(v) {
+        this.logger.error('不允许设置或覆盖 children 属性');
+    }
 
     /**
-     *
-     * @returns [DisplayObject]
+     * 子对象
+     * @member [*]
      */
     get children() {
         return this._children_;
@@ -46,35 +51,35 @@ class DisplayObjectContainer extends DisplayObject {
      ************************************************************************* */
 
     /**
-     * 添加子显示对象
-     * @param child {DisplayObject} 子显示对象
-     * @returns {DisplayObjectContainer} 返回本容器, 支持链式调用，例如：a.addChild(b).addChild(c);
+     * 添加子对象
+     * @param child {module:tigerface-display.DisplayObject} 子显示对象
+     * @returns {this} 返回本容器, 支持链式调用，例如：a.addChild(b).addChild(c);
      */
     addChild(child) {
-        // 子节点添加前调用方法，可用于检查合法性
+        // 子对象添加前调用方法，可用于检查合法性
         if (this._onBeforeAddChild_(child) === false) {
             this.logger.info('addChild(): 下级显示对象添加失败');
             return this;
         }
-        // 将子节点添加至容器最后
+        // 将子对象添加至容器最后
         this.children.push(child);
 
-        // 设置本容器为子节点的 parent
+        // 设置本容器为子对象的 parent
         child.parent = this;
 
-        // 子节点添加完成事件方法
+        // 子对象添加完成事件方法
         this._onAddChild_(child);
 
-        // 子节点整体发生变化事件方法
+        // 子对象整体发生变化事件方法
         this._onChildrenChanged_();
 
         return this;
     }
 
     /**
-     * 移除指定子显示对象
-     * @param child {DisplayObject} 要移除的子显示对象
-     * @returns {DisplayObjectContainer} 返回本容器, 支持链式调用，例如：a.addChild(b).addChild(c);
+     * 移除子对象
+     * @param child {module:tigerface-display.DisplayObject} 要移除的子对象
+     * @returns {this} 返回本容器, 支持链式调用，例如：a.addChild(b).addChild(c);
      */
     removeChild(child) {
         // 移除前调用方法，可用于检查合法性
@@ -97,8 +102,8 @@ class DisplayObjectContainer extends DisplayObject {
     }
 
     /**
-     * 执行移除。内部调用方法，不调用事件方法
-     * @param child {DisplayObject}
+     * 执行移除子对象
+     * @param child {module:tigerface-display.DisplayObject} 子对象
      * @private
      */
     _removeChild_(child) {
@@ -108,8 +113,8 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 移除指定位置的子对象
-     * @param index {number}
-     * @returns {DisplayObjectContainer}
+     * @param index {number} 子对象顺序
+     * @returns {this}
      */
     removeChildAt(index) {
         // 移除前调用方法，可用于检查合法性
@@ -134,17 +139,20 @@ class DisplayObjectContainer extends DisplayObject {
         return this;
     }
 
+    /**
+     * 执行移除指定位置的子对象
+     * @param index {number} 子对象顺序
+     * @private
+     */
     _removeChildAt_(index) {
-        if (index > -1) {
-            this.children.splice(index, 1);
-        }
+        this.children.splice(index, 1);
     }
 
     /**
      * 移除指定开始截止位置的多个子对象
-     * @param startIndex
-     * @param endIndex
-     * @returns {DisplayObjectContainer}
+     * @param [startIndex = 0] {number} 起始顺序
+     * @param [endIndex = this.children.length - 1] {number} 截止顺序
+     * @returns {module:tigerface-display.DisplayObjectContainer}
      */
     removeChildren(startIndex = 0, endIndex = this.children.length - 1) {
         this.children.splice(startIndex, (endIndex - startIndex) + 1);
@@ -156,7 +164,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 是否包含指定子对象
-     * @param child
+     * @param child {module:tigerface-display.DisplayObject} 子对象
      * @returns {boolean}
      */
     contains(child) {
@@ -164,9 +172,9 @@ class DisplayObjectContainer extends DisplayObject {
     }
 
     /**
-     * 获得指定位置的子对象
-     * @param child
-     * @returns {*}
+     * 获得子对象在容器中的顺序
+     * @param child {module:tigerface-display.DisplayObject} 子对象
+     * @returns {number} 子对象在容器中的顺序
      */
     getChildIndex(child) {
         return this.children.indexOf(child);
@@ -174,15 +182,15 @@ class DisplayObjectContainer extends DisplayObject {
 
     /** *************************************************************************
      *
-     * 子节点顺序方法
+     * 子对象顺序方法
      *
      ************************************************************************* */
 
     /**
      * 交换两个指定位置的子对象
-     * @param index1
-     * @param index2
-     * @returns {DisplayObjectContainer}
+     * @param index1 {number} 子对象顺序
+     * @param index2 {number} 子对象顺序
+     * @returns {this}
      */
     swapChildrenAt(index1, index2) {
         const tmp = this.children[index1];
@@ -195,9 +203,9 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 交换两个子对象的位置
-     * @param child1
-     * @param child2
-     * @returns {DisplayObjectContainer}
+     * @param child1 {module:tigerface-display.DisplayObject} 子对象
+     * @param child2 {module:tigerface-display.DisplayObject} 子对象
+     * @returns {this}
      */
     swapChildren(child1, child2) {
         const index1 = this.getChildIndex(child1);
@@ -210,9 +218,9 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 指定子对象的位置
-     * @param child
-     * @param index
-     * @returns {DisplayObjectContainer}
+     * @param child {module:tigerface-display.DisplayObject} 子对象
+     * @param index {number} 新的顺序
+     * @returns {this}
      */
     setChildIndex(child, index) {
         this._removeChild_(child);
@@ -232,9 +240,9 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 设置子对象的位置为最顶层
-     * @param child
+     * @param child {module:tigerface-display.DisplayObject} 子对象
      * @param neighbor 指定放在 neighbor 上面
-     * @returns {DisplayObjectContainer}
+     * @returns {this}
      */
     setTop(child, neighbor) {
         if (child === neighbor) return this;
@@ -253,9 +261,9 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 设置子对象的位置为最底层
-     * @param child
+     * @param child {module:tigerface-display.DisplayObject} 子对象
      * @param neighbor 指定放在 neighbor 下面
-     * @returns {DisplayObjectContainer}
+     * @returns {this}
      */
     setBottom(child, neighbor) {
         if (child === neighbor) return this;
@@ -279,12 +287,12 @@ class DisplayObjectContainer extends DisplayObject {
      ************************************************************************* */
 
     /**
-     * 子节点添加前调用的方法
-     * 子类可通过重写此方法, 对将要添加的子节点进行检查, 如果返回 false, 可导致良性添加失败
+     * 子对象添加前调用的方法
+     * 子类可通过重写此方法, 对将要添加的子对象进行检查, 如果返回 false, 可导致良性添加失败
      *
-     * @param child {DisplayObject} 要添加的子节点
+     * @param child {module:tigerface-display.DisplayObject} 要添加的子对象
      * @returns {boolean} 如果精确返回 false, 会导致添加失败
-     * @private
+     * @package
      */
     // eslint-disable-next-line no-unused-vars,class-methods-use-this
     _onBeforeAddChild_(child) {
@@ -297,35 +305,42 @@ class DisplayObjectContainer extends DisplayObject {
      * @private
      */
     _onAfterPaint_() {
-        for (let i = 0; i < this.children.length; i += 1) {
-            const child = this.children[i];
+        this.children.forEach((child) => {
             child._paint_();
-        }
+        });
     }
 
     /**
-     * 移除子节点前检查
-     * @param child {DisplayObject} 要移除的子节点
+     * 移除子对象前检查
+     * @param child {module:tigerface-display.DisplayObject} 要移除的子对象
      * @returns {boolean}
-     * @private
+     * @package
      */
     // eslint-disable-next-line no-unused-vars
     _onBeforeRemoveChild_(child) {
         return true;
     }
 
+    /**
+     * 移除子对象后调用
+     * @param child {module:tigerface-display.DisplayObject}
+     * @package
+     */
     _onRemoveChild_(child) {
         this.emit(Event.NodeEvent.CHILD_REMOVED, child);
     }
 
+    /**
+     * 子对象发生变化
+     * @package
+     */
     _onChildrenChanged_() {
-        this.logger.debug('子节点发生变化', this.children);
+        this.logger.debug('子对象发生变化', this.children);
         this.emit(Event.NodeEvent.CHILDREN_CHANGED);
     }
 
     /**
      * 系统进入帧事件侦听器，将事件转发至自身的侦听器
-     *
      */
     _onEnterFrame_() {
         super._onEnterFrame_();
@@ -343,123 +358,130 @@ class DisplayObjectContainer extends DisplayObject {
         return this._graphics_;
     }
 
+    /**
+     * 画笔
+     * @member {module:tigerface-graphic.Graphics}
+     */
     set graphics(v) {
         this._graphics_ = v;
     }
 
     /**
-     * 当子节点添加完成后被调用
-     * @param child {DisplayObject}
+     * 当子对象添加完成后被调用
+     * @param child {module:tigerface-display.DisplayObject}
      */
     _onAddChild_(child) {
         this.emit(Event.NodeEvent.CHILD_ADDED, child);
     }
 
     /**
-     * 覆盖超类方法，增加遍历孩子
+     * 添加至舞台时调用。覆盖超类方法，增加遍历孩子
      */
     _onAppendToStage_() {
         super._onAppendToStage_();
 
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            this.children[i]._onAppendToStage_();
-        }
+        this.children.forEach((child) => {
+            child._onAppendToStage_();
+        });
     }
 
     /**
-     * 覆盖超类方法，增加遍历孩子
+     * 添加至层时调用。覆盖超类方法，增加遍历孩子
      */
     _onAppendToLayer_() {
         super._onAppendToLayer_();
 
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            this.children[i]._onAppendToLayer_();
-        }
+        this.children.forEach((child) => {
+            child._onAppendToLayer_();
+        });
     }
 
     /**
-     * 覆盖超类方法，增加遍历孩子
+     * 状态改变时调用。覆盖超类方法，增加遍历孩子
      */
     _onStateChanged_() {
         super._onStateChanged_();
 
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            this.children[i].involvedChange();
-        }
+        this.children.forEach((child) => {
+            child.involvedChange();
+        });
     }
 
     /**
-     * 覆盖超类方法，增加遍历孩子
+     * 位置改变时调用。覆盖超类方法，增加遍历孩子
      */
     _onPosChanged_() {
         super._onPosChanged_();
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            const child = this.children[i];
+
+        this.children.forEach((child) => {
             child._onPosChanged_();
-        }
+        });
     }
 
     /**
-     * 覆盖超类方法，增加遍历孩子
+     * 缩放时调用，覆盖超类方法，增加遍历孩子
      */
     _onScaleChanged_() {
         super._onScaleChanged_();
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            const child = this.children[i];
+
+        this.children.forEach((child) => {
             child._onScaleChanged_();
-        }
+        });
     }
 
     /**
-     * 覆盖超类方法，增加遍历孩子
+     * 透明度改变时调用，覆盖超类方法，增加遍历孩子
      */
     _onAlphaChanged_() {
         super._onAlphaChanged_();
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            this.children[i]._onAlphaChanged_();
-        }
+
+        this.children.forEach((child) => {
+            child._onAlphaChanged_();
+        });
     }
 
     /**
-     * 覆盖超类方法，增加遍历孩子
+     * 旋转时调用，覆盖超类方法，增加遍历孩子
      */
     _onRotationChanged_() {
         super._onRotationChanged_();
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            this.children[i]._onRotationChanged_();
-        }
+
+        this.children.forEach((child) => {
+            child._onRotationChanged_();
+        });
     }
 
     /**
-     * 覆盖超类方法，增加遍历孩子
+     * 可见性改变时调用，覆盖超类方法，增加遍历孩子
      */
     _onVisibleChanged_() {
         super._onVisibleChanged_();
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            this.children[i]._onVisibleChanged_();
-        }
+
+        this.children.forEach((child) => {
+            child._onVisibleChanged_();
+        });
     }
 
     /**
-     * 覆盖超类方法，增加遍历孩子
+     * 原点改变时调用，覆盖超类方法，增加遍历孩子
      */
     _onOriginChanged_() {
         super._onOriginChanged_();
 
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            const child = this.children[i];
+        this.children.forEach((child) => {
             child._onOriginChanged_();
-        }
+        });
     }
 
     /**
-     * 覆盖超类方法，增加遍历孩子
+     * 尺寸改变时调用，覆盖超类方法，增加遍历孩子
      */
     _onSizeChanged_() {
         super._onSizeChanged_();
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            this.children[i]._onSizeChanged_();
-        }
+
+        this.children.forEach((child) => {
+            child._onSizeChanged_();
+        });
     }
 }
 
