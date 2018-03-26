@@ -4,6 +4,8 @@
     "EventDispatcher":"error",
     "CanvasLayer":"error",
     "Bar":"debug",
-    "Windmill":"off"
+    "Windmill":"off",
+    "DomCover":"warn",
+    "DemoCanvasSprite":"debug"
   }
 }

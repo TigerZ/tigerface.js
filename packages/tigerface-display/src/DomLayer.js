@@ -8,7 +8,7 @@ import DomSprite from './DomSprite';
  * @memberof module:tigerface-display
  */
 class DomLayer extends DomSprite {
-    constructor(options = undefined, dom = undefined) {
+    constructor(options, dom) {
         super({}, dom);
         this._layer_ = this;
         this.assign(options);

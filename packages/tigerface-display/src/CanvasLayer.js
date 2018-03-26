@@ -165,12 +165,6 @@ class CanvasLayer extends DomLayer {
     }
 
     /**
-     * 空方法，为了抵消 DomSprite 的同名方法
-     */
-    _onChildrenChanged_() {
-    }
-
-    /**
      * 绘制画布自身前的处理：缩放，设置透明度
      * @package
      */

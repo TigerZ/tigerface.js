@@ -1,8 +1,9 @@
 import React from 'react';
-import { DomLayer, CanvasLayer, CanvasSprite } from 'tigerface-display';
+import { DomLayer, CanvasSprite } from 'tigerface-display';
 import { Stage, Tag } from 'tigerface-react';
 import { Rectangle } from 'tigerface-shape';
 import { Event } from 'tigerface-event';
+import $ from 'jquery';
 
 class DemoLayer extends DomLayer {
     constructor(opts) {
@@ -38,10 +39,19 @@ class DemoCanvasSprite extends CanvasSprite {
         this.assign(opts);
         this.addBound(new Rectangle(0, 0, 100, 50));
         this.origin = { x: 50, y: 25 };
-        this.initCover();
 
-        this.onDoubleClick = () => {
-            this.cover.visible = true;
+        const $input = $('<input tabindex="2" style="border:0;height:50px;text-align:center;width:100%;outline:none;font-size:16px"/>');
+        $input.keyup((e) => {
+            if (e.keyCode === 13) {
+                this.complateInput($(e.currentTarget).val());
+            }
+        });
+        const $cover = $('<div tabindex="1"></div>').append($input).focus(() => $input.focus());
+
+        this.initCover($cover[0]);
+
+        this.onClick = () => {
+            this.showCover();
         };
         // this.mouseInside = false;
         this.on(Event.MouseEvent.MOUSE_OVER, () => {
@@ -55,6 +65,13 @@ class DemoCanvasSprite extends CanvasSprite {
         this.on(Event.MouseEvent.MOUSE_MOVE, () => {
             // this.postChange();
         });
+        this.text = '';
+    }
+
+    complateInput(text) {
+        this.text = text;
+        this.postChange();
+        this.hideCover();
     }
 
     paint() {
@@ -65,8 +82,12 @@ class DemoCanvasSprite extends CanvasSprite {
             g.fillStyle = 'rgba(0,255,0,0.8)';
         }
         g.drawRectangle(this.boundingRect, g.DrawStyle.FILL);
-        g.drawPoint(this.mousePos, 5, g.PointStyle.DEFAULT);
-        this.rotation += 1;
+        // g.drawPoint(this.mousePos, 5, g.PointStyle.DEFAULT);
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillStyle = 'black';
+        g.drawText(this.text, { x: 50, y: 25 }, '16px Hei', g.DrawStyle.FILL);
+        // this.rotation += 1;
     }
 }
 

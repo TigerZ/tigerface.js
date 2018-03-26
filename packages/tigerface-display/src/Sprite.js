@@ -84,6 +84,23 @@ class Sprite extends DisplayObjectContainer {
     }
 
     /**
+     * 获得外接矩形在舞台上的投影
+     * @return {{pos, size: {width, height}, rotation: number, origin: {x, y}|*, scale: {x: number, y: number}}}
+     * @package
+     */
+    getBoundRectShadow() {
+        const p0 = this.getStagePos();
+        const rect = this.boundingRect;
+        return {
+            pos: p0,
+            size: { width: rect.width, height: rect.height },
+            rotation: this._getStageRotation_(),
+            origin: this._getStageOrigin_(),
+            scale: this._getStageScale_(),
+        };
+    }
+
+    /**
      * 获取边界多边形的外接矩形
      * @package
      */
@@ -225,27 +242,25 @@ class Sprite extends DisplayObjectContainer {
      * @return {boolean} 是否在范围内
      * @package
      */
-    _checkMouseInside_(pos) {
-        const mouse = this.getInnerPos(pos, 2);
-        this.mousePos = mouse;
+    _checkMouseInside_() {
         // 记录之前的状态，用来判断是否第一次进入
         const beforeInside = this._mouseInside_;
         // this.logger.debug('舞台指针移动', mouse, beforeInside, this._mouseInside_);
         // 根据边界形状，判断鼠标是否在本对象范围内
-        this._mouseInside_ = this._pointInBounds_(mouse);
+        this._mouseInside_ = this._pointInBounds_(this.mousePos);
 
         if (this._mouseInside_) {
             // 当前鼠标在范围内
             if (!beforeInside) {
                 // 如果之前不在范围内，发送鼠标进入事件
-                this.logger.debug('鼠标指针进入边界');
-                this.dispatchEvent(Event.MouseEvent.MOUSE_OVER);
+                this.logger.debug('鼠标指针进入边界', { pos: this.mousePos });
+                this.dispatchEvent(Event.MouseEvent.MOUSE_OVER, { pos: this.mousePos });
             }
             return true;
         } else if (beforeInside) {
             // 当前鼠标不在范围内, 如果之前在范围内，发送鼠标移出事件
-            this.logger.debug('鼠标指针移出边界', mouse);
-            this.dispatchEvent(Event.MouseEvent.MOUSE_OUT);
+            this.logger.debug('鼠标指针移出边界', this.mousePos);
+            this.dispatchEvent(Event.MouseEvent.MOUSE_OUT, { pos: this.mousePos });
         }
         return false;
     }
@@ -256,7 +271,8 @@ class Sprite extends DisplayObjectContainer {
      * @package
      */
     _onStageMouseMove_(pos) {
-        if (this._checkMouseInside_(pos)) {
+        this.mousePos = this.getInnerPos(pos, 2);
+        if (this._checkMouseInside_()) {
             // 发送鼠标移动事件
             // this.logger.debug('鼠标指针移动', this.mousePos, this);
             this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
@@ -277,12 +293,12 @@ class Sprite extends DisplayObjectContainer {
      * @package
      */
     _onStageMouseEvents_(eventName, data) {
+        this.mousePos = this.getInnerPos(data.pos, 2);
         // 如果鼠标移出 stage，那么向全体下级推送 MOUSE_OUT 事件。因为 canvas 或 sprite 可能大于 stage。
-        if (eventName === Event.MouseEvent.MOUSE_OUT || data.pos === undefined || this._checkMouseInside_(data.pos, 2)) {
+        if (eventName === Event.MouseEvent.MOUSE_OUT || this._checkMouseInside_()) {
             // 上级推送的 MOUSE_OUT 事件，需要自己恢复状态
             if (eventName === Event.MouseEvent.MOUSE_OUT) {
                 this.logger.debug('鼠标移出舞台');
-                this.mousePos = { x: -1, y: -1 };
                 this._mouseInside_ = false;
             }
 
@@ -295,6 +311,24 @@ class Sprite extends DisplayObjectContainer {
                 if (child instanceof Sprite) {
                     this.logger.debug('_onStageMouseEvents_', eventName, data.pos, child);
                     child._onStageMouseEvents_(eventName, { pos: this.mousePos });
+                }
+            }
+        }
+    }
+
+    _onStageSingleTouchEvents_(eventName, data) {
+        this.mousePos = this.getInnerPos(data.pos, 2);
+        // 如果鼠标移出 stage，那么向全体下级推送 MOUSE_OUT 事件。因为 canvas 或 sprite 可能大于 stage。
+        if (this._checkMouseInside_()) {
+            // 本级事件转发
+            this.dispatchEvent(eventName, { pos: this.mousePos });
+
+            // 向下级传播
+            for (let i = this.children.length - 1; i >= 0; i -= 1) {
+                const child = this.children[i];
+                if (child instanceof Sprite) {
+                    this.logger.debug('_onStageTouchEvents_', eventName, data.pos, child);
+                    child._onStageSingleTouchEvents_(eventName, { pos: this.mousePos });
                 }
             }
         }

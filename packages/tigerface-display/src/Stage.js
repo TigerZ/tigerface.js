@@ -77,6 +77,10 @@ class Stage extends DomSprite {
         this.on(Event.MouseEvent.MOUSE_DOWN, e => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_UP, e => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_OUT, e => this._onMouseEvents_(e));
+
+        this.on(Event.TouchEvent.TOUCH_START, e => this._onTouchEvents_(e));
+
+        this.domCount = 0;
     }
 
     /**
@@ -87,7 +91,7 @@ class Stage extends DomSprite {
      */
     _onBeforeAddChild_(child) {
         if (!child.isLayer) {
-            this.logger.warn('添加失败，Stage 上只能放置 DomLayer 或者 Canvas Layer 的实例');
+            this.logger.warn('添加失败，Stage 上只能放置 DomLayer、Canvas Layer 或者其子类的实例');
             return false;
         }
         return true;
@@ -103,7 +107,7 @@ class Stage extends DomSprite {
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
             const child = this.children[i];
             if (child instanceof Sprite) {
-                child._onStageMouseMove_(e.pos, 2);
+                child._onStageMouseMove_(e.pos);
             }
         }
     }
@@ -118,8 +122,20 @@ class Stage extends DomSprite {
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
             const child = this.children[i];
             if (child instanceof Sprite) {
-                child._onStageMouseEvents_(e.eventName, e.pos);
+                child._onStageMouseEvents_(e.eventName, { pos: this.mousePos });
             }
+        }
+    }
+
+    _onTouchEvents_(e) {
+        this.logger.debug('*************', e);
+        if (e.touchs && e.touchs.length === 1) {
+            [this.mousePos] = e.touchs;
+            this.children.forEach((child) => {
+                if (child instanceof Sprite) {
+                    child._onStageSingleTouchEvents_(e.eventName, { pos: this.mousePos });
+                }
+            });
         }
     }
 
@@ -150,11 +166,6 @@ class Stage extends DomSprite {
         this.logger.info(`舞台帧速率设置为 ${this.fps}`);
 
         if (this.frameAdapter) this.frameAdapter.fps = this.fps;
-
-        // if (this.frameAdapter) this.frameAdapter.destroy();
-        // this.frameAdapter = new FrameEventGenerator({fps: this.fps});
-        // this.frameAdapter.on(Event.REDRAW, () => this._paint_());
-        // this.frameAdapter.on(Event.ENTER_FRAME, () => this._onEnterFrame_());
     }
 
     get fps() {
@@ -168,6 +179,7 @@ class Stage extends DomSprite {
      */
     _addCover_(cover) {
         if (cover.isCover) {
+            cover.parent = this;
             this.dom.appendChild(cover.dom);
             this._covers_.push(cover);
             this._onCoversChanged_();
@@ -180,8 +192,30 @@ class Stage extends DomSprite {
      */
     _onCoversChanged_() {
         this._covers_.forEach((cover, i) => {
-            cover.setStyle({ 'z-index': (i + this.children.length) * 10 });
+            cover.setStyle({ 'z-index': (i + this.domCount) * 10 });
         });
+    }
+
+    _onChildrenChanged_() {
+        super._onChildrenChanged_();
+        this._onCoversChanged_();
+    }
+
+    /**
+     * 显示封面，同一时间仅允许显示一个封面
+     * @param cover
+     */
+    showCover(cover) {
+        this._covers_.forEach((_cover) => {
+            _cover.setStyle({ visibility: 'hidden' });
+        });
+        cover.state.visible = true;
+        cover.setStyle({ visibility: 'visible' });
+    }
+
+    hideCover(cover) {
+        cover.state.visible = false;
+        cover.setStyle({ visibility: 'hidden' });
     }
 
     /**

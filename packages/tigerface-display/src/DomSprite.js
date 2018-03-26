@@ -221,44 +221,6 @@ class DomSprite extends Sprite {
     }
 
     /**
-     * Dom 的外接矩形，对应于 Context2DSprite 的 outer 外接矩形。
-     * 此方法返回的矩形，就是 Dom 的 MOUSE_MOVE 事件直接返回的坐标系，原点在左上角。
-     * mousePos 得到的鼠标坐标，经过偏移得到外部坐标，再转换为内部坐标，得到准确的内部鼠标坐标投影。
-     * @returns {module:tigerface-shape.Rectangle}
-     * @package
-     */
-    getDomBoundingRect() {
-        // 实例化图形对象，用于计算
-        const { size } = this;
-        const rect = new Rectangle(0, 0, size.width, size.height);
-
-        const vertexes = rect.getVertexes();
-        const points = [];
-        for (let i = 0; i < vertexes.length; i += 1) {
-            points.push(this.getOuterPos(vertexes[i]));
-        }
-        return new Rectangle(points);
-    }
-
-    /**
-     * Dom 特有的获取精确鼠标坐标的方法。直接从 Dom 事件中得到的坐标，是 Dom Outer 外接矩形的坐标。
-     * 如果 Dom 发生过旋转和缩放，必须用此方法，才能得到准确的内部鼠标坐标。
-     * 所以，为保证安全，在任何时候，都应该调用此方法获取鼠标坐标，不要直接访问 _mouseX_ 和 _mouseY_
-     *
-     * @returns {Point|{x:*,y:*}}
-     */
-    // getMousePos {
-    //     let pos = super.getMousePos();
-    //     // this.logger.debug('getMousePos(): pos=', pos);
-    //
-    //     // 坐标系转换
-    //     let rect = this.getDomBoundingRect();
-    //     pos = this.getInnerPos(new Point(pos).move(rect.left, rect.top), 2);
-    //
-    //     return pos;
-    // }
-
-    /**
      * 位置改变时调用，覆盖超类方法
      * @package
      */
@@ -294,24 +256,14 @@ class DomSprite extends Sprite {
         if (child.dom && child.dom.parentNode !== this.dom) {
             this.dom.appendChild(child.dom);
         }
-        // this.logger.debug('_onAddChild_(): parent =', this.dom, ' child =', child.dom);
-        // this.logger.debug(`_onAddChild_(): ${parent.nodeName}[${parent.title}] =? ${this.dom.nodeName}[${this.dom.title}]`);
-        // this.logger.debug('_onAddChild_(): child =', child.name || child.clazzName);
+
         super._onAddChild_(child);
     }
 
-    // _onDomChanged_() {
-    //     this.logger.debug('_onDomChanged_()', this.dom);
-    //     this.children.forEach((child) => {
-    //         if (child instanceof DomSprite) {
-    //             const parent = child.dom.parentNode;
-    //             if (parent !== this.dom) {
-    //                 this.dom.appendChild(child.dom);
-    //             }
-    //         }
-    //     });
-    // }
-
+    /**
+     * 透明度改变时调用，覆盖超类的方法
+     * @package
+     */
     _onAlphaChanged_() {
         const { alpha } = this;
         const style = {
@@ -324,6 +276,10 @@ class DomSprite extends Sprite {
         this.setStyle(style);
     }
 
+    /**
+     * 可见性改变时调用，覆盖超类的方法
+     * @package
+     */
     _onVisibleChanged_() {
         if (this.visible) {
             this.setStyle({ display: 'block' });
@@ -332,6 +288,10 @@ class DomSprite extends Sprite {
         }
     }
 
+    /**
+     * 原点改变时调用，覆盖超类的方法
+     * @package
+     */
     _onOriginChanged_() {
         this._onPosChanged_();
         this._setTransformOrigin_();
@@ -340,14 +300,26 @@ class DomSprite extends Sprite {
         super._onOriginChanged_();
     }
 
+    /**
+     * 旋转角度改变时调用，覆盖超类的方法
+     * @package
+     */
     _onRotationChanged_() {
         this._setTransform_();
     }
 
+    /**
+     * 缩放比例改变时调用，覆盖超类的方法
+     * @package
+     */
     _onScaleChanged_() {
         this._setTransform_();
     }
 
+    /**
+     * css 定义原点
+     * @private
+     */
     _setTransformOrigin_() {
         const t = this.origin;
         const style = {
@@ -360,6 +332,10 @@ class DomSprite extends Sprite {
         this.setStyle(style);
     }
 
+    /**
+     * css 实现缩放和旋转
+     * @private
+     */
     _setTransform_() {
         const s = this.scale;
         const r = this.rotation;
@@ -373,14 +349,16 @@ class DomSprite extends Sprite {
         this.setStyle(style);
     }
 
+    /**
+     *
+     * @package
+     */
     _onChildrenChanged_() {
         super._onChildrenChanged_();
-        if (this.children.length > 1) {
-            for (let i = 0; i < this.children.length; i += 1) {
-                const child = this.children[i];
-                child.setStyle({ 'z-index': (i * 10) + 10 });
-            }
-        }
+
+        this.children.forEach((child, i) => {
+            if (child instanceof DomSprite) child.setStyle({ 'z-index': (i * 10) + 10 });
+        });
     }
 
     /**
@@ -393,7 +371,7 @@ class DomSprite extends Sprite {
         if (child.isDomSprite) {
             return true;
         }
-        this.logger.warn(`_onBeforeAddChild_(${child.name || child.clazzName} ${child.isDomSprite}): DomSprite 类型容器的 addChild 方法只能接受同样是 DomSprite 类型的子节点`);
+        this.logger.warn('添加失败，DomSprite 容器只能添加 DomSprite 或子类的实例作为子对象');
         return false;
     }
 
@@ -452,54 +430,14 @@ class DomSprite extends Sprite {
         T.removeCss(this.dom, 'transition', true);
     }
 
-    getScroll() {
-        const { dom } = this;
-        return {
-            scrollTop: T.scrollTop(dom),
-            scrollLeft: T.scrollLeft(dom),
-        };
+    _onAppendToStage_() {
+        super._onAppendToStage_();
+        if (this.stage) this.stage.domCount += 1;
     }
 
-    set scroll(scroll) {
-        this.scrollLeft = scroll.scrollLeft;
-        this.scrollLeft = scroll.scrollLeft;
-    }
-
-    set scrollLeft(v) {
-        T.scrollLeft(this.dom, v);
-    }
-
-    set scrollTop(v) {
-        T.scrollTop(this.dom, v);
-    }
-
-    getDomInfo() {
-        const { dom } = this;
-        return {
-            clientWidth: dom.clientWidth,
-            clientHeight: dom.clientHeight,
-            offsetWidth: dom.offsetWidth,
-            offsetHeight: dom.offsetHeight,
-            scrollWidth: dom.scrollWidth,
-            scrollHeight: dom.scrollHeight,
-            scrollTop: dom.scrollTop,
-            scrollLeft: dom.scrollLeft,
-        };
-    }
-
-    getBoundRectShadow() {
-        const p0 = this.getStagePos();
-        const rect = this.boundingRect;
-        return {
-            pos: p0,
-            size: { width: rect.width, height: rect.height },
-            rotation: this._getStageRotation_(),
-            origin: this._getStageOrigin_(),
-            scale: this._getStageScale_(),
-        };
-    }
-
-    paint() {
+    _onRemoveChild_(child) {
+        super._onRemoveChild_(child);
+        if (this.stage) this.stage.domCount -= 1;
     }
 }
 

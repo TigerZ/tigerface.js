@@ -33,14 +33,13 @@ class CanvasSprite extends Sprite {
         this.assign(options);
     }
 
-    initCover() {
+    initCover(dom) {
         if (!this._cover_) {
             this._cover_ = new DomCover({
                 style: { background: 'rgba(0,0,0,0.5)' },
                 pos: { x: 0, y: 0 },
-                visible: false,
                 title: 'cover',
-            });
+            }, dom);
 
             this.resetCover();
 
@@ -56,18 +55,6 @@ class CanvasSprite extends Sprite {
         }
     }
 
-    getBoundRectShadow() {
-        const p0 = this.getStagePos();
-        const rect = this.boundingRect;
-        return {
-            pos: p0,
-            size: { width: rect.width, height: rect.height },
-            rotation: this._getStageRotation_(),
-            origin: this._getStageOrigin_(),
-            scale: this._getStageScale_(),
-        };
-    }
-
     resetCover() {
         if (!this._cover_ || !this._cover_.visible) return;
         const props = this.getBoundRectShadow();
@@ -77,12 +64,13 @@ class CanvasSprite extends Sprite {
     }
 
     showCover() {
+        this.stage.showCover(this.cover);
         this.resetCover();
-        this.cover.visible = true;
+        this.cover.dom.focus();
     }
 
     hideCover() {
-        this.cover.visible = false;
+        this.stage.hideCover(this.cover);
     }
 
     _onStateChanged_() {
@@ -93,52 +81,6 @@ class CanvasSprite extends Sprite {
     get cover() {
         return this._cover_;
     }
-
-    // /**
-    //  * 转换 Canvas 的鼠标坐标，为内部坐标，然后判断是否在本对象的范围内，根据判断结果，发送内部 MOUSE_OVER MOUSE_OUT MOUSE_MOVE事件。
-    //  * CanvasLayer 收到 Canvas Dom 的 MOUSE_MOVE 事件，
-    //  * 将坐标转换为 Canvas 的内部坐标后，遍历全部内部 Context2DSprint 对象，调用此方法。
-    //  * @param pos
-    //  * @param digits
-    //  * @package
-    //  */
-    // _onLayerMouseMove_(pos, digits) {
-    //     // 把全局坐标，转化为本级坐标
-    //     const mouse = this.getLayerLocalPos(pos, digits);
-    //
-    //     // 记录之前的状态，用来判断是否第一次进入
-    //     const beforeInside = this._mouseInside_;
-    //     this.logger.debug('画布指针移动', beforeInside, this._mouseInside_);
-    //     // 根据边界形状，判断鼠标是否在本对象范围内
-    //     this._mouseInside_ = this._pointInBounds_(mouse);
-    //
-    //     if (this._mouseInside_) {
-    //         this.logger.debug('鼠标指针进入边界');
-    //         // 当前鼠标在范围内
-    //         if (!beforeInside) {
-    //             // 如果之前不在范围内，发送鼠标进入事件
-    //             this.dispatchEvent(Event.MouseEvent.MOUSE_OVER);
-    //         }
-    //         // 发送鼠标移动事件
-    //         this.logger.debug('鼠标指针移动', mouse);
-    //         this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: mouse });
-    //     } else if (beforeInside) {
-    //         // 当前鼠标不在范围内, 如果之前在范围内，发送鼠标移出事件
-    //         this.logger.debug('鼠标指针移出边界', mouse);
-    //         this.dispatchEvent(Event.MouseEvent.MOUSE_OUT);
-    //     }
-    // }
-    //
-    // _onLayerMouseEvents_(e) {
-    //     const mouse = this.mousePos;
-    //     this.logger.debug('_onLayerMouseEvents_', e);
-    //     if (e.eventName === Event.MouseEvent.MOUSE_OVER) {
-    //         this._onLayerMouseMove_(mouse);
-    //     } else if (this._mouseInside_) {
-    //         this.dispatchEvent(e, { pos: mouse });
-    //     }
-    // }
-
 
     /**
      * 绘制自身前处理：缩放，旋转，平移原点

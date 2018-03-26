@@ -251,6 +251,7 @@ class DomEventAdapter extends EventDispatcher {
                 });
                 lastTouches.push({
                     start: pos,
+                    startTime: +new Date(),
                 });
             }
             // console.log('Event.TouchEvent.TOUCH_START');
@@ -297,7 +298,8 @@ class DomEventAdapter extends EventDispatcher {
                 const touch = lastTouches[i];
                 touches.push({
                     start: touch.start,
-                    pos: touch.move,
+                    startTime: touch.startTime,
+                    pos: touch.move || touch.start,
                 });
             }
             // console.log('Event.TouchEvent.TOUCH_END');
@@ -306,14 +308,15 @@ class DomEventAdapter extends EventDispatcher {
             }, this.preventDefault);
 
             if (touches.length === 1) {
-                // console.log('TOUCH_END -> Event.MouseEvent.MOUSE_UP');
-                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, {}, this.preventDefault);
+                this.logger.debug('TOUCH_END -> Event.MouseEvent.MOUSE_UP');
+                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, { pos: touches[0].pos }, this.preventDefault);
 
-                if ((!touches[0].pos || touches[0].pos.getDistance(touches[0].start) < 1) &&
+                this.logger.debug('检查是否能转换为 click', touches[0].pos === touches[0].start, T.distance(touches[0].pos, touches[0].start), touches[0]);
+                if ((touches[0].pos === touches[0].start || T.distance(touches[0].pos, touches[0].start) < 1) &&
                     +new Date() - touches[0].startTime < 500) {
                     // console.log('TOUCH_END -> Event.MouseEvent.CLICK');
                     this.dispatchSystemEvent(Event.MouseEvent.CLICK, e, {
-                        pos: touches[0].pos || touches[0].start,
+                        pos: touches[0].pos,
                     }, this.preventDefault);
                 }
             }

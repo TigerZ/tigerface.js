@@ -398,7 +398,6 @@ class DisplayObject extends EventDispatcher {
      * 重绘方法，需要被实现
      */
     paint() {
-        this.logger.error('paint 方法必须实现');
     }
 
     /**
@@ -750,6 +749,12 @@ class DisplayObject extends EventDispatcher {
         if (!this._layer_ && this.layer && this.layer !== this) {
             this.dispatchEvent(Event.APPEND_TO_LAYER);
             this.postChange('AppendToLayer');
+        }
+    }
+
+    emit(...args) {
+        if (this.visible) {
+            super.emit(...args);
         }
     }
 }
