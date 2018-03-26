@@ -1,8 +1,5 @@
 {
-  "log-level": "debug",
+  "log-level": "error",
   "class-log-level": {
-    "EventDispatcher":"off",
-    "Bar":"debug",
-    "Windmill":"off"
   }
 }

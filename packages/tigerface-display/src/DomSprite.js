@@ -1,13 +1,13 @@
 import { Utilities as T, Logger } from 'tigerface-common';
 import { Rectangle } from 'tigerface-shape';
-import { Event, DomEventAdapter } from 'tigerface-event';
+import { Event } from 'tigerface-event';
 import Sprite from './Sprite';
 
 
 /**
  * 基于 Dom 的 Sprite
  *
- * @extends Sprite
+ * @extends tigerface-display.Sprite
  * @author 张翼虎 <zhangyihu@gmail.com>
  * @memberof module:tigerface-display
  */
@@ -25,7 +25,24 @@ class DomSprite extends Sprite {
      * 初始化舞台
      *
      * @param options {object|HTMLElement} 选项
-     * @param dom {HTMLElement} dom 节点
+     * {
+     *      width: '320',
+     *      height: '240',
+     *      style: {
+     *          position: 'relative',
+     *          'transform-origin': '0px 0px 0px',
+     *          padding: '0px', // 无内边距
+     *          margin: '0px', // 无外边距
+     *          overflow: 'hidden', // 溢出隐藏
+     *          display: 'block',
+     *          outline: 'none', // 隐藏 focus 的方框
+     *          '-webkit-user-select': 'none',
+     *          '-moz-user-select': 'none',
+     *          '-ms-user-select': 'none',
+     *          'user-select': 'none',
+     *      }
+     * }
+     * @param dom {HTMLElement} 绑定的 DOM 节点
      */
     constructor(options = undefined, dom = undefined) {
         const _dom = typeof dom === 'string' ? document.createElement(dom) : (dom || document.createElement('div'));
@@ -46,7 +63,7 @@ class DomSprite extends Sprite {
         });
 
         // Dom 位置和尺寸获取方法，能同步 Dom 实际值和 DomSprite 属性
-        this.resize();
+        this._resize_();
 
         this.isDomSprite = true;
 
@@ -70,10 +87,15 @@ class DomSprite extends Sprite {
     }
 
     set dom(v) {
-        this._dom_ = v;
-        this._onDomChanged_();
+        this.logger.error('禁止替换 dom 对象');
+        // this._dom_ = v;
+        // this._onDomChanged_();
     }
 
+    /**
+     * 绑定的 DOM 对象（只读）
+     * @member {HTMLElement}
+     */
     get dom() {
         return this._dom_ === document ? document.documentElement : this._dom_;
     }
@@ -82,6 +104,10 @@ class DomSprite extends Sprite {
         return this.dom.id;
     }
 
+    /**
+     * DOM 对象的 id 属性
+     * @member {string}
+     */
     set id(v) {
         this.dom.id = v;
     }
@@ -90,15 +116,26 @@ class DomSprite extends Sprite {
         return this.dom.title;
     }
 
+    /**
+     * DOM 对象的 title 属性
+     * @member {string}
+     */
     set title(v) {
         this.dom.title = v;
     }
 
     get css() {
+        this.logger.warn('css 是已经废弃的属性，请使用 style 属性');
         return this.style;
     }
 
+    /**
+     * css 样式，已经废弃，请使用 style 属性
+     * @param {object}
+     * @deprecated
+     */
     set css(v) {
+        this.logger.warn('css 是已经废弃的属性，请使用 style 属性');
         this.style = v;
     }
 
@@ -106,20 +143,34 @@ class DomSprite extends Sprite {
         return this.dom.style || {};
     }
 
+    /**
+     * DOM 对象的 style/css 属性
+     * @member {object}
+     */
     set style(v) {
         this.setStyle(v);
     }
+
 
     get className() {
         return this.props.className;
     }
 
+    /**
+     * DOM 对象的 className 属性
+     * @member {string}
+     */
     set className(v) {
         this.props.className = v;
         T.addClass(this.dom, v);
         this.postChange('dom class', v);
     }
 
+    /**
+     * 画笔
+     * @member {undefined}
+     * @private
+     */
     get graphics() {
         return undefined;
     }
@@ -128,15 +179,27 @@ class DomSprite extends Sprite {
         return super.visible;
     }
 
+    /**
+     * 可见性，覆盖超类的属性
+     * @member {boolean}
+     */
     set visible(v) {
         super.visible = v;
         this.style = { visibility: this.visible ? 'visible' : 'hidden' };
     }
 
-    resize() {
+    /**
+     * 根据 Dom 对象调整 size 属性
+     * @private
+     */
+    _resize_() {
         this.size = T.size(this.dom);
     }
 
+    /**
+     * 位置坐标，覆盖超类的属性
+     * @member {module:tigerface-display.Point|{x:number,y:number}}
+     */
     set pos(pos) {
         super.pos = pos;
         this.style = { position: 'absolute' };
@@ -148,7 +211,7 @@ class DomSprite extends Sprite {
 
     /**
      * Dom 特有的边界获取方法，如果存在图形边界，返回图形边界数组，否则，返回边框图形
-     * @returns {*}
+     * @returns {array}
      */
     get bounds() {
         if (this._bounds_.length === 0) {
@@ -161,8 +224,8 @@ class DomSprite extends Sprite {
      * Dom 的外接矩形，对应于 Context2DSprite 的 outer 外接矩形。
      * 此方法返回的矩形，就是 Dom 的 MOUSE_MOVE 事件直接返回的坐标系，原点在左上角。
      * mousePos 得到的鼠标坐标，经过偏移得到外部坐标，再转换为内部坐标，得到准确的内部鼠标坐标投影。
-     * @returns {Shape.Rectangle}
-     * @private
+     * @returns {module:tigerface-shape.Rectangle}
+     * @package
      */
     getDomBoundingRect() {
         // 实例化图形对象，用于计算
@@ -196,10 +259,9 @@ class DomSprite extends Sprite {
     // }
 
     /**
-     * 设置 DOM 的位置
-     * @private
+     * 位置改变时调用，覆盖超类方法
+     * @package
      */
-
     _onPosChanged_() {
         if (this.dom === document) return;
         this.setStyle({ position: DomSprite.Position.ABSOLUTE });
@@ -213,7 +275,7 @@ class DomSprite extends Sprite {
 
     /**
      * 设置 Dom 的大小
-     * @private
+     * @package
      */
     _onSizeChanged_() {
         // if(this.layout) return;
@@ -226,7 +288,7 @@ class DomSprite extends Sprite {
      * 添加子节点后的处理
      *
      * @param child {DisplayObject}
-     * @private
+     * @package
      */
     _onAddChild_(child) {
         if (child.dom && child.dom.parentNode !== this.dom) {
@@ -238,15 +300,17 @@ class DomSprite extends Sprite {
         super._onAddChild_(child);
     }
 
-    _onDomChanged_() {
-        this.logger.debug('_onDomChanged_()', this.dom);
-        this.children.forEach((child) => {
-            const parent = child.dom.parentNode;
-            if (parent !== this.dom) {
-                this.dom.appendChild(child.dom);
-            }
-        });
-    }
+    // _onDomChanged_() {
+    //     this.logger.debug('_onDomChanged_()', this.dom);
+    //     this.children.forEach((child) => {
+    //         if (child instanceof DomSprite) {
+    //             const parent = child.dom.parentNode;
+    //             if (parent !== this.dom) {
+    //                 this.dom.appendChild(child.dom);
+    //             }
+    //         }
+    //     });
+    // }
 
     _onAlphaChanged_() {
         const { alpha } = this;
@@ -323,7 +387,7 @@ class DomSprite extends Sprite {
      *
      * @param child {DisplayObject | DomSprite}
      * @returns {boolean}
-     * @private
+     * @package
      */
     _onBeforeAddChild_(child) {
         if (child.isDomSprite) {
@@ -378,7 +442,7 @@ class DomSprite extends Sprite {
      * @param delay {number}
      * @param effect {string}
      * @returns {string}
-     * @private
+     * @package
      */
     _covertTween_(prop, duration, delay, effect) {
         return `${duration || '1'}s ${delay || '0'}s ${prop || ''} ${effect || 'linear'}`;

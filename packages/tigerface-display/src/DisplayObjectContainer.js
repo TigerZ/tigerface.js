@@ -23,13 +23,12 @@ class DisplayObjectContainer extends DisplayObject {
     constructor(options = undefined) {
         const props = {
             clazzName: DisplayObjectContainer.name,
+            _children_: [],
         };
 
         super(props);
 
         this.assign(options);
-
-        this._children_ = [];
     }
 
     set children(v) {
@@ -104,7 +103,7 @@ class DisplayObjectContainer extends DisplayObject {
     /**
      * 执行移除子对象
      * @param child {module:tigerface-display.DisplayObject} 子对象
-     * @private
+     * @package
      */
     _removeChild_(child) {
         const index = this.getChildIndex(child);
@@ -142,7 +141,7 @@ class DisplayObjectContainer extends DisplayObject {
     /**
      * 执行移除指定位置的子对象
      * @param index {number} 子对象顺序
-     * @private
+     * @package
      */
     _removeChildAt_(index) {
         this.children.splice(index, 1);
@@ -301,8 +300,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 绘制后调用的方法，子类需要根据情况覆盖此方法的实现
-     *
-     * @private
+     * @package
      */
     _onAfterPaint_() {
         this.children.forEach((child) => {
@@ -341,6 +339,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 系统进入帧事件侦听器，将事件转发至自身的侦听器
+     * @package
      */
     _onEnterFrame_() {
         super._onEnterFrame_();
@@ -369,6 +368,7 @@ class DisplayObjectContainer extends DisplayObject {
     /**
      * 当子对象添加完成后被调用
      * @param child {module:tigerface-display.DisplayObject}
+     * @package
      */
     _onAddChild_(child) {
         this.emit(Event.NodeEvent.CHILD_ADDED, child);
@@ -376,6 +376,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 添加至舞台时调用。覆盖超类方法，增加遍历孩子
+     * @package
      */
     _onAppendToStage_() {
         super._onAppendToStage_();
@@ -387,6 +388,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 添加至层时调用。覆盖超类方法，增加遍历孩子
+     * @package
      */
     _onAppendToLayer_() {
         super._onAppendToLayer_();
@@ -398,6 +400,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 状态改变时调用。覆盖超类方法，增加遍历孩子
+     * @package
      */
     _onStateChanged_() {
         super._onStateChanged_();
@@ -409,6 +412,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 位置改变时调用。覆盖超类方法，增加遍历孩子
+     * @package
      */
     _onPosChanged_() {
         super._onPosChanged_();
@@ -420,6 +424,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 缩放时调用，覆盖超类方法，增加遍历孩子
+     * @package
      */
     _onScaleChanged_() {
         super._onScaleChanged_();
@@ -431,6 +436,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 透明度改变时调用，覆盖超类方法，增加遍历孩子
+     * @package
      */
     _onAlphaChanged_() {
         super._onAlphaChanged_();
@@ -442,6 +448,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 旋转时调用，覆盖超类方法，增加遍历孩子
+     * @package
      */
     _onRotationChanged_() {
         super._onRotationChanged_();
@@ -453,6 +460,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 可见性改变时调用，覆盖超类方法，增加遍历孩子
+     * @package
      */
     _onVisibleChanged_() {
         super._onVisibleChanged_();
@@ -464,6 +472,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 原点改变时调用，覆盖超类方法，增加遍历孩子
+     * @package
      */
     _onOriginChanged_() {
         super._onOriginChanged_();
@@ -475,6 +484,7 @@ class DisplayObjectContainer extends DisplayObject {
 
     /**
      * 尺寸改变时调用，覆盖超类方法，增加遍历孩子
+     * @package
      */
     _onSizeChanged_() {
         super._onSizeChanged_();

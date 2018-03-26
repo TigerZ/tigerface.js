@@ -125,7 +125,7 @@ class CanvasLayer extends DomLayer {
 
     /**
      * 设置 Dom 的大小
-     * @private
+     * @package
      */
     _onSizeChanged_() {
         // retina 属性设置为 true，效果是：尺寸指定为 devicePixelRatio 倍，再用 css 缩至原始尺寸
@@ -172,7 +172,7 @@ class CanvasLayer extends DomLayer {
 
     /**
      * 绘制画布自身前的处理：缩放，设置透明度
-     * @private
+     * @package
      */
     _onBeforePaint_() {
         const g = this.graphics;
@@ -186,7 +186,7 @@ class CanvasLayer extends DomLayer {
 
     /**
      * 绘制画布自身后的处理：绘制子对象
-     * @private
+     * @package
      */
     _onAfterPaint_() {
         const g = this.graphics;
@@ -218,7 +218,7 @@ class CanvasLayer extends DomLayer {
 
     /**
      * 通用绘制方法，绘制前判断是否改变
-     * @private
+     * @package
      */
     _paint_() {
         if (!this.redrawAsNeeded || this.isChanged) {
@@ -248,7 +248,7 @@ class CanvasLayer extends DomLayer {
     /**
      * 接收 Canvas Dom 的鼠标单击事件，遍历内部对象，调用 _onLayerMouseClick_ 方法，由其自己判断是否发送内部鼠标单击事件
      * @param e {object}
-     * @private
+     * @package
      */
     // _onMouseEvents_(e) {
     //     this.logger.debug('_onMouseEvents_()', e);

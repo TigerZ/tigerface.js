@@ -9,12 +9,16 @@ tigerface.js 的当前版本，正在重构中，代码和文档都在变化中�
 
 tigerface.js 是一个 javascript 开发架构，用于更简便地实现高度交互性的前端界面，适用开发从动画片头至完整图形设计器的各种场合。包含可独立使用的多个部分，包括：事件、图形、绘制、显示、网络。tigerface.js 用 es6 编写，使用 webpack + babel 编译。
 
+**文档在哪里？**
+
+[入门教程](tutorials/readme.md) 在 tutorials 目录下。
+
+API 参考文档需要自己生成。项目根目录里有个 mac 的执行文件叫 buildDoc.sh 用于生成 jsdoc 文档，windows 环境开发者可参考内部的命令。
+
 **怎么开始？**
 
-在开始前先理解一些 tigerface.js 架构的基础知识吧，请[[阅读教程](tutorials/readme.md)]。
-
 建议使用 tigerface-cli 工具搭建项目脚手架，先运行范例，看到效果后，再开始写自己的模块。
-由于我的环境是 mac，如果你使用 windows 可能略有不同。
+由于我的环境是 mac，如果你使用 windows 环境也基本类似。
 
 
 1. 安装 tigerface-cli

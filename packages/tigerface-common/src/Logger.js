@@ -5,7 +5,14 @@ function isBrowserEnv() {
     return typeof window !== 'undefined' && window === global;
 }
 
-const config = require('../log-config.json');
+let config = {};
+if (isBrowserEnv()) {
+// eslint-disable-next-line global-require,import/no-unresolved
+    config = require('log-config.json');
+} else {
+// eslint-disable-next-line import/no-dynamic-require,global-require
+    config = require(`${process.cwd()}/log-config.json`);
+}
 
 const OFF = 0;
 const ERROR = 1;

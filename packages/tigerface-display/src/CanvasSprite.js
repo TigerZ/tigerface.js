@@ -36,7 +36,8 @@ class CanvasSprite extends Sprite {
     initCover() {
         if (!this._cover_) {
             this._cover_ = new DomCover({
-                style: { background: 'rgba(0,0,0,0.2)' },
+                style: { background: 'rgba(0,0,0,0.5)' },
+                pos: { x: 0, y: 0 },
                 visible: false,
                 title: 'cover',
             });
@@ -44,12 +45,12 @@ class CanvasSprite extends Sprite {
             this.resetCover();
 
             if (this.stage) {
-                this.stage.addCover(this._cover_);
+                this.stage._addCover_(this._cover_);
                 this.resetCover();
             }
 
             this.on(Event.APPEND_TO_STAGE, () => {
-                this.stage.addCover(this._cover_);
+                this.stage._addCover_(this._cover_);
                 this.resetCover();
             });
         }
@@ -99,7 +100,7 @@ class CanvasSprite extends Sprite {
     //  * 将坐标转换为 Canvas 的内部坐标后，遍历全部内部 Context2DSprint 对象，调用此方法。
     //  * @param pos
     //  * @param digits
-    //  * @private
+    //  * @package
     //  */
     // _onLayerMouseMove_(pos, digits) {
     //     // 把全局坐标，转化为本级坐标
@@ -141,7 +142,7 @@ class CanvasSprite extends Sprite {
 
     /**
      * 绘制自身前处理：缩放，旋转，平移原点
-     * @private
+     * @package
      */
     _onBeforePaint_() {
         const g = this.graphics;
@@ -161,7 +162,7 @@ class CanvasSprite extends Sprite {
 
     /**
      * 绘制自身后处理：还原原点平移，绘制子对象
-     * @private
+     * @package
      */
     _onAfterPaint_() {
         const g = this.graphics;

@@ -41,6 +41,9 @@ class DisplayObject extends EventDispatcher {
 
         super(props);
 
+        // 设置传入的初始值
+        this.assign(options);
+
         // 基本状态属性
         this.state = {
             pos: { x: 0, y: 0 },
@@ -56,10 +59,6 @@ class DisplayObject extends EventDispatcher {
         this._parent_ = undefined;
         this._layer_ = undefined;
         this._stage_ = undefined;
-
-
-        // 设置传入的初始值
-        this.assign(options);
     }
 
     //* ********************************** 坐标 **************************************
@@ -418,7 +417,7 @@ class DisplayObject extends EventDispatcher {
 
     /**
      * 完整绘制方法，此方法会被主循环调用
-     * @private
+     * @package
      */
     _paint_() {
         const g = this.graphics;
@@ -551,7 +550,7 @@ class DisplayObject extends EventDispatcher {
      * @returns {module:tigerface-shape.Point} 坐标
      * @package
      */
-    getStagePos(localPos, digits = 0) {
+    getStagePos(localPos = { x: 0, y: 0 }, digits = 0) {
         let pos = this.getOuterPos({ x: localPos.x + this.origin.x, y: localPos.y + this.origin.y }, digits);
         if (this.parent && !this.parent.isStage) {
             pos = this.parent.getStagePos(pos, digits);

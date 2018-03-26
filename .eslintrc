@@ -4,7 +4,6 @@
     "browser": true,
     "node": true
   },
-//  "extends": "eslint-config-airbnb",
   "extends": [
 //    "eslint:recommended",
     "eslint-config-airbnb",

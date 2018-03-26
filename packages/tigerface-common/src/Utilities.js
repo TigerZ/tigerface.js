@@ -5,14 +5,6 @@
 import $ from 'jquery';
 import Logger from './Logger';
 
-
-/**
- * 字符数组，算法备用
- * @type {string[]}
- * @private
- */
-
-
 /**
  * 工具对象
  * @memberof module:tigerface-common
@@ -447,7 +439,6 @@ const Utilities = {
      * @param pageX
      * @param pageY
      * @returns {{x:number, y:number}}
-     * @private
      */
     pagePosToDomPos(dom, pageX, pageY) {
         const pos = $(dom).offset();

@@ -8,7 +8,7 @@ import DisplayObjectContainer from './DisplayObjectContainer';
 /**
  * 精灵类，有交互能力的显示对象
  *
- * @extends DisplayObjectContainer
+ * @extends module:tigerface-display.DisplayObjectContainer
  * @author 张翼虎 <zhangyihu@gmail.com>
  * @memberof module:tigerface-display
  */
@@ -16,26 +16,28 @@ class Sprite extends DisplayObjectContainer {
     static logger = Logger.getLogger(Sprite.name);
 
     /**
-     * 构造器
-     *
-     * @param options 选项
+     * @param [options] {object} 可选初始属性，属性缺省值
+     *  {
+     *      activeMouseCheck: true, // sprite 状态变化时是否主动监测鼠标，在鼠标指针静止时，也会触发 MouseOver MouseOut MouseMove 等事件
+     *  }
      */
-    constructor(options = undefined) {
+    constructor(options) {
         const props = {
             clazzName: Sprite.name,
+            activeMouseCheck: true,
             _bounds_: [],
         };
 
         super(props);
 
+        this.assign(options);
+
+        this._dragging_ = false;
+
         this.on(Event.APPEND_TO_STAGE, () => {
             // 拖拽时，移动设备的缺省触摸事件会干扰显示对象的移动，所以用下面侦听器，在拖拽时禁止缺省的 TOUCH_MOVE 事件传递。
             this.stage.on(Event.TouchEvent.TOUCH_MOVE, this._disableTouchMove_);
         });
-
-        this._dragging_ = false;
-
-        this.assign(options);
     }
 
     /** *************************************************************************
@@ -45,10 +47,10 @@ class Sprite extends DisplayObjectContainer {
      ************************************************************************* */
 
     /**
-     * 添加边界多边形<br>
-     *     边界可由一个或多个多边形组成，bounds可以是一个shape对象或多个shape对象组成的数组
+     * 添加边界多边形
+     * 边界可由一个或多个多边形组成，bounds可以是一个shape对象或多个shape对象组成的数组
      *
-     * @param shape 边界多边形
+     * @param shape {module:tigerface-shape.Shape} 边界多边形
      */
     addBound(shape) {
         this._bounds_.push(shape);
@@ -57,6 +59,10 @@ class Sprite extends DisplayObjectContainer {
         return this;
     }
 
+    /**
+     * 移除边界多边形
+     * @param i {number} 边界多边形顺序
+     */
     removeBound(i) {
         if (this._bounds_[i]) {
             this._bounds_.splice(i, 1);
@@ -65,13 +71,21 @@ class Sprite extends DisplayObjectContainer {
         this.postChange('removeBound');
     }
 
+    set bounds(v) {
+        this.logger.error('不允许设置边界多边形容器');
+    }
+
+    /**
+     * 边界多边形
+     * @member {Array}
+     */
     get bounds() {
         return this._bounds_;
     }
 
     /**
      * 获取边界多边形的外接矩形
-     * @private
+     * @package
      */
     _createBoundingRect_() {
         let left = 100000;
@@ -108,7 +122,8 @@ class Sprite extends DisplayObjectContainer {
     }
 
     /**
-     * 获取边界多边形的外接矩形（缓存）
+     * 获取外接矩形（缓存）
+     * @member {module:tigerface-shape.Rectangle}
      */
     get boundingRect() {
         if (!this._boundingRect_) {
@@ -117,12 +132,21 @@ class Sprite extends DisplayObjectContainer {
         return this._boundingRect_;
     }
 
+    /**
+     * 当尺寸改变时调用。覆盖超类方法，增加重新计算外接矩形
+     * @package
+     */
     _onSizeChanged_() {
         super._onSizeChanged_();
         this._createBoundingRect_();
     }
 
+    /**
+     * 当边界矩形改变时执行
+     * @package
+     */
     _onBoundingRectChanged_() {
+        this.postChange('bounding rect changed');
     }
 
     /** *************************************************************************
@@ -134,8 +158,9 @@ class Sprite extends DisplayObjectContainer {
     /**
      * 返回点与感应区的碰撞测试结果
      *
-     * @param point 测试点
-     * @returns boolean 测试结果
+     * @param point {module:tigerface-shape.Point|{x:number,y:number}} 测试点
+     * @returns {boolean} 测试结果
+     * @package
      */
     _pointInBounds_(point) {
         // 先做外接矩形碰撞测试，排除远点
@@ -154,40 +179,54 @@ class Sprite extends DisplayObjectContainer {
         return false;
     }
 
-    /**
-     * 获得鼠标坐标
-     * @returns {Point|{x: *, y: *}}
-     */
     get mousePos() {
         return { x: this._mouseX_, y: this._mouseY_ };
     }
 
     /**
-     *
-     * @param pos {Point|{x: *, y: *}}
+     * 鼠标坐标
+     * @member {module:tigerface-shape.Point|{x:number,y:number}}
      */
     set mousePos(pos) {
         this._mouseX_ = pos.x;
         this._mouseY_ = pos.y;
     }
 
+    /**
+     * 鼠标 X 轴坐标
+     * @member {number}
+     */
     get mouseX() {
         return this._mouseX_;
     }
 
+    /**
+     * 鼠标 Y 轴坐标
+     * @member {number}
+     */
     get mouseY() {
         return this._mouseY_;
     }
 
+    /**
+     * 状态改变时执行，覆盖超类方法，增加主动读取鼠标坐标
+     * @package
+     */
     _onStateChanged_() {
         super._onStateChanged_();
-        if (this.parent) {
+        if (this.activeMouseCheck && this.parent) {
             this._onStageMouseMove_(this.parent.mousePos, 2);
         }
     }
 
-    _checkMouseInside_(pos, digits) {
-        const mouse = this.getInnerPos(pos, digits);
+    /**
+     * 检测鼠标是否在范围内，内部会触发 MOUSE_OVER MOUSE_OUT 事件
+     * @param pos {module:tigerface-shape.Point|{x:number,y:number} 外部位置坐标
+     * @return {boolean} 是否在范围内
+     * @package
+     */
+    _checkMouseInside_(pos) {
+        const mouse = this.getInnerPos(pos, 2);
         this.mousePos = mouse;
         // 记录之前的状态，用来判断是否第一次进入
         const beforeInside = this._mouseInside_;
@@ -211,8 +250,13 @@ class Sprite extends DisplayObjectContainer {
         return false;
     }
 
-    _onStageMouseMove_(pos, digits = 2) {
-        if (this._checkMouseInside_(pos, digits)) {
+    /**
+     * 舞台有鼠标移动时调用
+     * @param pos {module:tigerface-shape.Point|{x:number,y:number}}
+     * @package
+     */
+    _onStageMouseMove_(pos) {
+        if (this._checkMouseInside_(pos)) {
             // 发送鼠标移动事件
             // this.logger.debug('鼠标指针移动', this.mousePos, this);
             this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
@@ -221,11 +265,17 @@ class Sprite extends DisplayObjectContainer {
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
             const child = this.children[i];
             if (child instanceof Sprite) {
-                child._onStageMouseMove_(this.mousePos, 2);
+                child._onStageMouseMove_(this.mousePos);
             }
         }
     }
 
+    /**
+     * 舞台鼠标事件发生时调用
+     * @param eventName 事件名，事件数据
+     * @param data 事件数据，包含 pos
+     * @package
+     */
     _onStageMouseEvents_(eventName, data) {
         // 如果鼠标移出 stage，那么向全体下级推送 MOUSE_OUT 事件。因为 canvas 或 sprite 可能大于 stage。
         if (eventName === Event.MouseEvent.MOUSE_OUT || data.pos === undefined || this._checkMouseInside_(data.pos, 2)) {
@@ -256,42 +306,57 @@ class Sprite extends DisplayObjectContainer {
      *
      ************************************************************************* */
 
+    /**
+     * 启用拖拽
+     */
     enableDrag() {
         this.addEventListener(Event.MouseEvent.MOUSE_DOWN, this._startDrag_);
         this.addEventListener(Event.MouseEvent.MOUSE_UP, this._endDrag_);
     }
 
+    /**
+     * 禁用拖拽
+     */
     disableDrag() {
         this.removeEventListener(Event.MouseEvent.MOUSE_DOWN, this._startDrag_);
         this.removeEventListener(Event.MouseEvent.MOUSE_UP, this._endDrag_);
     }
 
+    /**
+     * 开始拖拽，鼠标按下事件侦听器
+     * @package
+     */
     _startDrag_ = () => {
+        if (this._dragging_) return;
         this.parent.addEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
 
-        if (!this._dragging_) {
-            this.logger.debug('开始拖拽 _startDrag_(): mousePos=', this.mousePos);
-            this._dragging_ = true;
-            const m = this.getOuterPos(this.mousePos);
-            this._dragX_ = m.x - this.x;
-            this._dragY_ = m.y - this.y;
-            this.dispatchEvent(Event.MouseEvent.DRAG_START);
-            return true;
-        }
-
-        return false;
+        this.logger.debug('开始拖拽 _startDrag_(): mousePos=', this.mousePos);
+        this._dragging_ = true;
+        const m = this.getOuterPos(this.mousePos);
+        this._dragX_ = m.x - this.x;
+        this._dragY_ = m.y - this.y;
+        this.dispatchEvent(Event.MouseEvent.DRAG_START);
     };
 
+    /**
+     * 停止拖拽，鼠标放开事件侦听器
+     * @package
+     */
     _endDrag_ = () => {
-        if (this._dragging_) {
-            this.logger.debug('停止拖拽 _endDrag_()');
-            this._dragging_ = false;
-            this.dispatchEvent(Event.MouseEvent.DRAG_END);
-            return true;
-        }
-        return false;
+        if (!this._dragging_) return;
+
+        this.parent.removeEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
+
+        this.logger.debug('停止拖拽 _endDrag_()');
+        this._dragging_ = false;
+        this.dispatchEvent(Event.MouseEvent.DRAG_END);
     };
 
+    /**
+     * 拖拽移动，鼠标移动事件侦听器
+     * @param e 事件
+     * @package
+     */
     _move_ = (e) => {
         // this.logger.debug(`_move_()`);
         if (this._dragging_) {
@@ -305,6 +370,11 @@ class Sprite extends DisplayObjectContainer {
         }
     };
 
+    /**
+     * 禁止触摸移动事件，触摸移动事件侦听器
+     * @return {boolean}
+     * @package
+     */
     _disableTouchMove_ = () => {
         if (this._dragging_) return false;
         return true;
@@ -312,102 +382,212 @@ class Sprite extends DisplayObjectContainer {
 
     //* ******************************** Event *********************************
 
+    /**
+     * 失去焦点事件侦听器（添加）
+     * @member {function}
+     */
     set onBlur(func) {
         this.on(Event.BLUR, func);
     }
 
+    /**
+     * 获得焦点事件侦听器（添加）
+     * @member {function}
+     */
     set onFocus(func) {
         this.on(Event.FOCUS, func);
     }
 
+    /**
+     * 尺寸改变事件侦听器（添加）
+     * @member {function}
+     */
     set onResize(func) {
         this.on(Event.SIZE_CHANGED, func);
     }
 
     //* ******************************** Key Event *********************************
 
+    /**
+     * 键盘按下事件侦听器（添加）
+     * @member {function}
+     */
     set onKeyDown(func) {
         this.on(Event.KeyEvent.KEY_DOWN, func);
     }
 
+    /**
+     * 键盘松开事件侦听器（添加）
+     * @member {function}
+     */
     set onKeyUp(func) {
         this.on(Event.KeyEvent.KEY_UP, func);
     }
 
+    /**
+     * 键盘按住事件侦听器（添加）
+     * @member {function}
+     */
     set onKeyPress(func) {
         this.on(Event.KeyEvent.KEY_PRESS, func);
     }
 
     //* ******************************** Mouse Event *********************************
 
+    /**
+     * 鼠标按下事件侦听器（添加）
+     * @member {function}
+     */
     set onMouseDown(func) {
         this.on(Event.MouseEvent.MOUSE_DOWN, func);
     }
 
+    /**
+     * 鼠标放开事件侦听器（添加）
+     * @member {function}
+     */
     set onMouseUp(func) {
         this.on(Event.MouseEvent.MOUSE_UP, func);
     }
 
+    /**
+     * 鼠标移动事件侦听器（添加）
+     * @member {function}
+     */
     set onMouseMove(func) {
         this.on(Event.MouseEvent.MOUSE_MOVE, func);
     }
 
+    /**
+     * 鼠标移出事件侦听器（添加）
+     * @member {function}
+     */
     set onMouseOut(func) {
         this.on(Event.MouseEvent.MOUSE_OUT, func);
     }
 
+    /**
+     * 鼠标移入事件侦听器（添加）
+     * @member {function}
+     */
     set onMouseOver(func) {
         this.on(Event.MouseEvent.MOUSE_OVER, func);
     }
 
+    /**
+     * 鼠标单击事件侦听器（添加）
+     * @member {function}
+     */
     set onClick(func) {
         this.on(Event.MouseEvent.CLICK, func);
     }
 
+    /**
+     * 鼠标双击事件侦听器（添加）
+     * @member {function}
+     */
     set onDoubleClick(func) {
         this.on(Event.MouseEvent.DOUBLE_CLICK, func);
     }
 
+    /**
+     * 鼠标右键单击事件侦听器（添加）
+     * @member {function}
+     */
     set onContextMenu(func) {
         this.on(Event.MouseEvent.CONTEXT_MENU, func);
     }
 
+    /**
+     * 拖拽开始事件侦听器（添加）
+     * @member {function}
+     */
     set onDragStart(func) {
         this.on(Event.MouseEvent.DRAG_START, func);
     }
 
+    /**
+     * 拖拽结束事件侦听器（添加）
+     * @member {function}
+     */
     set onDragEnd(func) {
         this.on(Event.MouseEvent.DRAG_END, func);
     }
 
+    /**
+     * 拖拽移动事件侦听器（添加）
+     * @member {function}
+     */
     set onDrag(func) {
         this.on(Event.MouseEvent.DRAG, func);
     }
 
     //* ******************************** Touch Event *********************************
 
+    /**
+     * 触摸开始事件侦听器（添加）
+     * @member {function}
+     */
     set onTouchStart(func) {
         this.on(Event.TouchEvent.TOUCH_START, func);
     }
 
+    /**
+     * 触摸移动事件侦听器（添加）
+     * @member {function}
+     */
     set onTouchMove(func) {
         this.on(Event.TouchEvent.TOUCH_MOVE, func);
     }
 
+    /**
+     * 触摸结束事件侦听器（添加）
+     * @member {function}
+     */
     set onTouchEnd(func) {
         this.on(Event.TouchEvent.TOUCH_END, func);
     }
 
+    /**
+     * 触摸取消事件侦听器（添加）
+     * @member {function}
+     */
     set onTouchCancel(func) {
         this.on(Event.TouchEvent.TOUCH_CANCEL, func);
     }
 
+    /**
+     * 触摸"开始捏"事件侦听器（添加）
+     * @member {function}
+     */
     set onTouchStartPinch(func) {
         this.on(Event.TouchEvent.TOUCH_START_PINCH, func);
     }
 
+    /**
+     * 触摸"捏过程"事件侦听器（添加）
+     * @member {function}
+     */
     set onTouchMovePinch(func) {
         this.on(Event.TouchEvent.TOUCH_MOVE_PINCH, func);
+    }
+
+    //* ******************************** loop Event *********************************
+
+    /**
+     * 重绘事件侦听器（添加）
+     * @member {function}
+     */
+    set onRedraw(func) {
+        this.on(Event.REDRAW, func);
+    }
+
+    /**
+     * 进入帧事件侦听器（添加）
+     * @member {function}
+     */
+    set onEnterFrame(func) {
+        this.on(Event.ENTER_FRAME, func);
     }
 }
 

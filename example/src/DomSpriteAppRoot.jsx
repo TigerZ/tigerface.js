@@ -11,11 +11,10 @@ class DemoLayer extends DomLayer {
         });
         this.assign(opts);
         this.enableDrag();
-        this.origin = { x: 50, y: 25 };
         this.pos = { x: 200, y: 150 };
         // this.scale = { x: 2, y: 1 };
         // this.step = 1;
-        this.rotation = 45;
+        // this.rotation = 45;
         this.num = 900000;
     }
 
@@ -25,7 +24,7 @@ class DemoLayer extends DomLayer {
         // this.originX += this.step;
         // this.num += -1;
         // if (this.num > 0) {
-        this.rotation += 1;
+
         // }
     }
 }
@@ -38,10 +37,11 @@ class DemoCanvasSprite extends CanvasSprite {
         });
         this.assign(opts);
         this.addBound(new Rectangle(0, 0, 100, 50));
+        this.origin = { x: 50, y: 25 };
         this.initCover();
 
         this.onDoubleClick = () => {
-            // this.cover.visible = true;
+            this.cover.visible = true;
         };
         // this.mouseInside = false;
         this.on(Event.MouseEvent.MOUSE_OVER, () => {
@@ -53,19 +53,20 @@ class DemoCanvasSprite extends CanvasSprite {
             this.postChange();
         });
         this.on(Event.MouseEvent.MOUSE_MOVE, () => {
-            this.postChange();
+            // this.postChange();
         });
     }
 
     paint() {
         const g = this.graphics;
         if (this.mouseInside) {
-            g.fillStyle = 'rgba(255,0,0,0.8)';
-        } else {
             g.fillStyle = 'rgba(255,255,0,0.8)';
+        } else {
+            g.fillStyle = 'rgba(0,255,0,0.8)';
         }
         g.drawRectangle(this.boundingRect, g.DrawStyle.FILL);
         g.drawPoint(this.mousePos, 5, g.PointStyle.DEFAULT);
+        this.rotation += 1;
     }
 }
 
@@ -87,9 +88,9 @@ class DomSpriteAppRoot extends React.Component {
     render() {
         return (
             <Stage id="stage" style={StageStyle} width={640} height={480}>
-                <Tag.Layer style={DomStyle} width={100} height={50} clazz={DemoLayer}>
-                    <Tag.Surface width={100} height={50} style={{ backgroundColor: 'rgba(0,255,255,1)' }}>
-                        <Tag.Sprite width={100} height={50} clazz={DemoCanvasSprite} />
+                <Tag.Layer style={DomStyle} clazz={DemoLayer}>
+                    <Tag.Surface width={200} height={200} style={{ backgroundColor: 'rgba(0,255,255,1)' }}>
+                        <Tag.Sprite x={100} y={100} width={100} height={50} clazz={DemoCanvasSprite} />
                     </Tag.Surface>
                 </Tag.Layer>
             </Stage>

@@ -84,7 +84,7 @@ this.logger.error('Hi, 这是红色的错误');
     
 ![Chrome 日志过滤](./img/chrome_log_filter.png "Chrome 日志过滤")
 
-* 配置 log-config.json 文件
+### 配置 log-config.json 文件
 
 log-config.json 是 Logger 的配置文件，放在项目根目录。编辑此文件，可以更精确的控制日志输出。
 

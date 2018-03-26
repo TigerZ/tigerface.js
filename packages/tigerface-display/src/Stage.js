@@ -7,7 +7,7 @@ import { DomEventAdapter } from "../../tigerface-event";
 /**
  * 舞台
  *
- * @extends DomSprite
+ * @extends module:tigerface-display.DomSprite
  * @author 张翼虎 <zhangyihu@gmail.com>
  * @memberof module:tigerface-display
  */
@@ -15,17 +15,21 @@ class Stage extends DomSprite {
     static logger = Logger.getLogger(Stage.name);
 
     /**
-     * 构建舞台
-     * @constructor
-     * @param options 可选项
-     * @param dom 舞台节点, 缺省是 document
+     * @param options {object} 可选项
+     *```
+     *{
+     *   fps: 60, // 每秒60帧
+     *   preventDefault: true,
+     *}
+     *```
+     *
+     * @param dom 指定舞台 Dom 节点
      */
-    constructor(options = undefined, dom = undefined) {
+    constructor(options, dom) {
         const props = {
             clazzName: Stage.name,
             fps: 60, // 每秒60帧
             preventDefault: true,
-            style: { position: DomSprite.Position.RELATIVE },
         };
 
         super(props, dom);
@@ -75,6 +79,12 @@ class Stage extends DomSprite {
         this.on(Event.MouseEvent.MOUSE_OUT, e => this._onMouseEvents_(e));
     }
 
+    /**
+     * 添加子对象前调用，覆盖超类方法
+     * @param child {module:tigerface-display.DisplayObject} 子对象
+     * @return {boolean} 是否允许添加
+     * @package
+     */
     _onBeforeAddChild_(child) {
         if (!child.isLayer) {
             this.logger.warn('添加失败，Stage 上只能放置 DomLayer 或者 Canvas Layer 的实例');
@@ -83,6 +93,11 @@ class Stage extends DomSprite {
         return true;
     }
 
+    /**
+     * Dom 鼠标移动事件侦听器
+     * @param e {object} 事件数据
+     * @package
+     */
     _onMouseMove_(e) {
         this.mousePos = e.pos;
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
@@ -93,6 +108,11 @@ class Stage extends DomSprite {
         }
     }
 
+    /**
+     * Dom 鼠标事件侦听器
+     * @param e {object} 事件数据
+     * @package
+     */
     _onMouseEvents_(e) {
         this.mousePos = e.pos;
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
@@ -103,6 +123,12 @@ class Stage extends DomSprite {
         }
     }
 
+    /**
+     * Dom 检查帧速是否设置合理
+     * @param v {number} 帧数
+     * @return {number} 过滤后的帧数
+     * @private
+     */
     _checkFPS_(v) {
         // 帧数控制在至少 12 帧
         if (v < 12) {
@@ -115,6 +141,10 @@ class Stage extends DomSprite {
         return v;
     }
 
+    /**
+     * 帧数
+     * @member {number}
+     */
     set fps(v) {
         this.props.fps = this._checkFPS_(v);
         this.logger.info(`舞台帧速率设置为 ${this.fps}`);
@@ -131,23 +161,33 @@ class Stage extends DomSprite {
         return this.props.fps;
     }
 
-    addCover(cover) {
+    /**
+     * 增加封面 Dom
+     * @param cover
+     * @package
+     */
+    _addCover_(cover) {
         if (cover.isCover) {
+            this.dom.appendChild(cover.dom);
             this._covers_.push(cover);
+            this._onCoversChanged_();
         }
     }
 
+    /**
+     * 封面容器改变时调用，计算封面 z 轴坐标
+     * @private
+     */
     _onCoversChanged_() {
-        super._onChildrenChanged_();
-        if (this.children.length > 1) {
-            for (let i = 0; i < this.children.length; i += 1) {
-                const child = this.children[i];
-                child.setStyle({ 'z-index': (i * 10) + 10 });
-            }
-        }
+        this._covers_.forEach((cover, i) => {
+            cover.setStyle({ 'z-index': (i + this.children.length) * 10 });
+        });
     }
 
-
+    /**
+     * 签名
+     * @private
+     */
     _signing_() {
         const sign = 'Paint by TigerFace.js 0.10 - tigerface.org';
         const devicePixelRatio = window.devicePixelRatio || 1;
