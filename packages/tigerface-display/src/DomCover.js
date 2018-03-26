@@ -36,6 +36,18 @@ class DomCover extends DomSprite {
     set visible(v) {
         this.logger.error('请使用 this.stage.showCover 方法');
     }
+
+    show() {
+        this.dom.disabled = false;
+        this.state.visible = true;
+        this.setStyle({ visibility: 'visible' });
+    }
+
+    hide() {
+        this.dom.disabled = true;
+        this.state.visible = false;
+        this.setStyle({ visibility: 'hidden' });
+    }
 }
 
 export default DomCover;

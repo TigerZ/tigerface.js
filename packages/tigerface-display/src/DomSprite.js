@@ -197,19 +197,6 @@ class DomSprite extends Sprite {
     }
 
     /**
-     * 位置坐标，覆盖超类的属性
-     * @member {module:tigerface-display.Point|{x:number,y:number}}
-     */
-    set pos(pos) {
-        super.pos = pos;
-        this.style = { position: 'absolute' };
-    }
-
-    get pos() {
-        return super.pos;
-    }
-
-    /**
      * Dom 特有的边界获取方法，如果存在图形边界，返回图形边界数组，否则，返回边框图形
      * @returns {array}
      */

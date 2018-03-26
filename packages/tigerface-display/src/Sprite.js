@@ -275,7 +275,7 @@ class Sprite extends DisplayObjectContainer {
         if (this._checkMouseInside_()) {
             // 发送鼠标移动事件
             // this.logger.debug('鼠标指针移动', this.mousePos, this);
-            this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
+            this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos })
         }
 
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
@@ -304,31 +304,12 @@ class Sprite extends DisplayObjectContainer {
 
             // 本级事件转发
             this.dispatchEvent(eventName, { pos: this.mousePos });
-
             // 向下级传播
             for (let i = this.children.length - 1; i >= 0; i -= 1) {
                 const child = this.children[i];
                 if (child instanceof Sprite) {
                     this.logger.debug('_onStageMouseEvents_', eventName, data.pos, child);
                     child._onStageMouseEvents_(eventName, { pos: this.mousePos });
-                }
-            }
-        }
-    }
-
-    _onStageSingleTouchEvents_(eventName, data) {
-        this.mousePos = this.getInnerPos(data.pos, 2);
-        // 如果鼠标移出 stage，那么向全体下级推送 MOUSE_OUT 事件。因为 canvas 或 sprite 可能大于 stage。
-        if (this._checkMouseInside_()) {
-            // 本级事件转发
-            this.dispatchEvent(eventName, { pos: this.mousePos });
-
-            // 向下级传播
-            for (let i = this.children.length - 1; i >= 0; i -= 1) {
-                const child = this.children[i];
-                if (child instanceof Sprite) {
-                    this.logger.debug('_onStageTouchEvents_', eventName, data.pos, child);
-                    child._onStageSingleTouchEvents_(eventName, { pos: this.mousePos });
                 }
             }
         }

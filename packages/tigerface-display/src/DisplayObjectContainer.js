@@ -411,6 +411,13 @@ class DisplayObjectContainer extends DisplayObject {
         });
     }
 
+    involvedChange() {
+        super.involvedChange();
+        this.children.forEach((child) => {
+            child.involvedChange();
+        });
+    }
+
     /**
      * 位置改变时调用。覆盖超类方法，增加遍历孩子
      * @package

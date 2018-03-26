@@ -94,8 +94,8 @@ class DisplayObject extends EventDispatcher {
     set pos(pos) {
         if (T.assignEqual(this.pos, pos)) return;
         Object.assign(this.state.pos, pos);
-        this._onPosChanged_();
         this.postChange('pos', this.pos);
+        this._onPosChanged_();
     }
 
     get pos() {
@@ -350,7 +350,7 @@ class DisplayObject extends EventDispatcher {
      * @param [log] {...string} 状态改变原因
      */
     postChange(...log) {
-        // if (log.length && log[0]) this.logger.debug('状态改变', ...log);
+        if (log.length && log[0]) this.logger.debug('状态改变', ...log);
         if (this.isChanged) return;
         this._changed_ = true;
         this.dispatchEvent(Event.STATE_CHANGED);
@@ -362,9 +362,13 @@ class DisplayObject extends EventDispatcher {
      * @param [log] {...string} 状态改变原因
      */
     involvedChange(...log) {
-        // if (log.length && log[0]) this.logger.debug('牵连状态改变', ...log);
+        if (log.length && log[0]) this.logger.debug('牵连状态改变', ...log);
         if (this.isChanged) return;
         this._changed_ = true;
+        this._onInvolvedChange_();
+    }
+
+    _onInvolvedChange_() {
     }
 
     /**

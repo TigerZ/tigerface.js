@@ -40,11 +40,16 @@ class DemoCanvasSprite extends CanvasSprite {
         this.addBound(new Rectangle(0, 0, 100, 50));
         this.origin = { x: 50, y: 25 };
 
-        const $input = $('<input tabindex="2" style="border:0;height:50px;text-align:center;width:100%;outline:none;font-size:16px"/>');
-        $input.keyup((e) => {
-            if (e.keyCode === 13) {
-                this.complateInput($(e.currentTarget).val());
-            }
+        const $input = $('<input tabindex="2" style="border:0;height:50px;width:100%;font-size:16px"/>');
+        $input.change((e) => {
+            // if (e.keyCode === 13) {
+                setTimeout(() => {
+                    $input.blur();
+                }, 300);
+            // }
+        });
+        $input.blur((e) => {
+            this.complateInput($(e.currentTarget).val());
         });
         const $cover = $('<div tabindex="1"></div>').append($input).focus(() => $input.focus());
 

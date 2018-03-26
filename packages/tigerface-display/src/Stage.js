@@ -78,8 +78,6 @@ class Stage extends DomSprite {
         this.on(Event.MouseEvent.MOUSE_UP, e => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_OUT, e => this._onMouseEvents_(e));
 
-        this.on(Event.TouchEvent.TOUCH_START, e => this._onTouchEvents_(e));
-
         this.domCount = 0;
     }
 
@@ -110,6 +108,7 @@ class Stage extends DomSprite {
                 child._onStageMouseMove_(e.pos);
             }
         }
+        // this.postChange('stage mouse move');
     }
 
     /**
@@ -125,18 +124,7 @@ class Stage extends DomSprite {
                 child._onStageMouseEvents_(e.eventName, { pos: this.mousePos });
             }
         }
-    }
-
-    _onTouchEvents_(e) {
-        this.logger.debug('*************', e);
-        if (e.touchs && e.touchs.length === 1) {
-            [this.mousePos] = e.touchs;
-            this.children.forEach((child) => {
-                if (child instanceof Sprite) {
-                    child._onStageSingleTouchEvents_(e.eventName, { pos: this.mousePos });
-                }
-            });
-        }
+        // this.postChange('stage mouse event');
     }
 
     /**
@@ -207,15 +195,13 @@ class Stage extends DomSprite {
      */
     showCover(cover) {
         this._covers_.forEach((_cover) => {
-            _cover.setStyle({ visibility: 'hidden' });
+            _cover.hide();
         });
-        cover.state.visible = true;
-        cover.setStyle({ visibility: 'visible' });
+        cover.show();
     }
 
     hideCover(cover) {
-        cover.state.visible = false;
-        cover.setStyle({ visibility: 'hidden' });
+        cover.hide();
     }
 
     /**

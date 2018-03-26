@@ -41,17 +41,17 @@ class CanvasSprite extends Sprite {
                 title: 'cover',
             }, dom);
 
-            this.resetCover();
-
             if (this.stage) {
                 this.stage._addCover_(this._cover_);
-                this.resetCover();
             }
 
             this.on(Event.APPEND_TO_STAGE, () => {
                 this.stage._addCover_(this._cover_);
-                this.resetCover();
             });
+
+            this.onRedraw = () => {
+                this.resetCover();
+            };
         }
     }
 
@@ -71,11 +71,6 @@ class CanvasSprite extends Sprite {
 
     hideCover() {
         this.stage.hideCover(this.cover);
-    }
-
-    _onStateChanged_() {
-        super._onStateChanged_();
-        this.resetCover();
     }
 
     get cover() {
