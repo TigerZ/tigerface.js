@@ -3,7 +3,8 @@ import { DomLayer, CanvasSprite } from 'tigerface-display';
 import { Stage, Tag } from 'tigerface-react';
 import { Rectangle } from 'tigerface-shape';
 import { Event } from 'tigerface-event';
-import $ from 'jquery';
+
+const { $ } = global;
 
 class DemoLayer extends DomLayer {
     constructor(opts) {
@@ -40,13 +41,14 @@ class DemoCanvasSprite extends CanvasSprite {
         this.addBound(new Rectangle(0, 0, 100, 50));
         this.origin = { x: 50, y: 25 };
 
-        const $input = $('<input tabindex="2" style="border:0;height:50px;width:100%;font-size:16px"/>');
-        $input.change((e) => {
-            // if (e.keyCode === 13) {
-                setTimeout(() => {
-                    $input.blur();
-                }, 300);
-            // }
+        const $input = $('<input tabindex="2" style="border:0;outline:none;height:50px;width:100%;font-size:16px"/>');
+        $input.change(() => {
+            $input.blur();
+        });
+        $input.keydown((e) => {
+            if (e.keyCode === 13) {
+                $input.blur();
+            }
         });
         $input.blur((e) => {
             this.complateInput($(e.currentTarget).val());

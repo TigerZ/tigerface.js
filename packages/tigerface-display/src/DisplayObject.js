@@ -617,30 +617,6 @@ class DisplayObject extends EventDispatcher {
         return this.getInnerPos(layerPos, digits);
     }
 
-    // getLayerLocalPos(layerPos, digits = 0) {
-    //     // 寻找全部祖先
-    //     const ancestor = [];
-    //     let parent = this.parent;
-    //
-    //     // parent.layer == parent 意味着是最顶级了
-    //     while (parent && parent.layer !== parent) {
-    //         ancestor.unshift(parent);
-    //         parent = parent.parent;
-    //     }
-    //
-    //     // 遍历全部祖先，分级转换为相对坐标
-    //     let pos = layerPos;
-    //     for (let i = 0; i < ancestor.length; i += 1) {
-    //         pos = ancestor[i].getInnerPos(pos);
-    //         // 因为孩子的坐标是从origin点开始计算的，所以要先偏移origin的坐标
-    //         const o = ancestor[i].origin;
-    //         pos = pos.move(-o.x, -o.y);
-    //     }
-    //
-    //     // 最后转换自己的相对坐标
-    //     return this.getInnerPos(pos, digits);
-    // }
-
     /**
      * 舞台坐标转换内部坐标
      *

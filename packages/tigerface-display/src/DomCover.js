@@ -25,6 +25,10 @@ class DomCover extends DomSprite {
         }, this);
     }
 
+    reset(props) {
+        this.assign(props);
+    }
+
     get isCover() {
         return true;
     }
@@ -38,13 +42,11 @@ class DomCover extends DomSprite {
     }
 
     show() {
-        this.dom.disabled = false;
         this.state.visible = true;
         this.setStyle({ visibility: 'visible' });
     }
 
     hide() {
-        this.dom.disabled = true;
         this.state.visible = false;
         this.setStyle({ visibility: 'hidden' });
     }

@@ -1,10 +1,11 @@
 /**
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
-import $ from 'jquery';
 import { Utilities as T, Logger } from 'tigerface-common';
 import EventDispatcher from './EventDispatcher';
 import Event from './Event';
+
+const { $ } = global;
 
 /**
  * 判断是否支持触摸

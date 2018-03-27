@@ -1,11 +1,9 @@
-/* eslint-disable no-console */
-import colors from 'colors/safe';
-
+/* eslint-disable no-console,global-require */
 function isBrowserEnv() {
     return typeof window !== 'undefined' && window === global;
 }
 
-let config = {};
+let config;
 if (isBrowserEnv()) {
 // eslint-disable-next-line global-require,import/no-unresolved
     config = require('log-config.json');
@@ -14,25 +12,59 @@ if (isBrowserEnv()) {
     config = require(`${process.cwd()}/log-config.json`);
 }
 
-const OFF = 0;
-const ERROR = 1;
-const WARN = 2;
-const INFO = 3;
-const DEBUG = 4;
-const FULL = 99;
-
-const Level = {
-    OFF,
-    ERROR,
-    WARN,
-    INFO,
-    DEBUG,
-    FULL,
-};
-
 function now() {
     const d = new Date();
     return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}.${d.getMilliseconds()}`;
+}
+
+const Level = {
+    OFF: 0,
+    ERROR: 1,
+    WARN: 2,
+    INFO: 3,
+    DEBUG: 4,
+    FULL: 99,
+};
+
+function logout (logLevel, target, msg, ...others) {
+    if (isBrowserEnv()) {
+        switch (logLevel) {
+            case Level.DEBUG:
+                console.debug(`%c${now()} [Level.DEBUG] ${target}: ${msg}`, 'color:blue', ...others);
+                break;
+            case Level.INFO:
+                console.info(`%c${now()} [Level.INFO] ${target}: ${msg}`, 'color:green', ...others);
+                break;
+            case Level.WARN:
+                console.warn(`%c${now()} [Level.WARN] ${target}: ${msg}`, 'color:orange', ...others);
+                break;
+            case Level.ERROR:
+                throw new Error(`${now()} [Level.ERROR] ${target}: ${msg}`);
+                break;
+            default:
+                throw new Error(`不支持的 Logger 级别: ${logLevel}`);
+                break;
+        }
+    } else {
+        const colors = require('colors/safe');
+        switch (logLevel) {
+            case Level.DEBUG:
+                console.debug(colors.blue(`${now()} [Level.DEBUG] ${target}: ${msg}`), ...others);
+                break;
+            case Level.INFO:
+                console.info(colors.green(`${now()} [Level.INFO] ${target}: ${msg}`), ...others);
+                break;
+            case Level.WARN:
+                console.info(colors.green(`${now()} [Level.INFO] ${this.target}: ${msg}`), ...others);
+                break;
+            case Level.ERROR:
+                throw new Error(`${now()} [Level.ERROR] ${target}: ${msg}`);
+                break;
+            default:
+                throw new Error(`不支持的 Logger 级别: ${logLevel}`);
+                break;
+        }
+    }
 }
 
 function getClassLogLevel(clazzName) {
@@ -101,33 +133,9 @@ class Logger {
 
     static get LOG_LEVEL() {
         const envLevel = process.env.LOG_LEVEL ?
-            Level[process.env.LOG_LEVEL.toUpperCase()] : FULL;
-        const localLevel = config['log-level'] ? Level[config['log-level'].toUpperCase()] : FULL;
+            Level[process.env.LOG_LEVEL.toUpperCase()] : Level.FULL;
+        const localLevel = config['log-level'] ? Level[config['log-level'].toUpperCase()] : Level.FULL;
         return Math.min(envLevel, localLevel);
-    }
-
-
-    info(msg) {
-        if (this._isForbidden_(INFO)) return;
-        if (isBrowserEnv()) {
-            console.info(`%c${now()} [INFO] ${this.target}: ${msg}`, 'color:green');
-        } else {
-            console.info(colors.green(`${now()} [INFO] ${this.target}: ${msg}`));
-        }
-    }
-
-    warn(msg) {
-        if (this._isForbidden_(WARN)) return;
-        if (isBrowserEnv()) {
-            console.warn(`%c${now()} [WARN] ${this.target}: ${msg}`, 'color:orange');
-        } else {
-            console.warn(colors.yellow(`${now()} [WARN] ${this.target}: ${msg}`));
-        }
-    }
-
-    error(msg) {
-        // console.error(`${now()} [ERROR] ${this.target}: ${msg}`);
-        throw new Error(`${now()} [ERROR] ${this.target}: ${msg}`);
     }
 
     _isForbidden_(level) {
@@ -146,13 +154,24 @@ class Logger {
         return Logger.LOG_LEVEL < level;
     }
 
-    debug(...msg) {
-        if (this._isForbidden_(DEBUG)) return;
-        if (isBrowserEnv()) {
-            console.debug(`%c${now()} [DEBUG] ${this.target}:`, 'color:blue', ...msg);
-        } else {
-            console.debug(colors.blue(`${now()} [DEBUG] ${this.target}:`), ...msg);
-        }
+    info(msg, ...others) {
+        if (this._isForbidden_(Level.INFO)) return;
+        logout(Level.INFO, this.target, msg, ...others);
+    }
+
+    warn(msg, ...others) {
+        if (this._isForbidden_(Level.WARN)) return;
+        logout(Level.WARN, this.target, msg, ...others);
+    }
+
+    error(msg, ...others) {
+        if (this._isForbidden_(Level.ERROR)) return;
+        logout(Level.ERROR, this.target, msg, ...others);
+    }
+
+    debug(msg, ...others) {
+        if (this._isForbidden_(Level.DEBUG)) return;
+        logout(Level.DEBUG, this.target, msg, ...others);
     }
 
     debugTimingReset() {
@@ -165,22 +184,18 @@ class Logger {
         return t > 60000 ? '60s more' : `${t}ms`;
     }
 
-    debugTiming(...msg) {
-        if (this._isForbidden_(DEBUG)) return;
-        if (isBrowserEnv()) {
-            console.log(`%c${now()} (+${this.debugTimingReset()}) [DEBUG] ${this.target}:`, 'color:blue;font-weight:bold', ...msg);
-        } else {
-            console.log(colors.blue.bold(`${now()} (+${this.debugTimingReset()}) [DEBUG] ${this.target}:`), ...msg);
-        }
+    debugTiming(msg, ...others) {
+        if (this._isForbidden_(Level.DEBUG)) return;
+        logout(Level.DEBUG, this.target, msg, ...others);
     }
 
-    debugTimingBegin(...msg) {
+    debugTimingBegin(msg, ...others) {
         this.debugTimingReset();
-        this.debugTiming(...msg);
+        this.debugTiming(msg, ...others);
     }
 
-    debugTimingEnd(...msg) {
-        this.debugTiming(...msg);
+    debugTimingEnd(msg, ...others) {
+        this.debugTiming(msg, ...others);
         this.debugTimingReset();
     }
 }

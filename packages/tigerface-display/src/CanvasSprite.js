@@ -58,9 +58,8 @@ class CanvasSprite extends Sprite {
     resetCover() {
         if (!this._cover_ || !this._cover_.visible) return;
         const props = this.getBoundRectShadow();
+        this.cover.reset(props);
         this.logger.debug('resetCover', props);
-        this._cover_.assign(props);
-        this.logger.debug('重置封面Dom');
     }
 
     showCover() {
@@ -110,8 +109,7 @@ class CanvasSprite extends Sprite {
         g.globalCompositeOperation = 'source-over';
 
         // 遍历孩子，顺序与globalCompositeOperation的设置要匹配，这是的效果是后添加的在上面
-        for (let i = 0; i < this.children.length; i += 1) {
-            const child = this.children[i];
+        this.children.forEach((child) => {
             // 子元件可见才绘制
             if (child.visible) {
                 // 孩子会坐标转换、缩放及旋转，所以先保存上下文
@@ -126,7 +124,7 @@ class CanvasSprite extends Sprite {
                 // 恢复上下文
                 g.restore();
             }
-        }
+        });
 
         g.restore();
     }

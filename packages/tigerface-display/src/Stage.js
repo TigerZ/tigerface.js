@@ -1,8 +1,8 @@
 import { Utilities as T, Logger } from 'tigerface-common';
-import { Event, FrameEventGenerator } from 'tigerface-event';
+import { Event, FrameEventGenerator, DomEventAdapter } from 'tigerface-event';
 import DomSprite from './DomSprite';
 import Sprite from './Sprite';
-import { DomEventAdapter } from "../../tigerface-event";
+import DomCover from './DomCover';
 
 /**
  * 舞台
@@ -78,7 +78,7 @@ class Stage extends DomSprite {
         this.on(Event.MouseEvent.MOUSE_UP, e => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_OUT, e => this._onMouseEvents_(e));
 
-        this.domCount = 0;
+        this.domList = [];
     }
 
     /**
@@ -102,12 +102,11 @@ class Stage extends DomSprite {
      */
     _onMouseMove_(e) {
         this.mousePos = e.pos;
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            const child = this.children[i];
+        this.children.forEach((child) => {
             if (child instanceof Sprite) {
                 child._onStageMouseMove_(e.pos);
             }
-        }
+        });
         // this.postChange('stage mouse move');
     }
 
@@ -118,12 +117,11 @@ class Stage extends DomSprite {
      */
     _onMouseEvents_(e) {
         this.mousePos = e.pos;
-        for (let i = this.children.length - 1; i >= 0; i -= 1) {
-            const child = this.children[i];
+        this.children.forEach((child) => {
             if (child instanceof Sprite) {
                 child._onStageMouseEvents_(e.eventName, { pos: this.mousePos });
             }
-        }
+        });
         // this.postChange('stage mouse event');
     }
 
@@ -180,12 +178,21 @@ class Stage extends DomSprite {
      */
     _onCoversChanged_() {
         this._covers_.forEach((cover, i) => {
-            cover.setStyle({ 'z-index': (i + this.domCount) * 10 });
+            cover.setStyle({ 'z-index': ((i + this.domList.length) * 10) + 10 });
         });
     }
 
-    _onChildrenChanged_() {
-        super._onChildrenChanged_();
+    /**
+     * 注册下级 Dom，由 Stage 统一管理
+     * @param domSprite {module:tigerface-display.DomSprite}
+     * @private
+     */
+    _registerDom_(domSprite) {
+        if (domSprite instanceof DomCover || this.domList.indexOf(domSprite) >= 0) return;
+        this.domList.unshift(domSprite);
+        this.domList.forEach((sprite, i) => {
+            sprite.setStyle({ 'z-index': (i * 10) + 10 });
+        });
         this._onCoversChanged_();
     }
 
@@ -200,6 +207,10 @@ class Stage extends DomSprite {
         cover.show();
     }
 
+    /**
+     * 隐藏封面
+     * @param cover
+     */
     hideCover(cover) {
         cover.hide();
     }

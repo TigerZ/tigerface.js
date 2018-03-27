@@ -1,13 +1,15 @@
 import assert from 'assert';
-import {Event} from 'tigerface-event';
-import {Stage, CanvasLayer, DomSprite, CanvasSprite} from 'tigerface-display';
-import {JSDOM} from "jsdom";
+import { Event } from 'tigerface-event';
+import { Stage, CanvasLayer, DomSprite, CanvasSprite } from 'tigerface-display';
+import { JSDOM } from "jsdom";
+const jquery = require('jquery');
 
 const win = new JSDOM(`<!DOCTYPE html><div></div>`).window;
-const dom = win.document.querySelector('div');
-global.$ = require('jquery')(win);
+
+global.$ = jquery(win);
 global.window = win;
 global.document = win.document;
+
 
 describe('测试舞台对象 Stage', () => {
     it('初始化正常', () => {

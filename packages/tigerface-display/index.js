@@ -3,6 +3,7 @@
  */
 export { default as DisplayObject } from './src/DisplayObject';
 export { default as DisplayObjectContainer } from './src/DisplayObjectContainer';
+export { default as Sprite } from './src/Sprite';
 export { default as DomCover } from './src/DomCover';
 export { default as DomSprite } from './src/DomSprite';
 export { default as Stage } from './src/Stage';

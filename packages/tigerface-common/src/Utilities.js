@@ -2,9 +2,9 @@
 /**
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
-import $ from 'jquery';
 import Logger from './Logger';
 
+const G = global;
 /**
  * 工具对象
  * @memberof module:tigerface-common
@@ -14,15 +14,15 @@ const Utilities = {
 
     css(dom, name, value, autoPrefix) {
         if (value !== undefined) {
-            $(dom).css(name, value);
+            G.$(dom).css(name, value);
             if (autoPrefix) {
-                $(dom).css(`-webkit-${name}`, value);
-                $(dom).css(`-moz-${name}`, value);
-                $(dom).css(`-o-${name}`, value);
-                $(dom).css(`-ms-${name}`, value);
+                G.$(dom).css(`-webkit-${name}`, value);
+                G.$(dom).css(`-moz-${name}`, value);
+                G.$(dom).css(`-o-${name}`, value);
+                G.$(dom).css(`-ms-${name}`, value);
             }
         }
-        return $(dom).css(name);
+        return G.$(dom).css(name);
     },
 
     cssMerge(dom, css, autoPrefix) {
@@ -40,33 +40,33 @@ const Utilities = {
     },
 
     removeCss(dom, name, autoPrefix) {
-        $(dom).css(name, '');
+        G.$(dom).css(name, '');
         if (autoPrefix) {
-            $(dom).css(`-webkit-${name}`, '');
-            $(dom).css(`-moz-${name}`, '');
-            $(dom).css(`-o-${name}`, '');
-            $(dom).css(`-ms-${name}`, '');
+            G.$(dom).css(`-webkit-${name}`, '');
+            G.$(dom).css(`-moz-${name}`, '');
+            G.$(dom).css(`-o-${name}`, '');
+            G.$(dom).css(`-ms-${name}`, '');
         }
     },
 
     addClass(dom, name) {
-        return $(dom).addClass(name);
+        return G.$(dom).addClass(name);
     },
 
     removeClass(dom, name) {
-        return $(dom).removeClass(name);
+        return G.$(dom).removeClass(name);
     },
 
     attr(dom, name, value) {
         if (arguments.length === 2) {
-            $(dom).attr(name);
+            G.$(dom).attr(name);
         } else if (arguments.length === 3) {
-            $(dom).attr(name, value);
+            G.$(dom).attr(name, value);
         }
     },
 
     removeAttr(dom, name) {
-        $(dom).removeAttr(name);
+        G.$(dom).removeAttr(name);
     },
 
     /**
@@ -75,38 +75,38 @@ const Utilities = {
      * @returns {{x: number, y: number}}
      */
     pos(dom) {
-        const pos = $(dom).position();
+        const pos = G.$(dom).position();
         return { x: pos.left, y: pos.top };
     },
 
     size(dom) {
-        const $dom = $(dom);
+        const $dom = G.$(dom);
         // console.log("***********", dom.tagName, {width: $dom.width(), height: $dom.height()});
         return { width: $dom.width(), height: $dom.height() };
     },
 
     scrollTop(dom, value) {
         if (arguments.length === 1) {
-            $(dom).scrollTop();
+            G.$(dom).scrollTop();
             return;
         }
 
-        $(dom).scrollTop(value);
+        G.$(dom).scrollTop(value);
     },
 
     scrollLeft(dom, value) {
         if (arguments.length === 1) {
-            $(dom).scrollLeft();
+            G.$(dom).scrollLeft();
             return;
         }
-        $(dom).scrollLeft(value);
+        G.$(dom).scrollLeft(value);
     },
 
     data(dom, name, value) {
         if (value !== undefined) {
-            $(dom).data(name, value);
+            G.$(dom).data(name, value);
         } else {
-            $(dom).data(name);
+            G.$(dom).data(name);
         }
     },
 
@@ -441,7 +441,7 @@ const Utilities = {
      * @returns {{x:number, y:number}}
      */
     pagePosToDomPos(dom, pageX, pageY) {
-        const pos = $(dom).offset();
+        const pos = G.$(dom).offset();
         if (dom === document) {
             return { x: pageX, y: pageY };
         }
@@ -453,7 +453,7 @@ const Utilities = {
     },
 
     domPosToPagePos(dom, domX, domY) {
-        const pos = $(dom).offset();
+        const pos = G.$(dom).offset();
         if (dom === document) {
             return { x: domX, y: domY };
         }

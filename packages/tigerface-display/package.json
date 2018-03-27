@@ -14,10 +14,10 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-1": "^6.24.1",
-    "colors": "^1.2.1"
+    "colors": "^1.2.1",
+    "jquery": "^3.3.1"
   },
   "dependencies": {
-    "jquery": "^3.3.1",
     "tigerface-event": "^0.10.4",
     "tigerface-graphic": "^0.10.0"
   }

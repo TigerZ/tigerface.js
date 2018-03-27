@@ -189,8 +189,7 @@ class CanvasLayer extends DomLayer {
         g.globalCompositeOperation = 'source-over';
 
         // 遍历孩子，顺序与globalCompositeOperation的设置要匹配，这里的效果是后添加的在上面
-        for (let i = 0; i < this.children.length; i += 1) {
-            const child = this.children[i];
+        this.children.forEach((child) => {
             // 子元件可见才绘制
             if (child.visible) {
                 // 孩子会坐标转换、缩放及旋转，所以先保存上下文
@@ -205,7 +204,7 @@ class CanvasLayer extends DomLayer {
                 // 恢复上下文
                 g.restore();
             }
-        }
+        });
 
         g.restore();
     }
@@ -238,31 +237,6 @@ class CanvasLayer extends DomLayer {
             CanvasLayer.logger.debug('已停止重绘');
         }
     }
-
-    /**
-     * 接收 Canvas Dom 的鼠标单击事件，遍历内部对象，调用 _onLayerMouseClick_ 方法，由其自己判断是否发送内部鼠标单击事件
-     * @param e {object}
-     * @package
-     */
-    // _onMouseEvents_(e) {
-    //     this.logger.debug('_onMouseEvents_()', e);
-    //     switch (e.eventName) {
-    //         case Event.MouseEvent.MOUSE_OVER:
-    //             this._mouseInside_ = true;
-    //             this._checkingMouse_ = false;
-    //             break;
-    //         case Event.MouseEvent.MOUSE_OUT:
-    //             this._mouseInside_ = false;
-    //             this._checkingMouse_ = true;
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    //     for (let i = this.children.length - 1; i >= 0; i -= 1) {
-    //         const child = this.children[i];
-    //         child._onLayerMouseEvents_(e.eventName);
-    //     }
-    // }
 }
 
 export default CanvasLayer;

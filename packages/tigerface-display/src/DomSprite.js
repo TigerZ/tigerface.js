@@ -76,10 +76,10 @@ class DomSprite extends Sprite {
                 overflow: 'hidden', // 溢出隐藏
                 display: 'block',
                 outline: 'none', // 隐藏 focus 的方框
-                '-webkit-user-select': 'none',
-                '-moz-user-select': 'none',
-                '-ms-user-select': 'none',
-                'user-select': 'none',
+                // '-webkit-user-select': 'none',
+                // '-moz-user-select': 'none',
+                // '-ms-user-select': 'none',
+                // 'user-select': 'none',
             },
         }, options));
 
@@ -338,18 +338,6 @@ class DomSprite extends Sprite {
 
     /**
      *
-     * @package
-     */
-    _onChildrenChanged_() {
-        super._onChildrenChanged_();
-
-        this.children.forEach((child, i) => {
-            if (child instanceof DomSprite) child.setStyle({ 'z-index': (i * 10) + 10 });
-        });
-    }
-
-    /**
-     *
      * @param child {DisplayObject | DomSprite}
      * @returns {boolean}
      * @package
@@ -419,12 +407,17 @@ class DomSprite extends Sprite {
 
     _onAppendToStage_() {
         super._onAppendToStage_();
-        if (this.stage) this.stage.domCount += 1;
+        if (this.stage) {
+            this.stage._registerDom_(this);
+        }
     }
 
     _onRemoveChild_(child) {
         super._onRemoveChild_(child);
-        if (this.stage) this.stage.domCount -= 1;
+        if (this.stage) {
+            const idx = this.stage.domList.indexOf(child);
+            this.stage.domList.split(idx, 1);
+        }
     }
 }
 
