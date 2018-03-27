@@ -36,8 +36,6 @@ class Stage extends DomSprite {
 
         this.assign(options);
 
-        this._covers_ = [];
-
         // 定义 Dom 引擎
         this.domAdapter = new DomEventAdapter(this.dom, {
             preventDefault: this.preventDefault,
@@ -78,7 +76,66 @@ class Stage extends DomSprite {
         this.on(Event.MouseEvent.MOUSE_UP, e => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_OUT, e => this._onMouseEvents_(e));
 
-        this.domList = [];
+        this.childrenIndex = {
+            domList: [],
+            layers: [],
+            covers: [],
+            all: {},
+        };
+    }
+
+    get domList() {
+        return this.childrenIndex.domList;
+    }
+
+    get layers() {
+        return this.childrenIndex.layers;
+    }
+
+    get covers() {
+        return this.childrenIndex.covers;
+    }
+
+    addChild() {
+        this.logger.error('舞台对象请使用 addLayer 方法代替 addChild');
+    }
+
+    /**
+     * 获取层
+     * @param [name = 'main'] {string} 层名称
+     * @return {DomLayer|CanvasLayer}
+     */
+    getLayer(name = 'main') {
+        return this.layers[name];
+    }
+
+    /**
+     * 在全部下级对象中搜索
+     * @param key {string} name 或 uuid
+     * @return {*}
+     */
+    find(key) {
+        return this.childrenIndex.all[key];
+    }
+
+    /**
+     * 添加层
+     * @param layer {DomLayer|CanvasLayer} 层对象
+     * @param [name='main'] {string} 层名称
+     */
+    addLayer(layer, name) {
+        let _name = name;
+        if (!_name) {
+            _name = layer.name;
+            if (!_name) {
+                _name = 'main';
+            }
+        }
+        if (this.getLayer(_name)) this.logger.error(`添加层失败，舞台上已经存在，名为 "${_name}" 的层`);
+        this.layers[_name] = layer;
+        super.addChild(layer);
+        layer._appendToStage_(this);
+        this.logger.debug(`已添加名为 "${_name}" 的层`);
     }
 
     /**
@@ -165,9 +222,20 @@ class Stage extends DomSprite {
         if (cover.isCover) {
             cover.parent = this;
             this.dom.appendChild(cover.dom);
-            this._covers_.push(cover);
+            this.covers.push(cover);
+            this._registerIndex_(cover);
             this._onCoversChanged_();
         }
+    }
+
+    _registerIndex_(child) {
+        if (child.name && !this.childrenIndex.all[child.name]) this.childrenIndex.all[child.name] = child;
+        if (!this.childrenIndex.all[child.uuid]) this.childrenIndex.all[child.uuid] = child;
+    }
+
+    _unregisterIndex_(child) {
+        if (child.name && this.childrenIndex.all[child.name]) delete this.childrenIndex.all[child.name];
+        if (this.childrenIndex.all[child.uuid]) delete this.childrenIndex.all[child.uuid];
     }
 
     /**
@@ -175,7 +243,7 @@ class Stage extends DomSprite {
      * @private
      */
     _onCoversChanged_() {
-        this._covers_.forEach((cover, i) => {
+        this.covers.forEach((cover, i) => {
             cover.setStyle({ 'z-index': ((i + this.domList.length) * 10) + 10 });
         });
     }
@@ -185,13 +253,23 @@ class Stage extends DomSprite {
      * @param domSprite {module:tigerface-display.DomSprite}
      * @private
      */
-    _registerDom_(domSprite) {
-        if (domSprite instanceof DomCover || this.domList.indexOf(domSprite) >= 0) return;
-        this.domList.unshift(domSprite);
-        this.domList.forEach((sprite, i) => {
-            sprite.setStyle({ 'z-index': (i * 10) + 10 });
-        });
-        this._onCoversChanged_();
+    _register_(child) {
+        if (child instanceof DomCover) {
+            if (this.domList.indexOf(child) < 0) {
+                this.domList.unshift(child);
+                this.domList.forEach((sprite, i) => {
+                    sprite.setStyle({ 'z-index': (i * 10) + 10 });
+                });
+                this._onCoversChanged_();
+            }
+        }
+        this._registerIndex_(child);
+    }
+
+    _unregister_(child) {
+        const idx = this.domList.indexOf(child);
+        this.domList.split(idx, 1);
+        this._unregisterIndex_(child);
     }
 
     /**
@@ -199,7 +277,7 @@ class Stage extends DomSprite {
      * @param cover
      */
     showCover(cover) {
-        this._covers_.forEach((_cover) => {
+        this.covers.forEach((_cover) => {
             _cover.hide();
         });
         cover.show();

@@ -14,12 +14,15 @@ const stage = new Stage({
     },
 }, dom);
 
+// 如果不直接把 dom 传给 stage，可以让 stage 自己创建 dom，再获取
+// dom.appendChild(stage.dom);
+
 let speed = 1;
 let mouseInCanvas = false;
 
 // 外部设置方式
 const surface = new CanvasLayer();
-
+surface.name = 'surface';
 surface.on(Event.MouseEvent.MOUSE_MOVE, () => {
     mouseInCanvas = true;
 });
@@ -38,6 +41,7 @@ class Panel extends CanvasSprite {
         super(opt);
         this.enableDrag();
     }
+
     paint() {
         const g = this.graphics;
         g.textAlign = 'right';
@@ -108,7 +112,13 @@ class Windmill extends CanvasSprite {
     }
 }
 
-surface.addChild(new Panel().addChild(new Windmill()));
+const windmill = new Windmill();
 
-stage.addChild(surface);
+const panel = new Panel().addChild(windmill);
+
+stage.addLayer(surface.addChild(panel));
+
+setTimeout(() => {
+    stage.find(surface.name).stop();
+}, 5000);
 

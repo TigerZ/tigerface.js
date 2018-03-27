@@ -404,21 +404,6 @@ class DomSprite extends Sprite {
     clearTween() {
         T.removeCss(this.dom, 'transition', true);
     }
-
-    _onAppendToStage_() {
-        super._onAppendToStage_();
-        if (this.stage) {
-            this.stage._registerDom_(this);
-        }
-    }
-
-    _onRemoveChild_(child) {
-        super._onRemoveChild_(child);
-        if (this.stage) {
-            const idx = this.stage.domList.indexOf(child);
-            this.stage.domList.split(idx, 1);
-        }
-    }
 }
 
 export default DomSprite;

@@ -44,6 +44,7 @@ export const Mixin = {
      * 构造器
      */
     construct() {
+        this.targets = {};
     },
 
     /**
@@ -67,6 +68,37 @@ export const Mixin = {
             this._eventEmitter_.setMaxListeners(maxNum);
         }
         return this._eventEmitter_;
+    },
+
+    _getTargetListeners_(target) {
+        if (!this.targets[target]) {
+            this.targets[target] = [];
+        }
+        return this.targets[target];
+    },
+
+    /**
+     * 保存目标对象注册的事件侦听器，用于以后集中销毁
+     * @param target {object} 目标对象
+     * @param eventName {string} 事件名称
+     * @param listener {function} 侦听器
+     * @private
+     */
+    _saveTargetListener_(target, eventName, listener) {
+        const listeners = this._getTargetListeners_(target);
+        listeners.push({ target, eventName, listener });
+    },
+
+    /**
+     * 销毁目标对象注册的全部事件侦听器
+     * @param target {object} 目标对象
+     */
+    destroyTargetListeners(target) {
+        const listeners = this._getTargetPool_(target);
+        listeners.forEach((listener) => {
+            this.removeEventListener(listener.target, listener.eventName, listener.listener);
+        });
+        delete this.targets[target];
     },
 
     /**
@@ -115,10 +147,10 @@ export const Mixin = {
      * @param eventName {string} 事件名称
      * @param listener {function} 事件侦听器
      */
-    addEventListener(eventName, listener) {
+    addEventListener(eventName, listener, target) {
         if (!eventName) EventDispatcher.logger.error(`注册事件侦听器时，事件名称不能为 ${eventName}`);
         if (!listener || typeof listener !== 'function') EventDispatcher.logger.error('注册事件侦听器时，必须传入有效的 function 类型的侦听器');
-        this.on(eventName, listener);
+        this.on(eventName, listener, target);
     },
 
     /**
@@ -126,10 +158,12 @@ export const Mixin = {
      * @param eventName
      * @param listener
      */
-    on(eventName, listener) {
+    on(eventName, listener, target) {
         if (!this.containsListener(eventName, listener)) {
             this._getEmitter_().on(eventName, listener);
             EventDispatcher.logger.debug(`添加事件侦听器 [${eventName}]：`, listener);
+
+            if (target) this._saveTargetListener_(target, eventName, listener);
         }
     },
 
@@ -138,8 +172,8 @@ export const Mixin = {
      * @param eventName
      * @param listener
      */
-    addOneTimeEventListener(eventName, listener) {
-        this.once(eventName, listener);
+    addOneTimeEventListener(eventName, listener, target) {
+        this.once(eventName, listener, target);
     },
 
     /**
@@ -147,10 +181,12 @@ export const Mixin = {
      * @param eventName
      * @param listener
      */
-    once(eventName, listener) {
+    once(eventName, listener, target) {
         if (!this.containsListener(eventName, listener)) {
             this._getEmitter_().once(eventName, listener);
             EventDispatcher.logger.debug(`添加一次性事件侦听器 [${eventName}]：`, listener);
+
+            if (target) this._saveTargetListener_(target, eventName, listener);
         }
     },
 
@@ -160,7 +196,7 @@ export const Mixin = {
      * @param data 提交给事件的数据
      */
     dispatchEvent(eventName, data) {
-        if (!this._isNoise_(eventName)) this.logger.debug(`发布事件 ${eventName}`, data || '');
+
         this.emit(eventName, data);
         if (this.debugging && this.getEventSubscribers().length > 0) {
             EventDispatcher.logger.debug(`向事件 ${this.getEventSubscribers().length} 个订阅者转发事件`);
@@ -180,6 +216,7 @@ export const Mixin = {
      * @param data
      */
     emit(eventName, data) {
+        if (!this._isNoise_(eventName)) this.logger.debug(`发布事件 ${eventName}`, data || '');
         const e = {
             clazzName: 'Event',
             currentTarget: this,
@@ -218,8 +255,15 @@ export const Mixin = {
      * @param data {object}
      */
     dispatchAsyncEvent(eventName, data) {
-        // setTimeout(()=>this.emit(eventName, data), 10);
-        process.nextTick(() => this.emit(eventName, data));
+        this.asyncEmit(eventName, data);
+    },
+
+    asyncEmit(eventName, data) {
+        if (process && process.nextTick) {
+            process.nextTick(() => this.emit(eventName, data));
+        } else {
+            setTimeout(() => this.emit(eventName, data), 10);
+        }
         EventDispatcher.logger.debug(`已安排发送异步事件 [${eventName}] `, data);
     },
 

@@ -1,5 +1,6 @@
 {
   "log-level": "debug",
   "class-log-level": {
+    "Windmill":"off"
   }
 }

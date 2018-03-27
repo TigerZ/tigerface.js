@@ -13,6 +13,12 @@ class DomLayer extends DomSprite {
         this._layer_ = this;
         this.assign(options);
     }
+
+    addChild(child) {
+        super.addChild(child);
+        child._appendToLayer_(this);
+        return this;
+    }
 }
 
 export default DomLayer;

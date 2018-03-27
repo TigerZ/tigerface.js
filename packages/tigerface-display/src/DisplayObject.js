@@ -36,13 +36,14 @@ class DisplayObject extends EventDispatcher {
     constructor(options) {
         const props = {
             clazzName: DisplayObject.name,
-            uuid: T.uuid(),
         };
 
         super(props);
 
         // 设置传入的初始值
         this.assign(options);
+
+        this.uuid = T.uuid();
 
         // 基本状态属性
         this.state = {
@@ -424,10 +425,11 @@ class DisplayObject extends EventDispatcher {
      * @package
      */
     _paint_() {
-        const g = this.graphics;
-        // this.logger.debug(`重绘...`);
         // 为最高效率，对象可见，才进入
         if (!this.visible) return;
+
+        const g = this.graphics;
+        // this.logger.debug(`重绘...`);
 
         // 清除"状态已改变"标志
         this.clearChange();
@@ -673,8 +675,10 @@ class DisplayObject extends EventDispatcher {
         if (!this.parent) return;
         this.dispatchEvent(Event.APPEND_TO_PARENT);
         this.postChange('AppendToParent');
-        this._onAppendToLayer_();
-        this._onAppendToStage_();
+        // eslint-disable-next-line no-unused-expressions
+        this.layer;
+        // eslint-disable-next-line no-unused-expressions
+        this.stage;
     }
 
     /**
@@ -684,53 +688,44 @@ class DisplayObject extends EventDispatcher {
     get stage() {
         if (!this._stage_) {
             // 通过 parent 的 get 方法向上遍历
-            if (this.parent) this._stage_ = this.parent.stage;
+            if (this.parent) this._appendToStage_(this.parent.stage);
         }
         return this._stage_;
-    }
-
-    set stage(v) {
-        if (this.stage === v) return;
-        this._stage_ = v;
     }
 
     /**
      * 添加至舞台
      * @package
      */
-    _onAppendToStage_() {
-        if (!this._stage_ && this.stage && this.stage !== this) {
-            this.dispatchEvent(Event.APPEND_TO_STAGE);
-            this.postChange('AppendToStage');
-        }
+    _appendToStage_(stage) {
+        // 只有第一次添加舞台，才会执行
+        if (!stage || this._stage_) return;
+        this._stage_ = stage;
+        this.stage._register_(this);
+        this.dispatchEvent(Event.APPEND_TO_STAGE);
+        this.postChange('AppendToStage');
+        this.logger.debug('添加至舞台');
     }
 
     get layer() {
         if (!this._layer_) {
             // 通过 parent 的 get 方法向上遍历
-            if (this.parent) this._layer_ = this.parent.layer;
+            if (this.parent) this._appendToLayer_(this.parent.layer);
         }
         return this._layer_;
-    }
-
-    /**
-     * 层
-     * @member {(module:tigerface-display.DomSprite|module:tigerface-display.CanvasLayer)}
-     */
-    set layer(v) {
-        if (this.layer === v) return;
-        this._layer_ = v;
     }
 
     /**
      * 添加至层
      * @package
      */
-    _onAppendToLayer_() {
-        if (!this._layer_ && this.layer && this.layer !== this) {
-            this.dispatchEvent(Event.APPEND_TO_LAYER);
-            this.postChange('AppendToLayer');
-        }
+    _appendToLayer_(layer) {
+        if (!layer || this._layer_) return;
+        this._layer_ = layer;
+        if (layer.graphics) this._graphics_ = layer.graphics;
+        this.dispatchEvent(Event.APPEND_TO_LAYER);
+        this.postChange('AppendToLayer');
+        this.logger.debug('添加至层');
     }
 
     emit(...args) {

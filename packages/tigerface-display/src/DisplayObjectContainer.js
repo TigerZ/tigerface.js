@@ -325,6 +325,9 @@ class DisplayObjectContainer extends DisplayObject {
      * @package
      */
     _onRemoveChild_(child) {
+        if (this.stage) {
+            this.stage._unregister_(this);
+        }
         this.emit(Event.NodeEvent.CHILD_REMOVED, child);
     }
 
@@ -379,11 +382,13 @@ class DisplayObjectContainer extends DisplayObject {
      * 添加至舞台时调用。覆盖超类方法，增加遍历孩子
      * @package
      */
-    _onAppendToStage_() {
-        super._onAppendToStage_();
+    _appendToStage_(stage) {
+        if (!stage) return;
+        
+        super._appendToStage_(stage);
 
         this.children.forEach((child) => {
-            child._onAppendToStage_();
+            child._appendToStage_(stage);
         });
     }
 
@@ -391,11 +396,13 @@ class DisplayObjectContainer extends DisplayObject {
      * 添加至层时调用。覆盖超类方法，增加遍历孩子
      * @package
      */
-    _onAppendToLayer_() {
-        super._onAppendToLayer_();
+    _appendToLayer_(layer) {
+        if (!layer) return;
+
+        super._appendToLayer_(layer);
 
         this.children.forEach((child) => {
-            child._onAppendToLayer_();
+            child._appendToLayer_(layer);
         });
     }
 
@@ -405,7 +412,6 @@ class DisplayObjectContainer extends DisplayObject {
      */
     _onStateChanged_() {
         super._onStateChanged_();
-
         this.children.forEach((child) => {
             child.involvedChange();
         });

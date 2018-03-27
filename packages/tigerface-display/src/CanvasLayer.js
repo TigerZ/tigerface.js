@@ -41,24 +41,15 @@ class CanvasLayer extends DomLayer {
         this.graphics = new Graphics(this.canvas.getContext('2d'));
 
         // 下层显示对象通过此属性识别是否是上层 CanvasContainer 对象
-        this.layer = this;
-
-        // if (this.props.devicePixelRatio != 1)
-        //    this.setScale(this.props.devicePixelRatio, this.props.devicePixelRatio);
-
-        // this.on(Event.MouseEvent.CLICK, e => this._onMouseEvents_(e));
-        // this.on(Event.MouseEvent.DOUBLE_CLICK, e => this._onMouseEvents_(e));
-        // this.on(Event.MouseEvent.CONTEXT_MENU, e => this._onMouseEvents_(e));
-        // this.on(Event.MouseEvent.MOUSE_DOWN, e => this._onMouseEvents_(e));
-        // this.on(Event.MouseEvent.MOUSE_UP, e => this._onMouseEvents_(e));
-        // this.on(Event.MouseEvent.MOUSE_OUT, (e) => this._onMouseEvents_(e));
-        // this.on(Event.MouseEvent.MOUSE_OVER, (e) => this._onMouseEvents_(e));
+        this._layer_ = this;
 
         this.assign(T.merge({
             style: {
                 // backgroundColor: 'rgba(255,255,255,0.3)',
             },
         }, options));
+
+        this._pause_ = false;
     }
 
     set devicePixelRatio(v) {
@@ -143,8 +134,7 @@ class CanvasLayer extends DomLayer {
      */
     addChild(child) {
         super.addChild(child);
-        child.graphics = this.graphics;
-        child.layer = this;
+        child._appendToLayer_(this);
         return this;
     }
 
@@ -209,12 +199,20 @@ class CanvasLayer extends DomLayer {
         g.restore();
     }
 
+    stop() {
+        this._pause_ = true;
+    }
+
+    run() {
+        this._pause_ = false;
+    }
+
     /**
      * 通用绘制方法，绘制前判断是否改变
      * @package
      */
     _paint_() {
-        if (!this.redrawAsNeeded || this.isChanged) {
+        if (!this._pause_ && (!this.redrawAsNeeded || this.isChanged)) {
             if (!this._painting_) {
                 this._painting_ = true;
                 CanvasLayer.logger.debug('开始重绘');
