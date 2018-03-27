@@ -1,6 +1,6 @@
 {
   "name": "tigerface-react",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "colors": "^1.2.1"
   },
   "dependencies": {
-    "tigerface-display": "^0.10.0",
+    "tigerface-display": "^0.10.4",
     "fbjs": "^0.8.16",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

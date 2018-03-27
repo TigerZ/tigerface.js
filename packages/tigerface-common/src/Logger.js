@@ -26,7 +26,9 @@ const Level = {
     FULL: 99,
 };
 
-function logout (logLevel, target, msg, ...others) {
+const colors = isBrowserEnv() ? {} : require('colors/safe');
+
+function logout(logLevel, target, msg, ...others) {
     if (isBrowserEnv()) {
         switch (logLevel) {
             case Level.DEBUG:
@@ -40,13 +42,10 @@ function logout (logLevel, target, msg, ...others) {
                 break;
             case Level.ERROR:
                 throw new Error(`${now()} [Level.ERROR] ${target}: ${msg}`);
-                break;
             default:
                 throw new Error(`不支持的 Logger 级别: ${logLevel}`);
-                break;
         }
     } else {
-        const colors = require('colors/safe');
         switch (logLevel) {
             case Level.DEBUG:
                 console.debug(colors.blue(`${now()} [Level.DEBUG] ${target}: ${msg}`), ...others);
@@ -59,10 +58,8 @@ function logout (logLevel, target, msg, ...others) {
                 break;
             case Level.ERROR:
                 throw new Error(`${now()} [Level.ERROR] ${target}: ${msg}`);
-                break;
             default:
                 throw new Error(`不支持的 Logger 级别: ${logLevel}`);
-                break;
         }
     }
 }

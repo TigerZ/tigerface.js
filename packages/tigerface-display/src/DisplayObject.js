@@ -378,6 +378,7 @@ class DisplayObject extends EventDispatcher {
     update(options) {
         super.update(options);
         // 强制重绘
+        this.logger.debug('重新读取传入的参数，强制重绘', options);
         this.postChange('update');
     }
 

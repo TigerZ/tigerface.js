@@ -20,7 +20,7 @@ class SimpleSpriteComponent extends BaseComponent {
 
     render() {
         const { props } = this;
-        const { instance, canvasProps, name } = this.getSpriteInfo();
+        const { instance, canvasProps } = this.getSpriteInfo();
         return (
             <Stage {...props}>
                 <Tag.Surface {...canvasProps}>
@@ -34,12 +34,7 @@ class SimpleSpriteComponent extends BaseComponent {
 export default function withSimpleSpriteComponent(instance, canvasProps) {
     return class extends SimpleSpriteComponent {
         getSpriteInfo() {
-            let name;
-            // eslint-disable-next-line prefer-destructuring
-            if (instance.name) name = instance.name;
-            else if (instance.clazzName) name = instance.clazzName;
-            else name = '';
-            return { instance, canvasProps, name };
+            return { instance, canvasProps };
         }
     };
 }

@@ -62,8 +62,8 @@ class BarChartSprite extends CanvasSprite {
     }
 
     update(options) {
-        super.update(options);
         this.h0 = 0;
+        super.update(options);
     }
 
     paint() {

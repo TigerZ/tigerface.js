@@ -35,7 +35,7 @@ class AppRoot extends React.Component {
     constructor(...args) {
         super(...args);
         this.state = {
-            data: Object.assign([], demoData),
+            data: [...demoData],
             options: {
                 speed: 3,
                 font: '12px Kaiti',
@@ -49,9 +49,9 @@ class AppRoot extends React.Component {
         if (data.length > 1) {
             data.pop();
         } else {
-            data = Object.assign([], demoData);
+            data = demoData;
         }
-        this.setState({ data });
+        this.setState({ data: [...data] });
     };
 
     render() {

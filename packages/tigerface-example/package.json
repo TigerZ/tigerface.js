@@ -1,6 +1,6 @@
 {
   "name": "tigerface-example",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -38,6 +38,6 @@
     "webpack-dev-server": "3.0.0"
   },
   "dependencies": {
-    "tigerface-react": "^0.10.0"
+    "tigerface-react": "^0.10.3"
   }
 }

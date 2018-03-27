@@ -107,7 +107,6 @@ class Stage extends DomSprite {
                 child._onStageMouseMove_(e.pos);
             }
         });
-        // this.postChange('stage mouse move');
     }
 
     /**
@@ -122,7 +121,6 @@ class Stage extends DomSprite {
                 child._onStageMouseEvents_(e.eventName, { pos: this.mousePos });
             }
         });
-        // this.postChange('stage mouse event');
     }
 
     /**

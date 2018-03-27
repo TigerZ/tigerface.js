@@ -1,6 +1,6 @@
 {
   "name": "tigerface-display",
-  "version": "0.10.3",
+  "version": "0.10.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "jquery": "^3.3.1"
   },
   "dependencies": {
-    "tigerface-event": "^0.10.4",
-    "tigerface-graphic": "^0.10.0"
+    "tigerface-event": "^0.10.6",
+    "tigerface-graphic": "^0.10.2"
   }
 }
