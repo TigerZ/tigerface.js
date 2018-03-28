@@ -1,14 +1,18 @@
 function drawPolygon(shape, props = {}) {
-    const { fillStyle, strokeStyle, lineWidth } = props;
+    const { fillStyle, lineWidth = 1 } = props;
+    let { strokeStyle } = props;
+    if (!fillStyle && !strokeStyle) strokeStyle = 'black';
+
     this.save();
+    this.beginPath();
 
     this.lineJoin = 'round';
     this.lineCap = 'round';
+
     const points = shape.getVertexes();
     let p1 = points[0];
     let p2;
 
-    this.beginPath();
     this.moveTo(p1.x, p1.y);
     // 注意：下面for循环的边界故意越界，因为第一点既是起始端点又是结束端点。但获取端点时，一定要用[i %
     // this.points.length]来获取
@@ -18,9 +22,7 @@ function drawPolygon(shape, props = {}) {
         p1 = p2;
     }
 
-    if (lineWidth) {
-        this.lineWidth = lineWidth;
-    }
+    this.lineWidth = lineWidth;
 
     if (fillStyle) {
         this.fillStyle = fillStyle;

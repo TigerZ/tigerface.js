@@ -1,22 +1,30 @@
-import Graphics from './Graphics';
+function drawCircle(circle, props = {}) {
+    const {
+        fillStyle,
+    } = props;
 
-function drawCircle(circle, drawStyle) {
+    let { strokeStyle } = props;
+
+    if (!fillStyle && !strokeStyle) strokeStyle = 'black';
+
     const center = circle.p0;
 
+    this.save();
     this.beginPath();
+
     this.arc(center.x, center.y, circle.radius, 0, Math.PI * 2);
+
+    if (fillStyle) {
+        this.fillStyle = fillStyle;
+        this.fill();
+    }
+    if (strokeStyle) {
+        this.strokeStyle = strokeStyle;
+        this.stroke();
+    }
+
     this.closePath();
-
-    if (drawStyle === undefined) {
-        drawStyle = Graphics.DrawStyle.DEFAULT;
-    }
-
-    if (drawStyle === Graphics.DrawStyle.FILL || drawStyle === Graphics.DrawStyle.STROKE_FILL) {
-        if (this.autoApply) this.fill();
-    }
-    if (drawStyle === Graphics.DrawStyle.STROKE || drawStyle === Graphics.DrawStyle.STROKE_FILL) {
-        if (this.autoApply) this.stroke();
-    }
+    this.restore();
 }
 
 export default drawCircle;

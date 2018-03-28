@@ -2,19 +2,23 @@ function drawText(text, props = {}) {
     const {
         x = 0,
         y = 0,
-        font = '12px default',
-        fillStyle,
+        font = '14px system',
         strokeStyle,
         textAlign = 'left',
         textBaseline = 'bottom',
+        lineWidth = 1,
     } = props;
+
+    let { fillStyle } = props;
+
+    if (!fillStyle && !strokeStyle) fillStyle = 'black';
 
     this.save();
 
     this.font = font;
     this.textAlign = textAlign;
     this.textBaseline = textBaseline;
-
+    this.lineWidth = lineWidth;
     if (strokeStyle) {
         this.strokeStyle = strokeStyle;
         this.strokeText(text, x, y);

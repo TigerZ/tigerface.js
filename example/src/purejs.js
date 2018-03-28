@@ -118,7 +118,7 @@ class Windmill extends CanvasSprite {
                 fillStyle,
             });
         });
-        g.drawPoint(this.origin, { radius: 5, fillStyle });
+        g.drawPoint(this.origin, { radius: 5, pointStyle: g.PointStyle.ROUND_PLUS });
         this.rotation += -speed;
     }
 }

@@ -1,10 +1,14 @@
 function drawRectangle(rectangle, props = {}) {
-    const { fillStyle, strokeStyle } = props;
+    const { fillStyle, lineWidth = 1 } = props;
+    let { strokeStyle } = props;
+    if (!fillStyle && !strokeStyle) strokeStyle = 'black';
 
     this.save();
     this.beginPath();
 
     this.rect(rectangle.left, rectangle.top, rectangle.width, rectangle.height);
+
+    this.lineWidth = lineWidth;
 
     if (fillStyle) {
         this.fillStyle = fillStyle;

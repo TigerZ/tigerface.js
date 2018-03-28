@@ -430,8 +430,7 @@ class Polygon extends Shape {
      * @param precision
      * @returns {Polygon}
      */
-    convertRounded(radius, precision) {
-        (precision !== undefined) || (precision = 10);
+    convertRounded(radius, precision = 10) {
         let points = this.getVertexes();
         let newPoints = [];
         let p1, p2;

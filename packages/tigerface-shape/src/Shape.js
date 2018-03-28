@@ -102,6 +102,13 @@ class Shape {
     clone() {
         this.logger.error("此方法必须被覆盖");
     }
+
+    /**
+     * 获取全部顶点，用于转换多边形
+     */
+    getVertexes() {
+        this.logger.error("此方法必须被覆盖");
+    }
 }
 
 export default Shape;
