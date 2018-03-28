@@ -30,5 +30,17 @@ width 和 height 与在 style 里设置 width 和 height 一样。
 
 参数里的 style 就是 css 样式，可以在这里定义 stage 的 css 外观。
 
+### DOM 事件
+
+tigerface.js 只在 Stage 上接收系统的 DOM 事件，内部的全部显示对象，
+包括 DomSprite 都是通过计算后生成的内部事件。
+
+### 对象搜索
+
+每个放置在舞台上的对象，无论多少层，都可以通过舞台的 find 方法找到。
+
+如果对象有唯一的 name 属性，那么可以用 find(name) 查找。注意：如果 name 有重复，只能找到第一个对象。
+
+更安全的做法是用每个对象都有的 uuid 属性。
 
 [下一章 层](layer.md)

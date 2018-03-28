@@ -18,17 +18,28 @@ function now() {
 }
 
 const Level = {
-    OFF: 0,
-    ERROR: 1,
-    WARN: 2,
-    INFO: 3,
-    DEBUG: 4,
+    OFF: 1,
+    ERROR: 2,
+    WARN: 3,
+    INFO: 4,
+    DEBUG: 5,
     FULL: 99,
 };
 
 const colors = isBrowserEnv() ? {} : require('colors/safe');
 
+function exclude(msg) {
+    if (typeof msg !== 'string') return false;
+    const keywords = config.exclude || [];
+    for (let i = 0; i < keywords.length; i += 1) {
+        const keyword = keywords[i];
+        if (msg.search(keyword) >= 0) return true;
+    }
+    return false;
+}
+
 function logout(logLevel, target, msg, ...others) {
+    if (exclude(msg)) return;
     if (isBrowserEnv()) {
         switch (logLevel) {
             case Level.DEBUG:
@@ -130,12 +141,13 @@ class Logger {
 
     static get LOG_LEVEL() {
         const envLevel = process.env.LOG_LEVEL ?
-            Level[process.env.LOG_LEVEL.toUpperCase()] : Level.FULL;
-        const localLevel = config['log-level'] ? Level[config['log-level'].toUpperCase()] : Level.FULL;
+            Level[process.env.LOG_LEVEL.toUpperCase()] : Level.ERROR;
+        const localLevel = config['log-level'] ? Level[config['log-level'].toUpperCase()] : Level.ERROR;
         return Math.min(envLevel, localLevel);
     }
 
     _isForbidden_(level) {
+        if (!this.debugging) return true;
         const targetLevel = getClassLogLevel(this.target);
 
         if (targetLevel >= 0) {

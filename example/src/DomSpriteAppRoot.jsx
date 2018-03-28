@@ -84,16 +84,19 @@ class DemoCanvasSprite extends CanvasSprite {
     paint() {
         const g = this.graphics;
         if (this.mouseInside) {
-            g.fillStyle = 'rgba(255,255,0,0.8)';
+            g.drawRectangle(this.boundingRect, { fillStyle: 'rgba(255,255,0,0.8)' });
         } else {
-            g.fillStyle = 'rgba(0,255,0,0.8)';
+            g.drawRectangle(this.boundingRect, { fillStyle: 'rgba(0,255,0,0.8)' });
         }
-        g.drawRectangle(this.boundingRect, g.DrawStyle.FILL);
-        // g.drawPoint(this.mousePos, 5, g.PointStyle.DEFAULT);
-        g.textAlign = 'center';
-        g.textBaseline = 'middle';
-        g.fillStyle = 'black';
-        g.drawText(this.text, { x: 50, y: 25 }, '16px Hei', g.DrawStyle.FILL);
+
+        g.drawText(this.text, {
+            x: 50,
+            y: 25,
+            font: '16px Hei',
+            textAlign: 'center',
+            textBaseline: 'middle',
+            fillStyle: 'blue',
+        });
         // this.rotation += 1;
     }
 }
@@ -106,24 +109,16 @@ const DomStyle = {
     backgroundColor: 'rgba(255,0,0,0.3)',
 };
 
-/**
- * User: zyh
- * Date: 2018/3/18.
- * Time: 13:29.
- */
-class DomSpriteAppRoot extends React.Component {
-
-    render() {
-        return (
-            <Stage id="stage" style={StageStyle} width={640} height={480}>
-                <Tag.Layer style={DomStyle} clazz={DemoLayer}>
-                    <Tag.Surface width={200} height={200} style={{ backgroundColor: 'rgba(0,255,255,1)' }}>
-                        <Tag.Sprite x={100} y={100} width={100} height={50} clazz={DemoCanvasSprite} />
-                    </Tag.Surface>
-                </Tag.Layer>
-            </Stage>
-        );
-    }
+function DomSpriteAppRoot() {
+    return (
+        <Stage id="stage" style={StageStyle} width={640} height={480}>
+            <Tag.Layer style={DomStyle} clazz={DemoLayer}>
+                <Tag.Surface width={200} height={200} style={{ backgroundColor: 'rgba(0,255,255,1)' }}>
+                    <Tag.Sprite x={100} y={100} width={100} height={50} clazz={DemoCanvasSprite} />
+                </Tag.Surface>
+            </Tag.Layer>
+        </Stage>
+    );
 }
 
 export default DomSpriteAppRoot;

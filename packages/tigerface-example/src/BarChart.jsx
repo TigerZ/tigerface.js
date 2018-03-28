@@ -97,34 +97,37 @@ class BarChartSprite extends CanvasSprite {
             ]);
         });
 
-        g.textBaseline = 'middle';
+        const textBaseline = 'middle';
 
         rects.forEach(([bar, name, num], idx) => {
             g.lineWidth = 1;
             // g.fillStyle = 'rgba(0,0,255,0.5)';
             // g.strokeStyle = 'rgba(0,0,255,0.8)';
-            g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
-            g.strokeStyle = g.fillStyle;
 
-            g.textAlign = 'right';
+            const fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+
             g.drawText(name, {
                 x: this.config.paddingLeft,
                 y: bar.top + (this.config.unit / 2),
-            }, this.config.font, g.DrawStyle.FILL);
+                font: this.config.font,
+                textAlign: 'end',
+                fillStyle,
+                textBaseline,
+            });
 
             g.drawRectangle(
                 bar,
-                g.DrawStyle.STROKE_FILL,
+                { fillStyle },
             );
-            g.lineWidth = 2;
-            // g.save();
-            // g.flipH(this.height);
-            g.textAlign = 'left';
+
             g.drawText(num, {
                 x: bar.left + (bar.width + (this.config.xSpace * 2)),
                 y: bar.top + (this.config.unit / 2),
-            }, this.config.font, g.DrawStyle.FILL);
-            // g.restore();
+                font: this.config.font,
+                textAlign: 'start',
+                textBaseline,
+                fillStyle,
+            });
         });
 
         // 绘制图例
@@ -133,16 +136,22 @@ class BarChartSprite extends CanvasSprite {
         rects.forEach(([bar, name, num], idx) => {
             const str = `${name} [${num}]`;
             g.lineWidth = 1;
-            g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
-            g.strokeStyle = g.fillStyle;
+            const fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+            const strokeStyle = fillStyle;
             // g.drawPoint(p1);
             const { width: w } = g.measureText(str);
             const left = (idx % 4) * 90;
             const top = 205 + (Math.floor(idx / 4) * 20);
 
-            g.drawRectangle(new Square(left, top, 10), g.DrawStyle.STROKE_FILL);
-            g.textBaseline = 'top';
-            g.drawText(str, { x: left + 10 + this.config.xSpace, y: top }, this.config.font, g.DrawStyle.FILL);
+            g.drawRectangle(new Square(left, top, 10), { fillStyle });
+
+            g.drawText(str, {
+                x: left + 10 + this.config.xSpace,
+                y: top,
+                font: this.config.font,
+                textBaseline: 'top',
+                fillStyle,
+            });
         });
 
         this.h0 += this.config.speed;

@@ -208,10 +208,6 @@ class DisplayObject extends EventDispatcher {
 
     //* ********************************** 可见 **************************************
 
-    /**
-     * 可见性
-     * @member {boolean}
-     */
     set visible(visible) {
         if (T.assignEqual(this.visible, visible)) return;
         this.state.visible = visible;
@@ -219,6 +215,10 @@ class DisplayObject extends EventDispatcher {
         this.postChange('visible', this.visible);
     }
 
+    /**
+     * 可见性
+     * @member {boolean}
+     */
     get visible() {
         return this.state.visible;
     }

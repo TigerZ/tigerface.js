@@ -2,7 +2,6 @@ import { Utilities as T, Logger } from 'tigerface-common';
 import { Event, FrameEventGenerator, DomEventAdapter } from 'tigerface-event';
 import DomSprite from './DomSprite';
 import Sprite from './Sprite';
-import DomCover from './DomCover';
 
 /**
  * 舞台
@@ -96,8 +95,55 @@ class Stage extends DomSprite {
         return this.childrenIndex.covers;
     }
 
-    addChild() {
-        this.logger.error('舞台对象请使用 addLayer 方法代替 addChild');
+    set rotation(rotation) {
+        if (rotation) this.logger.error('舞台不能旋转');
+    }
+
+    get rotation() {
+        return super.rotation;
+    }
+
+    //
+    set pos(pos) {
+        if (pos.x || pos.y) this.logger.error('舞台不能移动');
+    }
+
+    get pos() {
+        return super.pos;
+    }
+
+    set alpha(alpha) {
+        if (alpha !== 1) this.logger.error('舞台不能设置透明度');
+    }
+
+    get alpha() {
+        return super.alpha;
+    }
+
+    set scale(scale) {
+        if ((scale.x && scale !== 1) || (scale.y && scale.y !== 1)) this.logger.error('舞台不能设置缩放');
+    }
+
+    get scale() {
+        return super.scale;
+    }
+
+    /**
+     * 覆盖超类的方法
+     * @param visible {boolean}
+     * @member {boolean}
+     */
+    set visible(visible) {
+        if (!visible) this.logger.error('舞台不能设置可见性');
+        super.visible(visible);
+    }
+
+    get visible() {
+        return true;
+    }
+
+    addChild(child) {
+        this.addLayer(child);
     }
 
     /**
@@ -129,6 +175,7 @@ class Stage extends DomSprite {
             _name = layer.name;
             if (!_name) {
                 _name = 'main';
+                this.logger.debug(`未指定 layer 对象的 name，使用缺省 layer 名称 "${_name}"`);
             }
         }
         if (this.getLayer(_name)) this.logger.error(`添加层失败，舞台上已经存在，名为 "${_name}" 的层`);
@@ -215,7 +262,7 @@ class Stage extends DomSprite {
 
     /**
      * 增加封面 Dom
-     * @param cover
+     * @param cover {module:tigerface-display.DomCover}
      * @package
      */
     _addCover_(cover) {
@@ -228,11 +275,21 @@ class Stage extends DomSprite {
         }
     }
 
+    /**
+     * 注册全舞台索引，name 和 uuid，如果遇到同名的，静默注册失败
+     * @param child 待注册的子对象
+     * @private
+     */
     _registerIndex_(child) {
         if (child.name && !this.childrenIndex.all[child.name]) this.childrenIndex.all[child.name] = child;
         if (!this.childrenIndex.all[child.uuid]) this.childrenIndex.all[child.uuid] = child;
     }
 
+    /**
+     * 取消注册全舞台索引，同时删除 name 和 uuid 的索引
+     * @param child 待删除的子对象
+     * @private
+     */
     _unregisterIndex_(child) {
         if (child.name && this.childrenIndex.all[child.name]) delete this.childrenIndex.all[child.name];
         if (this.childrenIndex.all[child.uuid]) delete this.childrenIndex.all[child.uuid];
@@ -254,7 +311,7 @@ class Stage extends DomSprite {
      * @private
      */
     _register_(child) {
-        if (child instanceof DomCover) {
+        if (child instanceof DomSprite) {
             if (this.domList.indexOf(child) < 0) {
                 this.domList.unshift(child);
                 this.domList.forEach((sprite, i) => {
@@ -266,6 +323,11 @@ class Stage extends DomSprite {
         this._registerIndex_(child);
     }
 
+    /**
+     * 取消注册
+     * @param child
+     * @private
+     */
     _unregister_(child) {
         const idx = this.domList.indexOf(child);
         this.domList.split(idx, 1);

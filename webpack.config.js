@@ -61,7 +61,7 @@ const config = {
         new webpack.DefinePlugin({
             'process.env': {
                 // NODE_ENV: '"production"',
-                // LOG_LEVEL: '"error"',
+                LOG_LEVEL: '"DEBUG"',
                 // MAX_LISTENERS:100
             },
         }),

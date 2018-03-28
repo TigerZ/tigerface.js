@@ -126,53 +126,71 @@ class PieChartSprite extends CanvasSprite {
 
         // 绘制饼图
         // g.drawPoint({x: 150, y: 120});
-        g.lineWidth = 1;
+        const lineWidth = 1;
         shapes.forEach((pie, idx) => {
             const t = idx % this.data.length;
 
-            g.fillStyle = this.config.colors[t < this.config.colors.length ? t : this.config.colors.length - 1];
-            g.strokeStyle = 'rgba(0,0,0,0.2)';
+            const fillStyle = this.config.colors[t < this.config.colors.length ? t : this.config.colors.length - 1];
+            const strokeStyle = 'rgba(0,0,0,0.2)';
 
-            g.drawPolygon(pie, g.DrawStyle.STROKE_FILL);
+            g.drawPolygon(pie, {
+                fillStyle,
+                strokeStyle,
+                lineWidth,
+            });
         });
 
         if (finish) {
             // 绘制标签
             names.forEach(([p1, p2, name, num, percent], idx) => {
                 const str = `${name}[${percent}%]`;
-                g.lineWidth = 1;
-                g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
-                g.strokeStyle = g.fillStyle;
-                // g.drawPoint(p1);
-                const w = g.measureText(str).width;
+
+                const fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+                const strokeStyle = fillStyle;
+
+                const w = g.measureText(str).width + 10;
+
+                let textAlign;
                 if (p1.x < p0.x) {
-                    g.textAlign = 'end';
-                    g.drawLine(new Line(p1, { x: p1.x - w, y: p1.y }));
+                    textAlign = 'end';
+                    g.drawLine(new Line(p1, { x: p1.x - w, y: p1.y }), { strokeStyle, lineWidth });
                 } else {
-                    g.textAlign = 'start';
-                    g.drawLine(new Line(p1, { x: p1.x + w, y: p1.y }));
+                    textAlign = 'start';
+                    g.drawLine(new Line(p1, { x: p1.x + w, y: p1.y }), { strokeStyle, lineWidth });
                 }
-                g.drawLine(new Line(p1, p2));
-                g.textBaseline = 'bottom';
-                g.drawText(str, p1, this.config.font, g.DrawStyle.FILL);
+
+                g.drawText(str, {
+                    x: p1.x,
+                    y: p1.y,
+                    font: this.config.font,
+                    textBaseline: 'bottom',
+                    textAlign,
+                    fillStyle,
+                });
+
+                g.drawLine(new Line(p1, p2), { strokeStyle, lineWidth });
             });
         }
         // 绘制图例
-        g.textBaseline = 'top';
-        g.textAlign = 'start';
         names.forEach(([p1, p2, name, num], idx) => {
             const str = `${name} [${num}]`;
-            g.lineWidth = 1;
-            g.fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
-            g.strokeStyle = g.fillStyle;
-            // g.drawPoint(p1);
+
+            const fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+
             const { width: w } = g.measureText(str);
             const left = this.config.paddingLeft + idx % 4 * 90;
             const top = this.config.paddingTop + Math.floor(idx / 4) * 20;
 
-            g.drawRectangle(new Square(left, top, 10), g.DrawStyle.STROKE_FILL);
+            g.drawRectangle(new Square(left, top, 10), { fillStyle });
 
-            g.drawText(str, { x: left + 10 + this.config.xSpace, y: top }, this.config.font, g.DrawStyle.FILL);
+            g.drawText(str, {
+                x: left + 10 + this.config.xSpace,
+                y: top,
+                font: this.config.font,
+                textBaseline: 'top',
+                textAlign: 'start',
+                fillStyle,
+            });
         });
 
         this.h0 += this.config.speed;

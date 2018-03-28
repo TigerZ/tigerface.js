@@ -44,9 +44,17 @@ class Panel extends CanvasSprite {
 
     paint() {
         const g = this.graphics;
-        g.textAlign = 'right';
-        g.textBaseline = 'bottom';
-        g.drawText(`V:${speed}`, { x: 200, y: 200 }, '12px monaco', g.DrawStyle.FILL);
+        const textAlign = 'right';
+        const textBaseline = 'bottom';
+        const fillStyle = 'black';
+        g.drawText(`V:${speed}`, {
+            x: 200,
+            y: 200,
+            font: '12px monaco',
+            textAlign,
+            textBaseline,
+            fillStyle,
+        });
     }
 }
 
@@ -98,16 +106,19 @@ class Windmill extends CanvasSprite {
 
     paint() {
         const g = this.graphics;
+        let fillStyle;
         if (this.mouseInside) {
-            g.fillStyle = 'rgba(255,0,0,0.5)';
+            fillStyle = 'rgba(255,0,0,0.5)';
         } else {
-            g.fillStyle = 'rgba(0,0,255,0.5)';
+            fillStyle = 'rgba(0,0,255,0.5)';
         }
 
         this.bounds.forEach((shape) => {
-            g.drawPolygon(shape, g.DrawStyle.FILL);
+            g.drawPolygon(shape, {
+                fillStyle,
+            });
         });
-        g.drawPoint(this.origin, 5, g.PointStyle.DEFAULT);
+        g.drawPoint(this.origin, { radius: 5, fillStyle });
         this.rotation += -speed;
     }
 }
