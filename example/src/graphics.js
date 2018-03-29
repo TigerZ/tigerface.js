@@ -15,7 +15,8 @@ const stage = new Stage({
 // 继承的方式
 class Panel extends CanvasSprite {
     constructor(opt) {
-        super(opt);
+        super({ width: 400, height: 400 });
+        this.assign(opt);
         this.enableDrag();
     }
 
@@ -25,7 +26,7 @@ class Panel extends CanvasSprite {
         const strokeStyle = 'black';
 
         // 图片绘制时异步的，所以可能先调用，却后绘制
-        const url = './b.jpeg';
+        const url = './img/b.jpeg';
         g.drawImageUrl(url, {
             applyDevicePixelRatio: true,
             pos: { x: 0, y: 0 },

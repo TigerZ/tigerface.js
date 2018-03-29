@@ -3,14 +3,7 @@ function isBrowserEnv() {
     return typeof window !== 'undefined' && window === global;
 }
 
-let config;
-if (isBrowserEnv()) {
-// eslint-disable-next-line global-require,import/no-unresolved
-    config = require('log-config.json');
-} else {
-// eslint-disable-next-line import/no-dynamic-require,global-require
-    config = require(`${process.cwd()}/log-config.json`);
-}
+import config from 'RootPath/log-config.json';
 
 function now() {
     const d = new Date();

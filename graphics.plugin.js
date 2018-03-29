@@ -1,7 +1,5 @@
-import {Point} from 'tigerface-graphic';
+import drawImageUrl from './packages/tigerface-graphic/src/drawImageUrl';
 
-const plugins = {
-    drawPoint,
+export default {
+    drawImageUrl,
 };
-
-export default plugins;

@@ -50,8 +50,8 @@ sprite.onRedraw = ()=>{
 
 ## 画笔
 html5 中通过 canvas.getContext('2d') 获得绘图上下文对象 Context。
-tigerface.js 架构中的 Graphics 类对 html5 的绘图上下文进行增强。
-首先，Graphics 类完全兼容 Context，这部分功能参考 html5 的相关文档就可以。
-Graphcis 通过插件的方式支持更多的图形绘制、组件绘制。
+tigerface.js 架构中的 Graphics 类在兼容 Context 的基础上对 Context 进行了增强。
+支持更多的图形绘制、组件绘制。比如：Graphics 可绘制
+tigerface-shape 包里的各种图形，可绘制虚线、箭头、曲线、扇形、任意圆角多边形。
 
 [下一章 状态](state.md)

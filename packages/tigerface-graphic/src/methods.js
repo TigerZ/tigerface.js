@@ -9,9 +9,9 @@ import drawLine, { LineStyle } from './drawLine';
 import drawPolygon from './drawPolygon';
 import drawRectangle from './drawRectangle';
 import drawRoundedPolygon from './drawRoundedPolygon';
-import drawImageUrl from './drawImageUrl';
+import drawImage from './drawImage';
 
-const plugins = {
+export default {
     PointStyle,
     LineStyle,
     drawArrow,
@@ -25,7 +25,5 @@ const plugins = {
     drawRectangle,
     drawRoundedPolygon,
     drawText,
-    drawImageUrl,
+    drawImage,
 };
-
-export default plugins;

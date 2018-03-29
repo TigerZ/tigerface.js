@@ -27,6 +27,12 @@ const config = {
         path: path.resolve(__dirname, './example/assets'),
         filename: '[name].js',
     },
+    devServer: {
+        contentBase: [path.resolve(__dirname, './example/assets'), path.resolve(__dirname, './webroot')],
+        hot: true,
+        port: 9000,
+        host: '0.0.0.0',
+    },
     module: {
         exprContextCritical: false,
         rules: [
@@ -56,10 +62,11 @@ const config = {
         }),
         new CleanWebpackPlugin(['./example/assets']),
         new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: '"production"',
-                // LOG_LEVEL: '"DEBUG"',
+                // NODE_ENV: '"production"',
+                LOG_LEVEL: '"DEBUG"',
                 // MAX_LISTENERS:100
             },
         }),

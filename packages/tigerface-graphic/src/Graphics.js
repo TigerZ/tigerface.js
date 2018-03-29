@@ -1,14 +1,16 @@
 /**
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
-
+// eslint-disable-next-line import/no-unresolved
+import plugins from 'RootPath/graphics.plugin';
 import Context from './Context';
-import plugins from './plugins';
+import methods from './methods';
 
 class Graphics extends Context {
     constructor(...args) {
         super(...args);
-        Object.assign(this, plugins);
+        Object.assign(this, methods);
+        if (plugins) Object.assign(this, plugins);
     }
 
     get canvas() {

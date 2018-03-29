@@ -6,7 +6,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --require babel-core/register ",
     "watch": "webpack --watch",
-    "start": "webpack-dev-server --open",
+    "start": "webpack-dev-server --config webpack.dev.config.js --open",
     "build": "webpack"
   },
   "author": "",
