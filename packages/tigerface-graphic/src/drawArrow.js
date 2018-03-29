@@ -8,11 +8,19 @@ function drawArrow(point, props = {}) {
         radius = 10,
         lineWidth = 1,
         fillStyle,
+        fill = true,
+        stroke = true,
+        save = false,
+        beginPath = true,
+        closePath = true,
+        restore = false,
     } = props;
 
     let { strokeStyle } = props;
-
     if (!fillStyle && !strokeStyle) strokeStyle = 'black';
+
+    if (save) this.save();
+    if (beginPath) this.beginPath();
 
     const radian = T.degreeToRadian(rotation);
     let diff = T.degreeToRadian(angle / 2);
@@ -22,9 +30,6 @@ function drawArrow(point, props = {}) {
     const p2 = new Point((Math.cos(radian - diff) * radius) + point.x, (Math.sin(radian - diff) * radius)
         + point.y);
 
-    this.save();
-    this.beginPath();
-
     this.lineJoin = 'round';
     this.lineCap = 'round';
 
@@ -33,19 +38,20 @@ function drawArrow(point, props = {}) {
     this.lineTo(p2.x, p2.y);
     this.lineTo(p1.x, p1.y);
 
-    this.lineWidth = lineWidth;
+    if (closePath) this.closePath();
 
     if (fillStyle) {
         this.fillStyle = fillStyle;
-        this.fill();
-    }
-    if (strokeStyle) {
-        this.strokeStyle = strokeStyle;
-        this.stroke();
+        if (fill) this.fill();
     }
 
-    this.closePath();
-    this.restore();
+    if (strokeStyle) {
+        this.lineWidth = lineWidth;
+        this.strokeStyle = strokeStyle;
+        if (stroke) this.stroke();
+    }
+
+    if (restore) this.restore();
 }
 
 export default drawArrow;

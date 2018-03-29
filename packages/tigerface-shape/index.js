@@ -5,6 +5,7 @@ export { default as Circle } from './src/Circle';
 export { default as ClockwisePolygon } from './src/ClockwisePolygon';
 export { default as CubicBezier } from './src/CubicBezier';
 export { default as Curve } from './src/Curve';
+export { default as Arc } from './src/Arc';
 export { default as Ellipse } from './src/Ellipse';
 export { default as EquilateralTriangle } from './src/EquilateralTriangle';
 export { default as Line } from './src/Line';

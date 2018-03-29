@@ -43,32 +43,32 @@ function logout(logLevel, target, msg, ...others) {
     if (isBrowserEnv()) {
         switch (logLevel) {
             case Level.DEBUG:
-                console.debug(`%c${now()} [Level.DEBUG] ${target}: ${msg}`, 'color:blue', ...others);
+                console.debug(`%c${now()} [DEBUG] ${target}: ${msg}`, 'color:blue', ...others);
                 break;
             case Level.INFO:
-                console.info(`%c${now()} [Level.INFO] ${target}: ${msg}`, 'color:green', ...others);
+                console.info(`%c${now()} [INFO] ${target}: ${msg}`, 'color:green', ...others);
                 break;
             case Level.WARN:
-                console.warn(`%c${now()} [Level.WARN] ${target}: ${msg}`, 'color:orange', ...others);
+                console.warn(`%c${now()} [WARN] ${target}: ${msg}`, 'color:orange', ...others);
                 break;
             case Level.ERROR:
-                throw new Error(`${now()} [Level.ERROR] ${target}: ${msg}`);
+                throw new Error(`${now()} [ERROR] ${target}: ${msg}`);
             default:
                 throw new Error(`不支持的 Logger 级别: ${logLevel}`);
         }
     } else {
         switch (logLevel) {
             case Level.DEBUG:
-                console.debug(colors.blue(`${now()} [Level.DEBUG] ${target}: ${msg}`), ...others);
+                console.debug(colors.blue(`${now()} [DEBUG] ${target}: ${msg}`), ...others);
                 break;
             case Level.INFO:
-                console.info(colors.green(`${now()} [Level.INFO] ${target}: ${msg}`), ...others);
+                console.info(colors.green(`${now()} [INFO] ${target}: ${msg}`), ...others);
                 break;
             case Level.WARN:
-                console.info(colors.green(`${now()} [Level.INFO] ${this.target}: ${msg}`), ...others);
+                console.info(colors.green(`${now()} [INFO] ${this.target}: ${msg}`), ...others);
                 break;
             case Level.ERROR:
-                throw new Error(`${now()} [Level.ERROR] ${target}: ${msg}`);
+                throw new Error(`${now()} [ERROR] ${target}: ${msg}`);
             default:
                 throw new Error(`不支持的 Logger 级别: ${logLevel}`);
         }
@@ -195,7 +195,7 @@ class Logger {
 
     debugTiming(msg, ...others) {
         if (this._isForbidden_(Level.DEBUG)) return;
-        logout(Level.DEBUG, this.target, msg, ...others);
+        logout(Level.DEBUG, `(+${this.debugTimingReset()}) ${this.target}`, msg, ...others);
     }
 
     debugTimingBegin(msg, ...others) {

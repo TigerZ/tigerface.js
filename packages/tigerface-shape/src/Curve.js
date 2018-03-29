@@ -16,8 +16,7 @@ class Curve {
      * @param points
      */
     constructor(points) {
-        if (points)
-            this.initCurve(points);
+        if (points) this.initCurve(points);
         this.clazzName = Curve.name;
     }
 
@@ -32,11 +31,11 @@ class Curve {
      * @returns {Array}
      */
     _getSegments() {
-        let lines = [];
-        let points = this.getPoints();
-        let p1, p2;
-        p1 = points[0];
-        for (let i = 1; i <= points.length; i++) {
+        const lines = [];
+        const points = this.getPoints();
+        let [p1] = points;
+        let p2;
+        for (let i = 1; i <= points.length; i += 1) {
             p2 = points[i % points.length];
             lines.push(new Line(p1, p2));
             p1 = p2;
@@ -71,8 +70,8 @@ class Curve {
      * @returns {boolean}
      */
     hasIntersection(line) {
-        let segments = this.getSegments();
-        for (let i = 0; i < segments.length; i++) {
+        const segments = this.getSegments();
+        for (let i = 0; i < segments.length; i += 1) {
             if (segments[i].hasIntersection(line)) {
                 return true;
             }
@@ -86,8 +85,8 @@ class Curve {
      * @returns {*}
      */
     getIntersection(line) {
-        let segments = this.getSegments();
-        for (let i = 0; i < segments.length; i++) {
+        const segments = this.getSegments();
+        for (let i = 0; i < segments.length; i += 1) {
             if (segments[i].hasIntersection(line)) {
                 return segments[i].getIntersection(line);
             }
@@ -100,7 +99,7 @@ class Curve {
      * @param curve
      */
     connect(curve) {
-        let points = curve.getPoints();
+        const points = curve.getPoints();
         if (this.points[this.points.length - 1].equals(points[0])) {
             points.shift();
         }

@@ -47,6 +47,11 @@ export default class Context {
         this.createPattern = this.context.createPattern.bind(this.context);
         this.createRadialGradient = this.context.createRadialGradient.bind(this.context);
         //this.addColorStop = this.context.addColorStop.bind(this.context);
+
+        // this.context.mozImageSmoothingEnabled = false;
+        // this.context.webkitImageSmoothingEnabled = false;
+        // this.context.msImageSmoothingEnabled = false;
+        // this.context.imageSmoothingEnabled = true;
     }
 
     get context() {

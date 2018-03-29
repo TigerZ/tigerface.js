@@ -10,13 +10,18 @@ export const PointStyle = {
 function drawPoint(point, props) {
     const {
         radius = 3,
+        lineWidth = 1,
         pointStyle = PointStyle.ROUND_PLUS,
         strokeStyle = 'black',
+        stroke = true,
+        save = false,
+        beginPath = true,
+        closePath = true,
+        restore = false,
     } = props;
 
-    this.save();
-
-    this.beginPath();
+    if (save) this.save();
+    if (beginPath) this.beginPath();
 
 
     if (pointStyle === PointStyle.ROUND_PLUS) {
@@ -55,15 +60,15 @@ function drawPoint(point, props) {
         this.drawLine(Line.byPoint(p0, p1), { lineWidth: 0.5, strokeStyle });
     }
 
+    if (closePath) this.closePath();
+
     if (strokeStyle) {
+        this.lineWidth = lineWidth;
         this.strokeStyle = strokeStyle;
-        this.stroke();
+        if (stroke) this.stroke();
     }
 
-
-    this.closePath();
-
-    this.restore();
+    if (restore) this.restore();
 }
 
 export default drawPoint;

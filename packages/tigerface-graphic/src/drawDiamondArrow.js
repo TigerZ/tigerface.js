@@ -7,8 +7,18 @@ function drawDiamondArrow(point, props = {}) {
         angle = 60,
         rotation = 0,
         radius = 10,
+        lineWidth = 1,
         fillStyle,
+        fill = true,
+        stroke = true,
+        save = false,
+        beginPath = true,
+        closePath = true,
+        restore = false,
     } = props;
+
+    if (save) this.save();
+    if (beginPath) this.beginPath();
 
     let { strokeStyle } = props;
 
@@ -22,9 +32,6 @@ function drawDiamondArrow(point, props = {}) {
     const p2 = new Point((Math.cos(radian - diff) * radius) + point.x, (Math.sin(radian - diff) * radius)
         + point.y);
 
-    this.save();
-    this.beginPath();
-
     this.lineJoin = 'round';
     this.lineCap = 'round';
 
@@ -36,17 +43,20 @@ function drawDiamondArrow(point, props = {}) {
     this.lineTo(p2.x, p2.y);
     this.lineTo(p3.x, p3.y);
 
+    if (closePath) this.closePath();
+
     if (fillStyle) {
         this.fillStyle = fillStyle;
-        this.fill();
-    }
-    if (strokeStyle) {
-        this.strokeStyle = strokeStyle;
-        this.stroke();
+        if (fill) this.fill();
     }
 
-    this.closePath();
-    this.restore();
+    if (strokeStyle) {
+        this.lineWidth = lineWidth;
+        this.strokeStyle = strokeStyle;
+        if (stroke) this.stroke();
+    }
+
+    if (restore) this.restore();
 }
 
 export default drawDiamondArrow;

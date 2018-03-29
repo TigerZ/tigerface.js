@@ -1,13 +1,14 @@
+import { Utilities as T } from 'tigerface-common';
+import Curve from './Curve';
+import Point from './Point';
+
+
 /**
  * User: zyh
- * Date: 2018/2/27.
- * Time: 13:00.
+ * Date: 2018/3/29.
+ * Time: 07:29.
  */
-import { Utilities as T } from 'tigerface-common';
-import Point from './Point';
-import Polygon from './Polygon';
-
-class Sector extends Polygon {
+class Arc extends Curve {
     constructor(x, y, radiusX, radiusY, startAngle, endAngle, precision) {
         super();
         this.p0 = new Point(x, y);
@@ -16,17 +17,21 @@ class Sector extends Polygon {
         this.startAngle = startAngle;
         this.endAngle = endAngle;
         this.precision = (precision === undefined || precision < 5) ? 5 : precision;
-        // 转换为多边形处理
-        this.initPolygon(this.getVertexes(this.startAngle, this.endAngle, this.precision));
-        this.clazzName = Sector.name;
+        // 转换为曲线处理
+        this.initCurve(this.getVertexes(this.startAngle, this.endAngle, this.precision));
+        this.clazzName = Arc.name;
     }
 
     clone() {
-        return new Sector(this.p0.x, this.p0.y, this.radiusX, this.radiusY, this.startAngle, this.endAngle, this.precision);
+        return new Arc(this.p0.x, this.p0.y, this.radiusX, this.radiusY, this.startAngle, this.endAngle, this.precision);
+    }
+
+    getVertexes(...args) {
+        if (!this.vertexes) this.vertexes = this._getVertexes(...args);
+        return this.vertexes;
     }
 
     _getVertexes(beginAngle = 0, endAngle = 360, precision = 5) {
-        // if (!this.points) {
         const points = [];
         const getPos = (i) => {
             const x = (Math.cos(T.degreeToRadian(i)) * this.radiusX) + this.p0.x;
@@ -38,20 +43,8 @@ class Sector extends Polygon {
             points.push(getPos(i));
         }
         if ((i - endAngle) < precision) points.push(getPos(endAngle));
-
-        if (Math.abs(endAngle - beginAngle) < 360) points.push(this.p0);
-
-        // this.points = points;
-        // }
         return points;
-    }
-
-    scatter(radiusX, radiusY) {
-        const angle = this.startAngle + ((this.endAngle - this.startAngle) / 2);
-        const x = Math.cos(T.degreeToRadian(angle)) * radiusX;
-        const y = Math.sin(T.degreeToRadian(angle)) * radiusY;
-        return this.move(x, y);
     }
 }
 
-export default Sector;
+export default Arc;

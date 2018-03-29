@@ -14,7 +14,6 @@ export const LineStyle = {
 
 function _drawDottedLine(g, line, props = {}) {
     const {
-        strokeStyle = 'black',
         lineWidth = 1,
     } = props;
 
@@ -22,10 +21,6 @@ function _drawDottedLine(g, line, props = {}) {
         dotLength = 3 * lineWidth,
         blankLength = 3 * lineWidth,
     } = props;
-
-    g.save();
-    g.beginPath();
-
 
     const { x: x0, y: y0 } = line.p0;
     const { x: x1, y: y1 } = line.p1;
@@ -41,6 +36,7 @@ function _drawDottedLine(g, line, props = {}) {
     const yLen = Math.sin(slope) * sectionLength;
     const dotXlen = (xLen * dotLength) / sectionLength;
     const dotYlen = (yLen * dotLength) / sectionLength;
+
     let x;
     let y;
     for (let i = 0; i < countSection; i += 1) {
@@ -60,39 +56,11 @@ function _drawDottedLine(g, line, props = {}) {
     } else {
         g.lineTo(x1, y1);
     }
-
-    g.lineWidth = lineWidth;
-
-    if (strokeStyle) {
-        g.strokeStyle = strokeStyle;
-        g.stroke();
-    }
-
-    g.closePath();
-    g.restore();
 }
 
-function _drawLine(g, line, props = {}) {
-    const {
-        strokeStyle = 'black',
-        lineWidth = 1,
-    } = props;
-
-    g.save();
-    g.beginPath();
-
+function _drawLine(g, line) {
     g.moveTo(line.p0.x, line.p0.y);
     g.lineTo(line.p1.x, line.p1.y);
-
-    g.lineWidth = lineWidth;
-
-    if (strokeStyle) {
-        g.strokeStyle = strokeStyle;
-        g.stroke();
-    }
-
-    g.closePath();
-    g.restore();
 }
 
 function drawLine(line, props = {}) {
@@ -100,6 +68,11 @@ function drawLine(line, props = {}) {
         strokeStyle = 'black',
         lineWidth = 1,
         lineStyle = LineStyle.SOLID,
+        stroke = true,
+        save = false,
+        beginPath = true,
+        closePath = true,
+        restore = false,
     } = props;
 
     const {
@@ -108,54 +81,106 @@ function drawLine(line, props = {}) {
         dashLength = 9 * lineWidth,
     } = props;
 
+    const _props = {
+        lineWidth,
+        strokeStyle,
+        stroke,
+        save,
+        beginPath,
+        closePath,
+        restore,
+    };
+
+    if (save) this.save();
+    if (beginPath) this.beginPath();
+
     if (lineStyle === LineStyle.SOLID) {
-        _drawLine(this, line, { lineWidth, strokeStyle });
+        _drawLine(this, line);
     } else if (lineStyle === LineStyle.DOT) {
-        _drawDottedLine(this, line, {
-            dotLength,
-            blankLength,
-        });
+        _drawDottedLine(
+            this,
+            line,
+            Object.assign(_props, {
+                dotLength,
+                blankLength,
+            }),
+        );
     } else if (lineStyle === LineStyle.DASH) {
-        _drawDottedLine(this, line, {
-            dotLength: dashLength,
-            blankLength,
-        });
+        _drawDottedLine(
+            this,
+            line,
+            Object.assign(_props, {
+                dotLength: dashLength,
+                blankLength,
+            }),
+        );
     } else if (lineStyle === LineStyle.DASHDOT) {
-        _drawDottedLine(this, line, {
-            dotLength: dashLength,
-            blankLength: (blankLength + dotLength) + blankLength,
-        });
+        _drawDottedLine(
+            this,
+            line,
+            Object.assign(_props, {
+                dotLength: dashLength,
+                blankLength: (blankLength + dotLength) + blankLength,
+            }),
+        );
 
         const xLen = Math.cos(line.getSlope()) * (dashLength + blankLength);
         const yLen = Math.sin(line.getSlope()) * (dashLength + blankLength);
 
-        _drawDottedLine(this, new Line({ x: line.p0.x + xLen, y: line.p0.y + yLen }, { x: line.p1.x, y: line.p1.y }), {
-            dotLength,
-            blankLength: (blankLength + dashLength) + blankLength,
-        });
+        _drawDottedLine(
+            this,
+            new Line({ x: line.p0.x + xLen, y: line.p0.y + yLen }, { x: line.p1.x, y: line.p1.y }),
+            Object.assign(_props, {
+                dotLength,
+                blankLength: (blankLength + dashLength) + blankLength,
+            }),
+        );
     } else if (lineStyle === LineStyle.DASHDOTDOT) {
-        _drawDottedLine(this, line, {
-            dotLength: dashLength,
-            blankLength: ((blankLength + dotLength) * 2) + blankLength,
-        });
+        _drawDottedLine(
+            this,
+            line,
+            Object.assign(_props, {
+                dotLength: dashLength,
+                blankLength: ((blankLength + dotLength) * 2) + blankLength,
+            }),
+        );
+
         let xLen = Math.cos(line.getSlope()) * (dashLength + blankLength);
         let yLen = Math.sin(line.getSlope()) * (dashLength + blankLength);
 
-        _drawDottedLine(this, new Line({ x: line.p0.x + xLen, y: line.p0.y + yLen }, { x: line.p1.x, y: line.p1.y }), {
-            dotLength,
-            blankLength: ((blankLength + dotLength) + (blankLength + dashLength)) + blankLength,
-        });
+        _drawDottedLine(
+            this,
+            new Line({ x: line.p0.x + xLen, y: line.p0.y + yLen }, { x: line.p1.x, y: line.p1.y }),
+            Object.assign(_props, {
+                dotLength,
+                blankLength: ((blankLength + dotLength) + (blankLength + dashLength)) + blankLength,
+            }),
+        );
 
         xLen = Math.cos(line.getSlope())
             * (dashLength + blankLength + dotLength + blankLength);
         yLen = Math.sin(line.getSlope())
             * (dashLength + blankLength + dotLength + blankLength);
 
-        _drawDottedLine(this, new Line({ x: line.p0.x + xLen, y: line.p0.y + yLen }, { x: line.p1.x, y: line.p1.y }), {
-            dotLength,
-            blankLength: blankLength + dotLength + blankLength + dashLength + blankLength,
-        });
+        _drawDottedLine(
+            this,
+            new Line({ x: line.p0.x + xLen, y: line.p0.y + yLen }, { x: line.p1.x, y: line.p1.y }),
+            Object.assign(_props, {
+                dotLength,
+                blankLength: blankLength + dotLength + blankLength + dashLength + blankLength,
+            }),
+        );
     }
+
+    if (closePath) this.closePath();
+
+    if (strokeStyle) {
+        this.lineWidth = lineWidth;
+        this.strokeStyle = strokeStyle;
+        if (stroke) this.stroke();
+    }
+
+    if (restore) this.restore();
 }
 
 

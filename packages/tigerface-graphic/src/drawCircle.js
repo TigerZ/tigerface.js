@@ -1,30 +1,40 @@
 function drawCircle(circle, props = {}) {
     const {
+        lineWidth = 1,
         fillStyle,
+        fill = true,
+        stroke = true,
+        save = false,
+        beginPath = true,
+        closePath = true,
+        restore = false,
     } = props;
 
     let { strokeStyle } = props;
 
     if (!fillStyle && !strokeStyle) strokeStyle = 'black';
 
-    const center = circle.p0;
+    if (save) this.save();
+    if (beginPath) this.beginPath();
 
-    this.save();
-    this.beginPath();
+    const center = circle.p0;
 
     this.arc(center.x, center.y, circle.radius, 0, Math.PI * 2);
 
+    if (closePath) this.closePath();
+
     if (fillStyle) {
         this.fillStyle = fillStyle;
-        this.fill();
-    }
-    if (strokeStyle) {
-        this.strokeStyle = strokeStyle;
-        this.stroke();
+        if (fill) this.fill();
     }
 
-    this.closePath();
-    this.restore();
+    if (strokeStyle) {
+        this.lineWidth = lineWidth;
+        this.strokeStyle = strokeStyle;
+        if (stroke) this.stroke();
+    }
+
+    if (restore) this.restore();
 }
 
 export default drawCircle;

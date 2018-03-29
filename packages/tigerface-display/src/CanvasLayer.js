@@ -36,18 +36,20 @@ class CanvasLayer extends DomLayer {
 
         super(props, canvas);
 
-        this.canvas = canvas;
-
-        this.graphics = new Graphics(this.canvas.getContext('2d'));
-
-        // 下层显示对象通过此属性识别是否是上层 CanvasContainer 对象
-        this._layer_ = this;
-
         this.assign(T.merge({
             style: {
                 // backgroundColor: 'rgba(255,255,255,0.3)',
             },
         }, options));
+
+        this.canvas = canvas;
+
+        this.graphics = new Graphics(this.canvas.getContext('2d'));
+
+        this.graphics.layer = this;
+
+        // 下层显示对象通过此属性识别是否是上层 CanvasContainer 对象
+        this._layer_ = this;
 
         this._pause_ = false;
     }

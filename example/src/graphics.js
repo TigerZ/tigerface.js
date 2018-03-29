@@ -1,5 +1,5 @@
 import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
-import { Point, Line, Circle, Rectangle, Polygon, Curve } from 'tigerface-shape';
+import { Point, Line, Circle, Rectangle, Polygon, Curve, Sector, Arc } from 'tigerface-shape';
 
 const dom = document.getElementById('root');
 
@@ -23,6 +23,21 @@ class Panel extends CanvasSprite {
         const g = this.graphics;
         const fillStyle = 'white';
         const strokeStyle = 'black';
+
+        // 图片绘制时异步的，所以可能先调用，却后绘制
+        const url = './b.jpeg';
+        g.drawImageUrl(url, {
+            applyDevicePixelRatio: true,
+            pos: { x: 0, y: 0 },
+            size: { width: 200, height: 50 },
+            clip: {
+                x: 1 / 3,
+                y: 1 / 6,
+                width: 400,
+                height: 100,
+            },
+        });
+
         const p0 = new Point(100, 100);
         const p1 = p0.move(0, 100);
 
@@ -101,19 +116,28 @@ class Panel extends CanvasSprite {
 
         const p8 = p6.move(50, 0);
         const p9 = p7.move(50, 0);
+
         g.drawLine(new Line(p8, p9), {
             lineWidth: 1,
             lineStyle: g.LineStyle.DASHDOTDOT,
         });
 
-        g.drawText('你好，画笔！', { x: p9.x, y: p9.y });
+        g.drawText('你好，画笔！', { x: p9.x, y: p9.y + 150 });
 
-        g.drawCurve([
+        g.drawCurve(new Curve([
             { x: 100, y: 140 },
             { x: 130, y: 120 },
             { x: 180, y: 120 },
             { x: 280, y: 200 },
-        ]);
+        ]));
+
+        const arc = new Arc(p8.x, p8.y, 100, 50, 210, 330, 5);
+        g.lineJoin = 'round';
+        g.lineCap = 'round';
+        g.drawCurve(arc, {
+            strokeStyle: 'rgba(0,0,0,0.5)',
+            lineWidth: 15,
+        });
     }
 }
 

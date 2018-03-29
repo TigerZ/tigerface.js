@@ -9,6 +9,7 @@ import drawLine, { LineStyle } from './drawLine';
 import drawPolygon from './drawPolygon';
 import drawRectangle from './drawRectangle';
 import drawRoundedPolygon from './drawRoundedPolygon';
+import drawImageUrl from './drawImageUrl';
 
 const plugins = {
     PointStyle,
@@ -24,6 +25,7 @@ const plugins = {
     drawRectangle,
     drawRoundedPolygon,
     drawText,
+    drawImageUrl,
 };
 
 export default plugins;
