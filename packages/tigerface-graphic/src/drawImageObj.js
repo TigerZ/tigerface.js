@@ -1,4 +1,4 @@
-function drawImage(img, props = {}) {
+function drawImageObj(img, props = {}) {
     const {
         pos = { x: 0, y: 0 },
         applyDevicePixelRatio = false,
@@ -32,7 +32,7 @@ function drawImage(img, props = {}) {
         };
     }
 
-    this.context.drawImage(
+    this.drawImage(
         img,
         clip.x,
         clip.y,
@@ -45,4 +45,4 @@ function drawImage(img, props = {}) {
     );
 }
 
-export default drawImage;
+export default drawImageObj;

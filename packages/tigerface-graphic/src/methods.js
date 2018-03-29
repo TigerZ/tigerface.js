@@ -9,7 +9,7 @@ import drawLine, { LineStyle } from './drawLine';
 import drawPolygon from './drawPolygon';
 import drawRectangle from './drawRectangle';
 import drawRoundedPolygon from './drawRoundedPolygon';
-import drawImage from './drawImage';
+import drawImageObj from './drawImageObj';
 
 export default {
     PointStyle,
@@ -25,5 +25,5 @@ export default {
     drawRectangle,
     drawRoundedPolygon,
     drawText,
-    drawImage,
+    drawImageObj,
 };
