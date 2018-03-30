@@ -21,9 +21,9 @@ class CanvasLayer extends DomLayer {
         const props = {
             // position: 'absolute',
             clazzName: CanvasLayer.name,
-            devicePixelRatio: 1,
             width: '320',
             height: '240',
+            devicePixelRatio: 1,
             retina: true,
             noClear: false,
             useDirtyRect: false,
@@ -44,22 +44,12 @@ class CanvasLayer extends DomLayer {
 
         this.canvas = canvas;
 
-        this.graphics = new Graphics(this.canvas.getContext('2d'));
-
-        this.graphics.layer = this;
+        this.graphics = new Graphics(this);
 
         // 下层显示对象通过此属性识别是否是上层 CanvasContainer 对象
         this._layer_ = this;
 
         this._pause_ = false;
-    }
-
-    set devicePixelRatio(v) {
-        this.props.devicePixelRatio = v;
-    }
-
-    get devicePixelRatio() {
-        return this.props.devicePixelRatio;
     }
 
     set retina(v) {
@@ -114,6 +104,12 @@ class CanvasLayer extends DomLayer {
 
     set graphics(v) {
         this._graphics_ = v;
+        v.addBefore(() => {
+            if (this.devicePixelRatio !== undefined && this.devicePixelRatio !== 1) {
+                v.scale(this.devicePixelRatio, this.devicePixelRatio);
+            }
+            v.globalAlpha = this.alpha;
+        });
     }
 
     /**
@@ -128,6 +124,8 @@ class CanvasLayer extends DomLayer {
         // 用 css 约束尺寸
         T.css(this.dom, 'width', `${this.width}px`);
         T.css(this.dom, 'height', `${this.height}px`);
+
+        this.postChange();
     }
 
     /**
@@ -162,12 +160,7 @@ class CanvasLayer extends DomLayer {
      */
     _onBeforePaint_() {
         const g = this.graphics;
-        // 缩放
-        if (this.devicePixelRatio !== 1) {
-            g.scale(this.devicePixelRatio, this.devicePixelRatio);
-        }
-
-        g.globalAlpha = this.alpha;
+        g.before();
     }
 
     /**
@@ -199,6 +192,7 @@ class CanvasLayer extends DomLayer {
         });
 
         g.restore();
+        g.after();
     }
 
     stop() {

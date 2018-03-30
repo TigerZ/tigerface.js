@@ -18,26 +18,19 @@ class Panel extends CanvasSprite {
         super({ width: 400, height: 400 });
         this.assign(opt);
         this.enableDrag();
+        const self = this;
+        const img = new Image();
+        img.onload = function () {
+            self.img = img;
+            self.postChange();
+        };
+        img.src = './img/b.jpeg';
     }
 
     paint() {
         const g = this.graphics;
         const fillStyle = 'white';
         const strokeStyle = 'black';
-
-        // 图片绘制时异步的，所以可能先调用，却后绘制
-        const url = './img/b.jpeg';
-        g.drawImageUrl(url, {
-            applyDevicePixelRatio: true,
-            pos: { x: 0, y: 0 },
-            size: { width: 200, height: 50 },
-            clip: {
-                x: 1 / 3,
-                y: 1 / 6,
-                width: 400,
-                height: 100,
-            },
-        });
 
         const p0 = new Point(100, 100);
         const p1 = p0.move(0, 100);
@@ -139,6 +132,19 @@ class Panel extends CanvasSprite {
             strokeStyle: 'rgba(0,0,0,0.5)',
             lineWidth: 15,
         });
+
+        if (this.img) {
+            g.drawImageObj(this.img, {
+                pos: { x: 50, y: 100 },
+                size: { width: 200, height: 50 },
+                clip: {
+                    x: 1 / 3,
+                    y: 1 / 6,
+                    width: 400,
+                    height: 100,
+                },
+            });
+        }
     }
 }
 

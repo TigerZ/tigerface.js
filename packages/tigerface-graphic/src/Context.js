@@ -1,7 +1,13 @@
+import { EventDispatcher } from "RootPath/packages/tigerface-event";
 
-export default class Context {
-    constructor(ctx) {
-        this.context = ctx;
+export default class Context extends EventDispatcher {
+    constructor(options) {
+        super({
+            clazzName: Context.name,
+        });
+        this.assign(options);
+
+        this.context = this.layer.canvas.getContext('2d');
 
         this.save = this.context.save.bind(this.context);
         this.restore = this.context.restore.bind(this.context);
@@ -52,17 +58,6 @@ export default class Context {
         // this.context.webkitImageSmoothingEnabled = false;
         // this.context.msImageSmoothingEnabled = false;
         // this.context.imageSmoothingEnabled = true;
-    }
-
-    get context() {
-        if(!this._context_) {
-            this._context_ = new Canvas(640, 480).getContext('2d');
-        }
-        return this._context_;
-    }
-
-    set context(ctx) {
-        this._context_ = ctx;
     }
 
     /*********************************************************************

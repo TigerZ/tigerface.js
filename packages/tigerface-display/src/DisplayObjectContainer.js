@@ -354,8 +354,8 @@ class DisplayObjectContainer extends DisplayObject {
 
     get graphics() {
         if (this._graphics_ === undefined) {
-            if (this.parent && this.parent.graphics) {
-                this.graphics = this.parent.graphics;
+            if (this.layer) {
+                this.graphics = this.layer.graphics;
             }
         }
         return this._graphics_;

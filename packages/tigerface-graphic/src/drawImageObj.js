@@ -1,7 +1,6 @@
 function drawImageObj(img, props = {}) {
     const {
         pos = { x: 0, y: 0 },
-        applyDevicePixelRatio = false,
     } = props;
 
     const {
@@ -38,10 +37,10 @@ function drawImageObj(img, props = {}) {
         clip.y,
         clip.width,
         clip.height,
-        pos.x * (applyDevicePixelRatio ? this.devicePixelRatio : 1),
-        pos.y * (applyDevicePixelRatio ? this.devicePixelRatio : 1),
-        size.width * (applyDevicePixelRatio ? this.devicePixelRatio : 1),
-        size.height * (applyDevicePixelRatio ? this.devicePixelRatio : 1),
+        pos.x,
+        pos.y,
+        size.width,
+        size.height,
     );
 }
 
