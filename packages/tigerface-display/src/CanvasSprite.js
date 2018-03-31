@@ -80,8 +80,7 @@ class CanvasSprite extends Sprite {
      * 绘制自身前处理：缩放，旋转，平移原点
      * @package
      */
-    _onBeforePaint_() {
-        const g = this.graphics;
+    _onBeforePaint_(g) {
         // 缩放
         if (this.scaleX !== 1 || this.scaleY !== 1) {
             g.scale(this.scaleX, this.scaleY);
@@ -100,8 +99,7 @@ class CanvasSprite extends Sprite {
      * 绘制自身后处理：还原原点平移，绘制子对象
      * @package
      */
-    _onAfterPaint_() {
-        const g = this.graphics;
+    _onAfterPaint_(g) {
         g.save();
         // 还原原点平移
         g.translate(this.originX, this.originY);
@@ -120,7 +118,7 @@ class CanvasSprite extends Sprite {
                 child._realAlpha_ = this._realAlpha_ ? this._realAlpha_ * child.alpha : this.alpha * child.alpha;
                 g.globalAlpha = child._realAlpha_;
                 // 调用孩子绘制方法
-                child._paint_();
+                child._paint_(g);
                 // 恢复上下文
                 g.restore();
             }
@@ -129,91 +127,8 @@ class CanvasSprite extends Sprite {
         g.restore();
     }
 
-    /** *************************************************************************
-     *
-     * 坐标转换
-     *
-     ************************************************************************* */
-
-    /**
-     * 将感应区投影到全局坐标系
-     */
-    mirror() {
-        const shadow = new CanvasSprite();
-        // 通过感应区的外边框的坐标变换，来计算投影的旋转和缩放
-        for (let i = 0; i < this.bounds.length; i += 1) {
-            const bound = this.bounds[i];
-            shadow.addBound(this._shapeToLayer_(bound));
-        }
-        return shadow;
-    }
-
     _onAddChild_(child) {
         super._onAddChild_(child);
-    }
-
-    _shapeToLayer_(shape) {
-        const vertexes = shape.getVertexes();
-        const points = [];
-        for (let i = 0; i < vertexes.length; i += 1) {
-            points.push(this.getLayerPos(vertexes[i]));
-        }
-        // console.log("_shapeToLayer_", shape, new Rectangle(points), new Polygon(points));
-        if (Rectangle.isRectangle(points)) {
-            return new Rectangle(points);
-        }
-        return new Polygon(points);
-    }
-
-    _shapeToOuter_(shape) {
-        const vertexes = shape.getVertexes();
-        const points = [];
-        for (let i = 0; i < vertexes.length; i += 1) {
-            points.push(this.getOuterPos(vertexes[i]));
-        }
-        return new Polygon(points);
-    }
-
-
-    /** *************************************************************************
-     *
-     * 碰撞
-     *
-     ************************************************************************* */
-
-    /**
-     * 点碰撞测试，用边界形状做碰撞测试。<br>
-     *     注意：碰撞测试前，点坐标要转换为内部坐标
-     * @param point 内部坐标
-     * @returns {boolean}
-     */
-    hitTestPoint(point) {
-        return this.mirror()._pointInBounds_(point);
-    }
-
-    /**
-     * 对象碰撞测试，用两边界形状做碰撞测试。<br>
-     *     碰撞测试前，需要把形状转换为同一坐标系
-     * @param target
-     * @returns {boolean}
-     */
-    hitTestObject(target) {
-        const a = this.mirror();
-        const b = target.mirror();
-
-        if (a.boundingRect.hitTestRectangle(b.boundingRect)) {
-            for (let i = 0; i < a.bounds.length; i += 1) {
-                const shape1 = a.bounds[i];
-                for (let j = 0; j < b.bounds.length; j += 1) {
-                    const shape2 = b.bounds[j];
-                    if (shape1.hitTestPolygon(shape2)) {
-                        // console.log("hit", i, j);
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     /** *************************************************************************

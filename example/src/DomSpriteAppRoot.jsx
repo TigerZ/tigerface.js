@@ -20,7 +20,7 @@ class DemoLayer extends DomLayer {
         this.num = 900000;
     }
 
-    paint() {
+    paint(g) {
         // if (this.originX > this.width || this.originX < 0)
         //     this.step = -this.step;
         // this.originX += this.step;
@@ -81,8 +81,7 @@ class DemoCanvasSprite extends CanvasSprite {
         this.hideCover();
     }
 
-    paint() {
-        const g = this.graphics;
+    paint(g) {
         if (this.mouseInside) {
             g.drawRectangle(this.boundingRect, { fillStyle: 'rgba(255,255,0,0.8)' });
         } else {

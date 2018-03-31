@@ -424,47 +424,36 @@ class DisplayObject extends EventDispatcher {
      * 完整绘制方法，此方法会被主循环调用
      * @package
      */
-    _paint_() {
+    _paint_(g) {
         // 为最高效率，对象可见，才进入
         if (!this.visible) return;
-
-        const g = this.graphics;
-        // this.logger.debug(`重绘...`);
 
         // 清除"状态已改变"标志
         this.clearChange();
 
         // 保存一次上下文
-        if (g) {
-            g.save();
-        }
+        if (g) g.save();
 
         // 先调用绘制前处理
-        this._onBeforePaint_();
+        this._onBeforePaint_(g);
         this.dispatchEvent(Event.BEFORE_REDRAW, { target: this, context: g });
 
         // 保存二次上下文
-        if (g) {
-            g.save();
-        }
+        if (g) g.save();
 
         // 再调用自身绘制
-        this.paint();
+        this.paint(g);
         this.dispatchEvent(Event.REDRAW, { target: this, context: g });
 
         // 最后调用绘制后处理
-        this._onAfterPaint_();
+        this._onAfterPaint_(g);
         this.dispatchEvent(Event.AFTER_REDRAW, { target: this, context: g });
 
         // 恢复二次上下文
-        if (g) {
-            g.restore();
-        }
+        if (g) g.restore();
 
         // 恢复一次上下文
-        if (g) {
-            g.restore();
-        }
+        if (g) g.restore();
     }
 
     /**

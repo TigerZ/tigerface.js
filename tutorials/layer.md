@@ -28,6 +28,13 @@ stage.addLayer(layer2, 'second');
 
 从第二层开始，必须指定层名称，或者有 name 属性。
 
+### Dom 层：DomLayer
+
+### 画布层：CanvasLayer
+
+CanvasLayer 是从 DomLayer 继承来的，其核心的 Dom 是一个 Canvas。
+通过这个 Canvas 创建的画笔，是画布层上所有子对象的绘图上下文。
+
 
 ### 开发中的功能
 

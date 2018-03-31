@@ -3,6 +3,8 @@
 import { Logger } from 'tigerface-common';
 import { Event } from 'tigerface-event';
 import { Rectangle } from 'tigerface-shape';
+import { Polygon } from 'tigerface-shape';
+
 import DisplayObjectContainer from './DisplayObjectContainer';
 
 /**
@@ -603,6 +605,100 @@ class Sprite extends DisplayObjectContainer {
      */
     set onEnterFrame(func) {
         this.on(Event.ENTER_FRAME, func);
+    }
+
+    /**
+     * 将感应区投影到全局坐标系
+     */
+    mirror() {
+        const shadow = new Sprite();
+        // 通过感应区的外边框的坐标变换，来计算投影的旋转和缩放
+
+        this.bounds.forEach((bound) => {
+            shadow.addBound(this._shapeToStage_(bound));
+        });
+
+        return shadow;
+    }
+
+    _shapeToStage_(shape) {
+        const vertexes = shape.getVertexes();
+        const points = [];
+
+        vertexes.forEach((vertex) => {
+            points.push(this.getStagePos(vertex));
+        });
+
+        if (Rectangle.isRectangle(points)) {
+            return new Rectangle(points);
+        }
+
+        return new Polygon(points);
+    }
+
+    _shapeToLayer_(shape) {
+        const vertexes = shape.getVertexes();
+        const points = [];
+
+        vertexes.forEach((vertex) => {
+            points.push(this.getLayerPos(vertex));
+        });
+
+        if (Rectangle.isRectangle(points)) {
+            return new Rectangle(points);
+        }
+        return new Polygon(points);
+    }
+
+    _shapeToOuter_(shape) {
+        const vertexes = shape.getVertexes();
+        const points = [];
+
+        vertexes.forEach((vertex) => {
+            points.push(this.getOuterPos(vertex));
+        });
+
+        return new Polygon(points);
+    }
+
+    /** *************************************************************************
+     *
+     * 碰撞
+     *
+     ************************************************************************* */
+
+    /**
+     * 点碰撞测试，用边界形状做碰撞测试。<br>
+     *     注意：碰撞测试前，点坐标要转换为内部坐标
+     * @param point 内部坐标
+     * @returns {boolean}
+     */
+    hitTestPoint(point) {
+        return this.mirror()._pointInBounds_(point);
+    }
+
+    /**
+     * 对象碰撞测试，用两边界形状做碰撞测试。<br>
+     *     碰撞测试前，需要把形状转换为同一坐标系
+     * @param target
+     * @returns {boolean}
+     */
+    hitTestObject(target) {
+        const a = this.mirror();
+        const b = target.mirror();
+
+        if (a.boundingRect.hitTestRectangle(b.boundingRect)) {
+            for (let i = 0; i < a.bounds.length; i += 1) {
+                const shape1 = a.bounds[i];
+                for (let j = 0; j < b.bounds.length; j += 1) {
+                    const shape2 = b.bounds[j];
+                    if (shape1.hitTestPolygon(shape2)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
 

@@ -66,8 +66,7 @@ class BarChartSprite extends CanvasSprite {
         super.update(options);
     }
 
-    paint() {
-        const g = this.graphics;
+    paint(g) {
         // g.flipH(this.height);
 
         const rects = [];

@@ -27,8 +27,7 @@ class Panel extends CanvasSprite {
         img.src = './img/b.jpeg';
     }
 
-    paint() {
-        const g = this.graphics;
+    paint(g) {
         const fillStyle = 'white';
         const strokeStyle = 'black';
 

@@ -42,8 +42,7 @@ class Panel extends CanvasSprite {
         this.enableDrag();
     }
 
-    paint() {
-        const g = this.graphics;
+    paint(g) {
         const textAlign = 'right';
         const textBaseline = 'bottom';
         const fillStyle = 'black';
@@ -104,8 +103,7 @@ class Windmill extends CanvasSprite {
         this.logger.error('Hi, 这是红色的错误');
     }
 
-    paint() {
-        const g = this.graphics;
+    paint(g) {
         let fillStyle;
         if (this.mouseInside) {
             fillStyle = 'rgba(255,0,0,0.5)';
@@ -128,8 +126,3 @@ const windmill = new Windmill();
 const panel = new Panel().addChild(windmill);
 
 stage.addLayer(surface.addChild(panel));
-
-setTimeout(() => {
-    stage.find(surface.name).stop();
-}, 5000);
-

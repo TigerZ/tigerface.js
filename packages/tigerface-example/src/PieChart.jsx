@@ -85,8 +85,7 @@ class PieChartSprite extends CanvasSprite {
         return this._data_;
     }
 
-    paint() {
-        const g = this.graphics;
+    paint(g) {
 
         let finish = true;
         const shapes = [];

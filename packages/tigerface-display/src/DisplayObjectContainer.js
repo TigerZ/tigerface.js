@@ -302,9 +302,9 @@ class DisplayObjectContainer extends DisplayObject {
      * 绘制后调用的方法，子类需要根据情况覆盖此方法的实现
      * @package
      */
-    _onAfterPaint_() {
+    _onAfterPaint_(g) {
         this.children.forEach((child) => {
-            child._paint_();
+            child._paint_(g);
         });
     }
 
@@ -352,22 +352,22 @@ class DisplayObjectContainer extends DisplayObject {
         });
     }
 
-    get graphics() {
-        if (this._graphics_ === undefined) {
-            if (this.layer) {
-                this.graphics = this.layer.graphics;
-            }
-        }
-        return this._graphics_;
-    }
-
-    /**
-     * 画笔
-     * @member {module:tigerface-graphic.Graphics}
-     */
-    set graphics(v) {
-        this._graphics_ = v;
-    }
+    // get graphics() {
+    //     if (this._graphics_ === undefined) {
+    //         if (this.layer) {
+    //             this.graphics = this.layer.graphics;
+    //         }
+    //     }
+    //     return this._graphics_;
+    // }
+    //
+    // /**
+    //  * 画笔
+    //  * @member {module:tigerface-graphic.Graphics}
+    //  */
+    // set graphics(v) {
+    //     this._graphics_ = v;
+    // }
 
     /**
      * 当子对象添加完成后被调用

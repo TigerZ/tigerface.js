@@ -98,10 +98,6 @@ class CanvasLayer extends DomLayer {
         return this.props.useOffScreenCanvas;
     }
 
-    get graphics() {
-        return this._graphics_;
-    }
-
     set graphics(v) {
         this._graphics_ = v;
         v.addBefore(() => {
@@ -158,8 +154,7 @@ class CanvasLayer extends DomLayer {
      * 绘制画布自身前的处理：缩放，设置透明度
      * @package
      */
-    _onBeforePaint_() {
-        const g = this.graphics;
+    _onBeforePaint_(g) {
         g.before();
     }
 
@@ -167,8 +162,7 @@ class CanvasLayer extends DomLayer {
      * 绘制画布自身后的处理：绘制子对象
      * @package
      */
-    _onAfterPaint_() {
-        const g = this.graphics;
+    _onAfterPaint_(g) {
         g.save();
         // 绘制顺序为后绘制的在上层
         g.globalCompositeOperation = 'source-over';
@@ -185,7 +179,7 @@ class CanvasLayer extends DomLayer {
                 child.realAlpha = this.alpha * child.alpha;
                 g.globalAlpha = child.realAlpha;
                 // 调用孩子绘制方法
-                child._paint_();
+                child._paint_(g);
                 // 恢复上下文
                 g.restore();
             }
@@ -208,6 +202,7 @@ class CanvasLayer extends DomLayer {
      * @package
      */
     _paint_() {
+        const g = this._graphics_;
         if (!this._pause_ && (!this.redrawAsNeeded || this.isChanged)) {
             if (!this._painting_) {
                 this._painting_ = true;
@@ -215,8 +210,8 @@ class CanvasLayer extends DomLayer {
             }
             const start = +new Date();
 
-            this.graphics.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            super._paint_();
+            g.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            super._paint_(g);
 
             const time = +new Date() - start;
             if (time > 16 && time > (this._paint_time_ || 0)) {
