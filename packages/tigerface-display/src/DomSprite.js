@@ -69,7 +69,7 @@ class DomSprite extends Sprite {
 
         this.assign(T.merge({
             style: {
-                position: 'relative',
+                position: DomSprite.Position.ABSOLUTE,
                 'transform-origin': '0px 0px 0px',
                 padding: '0px', // 无内边距
                 margin: '0px', // 无外边距

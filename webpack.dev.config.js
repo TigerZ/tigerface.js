@@ -10,10 +10,11 @@ const config = {
         main: [
             'babel-polyfill',
             'react-hot-loader/patch',
-            './example/src/demo.jsx',
+            // './example/src/demo.jsx',
             // './example/src/charts.jsx',
             // './example/src/purejs.js',
             // './example/src/graphics.js',
+            './example/src/snow.js',
         ],
     },
     resolve: {

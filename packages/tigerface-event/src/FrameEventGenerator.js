@@ -26,8 +26,8 @@ if (!win.requestNextAnimationFrame) {
                         start = +new Date();
                         callback();
                         finish = +new Date();
-                        ctx._requestNextAnimationFrameTimeout_ = (1000 / 60) - (finish - start);
-                    }, ctx._requestNextAnimationFrameTimeout_ || (1000 / 60));
+                        ctx._requestNextAnimationFrameTimeout_ = Math.max(0, (1000 / 60) - (finish - start));
+                    }, ctx._requestNextAnimationFrameTimeout_ !== undefined ? ctx._requestNextAnimationFrameTimeout_ : (1000 / 60));
                 })
             )
     )();
@@ -103,8 +103,8 @@ class FrameEventGenerator extends EventDispatcher {
             start = +new Date();
             callback(start);
             finish = +new Date();
-            this._frameTimeout_ = (1000 / this.fps) - (finish - start);
-        }, this._frameTimeout_ || (1000 / this.fps));
+            this._frameTimeout_ = Math.max(0, (1000 / this.fps) - (finish - start));
+        }, this._frameTimeout_ !== undefined ? this._frameTimeout_ : (1000 / this.fps));
     };
 }
 

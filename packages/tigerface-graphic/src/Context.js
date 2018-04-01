@@ -7,7 +7,7 @@ export default class Context extends EventDispatcher {
         });
         this.assign(options);
 
-        this.context = this.layer.canvas.getContext('2d');
+        this.context = this.canvas.getContext('2d');
 
         this.save = this.context.save.bind(this.context);
         this.restore = this.context.restore.bind(this.context);

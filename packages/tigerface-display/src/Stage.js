@@ -3,6 +3,17 @@ import { Event, FrameEventGenerator, DomEventAdapter } from 'tigerface-event';
 import DomSprite from './DomSprite';
 import Sprite from './Sprite';
 
+function setZIndex(obj, pre = '1') {
+    const len = (`${obj.children.length * 10}`).length;
+    obj.children.forEach((child, idx) => {
+        if (child instanceof DomSprite) {
+            const cur = pre + (`${idx * 10}`).padStart(len, '0');
+            child.setStyle({ 'z-index': Number.parseInt(cur, 10) });
+            setZIndex(child, cur);
+        }
+    });
+}
+
 /**
  * 舞台
  *
@@ -168,6 +179,7 @@ class Stage extends DomSprite {
      * 添加层
      * @param layer {DomLayer|CanvasLayer} 层对象
      * @param [name='main'] {string} 层名称
+     * @return module:tigerface-display.Stage
      */
     addLayer(layer, name) {
         let _name = name;
@@ -183,6 +195,7 @@ class Stage extends DomSprite {
         super.addChild(layer);
         layer._appendToStage_(this);
         this.logger.debug(`已添加名为 "${_name}" 的层`);
+        return this;
     }
 
     /**
@@ -311,15 +324,6 @@ class Stage extends DomSprite {
      * @private
      */
     _register_(child) {
-        if (child instanceof DomSprite) {
-            if (this.domList.indexOf(child) < 0) {
-                this.domList.unshift(child);
-                this.domList.forEach((sprite, i) => {
-                    sprite.setStyle({ 'z-index': (i * 10) + 10 });
-                });
-                this._onCoversChanged_();
-            }
-        }
         this._registerIndex_(child);
     }
 
@@ -332,6 +336,10 @@ class Stage extends DomSprite {
         const idx = this.domList.indexOf(child);
         this.domList.split(idx, 1);
         this._unregisterIndex_(child);
+    }
+
+    _onChildrenChanged_() {
+        setZIndex(this);
     }
 
     /**

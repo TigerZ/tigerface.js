@@ -9,10 +9,10 @@ import methods from './methods';
 const EVENT_BEFORE_PAINT = 'EVENT_BEFORE_PAINT';
 
 class Graphics extends Context {
-    constructor(layer) {
+    constructor(canvas) {
         super({
             clazzName: Graphics.name,
-            layer,
+            canvas,
         });
 
         this.assignWithAOP(methods);
@@ -61,14 +61,6 @@ class Graphics extends Context {
                 this.after();
             }
         };
-    }
-
-    get canvas() {
-        return this.context.canvas;
-    }
-
-    get devicePixelRatio() {
-        return this.layer.devicePixelRatio;
     }
 
     flipH(height) {

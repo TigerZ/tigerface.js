@@ -19,7 +19,6 @@ class CanvasLayer extends DomLayer {
      */
     constructor(options = undefined, dom = undefined) {
         const props = {
-            // position: 'absolute',
             clazzName: CanvasLayer.name,
             width: '320',
             height: '240',
@@ -44,12 +43,21 @@ class CanvasLayer extends DomLayer {
 
         this.canvas = canvas;
 
-        this.graphics = new Graphics(this);
+        this._graphics_ = new Graphics(this.canvas);
+        this._setGraphicsBefore_(this._graphics_);
 
         // 下层显示对象通过此属性识别是否是上层 CanvasContainer 对象
         this._layer_ = this;
 
         this._pause_ = false;
+
+        if (this.useOffScreenCanvas) {
+            this._offScreenCanvas_ = document.createElement('canvas');
+            this._offScreenCanvas_.width = this.canvas.width;
+            this._offScreenCanvas_.height = this.canvas.height;
+            this._offScreenGraphics_ = new Graphics(this._offScreenCanvas_);
+            this._setGraphicsBefore_(this._offScreenGraphics_);
+        }
     }
 
     set retina(v) {
@@ -98,8 +106,7 @@ class CanvasLayer extends DomLayer {
         return this.props.useOffScreenCanvas;
     }
 
-    set graphics(v) {
-        this._graphics_ = v;
+    _setGraphicsBefore_(v) {
         v.addBefore(() => {
             if (this.devicePixelRatio !== undefined && this.devicePixelRatio !== 1) {
                 v.scale(this.devicePixelRatio, this.devicePixelRatio);
@@ -211,15 +218,20 @@ class CanvasLayer extends DomLayer {
             const start = +new Date();
 
             g.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            super._paint_(g);
+
+            if (this.useOffScreenCanvas) {
+                this._offScreenGraphics_.clearRect(0, 0, this._offScreenCanvas_.width, this._offScreenCanvas_.height);
+                super._paint_(this._offScreenGraphics_);
+                g.drawImage(this._offScreenCanvas_, 0, 0);
+            } else {
+                super._paint_(g);
+            }
+
 
             const time = +new Date() - start;
             if (time > 16 && time > (this._paint_time_ || 0)) {
-                const m = Math.floor(time / 60000);
-                const s = Math.floor((time - (m * 60000)) / 1000);
-                const mi = (time - (m * 60000)) - (s * 1000);
                 this._paint_time_ = time;
-                this.logger.warn(`耗时警告：最长重绘耗时为：${m}:${s}.${mi}，超过 16 毫秒，帧数将少于 60 帧`);
+                this.logger.warn(`耗时警告：最长重绘耗时为：${time} 毫秒，超过 16 毫秒，帧数将少于 60 帧`);
             }
         } else if (this._painting_) {
             this._painting_ = false;

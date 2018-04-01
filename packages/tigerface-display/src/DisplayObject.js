@@ -436,18 +436,18 @@ class DisplayObject extends EventDispatcher {
 
         // 先调用绘制前处理
         this._onBeforePaint_(g);
-        this.dispatchEvent(Event.BEFORE_REDRAW, { target: this, context: g });
+        this.dispatchEvent(Event.BEFORE_REDRAW, { target: this, graphics: g });
 
         // 保存二次上下文
         if (g) g.save();
 
         // 再调用自身绘制
         this.paint(g);
-        this.dispatchEvent(Event.REDRAW, { target: this, context: g });
+        this.dispatchEvent(Event.REDRAW, { target: this, graphics: g });
 
         // 最后调用绘制后处理
         this._onAfterPaint_(g);
-        this.dispatchEvent(Event.AFTER_REDRAW, { target: this, context: g });
+        this.dispatchEvent(Event.AFTER_REDRAW, { target: this, graphics: g });
 
         // 恢复二次上下文
         if (g) g.restore();

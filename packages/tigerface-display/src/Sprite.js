@@ -599,6 +599,14 @@ class Sprite extends DisplayObjectContainer {
         this.on(Event.REDRAW, func);
     }
 
+    set onBeforeDraw(func) {
+        this.on(Event.BEFORE_REDRAW, func);
+    }
+
+    set onAfterDraw(func) {
+        this.on(Event.AFTER_REDRAW, func);
+    }
+
     /**
      * 进入帧事件侦听器（添加）
      * @member {function}

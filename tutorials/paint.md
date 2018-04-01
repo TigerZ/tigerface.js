@@ -31,16 +31,15 @@ class MySprite extends CanvasSprite {
 * 外部事件侦听
 ```javascript
 const sprite = new CanvasSprite();
-sprite.on(Event.REDRAW, ()=>{
-    const g = this.graphics;
+sprite.on(Event.REDRAW, (g)=>{
     g.fillStyle = 'rgba(255,0,0,0.8)';
     g.textAlign = 'center';
     g.textBaseline = 'bottom';
     g.drawText('Hello World! ', { x: 200, y: 200 }, '12px monaco', g.DrawStyle.FILL);
 });
 // 或者
-sprite.onRedraw = ()=>{
-    const g = this.graphics;
+sprite.onRedraw = (e)=>{
+    const g = e.graphics;
     g.fillStyle = 'rgba(255,0,0,0.8)';
     g.textAlign = 'center';
     g.textBaseline = 'bottom';

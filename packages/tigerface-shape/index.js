@@ -1,6 +1,7 @@
 /**
  * @module tigerface-shape
  */
+
 export { default as Circle } from './src/Circle';
 export { default as ClockwisePolygon } from './src/ClockwisePolygon';
 export { default as CubicBezier } from './src/CubicBezier';
@@ -20,5 +21,10 @@ export { default as Shape } from './src/Shape';
 export { default as Square } from './src/Square';
 
 export { default as Triangle } from './src/Triangle';
+export { default as Hexagon } from './src/Hexagon';
+export { default as Pentagon } from './src/Pentagon';
+export { default as EquilateralPolygon } from './src/EquilateralPolygon';
+export { default as EquilateralStar } from './src/EquilateralStar';
+
 export { default as Vector } from './src/Vector';
 export { default as Vertex } from './src/Vertex';
