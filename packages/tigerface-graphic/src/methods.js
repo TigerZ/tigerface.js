@@ -10,6 +10,7 @@ import drawPolygon from './drawPolygon';
 import drawRectangle from './drawRectangle';
 import drawRoundedPolygon from './drawRoundedPolygon';
 import drawImageObj from './drawImageObj';
+import airbrushPoint from './airbrushPoint';
 
 export default {
     PointStyle,
@@ -26,4 +27,5 @@ export default {
     drawRoundedPolygon,
     drawText,
     drawImageObj,
+    airbrushPoint,
 };

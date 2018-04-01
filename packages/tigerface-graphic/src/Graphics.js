@@ -9,10 +9,11 @@ import methods from './methods';
 const EVENT_BEFORE_PAINT = 'EVENT_BEFORE_PAINT';
 
 class Graphics extends Context {
-    constructor(canvas) {
+    constructor(canvas, devicePixelRatio = 1) {
         super({
             clazzName: Graphics.name,
             canvas,
+            devicePixelRatio,
         });
 
         this.assignWithAOP(methods);

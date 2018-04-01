@@ -4,6 +4,7 @@ export default class Context extends EventDispatcher {
     constructor(options) {
         super({
             clazzName: Context.name,
+            devicePixelRatio: 1,
         });
         this.assign(options);
 
@@ -99,19 +100,19 @@ export default class Context extends EventDispatcher {
     }
 
     get shadowOffsetX() {
-        return this.context.shadowOffsetX;
+        return this.context.shadowOffsetX / this.devicePixelRatio;
     }
 
     set shadowOffsetX(value) {
-        this.context.shadowOffsetX = value;
+        this.context.shadowOffsetX = value * this.devicePixelRatio;
     }
 
     get shadowOffsetY() {
-        return this.context.shadowOffsetY;
+        return this.context.shadowOffsetY / this.devicePixelRatio;
     }
 
     set shadowOffsetY(value) {
-        this.context.shadowOffsetY = value;
+        this.context.shadowOffsetY = value * this.devicePixelRatio;
     }
 
     /*********************************************************************

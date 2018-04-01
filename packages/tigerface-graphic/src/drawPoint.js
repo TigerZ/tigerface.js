@@ -7,17 +7,17 @@ export const PointStyle = {
     MULTIPLY: 3,
 };
 
-function drawPoint(point, props) {
+function drawPoint(point, props = {}) {
     const {
         radius = 3,
         lineWidth = 1,
         pointStyle = PointStyle.ROUND_PLUS,
         strokeStyle = 'black',
         stroke = true,
-        save = false,
+        save = true,
         beginPath = true,
         closePath = true,
-        restore = false,
+        restore = true,
     } = props;
 
     if (save) this.save();

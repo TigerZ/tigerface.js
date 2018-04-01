@@ -187,7 +187,7 @@ class Sprite extends DisplayObjectContainer {
         // 先做外接矩形碰撞测试，排除远点
         if (this.boundingRect.hitTestPoint(point)) {
             // 如果没定义边界图形，那么说明 boundingRect 从孩子获取，直接返回true，主要用于图纸等用途
-            // this.logger.debug('_pointInBounds_', this.boundingRect, point, this._bounds_.length);
+            this.logger.debug('_pointInBounds_', this.boundingRect, point, this._bounds_.length);
             if (this._bounds_.length === 0) {
                 return true;
             }

@@ -13,8 +13,8 @@ const config = {
             // './example/src/demo.jsx',
             // './example/src/charts.jsx',
             // './example/src/purejs.js',
-            // './example/src/graphics.js',
-            './example/src/snow.js',
+            './example/src/graphics.js',
+            // './example/src/snow.js',
         ],
     },
     resolve: {

@@ -43,7 +43,10 @@ class CanvasLayer extends DomLayer {
 
         this.canvas = canvas;
 
-        this._graphics_ = new Graphics(this.canvas);
+        this._graphics_ = new Graphics(
+            this.canvas,
+            this.devicePixelRatio,
+        );
         this._setGraphicsBefore_(this._graphics_);
 
         // 下层显示对象通过此属性识别是否是上层 CanvasContainer 对象
@@ -55,7 +58,10 @@ class CanvasLayer extends DomLayer {
             this._offScreenCanvas_ = document.createElement('canvas');
             this._offScreenCanvas_.width = this.canvas.width;
             this._offScreenCanvas_.height = this.canvas.height;
-            this._offScreenGraphics_ = new Graphics(this._offScreenCanvas_);
+            this._offScreenGraphics_ = new Graphics(
+                this._offScreenCanvas_,
+                this.devicePixelRatio,
+            );
             this._setGraphicsBefore_(this._offScreenGraphics_);
         }
     }

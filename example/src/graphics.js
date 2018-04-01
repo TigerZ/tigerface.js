@@ -144,6 +144,23 @@ class Panel extends CanvasSprite {
                 },
             });
         }
+
+        const grad = g.createLinearGradient(0, 0, 1, 256);
+        const colors = {
+            0.45: 'rgb(0,0,255)',
+            0.55: 'rgb(0,255,255)',
+            0.65: 'rgb(0,255,0)',
+            0.95: 'yellow',
+            1.0: 'rgb(255,0,0)',
+        };
+        Object.keys(colors).forEach((x) => {
+            grad.addColorStop(x, colors[x]);
+        });
+
+        g.airbrushPoint({ x: p9.x - 50, y: p9.y + 150 }, {
+            fillStyle: 'rgba(255,0,0,1)',
+            radius: 10,
+        });
     }
 }
 

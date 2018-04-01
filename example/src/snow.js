@@ -41,8 +41,9 @@ class Snow extends CanvasSprite {
                 fillStyle: 'white',
             });
         });
-        let restart = false
-        if (!this.stop && (this.noHitTest || !this.hitTestObject(this.stage.find('tree')))) {
+        let restart = false;
+
+        if (!this.stop && (this.noHitTest || !this.stage.find('tree').hitTestPoint(this.getStagePos()))) {
             this.y += this.speed;
             this.rotation += this.rotationSpeed;
             if (this.y > 198) this.stop = true;
