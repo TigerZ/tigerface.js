@@ -12,9 +12,9 @@ const config = {
             'react-hot-loader/patch',
             // './example/src/demo.jsx',
             // './example/src/charts.jsx',
-            // './example/src/purejs.js',
-            './example/src/graphics.js',
-            // './example/src/snow.js',
+            // './packages/tigerface-example/src/windmill.js',
+            './packages/tigerface-example/src/graphics.js',
+            // './packages/tigerface-example/src/snow.js',
         ],
     },
     resolve: {

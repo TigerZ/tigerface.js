@@ -1,5 +1,5 @@
 import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
-import { Point, Line, Circle, Rectangle, Polygon, Curve, Sector, Arc } from 'tigerface-shape';
+import { Point, Line, Circle, Rectangle, Polygon, Curve, Arc } from 'tigerface-shape';
 
 const dom = document.getElementById('root');
 
