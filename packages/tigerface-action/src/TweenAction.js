@@ -30,7 +30,7 @@ class TweenAction extends EventDispatcher {
             prop,
             end,
             effect = Tween.Linear.easeOut,
-            duration = 1000,
+            time = 1000,
             digits = 0,
             adapter = new FrameEventGenerator(),
         } = options;
@@ -46,7 +46,7 @@ class TweenAction extends EventDispatcher {
             startValue: start,
             endValue: end,
             effect,
-            duration,
+            time,
             digits,
             yoyoEffect,
             adapter,
@@ -61,7 +61,7 @@ class TweenAction extends EventDispatcher {
 
         this.dispatchEvent(Tween.Event.MOTION_CHANGED, {
             value,
-            duration: elapsed,
+            time: elapsed,
         });
     }
 
@@ -72,7 +72,7 @@ class TweenAction extends EventDispatcher {
         if (now >= this.endTime) {
             this.end();
         } else {
-            let newValue = this.effect(elapsed, this.startValue, this.diff, this.duration);
+            let newValue = this.effect(elapsed, this.startValue, this.diff, this.time);
             newValue = T.round(newValue, this.digits);
             this.changeTargetValue(newValue, elapsed);
         }
@@ -89,7 +89,7 @@ class TweenAction extends EventDispatcher {
     _start_() {
         this.diff = this.endValue - this.startValue;
         this.startTime = +new Date();
-        this.endTime = this.startTime + this.duration;
+        this.endTime = this.startTime + this.time;
         this.changeTargetValue(this.startValue, 0);
         this.running = true;
         this.adapter.addEventListener(Event.REDRAW, this.run);

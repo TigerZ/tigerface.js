@@ -7,7 +7,7 @@ const dom = document.getElementById('root');
 const stage = new Stage({
     fps: 16,
     width: 200,
-    height: 200,
+    height: 400,
     style: {
         'background-color': 'rgba(255,255,0,0.3)',
     },
@@ -23,8 +23,9 @@ class Ball extends CanvasSprite {
         this.addBound(new Circle(0, 0, 10));
         this.tween = new TweenAction(this, {
             prop: 'y',
-            end: 150,
-            effect: Tween.Elastic.easeOut,
+            end: 300,
+            time: 1000,
+            effect: Tween.Bounce.easeOut,
         });
         this.tween.start();
         this.tween.onFinish = () => this.tween.yoyo();
@@ -39,8 +40,11 @@ class Ball extends CanvasSprite {
 }
 
 stage
-    .addLayer(new CanvasLayer().addChild(new Ball({
+    .addLayer(new CanvasLayer({
+        width: 200,
+        height: 400,
+    }).addChild(new Ball({
         x: 100,
-        y: 50,
+        y: 100,
     })), 'snow1');
 
