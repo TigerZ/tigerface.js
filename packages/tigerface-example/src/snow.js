@@ -2,8 +2,6 @@ import { Stage, CanvasLayer, CanvasSprite, DomLayer } from 'tigerface-display';
 import { Triangle, EquilateralStar, Rectangle } from 'tigerface-shape';
 import { Utilities as T } from 'tigerface-common';
 
-const dom = document.getElementById('root');
-
 const stage = new Stage({
     fps: 16,
     width: 200,
@@ -11,7 +9,7 @@ const stage = new Stage({
     style: {
         'background-color': 'rgba(255,255,0,0.3)',
     },
-}, dom);
+});
 
 class Snow extends CanvasSprite {
     constructor(opt) {
@@ -116,3 +114,4 @@ stage
         retina: false,
     }).addChild(new ViewPort({ max: 50, radius: 0.5, noHitTest: true })), 'snow3');
 
+document.getElementById('snow').append(stage.dom);

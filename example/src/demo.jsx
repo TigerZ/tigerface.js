@@ -9,7 +9,7 @@ import AppRoot from './DomSpriteAppRoot';
 const render = (Component) => {
     ReactDOM.render(
             <Component />,
-        document.getElementById('root'),
+        document.getElementById('demo'),
     );
 };
 

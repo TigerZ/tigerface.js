@@ -170,23 +170,3 @@ export default withSimpleSpriteComponent(barChart, {
 });
 
 // 以下是演示数据
-
-// const colors = ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon'];
-// const data = [
-//     {name: '何敏', num: 38},
-//     {name: '王菲丽', num: 76},
-//     {name: '张思雨', num: 25},
-//     {name: '王明清', num: 48},
-//     {name: '袁立', num: 22},
-//     {name: '邢惠珊', num: 71},
-//     {name: '李安和', num: 45}
-// ];
-//
-// putData(
-//     data,
-//     {
-//         speed: 3,
-//         font: '12px Kaiti',
-//         colors
-//     }
-// );

@@ -3,8 +3,6 @@ import { Triangle } from 'tigerface-shape';
 import { Event } from 'tigerface-event';
 import { Utilities as T } from 'tigerface-common';
 
-const dom = document.getElementById('root');
-
 const stage = new Stage({
     fps: 16,
     width: 200,
@@ -12,7 +10,7 @@ const stage = new Stage({
     style: {
         'background-color': 'rgba(255,255,0,0.3)',
     },
-}, dom);
+});
 
 // 如果不直接把 dom 传给 stage，可以让 stage 自己创建 dom，再获取
 // dom.appendChild(stage.dom);
@@ -126,3 +124,5 @@ const windmill = new Windmill();
 const panel = new Panel().addChild(windmill);
 
 stage.addLayer(surface.addChild(panel));
+
+document.getElementById('windmill').append(stage.dom);

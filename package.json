@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "fbjs": "^0.8.16",
+    "marked": "^0.3.19",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-reconciler": "^0.7.0"

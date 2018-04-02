@@ -2,8 +2,6 @@ import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
 import { Circle } from 'tigerface-shape';
 import { TweenAction, Tween } from 'tigerface-action';
 
-const dom = document.getElementById('root');
-
 const stage = new Stage({
     fps: 16,
     width: 200,
@@ -11,7 +9,7 @@ const stage = new Stage({
     style: {
         'background-color': 'rgba(255,255,0,0.3)',
     },
-}, dom);
+}, document.getElementById('tween'));
 
 
 class Ball extends CanvasSprite {

@@ -1,8 +1,6 @@
 import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
 import { Point, Line, Circle, Rectangle, Polygon, Curve, Arc } from 'tigerface-shape';
 
-const dom = document.getElementById('root');
-
 const stage = new Stage({
     fps: 16,
     width: 400,
@@ -10,7 +8,7 @@ const stage = new Stage({
     style: {
         'background-color': 'rgba(255,255,0,0.3)',
     },
-}, dom);
+}, document.getElementById('graphics'));
 
 // 继承的方式
 class Panel extends CanvasSprite {

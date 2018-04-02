@@ -8,15 +8,23 @@ const RootPath = path.resolve(__dirname);
 const config = {
     entry: {
         main: [
+            './example/src/marked.js',
+        ],
+        demo: [
             'babel-polyfill',
             'react-hot-loader/patch',
-            // './example/src/demo.jsx',
-            './example/src/charts.jsx',
-            //  './example/src/tween.js',
-            // './packages/tigerface-example/src/windmill.js',
-            // './packages/tigerface-example/src/graphics.js',
-            // './packages/tigerface-example/src/snow.js',
+            './example/src/demo.jsx',
         ],
+        barChart: [
+            './packages/tigerface-example/src/BarChartApp.jsx',
+        ],
+        pieChart: [
+            './packages/tigerface-example/src/PieChartApp.jsx',
+        ],
+        tween: ['./example/src/tween.js'],
+        windmill: ['./packages/tigerface-example/src/windmill.js'],
+        graphics: ['./packages/tigerface-example/src/graphics.js'],
+        snow: ['./packages/tigerface-example/src/snow.js'],
     },
     resolve: {
         alias: {
@@ -61,6 +69,7 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './template/index.template.html',
+            chunks: ['main'],
         }),
         new CleanWebpackPlugin(['./example/assets']),
         new webpack.NamedModulesPlugin(),
