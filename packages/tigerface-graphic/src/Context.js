@@ -1,4 +1,4 @@
-import { EventDispatcher } from "RootPath/packages/tigerface-event";
+import { EventDispatcher } from 'tigerface-event';
 
 export default class Context extends EventDispatcher {
     constructor(options) {
@@ -12,9 +12,9 @@ export default class Context extends EventDispatcher {
 
         this.save = this.context.save.bind(this.context);
         this.restore = this.context.restore.bind(this.context);
-        //this.getContext = this.context.getContext.bind(this.context);
-        //this.createEvent = this.context.createEvent.bind(this.context);
-        //this.toDataURL = this.context.toDataURL.bind(this.context);
+        // this.getContext = this.context.getContext.bind(this.context);
+        // this.createEvent = this.context.createEvent.bind(this.context);
+        // this.toDataURL = this.context.toDataURL.bind(this.context);
 
         this.createImageData = this.context.createImageData.bind(this.context);
         this.getImageData = this.context.getImageData.bind(this.context);
@@ -53,7 +53,7 @@ export default class Context extends EventDispatcher {
         this.createLinearGradient = this.context.createLinearGradient.bind(this.context);
         this.createPattern = this.context.createPattern.bind(this.context);
         this.createRadialGradient = this.context.createRadialGradient.bind(this.context);
-        //this.addColorStop = this.context.addColorStop.bind(this.context);
+        // this.addColorStop = this.context.addColorStop.bind(this.context);
 
         // this.context.mozImageSmoothingEnabled = false;
         // this.context.webkitImageSmoothingEnabled = false;
@@ -61,11 +61,11 @@ export default class Context extends EventDispatcher {
         // this.context.imageSmoothingEnabled = true;
     }
 
-    /*********************************************************************
+    /** *******************************************************************
      *
      * 颜色、样式和阴影
      *
-     **********************************************************************/
+     ********************************************************************* */
 
     get fillStyle() {
         return this.context.fillStyle;
@@ -115,11 +115,11 @@ export default class Context extends EventDispatcher {
         this.context.shadowOffsetY = value * this.devicePixelRatio;
     }
 
-    /*********************************************************************
+    /** *******************************************************************
      *
      * 线条样式
      *
-     *********************************************************************/
+     ******************************************************************** */
 
     get lineCap() {
         return this.context.lineCap;
@@ -153,11 +153,11 @@ export default class Context extends EventDispatcher {
         this.context.miterLimit = value;
     }
 
-    /*********************************************************************
+    /** *******************************************************************
      *
      * 合成
      *
-     *********************************************************************/
+     ******************************************************************** */
 
     get globalAlpha() {
         return this.context.globalAlpha;
@@ -175,11 +175,11 @@ export default class Context extends EventDispatcher {
         this.context.globalCompositeOperation = value;
     }
 
-    /*********************************************************************
+    /** *******************************************************************
      *
      * 像素操作
      *
-     *********************************************************************/
+     ******************************************************************** */
 
     get width() {
         return this.context.width;
@@ -205,11 +205,11 @@ export default class Context extends EventDispatcher {
         this.context.data = value;
     }
 
-    /*********************************************************************
+    /** *******************************************************************
      *
      * 文本
      *
-     *********************************************************************/
+     ******************************************************************** */
 
     get font() {
         return this.context.font;

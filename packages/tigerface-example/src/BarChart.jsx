@@ -26,7 +26,7 @@ const _default = {
     font: '12px monaco',
     speed: 3,
     style: {
-        margin: '30px auto',
+        margin: '30px',
     },
 };
 

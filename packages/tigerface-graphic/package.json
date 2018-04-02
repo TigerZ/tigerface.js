@@ -1,6 +1,6 @@
 {
   "name": "tigerface-graphic",
-  "version": "0.10.2",
+  "version": "0.10.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "Tiger zhangyihu@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "tigerface-shape": "^0.10.4"
+    "tigerface-shape": "^0.10.5"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

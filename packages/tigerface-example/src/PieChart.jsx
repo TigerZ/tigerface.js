@@ -26,7 +26,7 @@ const _default = {
     font: '12px monaco',
     speed: 3,
     style: {
-        margin: '30px auto 0',
+        margin: '30px',
     },
     colors: ['red'],
 };

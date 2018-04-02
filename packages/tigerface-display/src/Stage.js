@@ -44,7 +44,11 @@ class Stage extends DomSprite {
 
         super(props, dom);
 
-        this.assign(options);
+        this.assign(T.merge({
+            style: {
+                position: DomSprite.Position.RELATIVE,
+            },
+        }, options));
 
         // 定义 Dom 引擎
         this.domAdapter = new DomEventAdapter(this.dom, {
