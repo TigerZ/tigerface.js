@@ -5,13 +5,20 @@ import Sprite from './Sprite';
 
 function setZIndex(obj, pre = '1') {
     const len = (`${obj.children.length * 10}`).length;
+    let last = pre;
     obj.children.forEach((child, idx) => {
         if (child instanceof DomSprite) {
             const cur = pre + (`${idx * 10}`).padStart(len, '0');
             child.setStyle({ 'z-index': Number.parseInt(cur, 10) });
-            setZIndex(child, cur);
+            last = setZIndex(child, cur);
         }
     });
+    if (obj.isStage) {
+        obj.covers.forEach((cover, i) => {
+            cover.setStyle({ 'z-index': ((i + 1) * 10) + Number.parseInt(last, 10) });
+        });
+    }
+    return last;
 }
 
 /**
@@ -317,9 +324,7 @@ class Stage extends DomSprite {
      * @private
      */
     _onCoversChanged_() {
-        this.covers.forEach((cover, i) => {
-            cover.setStyle({ 'z-index': ((i + this.domList.length) * 10) + 10 });
-        });
+        setZIndex(this);
     }
 
     /**
