@@ -8,7 +8,7 @@ const stage = new Stage({
     style: {
         'background-color': 'rgba(255,255,0,0.3)',
     },
-}, document.getElementById('graphics'));
+}, document.getElementById('graphics') || document.documentElement);
 
 // 继承的方式
 class Panel extends CanvasSprite {

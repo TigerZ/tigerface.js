@@ -125,4 +125,4 @@ const panel = new Panel().addChild(windmill);
 
 stage.addLayer(surface.addChild(panel));
 
-document.getElementById('windmill').append(stage.dom);
+(document.getElementById('windmill') || document.documentElement).append(stage.dom);

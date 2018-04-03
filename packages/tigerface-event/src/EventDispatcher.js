@@ -33,7 +33,7 @@ class EventDispatcher extends BaseObject {
     }
 }
 
-const MAX_LISTENERS = 100;
+const MAX_LISTENERS = 200;
 
 /**
  * 导出 EventDispatcher 的基本功能，是为了让其他类可以不从 EventDispatcher 继承，而使用 mixin 方式集成事件

@@ -1,17 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { AppContainer } from 'react-hot-loader';
 import AppRoot from './DomSpriteAppRoot';
 
+const { $ } = global;
+window.$ = $;
 
 const render = (Component) => {
     ReactDOM.render(
-            <Component />,
-        document.getElementById('demo'),
+        <AppContainer>
+            <Component />
+        </AppContainer>,
+        document.getElementById('root'),
     );
 };
 
 render(AppRoot);
+
+// Webpack Hot Module Replacement API
+if (module.hot) {
+    module.hot.accept('./DomSpriteAppRoot', () => {
+        render(AppRoot);
+    });
+}
 

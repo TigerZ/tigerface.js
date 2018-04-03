@@ -66,6 +66,6 @@ class AppRoot extends React.Component {
 
 ReactDom.render(
     <AppRoot />,
-    document.getElementById('barChart'),
+    document.getElementById('barChart') || document.documentElement,
 );
 

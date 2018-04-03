@@ -10,15 +10,13 @@ const stage = new Stage(
 );
 ```
 
-[雪花](html/snow.html)
-
 [barChart](html/barChart.html "tigerface-embed:barChart")
 
 [pieChart](html/pieChart.html "tigerface-embed:pieChart")
 
 [风车](html/windmill.html "tigerface-embed:windmill")
 
-[Tween](html/tween.html "tigerface-embed:tween")
+[雪花](html/snow.html)
 
-[Graphics](html/graphics.html "tigerface-embed:graphics")
+[Tween](html/tween.html "tigerface-embed:tween")
 

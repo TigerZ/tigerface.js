@@ -114,4 +114,4 @@ stage
         retina: false,
     }).addChild(new ViewPort({ max: 50, radius: 0.5, noHitTest: true })), 'snow3');
 
-document.getElementById('snow').append(stage.dom);
+(document.getElementById('snow') || document.documentElement).append(stage.dom);

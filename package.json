@@ -6,8 +6,8 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --require babel-core/register ",
     "watch": "webpack --watch",
-    "start": "webpack-dev-server --config webpack.dev.config.js --open",
-    "build": "webpack"
+    "start": "webpack-dev-server --config webpack.dev.config.js --open --open-page index.html",
+    "build": "webpack -p --config webpack.config.js"
   },
   "author": "",
   "license": "MIT",
@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "fbjs": "^0.8.16",
+    "highlight.js": "^9.12.0",
     "marked": "^0.3.19",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

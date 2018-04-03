@@ -1,5 +1,4 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack'); // to access built-in plugins
 const path = require('path');
 
@@ -7,7 +6,7 @@ const RootPath = path.resolve(__dirname);
 
 const config = {
     entry: {
-        main: [
+        marked: [
             './example/src/marked.js',
         ],
         demo: [
@@ -34,11 +33,11 @@ const config = {
         modules: [__dirname, path.resolve(__dirname, 'packages'), 'node_modules'],
     },
     output: {
-        path: path.resolve(__dirname, './example/assets'),
+        path: path.resolve(__dirname, './assets'),
         filename: '[name].js',
     },
     devServer: {
-        contentBase: [path.resolve(__dirname, './example/assets'), path.resolve(__dirname, './webroot')],
+        contentBase: [path.resolve(__dirname, './assets')],
         hot: true,
         port: 9000,
         host: '0.0.0.0',
@@ -69,9 +68,41 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './template/index.template.html',
-            chunks: ['main'],
+            title: 'tigerface.js',
+            filename: 'index.html',
+            chunks: ['marked'],
         }),
-        new CleanWebpackPlugin(['./example/assets']),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: 'snow.html',
+            title: 'tigerface.js 范例 - 雪花',
+            chunks: ['snow'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: 'windmill.html',
+            title: 'tigerface.js 范例 - 风车',
+            chunks: ['windmill'],
+        }),
+
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: 'barChart.html',
+            title: 'tigerface.js 范例 - 柱图',
+            chunks: ['barChart'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: 'pieChart.html',
+            title: 'tigerface.js 范例 - 饼图',
+            chunks: ['pieChart'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: 'tween.html',
+            title: 'tigerface.js 范例 - 补间',
+            chunks: ['tween'],
+        }),
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
