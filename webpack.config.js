@@ -8,7 +8,7 @@ const RootPath = path.resolve(__dirname);
 const config = {
     entry: {
         marked: [
-            './webroot/src/marked.js',
+            './tigerz.github.io/src/marked.js',
         ],
         demo: [
             'babel-polyfill',
@@ -33,7 +33,7 @@ const config = {
         modules: [__dirname, path.resolve(__dirname, 'packages'), 'node_modules'],
     },
     output: {
-        path: path.resolve(__dirname, './webroot/js'),
+        path: path.resolve(__dirname, './tigerz.github.io/js'),
         filename: '[name].js',
     },
     module: {
@@ -91,7 +91,7 @@ const config = {
             title: 'tigerface.js 范例 - 补间',
             chunks: ['tween'],
         }),
-        new CleanWebpackPlugin(['./webroot/marked.html', './webroot/js', './webroot/html']),
+        new CleanWebpackPlugin(['./tigerz.github.io/js', './tigerz.github.io/html']),
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
