@@ -2,7 +2,7 @@
 
 感谢你对 tigerface.js 感兴趣。
 
-tigerface.js 的当前版本，正在加紧重构中，代码和文档每天都在变化中，希望很快会发布稳定正式版本。\[[更新日志](tutorials/log.md "更新日志")\]
+tigerface.js 的当前版本，正在加紧重构中，代码和文档每天都在变化中，希望很快会发布稳定正式版本。\[[更新日志](log.md "更新日志")\]
 
 新版本的网站正在建设，旧版网站：[[tigerfacejs.org](http://tigerfacejs.org "tigerfacejs.org")]
 

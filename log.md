@@ -28,3 +28,5 @@
 2018/03/17 完成主要模块的独立发布，完成 tigerface-cli 工具的 "init example" 功能
 
 2018/04/02 display 相关功能基本重构完成，还需要继续加注释、写文档、写范例
+
+2018/04/05 tigerz.github.io 网站已经建立，支持 markdown 和 tigerface-embed，但内容还未完善
