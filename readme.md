@@ -4,7 +4,9 @@
 
 tigerface.js 的当前版本，正在加紧重构中，代码和文档每天都在变化中，希望很快会发布稳定正式版本。\[[更新日志](log.md "更新日志")\]
 
-新版本的网站正在建设，旧版网站：[[tigerfacejs.org](http://tigerfacejs.org "tigerfacejs.org")]
+新版本的网站正在建设：[[tigerz.github.io](https://tigerz.github.io "tigerz.github.io")]
+
+旧版网站：[[tigerfacejs.org](http://tigerfacejs.org "tigerfacejs.org")]
 
 **tigerface.js 是什么？**
 
