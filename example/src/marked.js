@@ -13,7 +13,7 @@ renderer.link = function (href, title, text) {
         const name = title.substr(prefix.length);
         return `<div>${text}</div><div id="${name}"></div><script src="${href.replace(/html/g, 'js')}"></script>`;
     } else if (href && href.endsWith('md')) {
-        return `<a title="${title}" href="javascript:openmd('${href}')">${text}</a>`;
+        return `<a title="${title}" href="#${href}">${text}</a>`;
     }
     return `<a href="${href}" title="${title}">${text}</a>`;
 };
@@ -26,7 +26,7 @@ myMarked.setOptions({
 });
 
 function openmd(url) {
-    $.get(url, (md) => {
+    $.get(`${url}?${+new Date()}`, (md) => {
         const result = myMarked(md, { renderer });
         $('#root').html(result);
     });
