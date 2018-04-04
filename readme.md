@@ -24,7 +24,7 @@ tigerface.js 架构代码用 es6 编写，使用 webpack + babel 编译。
 
 **文档在哪里？**
 
-[入门教程](tutorials/readme.md) 在 tutorials/ 目录下。
+教程在 tutorials/ 目录下，[访问网站](https://tigerz.github.io/tutorials.html)可以更直观的阅读
 
 API 参考文档需要自己生成。项目根目录里有个 mac 的执行文件叫 buildDoc.sh 用于生成 jsdoc 文档，windows 环境开发者可参考内部的命令。
 
