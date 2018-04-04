@@ -22,7 +22,7 @@ tigerface.js 架构代码用 es6 编写，使用 webpack + babel 编译。
 
 **文档在哪里？**
 
-[入门教程](webroot/tutorials/readme.md) 在 webroot/tutorials/ 目录下。
+[入门教程](tutorials.md) 在 tutorials/ 目录下。
 
 API 参考文档需要自己生成。项目根目录里有个 mac 的执行文件叫 buildDoc.sh 用于生成 jsdoc 文档，windows 环境开发者可参考内部的命令。
 
@@ -58,5 +58,6 @@ API 参考文档需要自己生成。项目根目录里有个 mac 的执行文�
     ```
 
 1. 在浏览器中会显示运行效果：
-![范例](./tutorials/img/example.png "范例")
-_说明：此范例是两个图表，点击"**刷新**"按钮_，更新演示数据，重绘图表
+
+[barChart](http://tigerz.github.io/html/barChart.html "tigerface-embed:barChart")
+[pieChart](http://tigerz.github.io/html/pieChart.html "tigerface-embed:pieChart")
