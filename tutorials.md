@@ -1,7 +1,7 @@
 # 入门教程(未完成，编写中)
 
-* [代码风格](code.md)
-* [日志](logger.md)
+* [代码风格](https://raw.githubusercontent.com/TigerZ/tigerface.js/master/tutorials/code.md)
+* [日志](https://raw.githubusercontent.com/TigerZ/tigerface.js/master/tutorials/logger.md)
 * [事件](event.md)
 * [舞台](stage.md)
 * [层](layer.md)
