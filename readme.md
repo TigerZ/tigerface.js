@@ -59,5 +59,5 @@ API 参考文档需要自己生成。项目根目录里有个 mac 的执行文�
 
 1. 在浏览器中会显示运行效果：
 
-[barChart](http://tigerz.github.io/html/barChart.html "tigerface-embed:barChart")
-[pieChart](http://tigerz.github.io/html/pieChart.html "tigerface-embed:pieChart")
+[barChart](https://tigerz.github.io/html/barChart.html "tigerface-embed:barChart")
+[pieChart](https://tigerz.github.io/html/pieChart.html "tigerface-embed:pieChart")
