@@ -11,23 +11,25 @@ tigerface.js 架构的重绘是舞台对象通过 FrameEventGenerator 类实现�
 ## 实现绘制
 开发者实现绘制有多种方法：
 * 继承类内部实现 paint 方法
-```javascript
 
-class MySprite extends CanvasSprite {
-    constructor(opt) {
-        super();
-        this.assign(opt);
-    }
+    ```javascript
 
-    paint() {
-        const g = this.graphics;
-        g.fillStyle = 'rgba(255,0,0,0.8)';
-        g.textAlign = 'center';
-        g.textBaseline = 'bottom';
-        g.drawText('Hello World! ', { x: 200, y: 200 }, '12px monaco', g.DrawStyle.FILL);
+    class MySprite extends CanvasSprite {
+        constructor(opt) {
+            super();
+            this.assign(opt);
+        }
+
+        paint() {
+            const g = this.graphics;
+            g.fillStyle = 'rgba(255,0,0,0.8)';
+            g.textAlign = 'center';
+            g.textBaseline = 'bottom';
+            g.drawText('Hello World! ', { x: 200, y: 200 }, '12px monaco', g.DrawStyle.FILL);
+        }
     }
-}
-```
+    ```
+
 * 外部事件侦听
 ```javascript
 const sprite = new CanvasSprite();
