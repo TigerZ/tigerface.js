@@ -2,7 +2,7 @@
 
 感谢你对 tigerface.js 感兴趣。
 
-tigerface.js 的当前版本，正在加紧重构中，代码和文档每天都在变化中，希望很快会发布稳定正式版本。\[[更新日志](./doc/log.md "更新日志")\]
+tigerface.js 的当前版本，正在加紧重构中，代码和文档每天都在变化中，希望很快会发布稳定正式版本。\[[更新日志](webroot/tutorials/log.md "更新日志")\]
 
 新版本的网站正在建设，旧版网站：[[tigerfacejs.org](http://tigerfacejs.org "tigerfacejs.org")]
 
@@ -22,7 +22,7 @@ tigerface.js 架构代码用 es6 编写，使用 webpack + babel 编译。
 
 **文档在哪里？**
 
-[入门教程](tutorials/readme.md) 在 tutorials 目录下。
+[入门教程](webroot/tutorials/readme.md) 在 tutorials 目录下。
 
 API 参考文档需要自己生成。项目根目录里有个 mac 的执行文件叫 buildDoc.sh 用于生成 jsdoc 文档，windows 环境开发者可参考内部的命令。
 
