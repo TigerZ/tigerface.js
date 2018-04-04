@@ -8,7 +8,7 @@ const RootPath = path.resolve(__dirname);
 const config = {
     entry: {
         marked: [
-            './example/src/marked.js',
+            './webroot/src/marked.js',
         ],
         demo: [
             'babel-polyfill',
@@ -60,12 +60,6 @@ const config = {
         ],
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            template: './template/index.template.html',
-            title: 'tigerface.js',
-            filename: '../marked.html',
-            chunks: ['marked'],
-        }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
             filename: '../html/snow.html',

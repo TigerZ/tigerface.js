@@ -24,24 +24,11 @@
             <div class="row">
                 <div class="col-sm-8 col-md-7 py-4">
                     <h4 class="text-white">关于我</h4>
-                    <p class="text-muted">我 7x 后，多年从事服务器端 Java 开发，但是喜欢图形化的直观交互，喜欢各种语言。
-                        Flash 之死让我无比的遗憾，我怀念那些伴随我青春的小动画，怀念强大的 ActionScript3。
-                        HTML5 作为替代的技术开始崛起，所以我就写了这个 tigerface.js 架构，既是为了致敬经典，也为了送给我老婆，
-                        她曾经是专业 Flash 工程师。</p>
-                    <p class="text-muted">tigerface.js 的使用者是程序员，因为还没有设计界面，不太适合设计师。
-                        tigerface.js 从 2014 年第一版到现在，风格变化很大。
-                        现在的版本更完整更高效，前后端整合，更适合全栈团队使用，这也是我的工作方向。
-                    </p>
+                    <p class="text-muted" id="about"></p>
                 </div>
                 <div class="col-sm-4 offset-md-1 py-4">
                     <h4 class="text-white">联系我</h4>
-                    <ul class="list-unstyled">
-                        <li><a href="mailto:zhangyihu@gmail.com" class="text-white">发送邮件: zhangyihu@gmail.com</a></li>
-                        <li>
-                            <p class="text-white"></p>
-                            <p class="text-white">或者，微信搜索 "喝咖啡的老虎" 全拼，请写明备注。如果我忘记通过你的申请，请你理解。</p>
-                        </li>
-                    </ul>
+                    <p class="text-white" id="contact"></p>
                 </div>
             </div>
         </div>
@@ -61,7 +48,7 @@
                         <a class="nav-link" href="start.html">入门</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="tutorials/tutorials.html">教程</a>
+                        <a class="nav-link" href="tutorials/index.html">教程</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-toggle="collapse" data-target="#navbarHeader">关于</a>
@@ -212,6 +199,13 @@
         crossorigin="anonymous"></script>
 <script src="lib/vendor/holder.min.js"></script>
 <!-- 嵌入范例 -->
+<script type="text/javascript" src="js/marked.js"></script>
+<script>
+$(() => {
+    openmd('about.md', 'about');
+    openmd('contact.md', 'contact');
+});
+</script>
 <script src="js/windmill.js"></script>
 <script src="js/barChart.js"></script>
 <script src="js/pieChart.js"></script>

@@ -25,10 +25,10 @@ myMarked.setOptions({
     },
 });
 
-function openmd(url) {
+function openmd(url, id) {
     $.get(`${url}?${+new Date()}`, (md) => {
         const result = myMarked(md, { renderer });
-        $('#root').html(result);
+        $(`#${id}`).html(result);
     });
 }
 
