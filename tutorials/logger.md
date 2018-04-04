@@ -35,7 +35,7 @@ INFO、DEBUG 五个级别。在生产环境下，自动全局关闭。
 
 
 输出:
-![DEBUG 日志输出图例](./img/debug.png "DEBUG 日志输出图例")
+![DEBUG 日志输出图例](https://raw.githubusercontent.com/TigerZ/tigerface.js/master/tutorials/img/debug.png "DEBUG 日志输出图例")
 
 
 
@@ -68,7 +68,7 @@ this.logger.error('Hi, 这是红色的错误');
 ```
 输出效果：
 
-![Chrome 日志输出](./img/chrome_log_color1.png "Chrome 日志输出")
+![Chrome 日志输出](https://raw.githubusercontent.com/TigerZ/tigerface.js/master/tutorials/img/chrome_log_color1.png "Chrome 日志输出")
 
 注意：error 方法直接抛出错误异常，运行终止。如果不希望终止运行，需要 `try{...}catch(e){...};`
 debug、info、warn 都支持多参数，第一参数 msg 是字符串的日志说明，后面随意添加任意多个要显示的对象。
@@ -79,11 +79,11 @@ debug、info、warn 都支持多参数，第一参数 msg 是字符串的日志�
 
 * 在浏览器控制台里对输出进行级别过滤：
 
-![Chrome 日志输出级别](./img/chrome_log_level.png "Chrome 日志输出级别")
+![Chrome 日志输出级别](https://raw.githubusercontent.com/TigerZ/tigerface.js/master/tutorials/img/chrome_log_level.png "Chrome 日志输出级别")
 
 或者关键字过滤：
     
-![Chrome 日志过滤](./img/chrome_log_filter.png "Chrome 日志过滤")
+![Chrome 日志过滤](https://raw.githubusercontent.com/TigerZ/tigerface.js/master/tutorials/img/chrome_log_filter.png "Chrome 日志过滤")
 
 ### 配置 log-config.json 文件
 
@@ -142,7 +142,7 @@ class Bar extends CanvasSprite {
 ```
 输出也会改变：
 
-![Chrome 日志输出](./img/chrome_log_color2.png "Chrome 日志输出")
+![Chrome 日志输出](https://raw.githubusercontent.com/TigerZ/tigerface.js/master/tutorials/img/chrome_log_color2.png "Chrome 日志输出")
 
 #### exclude
 
