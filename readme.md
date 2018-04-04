@@ -36,23 +36,23 @@ API 参考文档需要自己生成。项目根目录里有个 mac 的执行文�
 
     tigerface-cli 是一个工具，帮助搭建前端项目的脚手架，并快速运行 tigerface.js 的范例。需要 node.js 8.5 以上版本 
 
-    ```commandline
+    ```shell
     npm install -g tigerface-cli
     ```
 
 1. 创建项目目录，然后进入此目录
-    ```commandline
+    ```shell
     mkdir example
     cd example
     ```
 
 1. 初始化项目结构
-    ```commandline
+    ```shell
     tigerface init example
     ```
 
 1. 安装依赖, 然后运行。
-    ```commandline
+    ```shell
     npm install
     npm start
     ```
