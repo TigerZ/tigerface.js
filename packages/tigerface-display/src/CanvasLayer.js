@@ -20,8 +20,8 @@ class CanvasLayer extends DomLayer {
     constructor(options = undefined, dom = undefined) {
         const props = {
             clazzName: CanvasLayer.name,
-            width: '320',
-            height: '240',
+            width: '100%',
+            height: '100%',
             devicePixelRatio: 1,
             retina: true,
             noClear: false,
@@ -35,11 +35,7 @@ class CanvasLayer extends DomLayer {
 
         super(props, canvas);
 
-        this.assign(T.merge({
-            style: {
-                // backgroundColor: 'rgba(255,255,255,0.3)',
-            },
-        }, options));
+        this.assign(options);
 
         this.canvas = canvas;
 
@@ -126,12 +122,12 @@ class CanvasLayer extends DomLayer {
      * @package
      */
     _onSizeChanged_() {
+        super._onSizeChanged_();
         // retina 属性设置为 true，效果是：尺寸指定为 devicePixelRatio 倍，再用 css 缩至原始尺寸
         T.attr(this.dom, 'width', `${this.width * this.devicePixelRatio}px`);
-        T.attr(this.dom, 'height', `${this.height * this.devicePixelRatio}px`);
-
-        // 用 css 约束尺寸
         T.css(this.dom, 'width', `${this.width}px`);
+
+        T.attr(this.dom, 'height', `${this.height * this.devicePixelRatio}px`);
         T.css(this.dom, 'height', `${this.height}px`);
 
         this.postChange();

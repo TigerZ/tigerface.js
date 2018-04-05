@@ -20,7 +20,7 @@ class DisplayObjectContainer extends DisplayObject {
     /**
      * @param options {object} 可选初始属性
      */
-    constructor(options = undefined) {
+    constructor(options) {
         const props = {
             clazzName: DisplayObjectContainer.name,
             _children_: [],
@@ -504,7 +504,7 @@ class DisplayObjectContainer extends DisplayObject {
         super._onSizeChanged_();
 
         this.children.forEach((child) => {
-            child._onSizeChanged_();
+            child._onParentSizeChanged();
         });
     }
 }

@@ -6,9 +6,6 @@ const RootPath = path.resolve(__dirname);
 
 const config = {
     entry: {
-        marked: [
-            './example/src/marked.js',
-        ],
         demo: [
             'babel-polyfill',
             'react-hot-loader/patch',
@@ -24,6 +21,9 @@ const config = {
         windmill: ['./packages/tigerface-example/src/windmill.js'],
         graphics: ['./packages/tigerface-example/src/graphics.js'],
         snow: ['./packages/tigerface-example/src/snow.js'],
+        layout: [
+            './example/src/layout.js',
+        ],
     },
     resolve: {
         alias: {
@@ -67,10 +67,10 @@ const config = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './template/index.template.html',
+            template: './template/layout.template.html',
             title: 'tigerface.js',
-            filename: 'index.html',
-            chunks: ['marked'],
+            filename: 'layout.html',
+            chunks: ['barChart', 'pieChart'],
         }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
@@ -79,8 +79,8 @@ const config = {
             chunks: ['snow'],
         }),
         new HtmlWebpackPlugin({
-            template: './template/embed.template.html',
-            filename: 'windmill.html',
+            template: './template/index.template.html',
+            filename: 'index.html',
             title: 'tigerface.js 范例 - 风车',
             chunks: ['windmill'],
         }),

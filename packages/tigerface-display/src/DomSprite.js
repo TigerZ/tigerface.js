@@ -51,23 +51,12 @@ class DomSprite extends Sprite {
             clazzName: DomSprite.name,
             _dom_: _dom, // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
-            width: '320',
-            height: '240',
         };
 
         super(props);
 
-        // chrome 浏览器在拖拽时，鼠标指针为“I”，下面用来修复此问题
-        this.addEventListener(Event.MouseEvent.DRAG, (e) => {
-            T.css(e.currentTarget.dom, 'cursor', 'default');
-        });
-
-        // Dom 位置和尺寸获取方法，能同步 Dom 实际值和 DomSprite 属性
-        this._resize_();
-
-        this.isDomSprite = true;
-
         this.assign(T.merge({
+            size: { width: 320, height: 240 },
             style: {
                 position: DomSprite.Position.ABSOLUTE,
                 'transform-origin': '0px 0px 0px',
@@ -83,6 +72,16 @@ class DomSprite extends Sprite {
             },
         }, options));
 
+        // chrome 浏览器在拖拽时，鼠标指针为“I”，下面用来修复此问题
+        this.addEventListener(Event.MouseEvent.DRAG, (e) => {
+            T.css(e.currentTarget.dom, 'cursor', 'default');
+        });
+
+        // Dom 位置和尺寸获取方法，能同步 Dom 实际值和 DomSprite 属性
+        // this._resize_();
+
+        this.isDomSprite = true;
+
         this.logger.debug('初始化完成');
     }
 
@@ -90,6 +89,22 @@ class DomSprite extends Sprite {
         this.logger.error('禁止替换 dom 对象');
         // this._dom_ = v;
         // this._onDomChanged_();
+    }
+
+    set width(v) {
+        super.width = v;
+    }
+
+    get width() {
+        return super.width;
+    }
+
+    set height(v) {
+        super.height = v;
+    }
+
+    get height() {
+        return super.height;
     }
 
     /**
@@ -122,6 +137,40 @@ class DomSprite extends Sprite {
      */
     set title(v) {
         this.dom.title = v;
+    }
+
+    get size() {
+        return super.size;
+    }
+
+    set size(v) {
+        let {
+            width,
+            height,
+        } = v;
+        if (typeof width === 'string') {
+            const precWidth = width.match('[0-9]+%');
+            if (precWidth) {
+                this.props.precWidth = Number.parseInt(precWidth[0].substr(0, precWidth[0].length - 1), 10);
+                width = undefined;
+            }
+        }
+        if (typeof height === 'string') {
+            const precHeight = height.match('[0-9]+%');
+            if (precHeight) {
+                this.props.precHeight = Number.parseInt(precHeight[0].substr(0, precHeight[0].length - 1), 10);
+                height = undefined;
+            }
+        }
+        const nv = {};
+        if (width !== undefined) nv.width = width;
+        if (height !== undefined) nv.height = height;
+        super.size = nv;
+    }
+
+    _appendToStage_(stage) {
+        super._appendToStage_(stage);
+        this._onParentSizeChanged();
     }
 
     get css() {
@@ -227,10 +276,12 @@ class DomSprite extends Sprite {
      * @package
      */
     _onSizeChanged_() {
-        // if(this.layout) return;
-        // console.log("***********", this.width, this.height);
-        T.css(this.dom, 'width', typeof this.width === 'number' ? (`${this.width}px`) : this.width);
-        T.css(this.dom, 'height', typeof this.height === 'number' ? (`${this.height}px`) : this.height);
+        super._onSizeChanged_();
+
+        T.css(this.dom, 'width', typeof this.width === 'number' ? `${this.width}px` : this.width);
+        T.css(this.dom, 'height', typeof this.height === 'number' ? `${this.height}px` : this.height);
+
+        console.log('***********', this.clazzName, this.dom.style.width)
     }
 
     /**
@@ -356,6 +407,10 @@ class DomSprite extends Sprite {
      * @param autoPrefix {boolean} 是否添加多浏览器前缀
      */
     setStyle(style, autoPrefix = false) {
+        if (style.width !== undefined || style.height !== undefined) {
+            delete style.width;
+            delete style.height;
+        }
         if (T.assignEqual(this.dom.style, style)) return;
         T.cssMerge(this.dom, style, autoPrefix);
         this.postChange('dom style', style);

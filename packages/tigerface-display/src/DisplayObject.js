@@ -40,21 +40,22 @@ class DisplayObject extends EventDispatcher {
 
         super(props);
 
-        // 设置传入的初始值
-        this.assign(options);
-
-        this.uuid = T.uuid();
-
         // 基本状态属性
         this.state = {
             pos: { x: 0, y: 0 },
-            size: { width: 320, height: 240 },
+            size: { width: 1, height: 1 },
             scale: { x: 1, y: 1 },
             origin: { x: 0, y: 0 },
             alpha: 1,
             rotation: 0,
             visible: true,
         };
+        this.assign(options);
+
+        // 设置传入的初始值
+        this.assign(options);
+
+        this.uuid = T.uuid();
 
         // 宿主信息
         this._parent_ = undefined;
@@ -720,6 +721,17 @@ class DisplayObject extends EventDispatcher {
     emit(...args) {
         if (this.visible) {
             super.emit(...args);
+        }
+    }
+
+    _onParentSizeChanged() {
+        if (this.props.precWidth) {
+            const { precWidth } = this.props;
+            this.width = (this.parent.width * precWidth) / 100;
+        }
+        if (this.props.precHeight) {
+            const { precHeight } = this.props;
+            this.height = (this.parent.height * precHeight) / 100;
         }
     }
 }

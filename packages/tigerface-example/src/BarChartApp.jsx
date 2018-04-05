@@ -20,15 +20,6 @@ const demoData = [
     { name: '李安和', num: 45 },
 ];
 
-const Style = {
-    width: '400px',
-    height: '300px',
-    margin: '5px',
-    border: '1px solid rgba(0,0,0,0.2)',
-    backgroundColor: 'rgba(255,255,0,0.2)',
-    borderBottom: '1px solid rgba(0,0,0,0.1)',
-};
-
 class AppRoot extends React.Component {
     static logger = Logger.getLogger('example.AppRoot');
 
@@ -57,8 +48,10 @@ class AppRoot extends React.Component {
     render() {
         return (
             <div>
-                <BarChart className="stage" style={Style} config={this.state.options} data={this.state.data} />
-                <button onClick={() => this.refresh()}>刷新数据</button>
+                <BarChart
+                    config={this.state.options}
+                    data={this.state.data}
+                />
             </div>
         );
     }

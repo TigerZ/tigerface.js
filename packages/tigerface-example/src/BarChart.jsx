@@ -17,17 +17,14 @@ import { Utilities as T } from 'tigerface-common';
  * @private
  */
 const _default = {
-    paddingLeft: 50,
-    paddingTop: 0,
-    unit: 20,
-    scale: 3,
+    paddingLeft: 60,
+    paddingTop: 10,
+    unit: 15,
+    scale: 2,
     xSpace: 5,
     ySpace: 5,
     font: '12px monaco',
     speed: 3,
-    style: {
-        margin: '30px',
-    },
 };
 
 class BarChartSprite extends CanvasSprite {
@@ -76,14 +73,7 @@ class BarChartSprite extends CanvasSprite {
         this.data.forEach(({ name, num }, idx) => {
             const length = this.config.scale * num;
             if (length > this.h0) finish = false;
-            // rects.push(
-            //     new Rectangle(
-            //         idx * (this.config.unit + this.config.xSpace) + this.config.xSpace,
-            //         this.config.ySpace,
-            //         this.config.width,
-            //         Math.min(this.h0, length)
-            //     )
-            // );
+
             rects.push([
                 new Rectangle(
                     this.config.xSpace + this.config.paddingLeft,
@@ -100,8 +90,6 @@ class BarChartSprite extends CanvasSprite {
 
         rects.forEach(([bar, name, num], idx) => {
             g.lineWidth = 1;
-            // g.fillStyle = 'rgba(0,0,255,0.5)';
-            // g.strokeStyle = 'rgba(0,0,255,0.8)';
 
             const fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
 
@@ -139,8 +127,8 @@ class BarChartSprite extends CanvasSprite {
             const strokeStyle = fillStyle;
             // g.drawPoint(p1);
             const { width: w } = g.measureText(str);
-            const left = (idx % 4) * 90;
-            const top = 205 + (Math.floor(idx / 4) * 20);
+            const left = this.config.paddingTop + ((idx % 3) * 90);
+            const top = 180 + (Math.floor(idx / 3) * 20);
 
             g.drawRectangle(new Square(left, top, 10), { fillStyle });
 

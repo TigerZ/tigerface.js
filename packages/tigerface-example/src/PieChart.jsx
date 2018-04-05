@@ -21,13 +21,10 @@ const _default = {
     unitHeight: 8,
     xSpace: 5,
     ySpace: 5,
-    paddingTop: 200,
-    paddingLeft: 0,
+    paddingTop: 180,
+    paddingLeft: 10,
     font: '12px monaco',
     speed: 3,
-    style: {
-        margin: '30px',
-    },
     colors: ['red'],
 };
 
@@ -177,8 +174,8 @@ class PieChartSprite extends CanvasSprite {
             const fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
 
             const { width: w } = g.measureText(str);
-            const left = this.config.paddingLeft + idx % 4 * 90;
-            const top = this.config.paddingTop + Math.floor(idx / 4) * 20;
+            const left = this.config.paddingLeft + idx % 3 * 90;
+            const top = this.config.paddingTop + Math.floor(idx / 3) * 20;
 
             g.drawRectangle(new Square(left, top, 10), { fillStyle });
 

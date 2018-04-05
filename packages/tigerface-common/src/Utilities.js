@@ -81,8 +81,7 @@ const Utilities = {
 
     size(dom) {
         const $dom = G.$(dom);
-        // console.log("***********", dom.tagName, {width: $dom.width(), height: $dom.height()});
-        return { width: $dom.width(), height: $dom.height() };
+        return { width: $dom.outerWidth(), height: $dom.outerHeight() };
     },
 
     scrollTop(dom, value) {

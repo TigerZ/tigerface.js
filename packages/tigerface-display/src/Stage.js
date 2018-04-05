@@ -49,13 +49,15 @@ class Stage extends DomSprite {
             preventDefault: true,
         };
 
-        super(props, dom);
+        super(props);
 
         this.assign(T.merge({
             style: {
                 position: DomSprite.Position.RELATIVE,
             },
         }, options));
+
+        dom.appendChild(this.dom);
 
         // 定义 Dom 引擎
         this.domAdapter = new DomEventAdapter(this.dom, {
@@ -402,6 +404,17 @@ class Stage extends DomSprite {
             'background-repeat': 'no-repeat',
             'background-size': `${T.round(width / devicePixelRatio)}px ${height}px`,
         });
+    }
+
+    set size(v) {
+        if (typeof v.width === 'string' || typeof v.height === 'string') {
+            this.logger.error('Stage 不允许设置非数值 size');
+        }
+        super.size = v;
+    }
+
+    get size() {
+        return super.size;
     }
 }
 

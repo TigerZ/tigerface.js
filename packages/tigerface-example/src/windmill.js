@@ -7,10 +7,7 @@ const stage = new Stage({
     fps: 16,
     width: 200,
     height: 200,
-    style: {
-        'background-color': 'rgba(255,255,0,0.3)',
-    },
-});
+}, (document.getElementById('windmill') || document.documentElement));
 
 // 如果不直接把 dom 传给 stage，可以让 stage 自己创建 dom，再获取
 // dom.appendChild(stage.dom);
@@ -36,7 +33,11 @@ surface.on(Event.ENTER_FRAME, () => {
 // 继承的方式
 class Panel extends CanvasSprite {
     constructor(opt) {
-        super(opt);
+        super({
+            clazzName: Panel.name,
+            size: { width: 200, height: 200 },
+        });
+        this.assign(opt);
         this.enableDrag();
     }
 
@@ -124,5 +125,3 @@ const windmill = new Windmill();
 const panel = new Panel().addChild(windmill);
 
 stage.addLayer(surface.addChild(panel));
-
-(document.getElementById('windmill') || document.documentElement).append(stage.dom);
