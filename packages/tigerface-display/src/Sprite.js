@@ -26,7 +26,7 @@ class Sprite extends DisplayObjectContainer {
     constructor(options) {
         const props = {
             clazzName: Sprite.name,
-            activeMouseCheck: true,
+            activeMouseCheck: false,
             _bounds_: [],
         };
 

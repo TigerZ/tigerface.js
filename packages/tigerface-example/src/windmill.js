@@ -38,7 +38,7 @@ class Panel extends CanvasSprite {
             size: { width: 200, height: 200 },
         });
         this.assign(opt);
-        this.enableDrag();
+        // this.enableDrag();
     }
 
     paint(g) {
