@@ -1,6 +1,4 @@
-[返回目录](readme.md)
-
-## 架构代码风格说明
+### 架构代码风格说明
 
 tigerface.js 架构整体使用 ECMAScript 6 语法编写，部分地方使用了 stage-1 阶段语法。
 

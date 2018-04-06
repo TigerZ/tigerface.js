@@ -1,6 +1,4 @@
-[返回目录](readme.md)
-
-## 事件
+### 事件
 
 tigerface-event 包下的 EventDispatcher 类是事件分发器。
 tigerface-display 包的顶级基类 DisplayObject 
