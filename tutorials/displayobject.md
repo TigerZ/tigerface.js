@@ -1,4 +1,4 @@
-### 显示对象
+## 显示对象
 
 显示对象是 tigerface-display 包的最底层基类。
 舞台、层、画布、以及画布上绘制的任何元素都从显示对象衍生。
@@ -8,7 +8,7 @@
 1. 确定重绘模式
 1. 状态改变
 
-## 显示属性
+### 显示属性
 
 显示对象具有以下基本显示属性：位置 pos (x, y)，原点 origin (originX, originY)，
 尺寸 size (width, height)，缩放 scale (scaleX, scaleY)，旋转 rotation，透明度 alpha，可见性 visible。

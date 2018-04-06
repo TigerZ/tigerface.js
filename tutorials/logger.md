@@ -1,4 +1,4 @@
-### 日志
+## 日志
 
 tigerface.js 自建了一个日志工具 Logger，用于在开发过程中打印调试信息。
 Logger 可同时在浏览器或 node.js 环境下运行。在开发环境下支持 OFF、ERROR、WARN、
