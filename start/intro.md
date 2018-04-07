@@ -21,7 +21,7 @@ tigerface.js 设计目标是用于开发各种的图形化项目。
 
 我用 IntelliJ IDEA 开发的 tigerface.js，这是因为我多年一直是 Java 程序员。
 其实 tigerface.js 的开发仅依赖 node.js 运行环境，多数工作只依赖命令行，有个终端都够了。
-至于编辑器，你可以用任何你喜欢的，比如程序员专用的 WebStorm、PHPStorm、eclipse，
+至于编辑器，你可以用任何你喜欢的，比如程序员专用的 WebStorm、PHPStorm、eclipse、VSCode、Atom，
 设计师用的 Dreamweaver，或者纯文本编辑器 Sublime Text、UltraEdit、Notepad++，甚至 Vim。
 
 ### tigerface.js 的开发环境是什么？

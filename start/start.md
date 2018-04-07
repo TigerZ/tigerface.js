@@ -39,6 +39,7 @@
 1. 在浏览器中会显示类似这样的运行结果：
 
 [barChart](https://tigerz.github.io/html/barChart.html "tigerface-embed:barChart")
+
 [pieChart](https://tigerz.github.io/html/pieChart.html "tigerface-embed:pieChart")
 
 
