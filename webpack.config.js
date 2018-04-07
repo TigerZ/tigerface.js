@@ -7,28 +7,17 @@ const RootPath = path.resolve(__dirname);
 
 const config = {
     entry: {
-        marked: [
-            './tigerz.github.io/src/marked.js',
-        ],
-        demo: [
-            'babel-polyfill',
-            './example/src/demo.jsx',
-        ],
-        barChart: [
-            './packages/tigerface-example/src/BarChartApp.jsx',
-        ],
-        pieChart: [
-            './packages/tigerface-example/src/PieChartApp.jsx',
-        ],
+        marked: ['./tigerz.github.io/src/marked.js'],
+        demo: ['babel-polyfill', './example/src/demo.jsx'],
+        barChart: ['./example/src/BarChartApp.jsx'],
+        pieChart: ['./example/src/PieChartApp.jsx'],
         tween: ['./example/src/tween.js'],
-        windmill: ['./packages/tigerface-example/src/windmill.js'],
-        graphics: ['./packages/tigerface-example/src/graphics.js'],
-        snow: ['./packages/tigerface-example/src/snow.js'],
+        windmill: ['./example/src/windmill.js'],
+        graphics: ['./example/src/graphics.js'],
+        snow: ['./example/src/snow.js'],
     },
     resolve: {
-        alias: {
-            RootPath,
-        },
+        alias: { RootPath },
         extensions: ['.js', '.jsx', '.json'],
         modules: [__dirname, path.resolve(__dirname, 'packages'), 'node_modules'],
     },

@@ -199,8 +199,8 @@ class Stage extends DomSprite {
         if (!_name) {
             _name = layer.name;
             if (!_name) {
-                _name = 'main';
-                this.logger.debug(`未指定 layer 对象的 name，使用缺省 layer 名称 "${_name}"`);
+                _name = layer.uuid;
+                this.logger.debug(`未指定 layer 对象的 name，使用缺省 layer uuid "${_name}"`);
             }
         }
         if (this.getLayer(_name)) this.logger.error(`添加层失败，舞台上已经存在，名为 "${_name}" 的层`);

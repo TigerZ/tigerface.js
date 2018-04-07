@@ -5,6 +5,9 @@
  */
 import Line from './Line';
 import Vertex from './Vertex';
+import QuadraticBezier from "RootPath/packages/tigerface-shape/src/QuadraticBezier";
+import Polygon from "RootPath/packages/tigerface-shape/src/Polygon";
+import Point from "RootPath/packages/tigerface-shape/src/Point";
 
 /**
  * 曲线基类
@@ -107,6 +110,40 @@ class Curve {
         this.points = this.points.concat(points);
         // 重新提取线段
         this.segments = this._getSegments();
+    }
+
+    /**
+     * 转换圆角曲线
+     *
+     * @param radius {number} 圆角半径
+     * @param precision {number} 采样精度
+     * @returns {Curve}
+     */
+    convertRounded(radius, precision = 10) {
+        if (this.points.length < 3) return this;
+        const points = this.getPoints();
+        let newPoints = [points[0]];
+        let p1;
+        let p2;
+        let rp1;
+        let rp2;
+
+        for (let i = 0; i < points.length - 1; i += 1) {
+            p1 = points[i];
+            p2 = points[i + 1];
+            const slope = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+            const x = Math.cos(slope) * radius;
+            const y = Math.sin(slope) * radius;
+            rp1 = new Point(p1.x + x, p1.y + y);
+            if (rp2) {
+                const curvePoints = new QuadraticBezier(rp2, p1, rp1, precision).getPoints();
+                newPoints = newPoints.concat(curvePoints);
+            }
+            rp2 = new Point(p2.x - x, p2.y - y);
+        }
+        newPoints.push(points[points.length - 1]);
+
+        return new Curve(newPoints);
     }
 }
 

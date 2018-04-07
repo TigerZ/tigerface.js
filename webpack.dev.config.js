@@ -6,29 +6,18 @@ const RootPath = path.resolve(__dirname);
 
 const config = {
     entry: {
-        demo: [
-            'babel-polyfill',
-            'react-hot-loader/patch',
-            './example/src/demo.jsx',
-        ],
-        barChart: [
-            './packages/tigerface-example/src/BarChartApp.jsx',
-        ],
-        pieChart: [
-            './packages/tigerface-example/src/PieChartApp.jsx',
-        ],
+        demo: ['babel-polyfill', 'react-hot-loader/patch', './example/src/demo.jsx'],
+        barChart: ['./example/src/BarChartApp.jsx'],
+        pieChart: ['./example/src/PieChartApp.jsx'],
         tween: ['./example/src/tween.js'],
-        windmill: ['./packages/tigerface-example/src/windmill.js'],
-        graphics: ['./packages/tigerface-example/src/graphics.js'],
-        snow: ['./packages/tigerface-example/src/snow.js'],
-        layout: [
-            './example/src/layout.js',
-        ],
+        windmill: ['./example/src/windmill.js'],
+        graphics: ['./example/src/graphics.js'],
+        snow: ['./example/src/snow.js'],
+        layout: ['./example/src/layout.js'],
+        bezier: ['./example/src/bezier.js'],
     },
     resolve: {
-        alias: {
-            RootPath,
-        },
+        alias: { RootPath },
         extensions: ['.js', '.jsx', '.json'],
         modules: [__dirname, path.resolve(__dirname, 'packages'), 'node_modules'],
     },
@@ -66,6 +55,13 @@ const config = {
         ],
     },
     plugins: [
+
+        new HtmlWebpackPlugin({
+            template: './template/index.template.html',
+            title: 'tigerface.js',
+            filename: 'index.html',
+            chunks: ['bezier'],
+        }),
         new HtmlWebpackPlugin({
             template: './template/layout.template.html',
             title: 'tigerface.js',
@@ -80,7 +76,7 @@ const config = {
         }),
         new HtmlWebpackPlugin({
             template: './template/index.template.html',
-            filename: 'index.html',
+            filename: 'windmill.html',
             title: 'tigerface.js 范例 - 风车',
             chunks: ['windmill'],
         }),

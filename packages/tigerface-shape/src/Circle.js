@@ -1,7 +1,8 @@
+import { Utilities as T } from 'tigerface-common';
 import Polygon from './Polygon';
 import Shape from './Shape';
 import Point from './Point';
-import {Utilities as T} from 'tigerface-common';
+import Line from './Line';
 
 /**
  * 圆
@@ -147,6 +148,15 @@ class Circle extends Shape {
 
     scale(scaleX, scaleY) {
         return new Circle(this.p0.x, this.p0.y, this.radius * Math.max(scaleX, scaleY));
+    }
+
+    getTangent(p1) {
+        const dist = T.distance(this.p0, p1);
+        const radian = Math.asin(this.radius / dist);
+        const slope = new Line(this.p0, p1).getSlope();
+        const p2 = this.p0.move(0, -this.radius).rotate(slope + radian, this.p0);
+        const p3 = this.p0.move(0, this.radius).rotate(slope - radian, this.p0);
+        return [new Line(p2, p1), new Line(p3, p1)];
     }
 }
 

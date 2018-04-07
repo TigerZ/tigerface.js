@@ -20,7 +20,7 @@ class QuadraticBezier extends Curve {
      * @param startPoint 开始点
      * @param controlPoint 控制点
      * @param endPoint 结束点
-     * @param precision 精度（可选）
+     * @param precision 采样精度（可选）
      */
     constructor(startPoint, controlPoint, endPoint, precision) {
 
@@ -31,8 +31,8 @@ class QuadraticBezier extends Curve {
         this.p1 = Vertex.convertVertex(controlPoint);
         this.p2 = Vertex.convertVertex(endPoint);
 
-        this.precision = precision ? precision : T.round((this.p0.getDistance(this.p1) + this.p1
-            .getDistance(this.p2)) / 10);
+        this.precision = precision !== undefined ? precision :
+            T.round((this.p0.getDistance(this.p1) + this.p1.getDistance(this.p2)) / 10);
 
         // 调用曲线构造器，创建实例
         this.initCurve(this._getPoints());

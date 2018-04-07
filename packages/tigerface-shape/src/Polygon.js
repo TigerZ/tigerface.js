@@ -429,8 +429,8 @@ class Polygon extends Shape {
     /**
      * 转换圆角
      *
-     * @param radius
-     * @param precision
+     * @param radius {number} 圆角半径
+     * @param precision {number} 采样精度
      * @returns {Polygon}
      */
     convertRounded(radius, precision = 10) {

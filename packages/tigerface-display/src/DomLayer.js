@@ -1,4 +1,5 @@
 import DomSprite from './DomSprite';
+import { Utilities as T } from "RootPath/packages/tigerface-common";
 
 /**
  * Dom 层

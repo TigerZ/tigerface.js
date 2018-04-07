@@ -115,12 +115,20 @@ class Panel extends CanvasSprite {
 
         g.drawText('你好，画笔！', { x: p9.x, y: p9.y + 150 });
 
-        g.drawCurve(new Curve([
-            { x: 100, y: 140 },
+        const curve = new Curve([
+            { x: 30, y: 240 },
             { x: 130, y: 120 },
             { x: 180, y: 120 },
-            { x: 280, y: 200 },
-        ]));
+            { x: 280, y: 170 },
+            { x: 180, y: 220 },
+        ]);
+
+        // g.drawCurve(curve);
+
+        g.drawCurve(curve.convertRounded(20), {
+            strokeStyle: 'rgba(0,0,0,0.5)',
+            lineWidth: 1,
+        });
 
         const arc = new Arc(p8.x, p8.y, 100, 50, 210, 330, 5);
         g.lineJoin = 'round';
@@ -129,6 +137,7 @@ class Panel extends CanvasSprite {
             strokeStyle: 'rgba(0,0,0,0.5)',
             lineWidth: 15,
         });
+
 
         if (this.img) {
             g.drawImageObj(this.img, {

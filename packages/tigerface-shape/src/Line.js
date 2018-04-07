@@ -1,12 +1,14 @@
+/* eslint-disable no-mixed-operators */
 /**
  * User: zyh
  * Date: 2018/2/27.
  * Time: 13:06.
  */
+import { Logger, Utilities as T } from 'tigerface-common';
 import Point from './Point';
 import Vertex from './Vertex';
 import Vector from './Vector';
-import {Logger} from 'tigerface-common';
+
 /**
  * Line类，由两点坐标描述一个直线段
  */
@@ -16,13 +18,13 @@ class Line {
     }
 
     static bySlope(p0, radian, length) {
-        let x = Math.cos(radian) * length + p0.x;
-        let y = Math.sin(radian) * length + p0.y;
+        const x = (Math.cos(radian) * length) + p0.x;
+        const y = (Math.sin(radian) * length) + p0.y;
         return new Line(p0, new Point(x, y));
     }
 
     static byVector(p0, vector, length) {
-        let radian = vector.getRadian();
+        const radian = vector.getRadian();
         return Line.bySlope(p0, radian, length);
     }
 
@@ -32,7 +34,6 @@ class Line {
      * @param p1 结束点
      */
     constructor(p0, p1) {
-
         this.p0 = Vertex.convertVertex(p0);
         this.p1 = Vertex.convertVertex(p1);
 
@@ -41,7 +42,7 @@ class Line {
     }
 
     toString() {
-        return "Line { p0:" + this.p0.toString() + ", p1:" + this.p1.toString() + " }";
+        return `Line { p0:${this.p0.toString()}, p1:${this.p1.toString()} }`;
     }
 
     /**
@@ -59,7 +60,7 @@ class Line {
      * @returns {number}
      */
     getLength() {
-        return this.p0.getDistance(this.p1);
+        return T.distance(this.p0, this.p1);
     }
 
     /**
@@ -82,7 +83,7 @@ class Line {
         if (p2.x >= Math.min(this.p0.x, this.p1.x) && p2.x <= Math.max(this.p0.x, this.p1.x)
             && p2.y >= Math.min(this.p0.y, this.p1.y) && p2.y <= Math.max(this.p0.y, this.p1.y)) {
             // 叉积等于0，说明共线
-            let cp = Vector.byPoint(this.p0, this.p1).unit().crossProduct(Vector.byPoint(this.p0, p2).unit());
+            const cp = Vector.byPoint(this.p0, this.p1).unit().crossProduct(Vector.byPoint(this.p0, p2).unit());
             return (-precision < cp && cp < precision);
         }
         return false;
@@ -95,18 +96,19 @@ class Line {
      * @returns {Boolean}
      */
     hasIntersection(line) {
-
         // 叉积
-        let crossProduct = function (p0, p1, p2) {
+        const crossProduct = function (p0, p1, p2) {
             // return (p1.x - p0.x) * (p2.y - p0.y) - (p2.x - p0.x) * (p1.y -
             // p0.y);
             return new Vector(p1.x - p0.x, p1.y - p0.y).crossProduct(new Vector(p2.x - p0.x, p2.y - p0.y));
         };
-        let s1 = this.p0, e1 = this.p1;
-        let s2 = line.p0, e2 = line.p1;
+        const s1 = this.p0;
+        const e1 = this.p1;
+        const s2 = line.p0;
+        const e2 = line.p1;
 
-        //console.log(line.toString(), this.toString());
-        //console.log(Math.max(s2.x, e2.x), ">", Math.min(s1.x, e1.x));
+        // console.log(line.toString(), this.toString());
+        // console.log(Math.max(s2.x, e2.x), ">", Math.min(s1.x, e1.x));
         // 快速排斥试验 && 跨立试验
         return Math.max(s1.x, e1.x) >= Math.min(s2.x, e2.x) //
             && Math.max(s2.x, e2.x) >= Math.min(s1.x, e1.x) //
@@ -123,22 +125,23 @@ class Line {
      * @returns {Point | undefined}
      */
     getIntersection(line) {
-
-        let a = this.p0, b = this.p1, c = line.p0, d = line.p1;
+        const a = this.p0;
+        const b = this.p1;
+        const c = line.p0;
+        const d = line.p1;
 
         // 先判断是否存在交点，因为内部的求交点算法是用直线方程计算的，得到的交点可能不在线段范围内。
         if (this.hasIntersection(line)) {
-
             // 如果叉积为0 则平行或共线, 不相交
             // let cross = (b.y - a.y) * (d.x - c.x) - (a.x - b.x) * (c.y -
             // d.y);
-            let cross = Vector.byPoint(a, b).crossProduct(Vector.byPoint(d, c));
+            const cross = Vector.byPoint(a, b).crossProduct(Vector.byPoint(d, c));
 
             // 线段所在直线的交点坐标 (x , y)
-            let x = ((b.x - a.x) * (d.x - c.x) * (c.y - a.y) + (b.y - a.y) * (d.x - c.x) * a.x - (d.y - c.y)
+            const x = ((b.x - a.x) * (d.x - c.x) * (c.y - a.y) + (b.y - a.y) * (d.x - c.x) * a.x - (d.y - c.y)
                 * (b.x - a.x) * c.x)
                 / cross;
-            let y = -((b.y - a.y) * (d.y - c.y) * (c.x - a.x) + (b.x - a.x) * (d.y - c.y) * a.y - (d.x - c.x)
+            const y = -((b.y - a.y) * (d.y - c.y) * (c.x - a.x) + (b.x - a.x) * (d.y - c.y) * a.y - (d.x - c.x)
                 * (b.y - a.y) * c.y)
                 / cross;
             return new Point(x, y);
@@ -156,24 +159,27 @@ class Line {
     getDistance(p) {
         // 算法来自网络，有修改。经测试，确实比较快，海量运算情况下，有优势
 
-        let a = this.p0;
-        let b = this.p1;
+        const a = this.p0;
+        const b = this.p1;
 
-        let l = this.getLength();
-        if (l === 0.0) /* a = b */
+        const l = this.getLength();
+        if (l === 0.0) { /* a = b */
             return (p.getDistance(a));
+        }
 
-        let r = ((a.y - p.y) * (a.y - b.y) - (a.x - p.x) * (b.x - a.x)) / (l * l);
+        const r = ((a.y - p.y) * (a.y - b.y) - (a.x - p.x) * (b.x - a.x)) / (l * l);
 
         // P 的垂线投影位于 AB 的向前延伸线
-        if (r > 1)
+        if (r > 1) {
             return (Math.min(p.getDistance(b), p.getDistance(a)));
+        }
 
         // P 的垂线投影位于 AB 的向后延伸线
-        if (r < 0)
+        if (r < 0) {
             return (Math.min(p.getDistance(b), p.getDistance(a)));
+        }
 
-        let s = ((a.y - p.y) * (b.x - a.x) - (a.x - p.x) * (b.y - a.y)) / (l * l);
+        const s = ((a.y - p.y) * (b.x - a.x) - (a.x - p.x) * (b.y - a.y)) / (l * l);
 
         return Math.abs(s * l);
     }
@@ -188,15 +194,15 @@ class Line {
     getDistance_method2(p) {
         // 本算法比较容易理解，但慢
 
-        let v = Vector.byPoint(this.p0, this.p1);
+        const v = Vector.byPoint(this.p0, this.p1);
 
-        let v0 = Vector.byPoint(this.p0, p);
+        const v0 = Vector.byPoint(this.p0, p);
         if (v.dotProduct(v0) <= 0) { // 对于 p0 大于等于90度
             // console.log("对于 p0 大于等于90度");
             return this.p0.getDistance(p);
         }
 
-        let v1 = Vector.byPoint(this.p1, p);
+        const v1 = Vector.byPoint(this.p1, p);
         if (v.reverse().dotProduct(v1) <= 0) { // 对于 p1 大于等于90度
             // console.log("对于 p1 大于等于90度");
             return this.p1.getDistance(p);
@@ -212,20 +218,20 @@ class Line {
      */
     getSlope() {
         if (!this.slope) {
-            this.slope = Math.atan2(this.p1.y - this.p0.y, this.p1.x - this.p0.x);
+            this.slope = T.slope(this.p0, this.p1);
         }
         return this.slope;
     }
 
     getFootPoint(point) {
-        let v0 = Vector.byPoint(this.p0, this.p1);
-        let v1 = Vector.byPoint(this.p0, point);
-        let ac = this.p0.getDistance(point);
-        let a0 = v0.getAngle(v1);
-        let ab = ac * Math.cos(a0);
-        let a1 = v0.getRadian();
-        let x = Math.cos(a1) * ab + this.p0.x;
-        let y = Math.sin(a1) * ab + this.p0.y;
+        const v0 = Vector.byPoint(this.p0, this.p1);
+        const v1 = Vector.byPoint(this.p0, point);
+        const ac = this.p0.getDistance(point);
+        const a0 = v0.getAngle(v1);
+        const ab = ac * Math.cos(a0);
+        const a1 = v0.getRadian();
+        const x = (Math.cos(a1) * ab) + this.p0.x;
+        const y = (Math.sin(a1) * ab) + this.p0.y;
         return new Point(x, y);
     }
 }
