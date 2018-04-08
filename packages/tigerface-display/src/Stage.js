@@ -44,7 +44,7 @@ class Stage extends DomSprite {
      */
     constructor(options, dom) {
         const props = {
-            clazzName: Stage.name,
+            clazzName: 'Stage',
             fps: 60, // 每秒60帧
             preventDefault: true,
         };
@@ -54,6 +54,7 @@ class Stage extends DomSprite {
         this.assign(T.merge({
             style: {
                 position: DomSprite.Position.RELATIVE,
+                overflow: 'hidden',
             },
         }, options));
 

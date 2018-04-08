@@ -19,7 +19,7 @@ class CanvasLayer extends DomLayer {
      */
     constructor(options = undefined, dom = undefined) {
         const props = {
-            clazzName: CanvasLayer.name,
+            clazzName: 'CanvasLayer',
             width: '100%',
             height: '100%',
             devicePixelRatio: 1,

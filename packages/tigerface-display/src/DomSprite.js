@@ -48,7 +48,7 @@ class DomSprite extends Sprite {
         const _dom = typeof dom === 'string' ? document.createElement(dom) : (dom || document.createElement('div'));
 
         const props = {
-            clazzName: DomSprite.name,
+            clazzName: 'DomSprite',
             _dom_: _dom, // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
         };
@@ -280,8 +280,6 @@ class DomSprite extends Sprite {
 
         T.css(this.dom, 'width', typeof this.width === 'number' ? `${this.width}px` : this.width);
         T.css(this.dom, 'height', typeof this.height === 'number' ? `${this.height}px` : this.height);
-
-        console.log('***********', this.clazzName, this.dom.style.width)
     }
 
     /**

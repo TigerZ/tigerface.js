@@ -43,7 +43,7 @@ class Vertex extends Point {
 
     constructor(x, y) {
         super(x, y);
-        this.clazzName = Vertex.name;
+        this.clazzName = 'Vertex';
     }
 
     getSide() {

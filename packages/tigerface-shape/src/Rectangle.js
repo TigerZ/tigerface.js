@@ -21,7 +21,7 @@ class Rectangle extends Polygon {
     
     constructor(left, top, width, height) {
         super();
-        this.clazzName = Rectangle.name;
+        this.clazzName = 'Rectangle';
 
         if (arguments.length === 1 && T.isArray(left)) {
             this.left = Math.min(left[0].x, left[1].x, left[2].x, left[3].x);

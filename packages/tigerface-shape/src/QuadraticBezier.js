@@ -25,7 +25,6 @@ class QuadraticBezier extends Curve {
     constructor(startPoint, controlPoint, endPoint, precision) {
 
         super([startPoint, controlPoint, endPoint]);
-        this.clazzName = QuadraticBezier.name;
 
         this.p0 = Vertex.convertVertex(startPoint);
         this.p1 = Vertex.convertVertex(controlPoint);
@@ -36,6 +35,8 @@ class QuadraticBezier extends Curve {
 
         // 调用曲线构造器，创建实例
         this.initCurve(this._getPoints());
+
+        this.clazzName = 'QuadraticBezier';
     }
 
     /**

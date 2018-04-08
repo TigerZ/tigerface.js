@@ -3,6 +3,7 @@ import Polygon from './Polygon';
 import Shape from './Shape';
 import Point from './Point';
 import Line from './Line';
+import Rectange from './Rectangle';
 
 /**
  * 圆
@@ -19,7 +20,7 @@ class Circle extends Shape {
      */
     constructor(x, y, radius) {
         super();
-        this.clazzName = Circle.name;
+        this.clazzName = 'Circle';
         this.p0 = new Point(x, y);
         this.radius = radius;
         // 转换为多边形处理
@@ -59,7 +60,7 @@ class Circle extends Shape {
     /**
      * 提取外接矩形
      *
-     * @returns {{left: Number, top: Number, width: Number, height: Number}}
+     * @returns {module:tigerface-shape.Rectange}
      * @private
      */
     _getBoundingRect_() {
@@ -67,14 +68,12 @@ class Circle extends Shape {
         let right = this.p0.x + this.radius;
         let top = this.p0.y - this.radius;
         let bottom = this.p0.y + this.radius;
-        return {
-            left: left,
-            top: top,
-            right: right,
-            bottom: bottom,
-            width: right - left,
-            height: bottom - top
-        };
+        return new Rectange(
+            left,
+            top,
+            right - left,
+            bottom - top,
+        );
     }
 
     /**
@@ -185,7 +184,7 @@ class Circle extends Shape {
                 return c0.radius + c1.radius;
             },
             get ratio() {
-                return c1.radius / c0.radius;
+                return c0.radius / (c0.radius + c1.radius);
             },
             get outerLen() {
                 // 外公切线的长=根号下圆心距的平方-大圆半径减小圆半径的平方

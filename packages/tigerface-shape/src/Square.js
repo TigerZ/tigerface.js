@@ -8,7 +8,7 @@ import Rectangle from "./Rectangle";
 class Square extends Rectangle {
     constructor(x, y, width) {
         super(x, y, width, width);
-        this.clazzName = Square.name;
+        this.clazzName = 'Square';
     }
 }
 

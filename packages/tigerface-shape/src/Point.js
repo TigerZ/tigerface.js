@@ -17,7 +17,7 @@ class Point {
      * @param args.y {number} Y 轴坐标
      */
     constructor(...args) {
-        this.clazzName = Point.name;
+        this.clazzName = 'Point';
         this.logger = Logger.getLogger(this);
         // 支持对象参数
         if ((args.length === 1)) {

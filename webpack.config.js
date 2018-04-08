@@ -15,6 +15,7 @@ const config = {
         windmill: ['./example/src/windmill.js'],
         graphics: ['./example/src/graphics.js'],
         snow: ['./example/src/snow.js'],
+        gum: ['./example/src/gum.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -51,6 +52,12 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
+            filename: '../html/gum.html',
+            title: 'tigerface.js 范例 - 口香糖',
+            chunks: ['gum'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
             filename: '../html/snow.html',
             title: 'tigerface.js 范例 - 雪花',
             chunks: ['snow'],
@@ -61,7 +68,6 @@ const config = {
             title: 'tigerface.js 范例 - 风车',
             chunks: ['windmill'],
         }),
-
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
             filename: '../html/barChart.html',

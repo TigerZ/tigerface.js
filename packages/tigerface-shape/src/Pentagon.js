@@ -12,11 +12,11 @@ import EquilateralPolygon from './EquilateralPolygon';
  * @type {*|void}
  */
 class Pentagon extends EquilateralPolygon {
-    static logger = Logger.getLogger(Pentagon.name);
+    static logger = Logger.getLogger('Pentagon');
 
     constructor(x, y, radius) {
         super(x, y, radius, 5);
-        this.clazzName = Pentagon.name;
+        this.clazzName = 'Pentagon';
     }
 }
 

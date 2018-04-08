@@ -335,6 +335,7 @@ class Sprite extends DisplayObjectContainer {
      * 禁用拖拽
      */
     disableDrag() {
+        this._endDrag_();
         this.removeEventListener(Event.MouseEvent.MOUSE_DOWN, this._startDrag_);
         this.removeEventListener(Event.MouseEvent.MOUSE_UP, this._endDrag_);
     }

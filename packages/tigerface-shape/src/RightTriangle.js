@@ -13,7 +13,7 @@ import Polygon from './Polygon';
 class RightTriangle extends Polygon {
     constructor(x, y, l1, l2) {
         super();
-        this.clazzName = RightTriangle.name;
+        this.clazzName = 'RightTriangle';
 
         let points = [];
         points.push(new Point(x, y));

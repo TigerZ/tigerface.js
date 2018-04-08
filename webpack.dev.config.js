@@ -14,7 +14,7 @@ const config = {
         graphics: ['./example/src/graphics.js'],
         snow: ['./example/src/snow.js'],
         layout: ['./example/src/layout.js'],
-        bezier: ['./example/src/bezier.js'],
+        gum: ['./example/src/gum.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -60,13 +60,19 @@ const config = {
             template: './template/index.template.html',
             title: 'tigerface.js',
             filename: 'index.html',
-            chunks: ['bezier'],
+            chunks: ['gum'],
         }),
         new HtmlWebpackPlugin({
             template: './template/layout.template.html',
             title: 'tigerface.js',
             filename: 'layout.html',
             chunks: ['barChart', 'pieChart'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: 'gum.html',
+            title: 'tigerface.js 范例 - 口香糖',
+            chunks: ['gum'],
         }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',

@@ -12,11 +12,11 @@ import EquilateralPolygon from './EquilateralPolygon';
  * @type {*|void}
  */
 class Hexagon extends EquilateralPolygon {
-    static logger = Logger.getLogger(Hexagon.name);
+    static logger = Logger.getLogger('Hexagon');
 
     constructor(x, y, radius) {
         super(x, y, radius, 6);
-        this.clazzName = Hexagon.name;
+        this.clazzName = 'Hexagon';
     }
 }
 

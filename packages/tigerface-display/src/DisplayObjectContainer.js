@@ -22,7 +22,7 @@ class DisplayObjectContainer extends DisplayObject {
      */
     constructor(options) {
         const props = {
-            clazzName: DisplayObjectContainer.name,
+            clazzName: 'DisplayObjectContainer',
             _children_: [],
         };
 

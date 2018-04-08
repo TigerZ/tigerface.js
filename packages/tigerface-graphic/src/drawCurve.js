@@ -37,7 +37,6 @@ function drawCurve(curve, props = {}) {
         save = false,
         beginPath = true,
         closePath = true,
-        restore = false,
     } = props;
 
     if (save) this.save();
@@ -65,7 +64,7 @@ function drawCurve(curve, props = {}) {
         if (stroke) this.stroke();
     }
 
-    if (restore) this.restore();
+    if (save) this.restore();
 }
 
 export default drawCurve;

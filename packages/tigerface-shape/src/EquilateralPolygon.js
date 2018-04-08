@@ -12,7 +12,7 @@ import Polygon from './Polygon';
  * @type {*|void}
  */
 class EquilateralPolygon extends Polygon {
-    static logger = Logger.getLogger(EquilateralPolygon.name);
+    static logger = Logger.getLogger('EquilateralPolygon');
 
     constructor(x, y, radius, sideNum) {
         super();
@@ -27,7 +27,7 @@ class EquilateralPolygon extends Polygon {
         }
 
         this.initPolygon(points);
-        this.clazzName = EquilateralPolygon.name;
+        this.clazzName = 'EquilateralPolygon';
     }
 }
 

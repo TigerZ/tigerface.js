@@ -16,7 +16,7 @@ class BaseObject {
         this.props = {};
         this.state = {};
 
-        this.clazzName = BaseObject.name;
+        this.clazzName = 'BaseObject';
 
         this.logger = Logger.getLogger(this);
 

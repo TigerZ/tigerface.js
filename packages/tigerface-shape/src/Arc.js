@@ -19,7 +19,7 @@ class Arc extends Curve {
         this.precision = (precision === undefined || precision < 5) ? 5 : precision;
         // 转换为曲线处理
         this.initCurve(this.getVertexes(this.startAngle, this.endAngle, this.precision));
-        this.clazzName = Arc.name;
+        this.clazzName = 'Arc';
     }
 
     clone() {

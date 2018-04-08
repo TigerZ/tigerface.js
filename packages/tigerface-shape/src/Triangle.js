@@ -13,7 +13,7 @@ import Point from './Point';
  * @type {*|void}
  */
 class Triangle extends Polygon {
-    static logger = Logger.getLogger(Triangle.name);
+    static logger = Logger.getLogger('Triangle');
 
     /**
      * @param x {number} X 轴坐标
@@ -33,7 +33,7 @@ class Triangle extends Polygon {
         points.push(new Point(x + l1, y));
         points.push(new Point(x + x2, y + y2));
         this.initPolygon(points);
-        this.clazzName = Triangle.name;
+        this.clazzName = 'Triangle';
     }
 }
 

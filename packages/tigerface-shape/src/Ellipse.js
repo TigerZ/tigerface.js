@@ -14,7 +14,7 @@ import Sector from './Sector';
 class Ellipse extends Sector {
     constructor(x, y, radiusX, radiusY, precision) {
         super(x, y, radiusX, radiusY, 0, 360, precision);
-        this.clazzName = Ellipse.name;
+        this.clazzName = 'Ellipse';
     }
 
     clone() {

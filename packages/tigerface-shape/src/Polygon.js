@@ -501,8 +501,6 @@ class Polygon extends Shape {
             newPoints.push(point.rotate(radian, origin));
         });
         return new Polygon(newPoints);
-        // this.initPolygon(newPoints);
-        // return this;
     }
 
     /**

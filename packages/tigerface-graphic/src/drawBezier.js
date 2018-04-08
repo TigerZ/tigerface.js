@@ -6,12 +6,10 @@ function drawBezier(bezier, props = {}) {
         save = false,
         beginPath = true,
         closePath = true,
-        restore = false,
     } = props;
 
     if (save) this.save();
     if (beginPath) this.beginPath();
-
     if (bezier.clazzName === 'QuadraticBezier') {
         this.moveTo(bezier.p0.x, bezier.p0.y);
         this.quadraticCurveTo(bezier.p1.x, bezier.p1.y, bezier.p2.x, bezier.p2.y);
@@ -26,7 +24,6 @@ function drawBezier(bezier, props = {}) {
             save: false,
             beginPath: false,
             closePath: false,
-            restore: false,
         });
     }
 
@@ -38,7 +35,7 @@ function drawBezier(bezier, props = {}) {
 
     if (closePath) this.closePath();
 
-    if (restore) this.restore();
+    if (save) this.restore();
 }
 
 export default drawBezier;

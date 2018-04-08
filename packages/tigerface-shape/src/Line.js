@@ -37,7 +37,7 @@ class Line {
         this.p0 = Vertex.convertVertex(p0);
         this.p1 = Vertex.convertVertex(p1);
 
-        this.clazzName = Line.name;
+        this.clazzName = 'Line';
         this.logger = Logger.getLogger(this);
     }
 

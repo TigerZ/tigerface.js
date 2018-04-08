@@ -22,7 +22,7 @@ class EventDispatcher extends BaseObject {
      */
     constructor(options) {
         const props = {
-            clazzName: EventDispatcher.name,
+            clazzName: 'EventDispatcher',
         };
         super(props);
 

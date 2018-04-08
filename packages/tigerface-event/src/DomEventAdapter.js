@@ -65,7 +65,7 @@ class DomEventAdapter extends EventDispatcher {
      */
     constructor(dom, options, handler) {
         const props = {
-            clazzName: DomEventAdapter.name,
+            clazzName: 'DomEventAdapter',
             preventDefault: true,
         };
 

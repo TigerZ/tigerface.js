@@ -11,7 +11,7 @@ import DomSprite from './DomSprite';
 class DomCover extends DomSprite {
     constructor(options, dom) {
         super({
-            clazzName: DomCover.name,
+            clazzName: 'DomCover',
         }, dom);
         this.assign(T.merge({
             style: {

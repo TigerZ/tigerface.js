@@ -35,7 +35,7 @@ class DisplayObject extends EventDispatcher {
      */
     constructor(options) {
         const props = {
-            clazzName: DisplayObject.name,
+            clazzName: 'DisplayObject',
         };
 
         super(props);

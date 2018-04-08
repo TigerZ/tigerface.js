@@ -18,7 +18,7 @@ class Sector extends Polygon {
         this.precision = (precision === undefined || precision < 5) ? 5 : precision;
         // 转换为多边形处理
         this.initPolygon(this.getVertexes(this.startAngle, this.endAngle, this.precision));
-        this.clazzName = Sector.name;
+        this.clazzName = 'Sector';
     }
 
     clone() {

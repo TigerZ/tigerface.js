@@ -21,7 +21,7 @@ class CanvasSprite extends Sprite {
      */
     constructor(options = undefined) {
         const props = {
-            clazzName: CanvasSprite.name,
+            clazzName: 'CanvasSprite',
             pos: { x: 0, y: 0 },
             size: { width: 100, height: 100 },
             scale: { scaleX: 1, scaleY: 1 },

@@ -43,7 +43,7 @@ class FrameEventGenerator extends EventDispatcher {
     constructor(options) {
         // 缺省配置
         const props = {
-            clazzName: FrameEventGenerator.name,
+            clazzName: 'FrameEventGenerator',
             fps: 60,
         };
 

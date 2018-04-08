@@ -20,7 +20,7 @@ class Curve {
      */
     constructor(points) {
         if (points) this.initCurve(points);
-        this.clazzName = Curve.name;
+        this.clazzName = 'Curve';
     }
 
     initCurve(points) {
