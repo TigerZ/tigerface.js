@@ -1,6 +1,6 @@
 function drawBezier(bezier, props = {}) {
     const {
-        strokeStyle = 'black',
+        strokeStyle,
         lineWidth = 1,
         stroke = true,
         save = false,
@@ -30,13 +30,13 @@ function drawBezier(bezier, props = {}) {
         });
     }
 
-    if (closePath) this.closePath();
-
     if (strokeStyle) {
         this.lineWidth = lineWidth;
         this.strokeStyle = strokeStyle;
         if (stroke) this.stroke();
     }
+
+    if (closePath) this.closePath();
 
     if (restore) this.restore();
 }

@@ -1,5 +1,6 @@
 function drawCircle(circle, props = {}) {
     const {
+        strokeStyle,
         lineWidth = 1,
         fillStyle,
         fill = true,
@@ -9,10 +10,6 @@ function drawCircle(circle, props = {}) {
         closePath = true,
         restore = false,
     } = props;
-
-    let { strokeStyle } = props;
-
-    if (!fillStyle && !strokeStyle) strokeStyle = 'black';
 
     if (save) this.save();
     if (beginPath) this.beginPath();

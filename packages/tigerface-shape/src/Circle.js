@@ -150,13 +150,88 @@ class Circle extends Shape {
         return new Circle(this.p0.x, this.p0.y, this.radius * Math.max(scaleX, scaleY));
     }
 
-    getTangent(p1) {
+    /**
+     * 获得与点的切线
+     * @param p1
+     * @return {*[]}
+     */
+    getTangentWithPoint(p1) {
         const dist = T.distance(this.p0, p1);
         const radian = Math.asin(this.radius / dist);
         const slope = new Line(this.p0, p1).getSlope();
         const p2 = this.p0.move(0, -this.radius).rotate(slope + radian, this.p0);
         const p3 = this.p0.move(0, this.radius).rotate(slope - radian, this.p0);
         return [new Line(p2, p1), new Line(p3, p1)];
+    }
+
+
+    /**
+     * 获得与圆的切线
+     * @param c1
+     */
+    getTangentWithCircle(c1) {
+        const c0 = this;
+        const tools = {
+            get distance() {
+                return T.distance(c0.p0, c1.p0);
+            },
+            get radiusDiff() {
+                return Math.abs(c0.radius - c1.radius);
+            },
+            get slope() {
+                return T.slope(c0.p0, c1.p0);
+            },
+            get sum() {
+                return c0.radius + c1.radius;
+            },
+            get ratio() {
+                return c1.radius / c0.radius;
+            },
+            get outerLen() {
+                // 外公切线的长=根号下圆心距的平方-大圆半径减小圆半径的平方
+                return Math.sqrt((this.distance ** 2) - (Math.abs(c0.radius - c1.radius) ** 2));
+            },
+
+            get innerLen() {
+                // 内公切线的长=根号下圆心距的平方-大圆半径加小圆半径的平方
+                return Math.sqrt((this.distance ** 2) - ((c0.radius + c1.radius) ** 2));
+            },
+
+            get outerRadian() {
+                // 外公切线与连心线夹角的正弦值=圆心距分之大圆半径减小圆半径
+                return Math.asin(Math.abs(c0.radius - c1.radius) / this.distance);
+            },
+
+            get innerRadian() {
+                // 外公切线与连心线夹角的正弦值=圆心距分之大圆半径减小圆半径
+                return Math.asin(Math.abs(c0.radius + c1.radius) / this.distance);
+            },
+
+            get outerTangentLines() {
+                // 上切线两点
+                const p0 = new Point(c0.p0).move(0, -c0.radius).rotate(this.slope + this.outerRadian, c0.p0);
+                const p1 = new Point(c1.p0).move(0, -c1.radius).rotate(this.slope + this.outerRadian, c1.p0);
+
+                // 下切线两点
+                const p2 = new Point(c0.p0).move(0, c0.radius).rotate(this.slope - this.outerRadian, c0.p0);
+                const p3 = new Point(c1.p0).move(0, c1.radius).rotate(this.slope - this.outerRadian, c1.p0);
+
+                return [new Line(p0, p1), new Line(p2, p3)];
+            },
+
+            get innerTangentLines() {
+                // 上切线两点
+                const p0 = new Point(c0.p0).move(0, -c0.radius).rotate(this.slope + this.innerRadian, c0.p0);
+                const p3 = new Point(c1.p0).move(0, -c1.radius).rotate(this.slope - this.innerRadian, c1.p0);
+
+                // 下切线两点
+                const p2 = new Point(c0.p0).move(0, c0.radius).rotate(this.slope - this.innerRadian, c0.p0);
+                const p1 = new Point(c1.p0).move(0, c1.radius).rotate(this.slope + this.innerRadian, c1.p0);
+
+                return [new Line(p0, p1), new Line(p2, p3)];
+            }
+        }
+        return tools;
     }
 }
 
