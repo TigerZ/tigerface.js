@@ -34,7 +34,7 @@ class Sprite extends DisplayObjectContainer {
 
         this.assign(options);
 
-        this._dragging_ = false;
+        this.dragging = false;
 
         this.on(Event.APPEND_TO_STAGE, () => {
             // 拖拽时，移动设备的缺省触摸事件会干扰显示对象的移动，所以用下面侦听器，在拖拽时禁止缺省的 TOUCH_MOVE 事件传递。
@@ -345,11 +345,11 @@ class Sprite extends DisplayObjectContainer {
      * @package
      */
     _startDrag_ = () => {
-        if (this._dragging_) return;
+        if (this.dragging) return;
         this.parent.addEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
 
         this.logger.debug('开始拖拽 _startDrag_(): mousePos=', this.mousePos);
-        this._dragging_ = true;
+        this.dragging = true;
         const m = this.getOuterPos(this.mousePos);
         this._dragX_ = m.x - this.x;
         this._dragY_ = m.y - this.y;
@@ -361,12 +361,12 @@ class Sprite extends DisplayObjectContainer {
      * @package
      */
     _endDrag_ = () => {
-        if (!this._dragging_) return;
+        if (!this.dragging) return;
 
         this.parent.removeEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
 
         this.logger.debug('停止拖拽 _endDrag_()');
-        this._dragging_ = false;
+        this.dragging = false;
         this.dispatchEvent(Event.MouseEvent.DRAG_END);
     };
 
@@ -377,7 +377,7 @@ class Sprite extends DisplayObjectContainer {
      */
     _move_ = (e) => {
         // this.logger.debug(`_move_()`);
-        if (this._dragging_) {
+        if (this.dragging) {
             const last = { x: this.x, y: this.y };
             this.x = e.pos.x - this._dragX_;
             this.y = e.pos.y - this._dragY_;
@@ -394,7 +394,7 @@ class Sprite extends DisplayObjectContainer {
      * @package
      */
     _disableTouchMove_ = () => {
-        if (this._dragging_) return false;
+        if (this.dragging) return false;
         return true;
     };
 

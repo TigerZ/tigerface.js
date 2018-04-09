@@ -57,12 +57,18 @@ const config = {
         ],
     },
     plugins: [
+        // new HtmlWebpackPlugin({
+        //     template: './template/index.template.html',
+        //     title: 'tigerface.js',
+        //     filename: 'index.html',
+        //     chunks: ['points'],
+        // }),
         new HtmlWebpackPlugin({
-            template: './template/index.template.html',
-            title: 'tigerface.js',
-            filename: 'index.html',
-            chunks: ['points'],
-        }),
+                template: './template/index.template.html',
+                title: 'tigerface.js',
+                filename: 'index.html',
+                chunks: ['gum'],
+            }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
             filename: '../html/merge.html',

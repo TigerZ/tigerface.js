@@ -36,20 +36,22 @@ class Panel extends CanvasSprite {
         this.big = new Ball({
             name: 'big',
             radius: 30,
-            x: 50,
+            x: 100,
             y: 50,
         });
         this.small = new Ball({
             name: 'small',
             radius: 20,
-            x: 50,
+            x: 100,
             y: 50,
         });
         this.addChild(this.small);
         this.addChild(this.big);
         this.big.enableDrag();
         this.canDrag = true;
-        this.onMouseOut = this.back;
+        this.onMouseOut = () => {
+            if (this.big.dragging) this.back();
+        };
         this.big.onDragEnd = this.back;
     }
 
@@ -61,14 +63,14 @@ class Panel extends CanvasSprite {
             prop: 'x',
             end: this.small.x,
             time: 1000,
-            effect: Tween.Bounce.easeOut,
+            effect: Tween.Elastic.easeOut,
         });
         this.tweenX.start();
         this.tweenY = new TweenAction(this.big, {
             prop: 'y',
             end: this.small.y,
             time: 1000,
-            effect: Tween.Bounce.easeOut,
+            effect: Tween.Elastic.easeOut,
         });
         this.tweenY.start();
         this.tweenY.onFinish = () => {
