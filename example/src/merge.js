@@ -4,7 +4,7 @@ import { Polygon } from 'tigerface-shape';
 const stage = new Stage({
     width: 350,
     height: 200,
-}, document.getElementById('MergePolygon') || document.documentElement);
+}, document.getElementById('merge') || document.documentElement);
 
 
 const s1 = new Polygon([{ x: 309, y: 96 }, { x: 329, y: 149 }, { x: 389, y: 150 }, {

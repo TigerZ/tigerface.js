@@ -6,11 +6,6 @@
 import { Logger } from 'tigerface-common';
 import EquilateralPolygon from './EquilateralPolygon';
 
-/**
- * 根据两边长夹角创建三角形
- *
- * @type {*|void}
- */
 class Pentagon extends EquilateralPolygon {
     static logger = Logger.getLogger('Pentagon');
 

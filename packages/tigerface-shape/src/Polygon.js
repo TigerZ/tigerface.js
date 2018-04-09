@@ -541,6 +541,17 @@ class Polygon extends Shape {
         // return this;
     }
 
+    convertPoints() {
+        const sides = this.getSides();
+        let points = [];
+        sides.forEach((side) => {
+            const ps = side.getPoints();
+            ps.pop();
+            points = points.concat(ps);
+        });
+        return points;
+    }
+
     merge(polygon, g) {
         const s1 = this;
         const s2 = polygon;

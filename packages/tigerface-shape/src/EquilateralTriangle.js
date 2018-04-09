@@ -3,9 +3,10 @@
  * Date: 2018/3/2.
  * Time: 22:46.
  */
+import { Utilities as T } from 'tigerface-common';
 import Polygon from './Polygon';
 import Point from './Point';
-import {Utilities as T} from 'tigerface-common';
+
 /**
  * 等边三角形
  *

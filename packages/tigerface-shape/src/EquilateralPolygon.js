@@ -6,11 +6,6 @@
 import { Utilities as T, Logger } from 'tigerface-common';
 import Polygon from './Polygon';
 
-/**
- * 根据两边长夹角创建三角形
- *
- * @type {*|void}
- */
 class EquilateralPolygon extends Polygon {
     static logger = Logger.getLogger('EquilateralPolygon');
 
@@ -21,8 +16,8 @@ class EquilateralPolygon extends Polygon {
         for (let i = 0; i < 360; i += angle) {
             const radian = T.degreeToRadian(i);
             points.push({
-                x: Math.cos(radian) * radius,
-                y: Math.sin(radian) * radius,
+                x: Math.cos(radian) * radius + x,
+                y: Math.sin(radian) * radius + y,
             });
         }
 

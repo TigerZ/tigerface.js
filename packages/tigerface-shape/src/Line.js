@@ -1,4 +1,4 @@
-/* eslint-disable no-mixed-operators */
+/* eslint-disable no-mixed-operators,no-nested-ternary */
 /**
  * User: zyh
  * Date: 2018/2/27.
@@ -233,6 +233,57 @@ class Line {
         const x = (Math.cos(a1) * ab) + this.p0.x;
         const y = (Math.sin(a1) * ab) + this.p0.y;
         return new Point(x, y);
+    }
+
+    getPoints() {
+
+        const exp = (() => {
+            const x1 = this.p0.x;
+            const y1 = this.p0.y;
+            const x2 = this.p1.x;
+            const y2 = this.p1.y;
+            return {
+                x(y) {
+                    return (y - y1) / (y2 - y1) * (x2 - x1) + x1;
+                },
+                y(x) {
+                    return (x - x1) / (x2 - x1) * (y2 - y1) + y1;
+                },
+            };
+        })();
+
+
+        const points = [];
+        let x = T.round(this.p0.x, 2);
+        let y = T.round(this.p0.y, 2);
+        const offsetX = T.round(this.p1.x - this.p0.x);
+        const offsetY = T.round(this.p1.y - this.p0.x);
+        const xstep = offsetX > 0 ? 1 : (offsetX === 0 ? 0 : -1);
+        const ystep = offsetY > 0 ? 1 : (offsetY === 0 ? 0 : -1);
+        if (xstep === 0 && ystep === 0) {
+            points.push({ x, y });
+        } else if (xstep === 0) {
+            for (; ystep > 0 ? (y <= this.p1.y) : (y >= this.p1.y); y += ystep) {
+                points.push({ x, y: T.round(y, 2) });
+            }
+        } else if (ystep === 0) {
+            for (; xstep > 0 ? (x <= this.p1.x) : (x >= this.p1.x); x += xstep) {
+                points.push({ x: T.round(x, 2), y });
+            }
+        } else {
+            for (; xstep > 0 ? (x <= this.p1.x) : (x >= this.p1.x); x += xstep) {
+                const ny = T.round(exp.y(x), 2);
+                if (ystep > 0 ? (ny > y + ystep) : (ny < y + ystep)) {
+                    for (; ystep > 0 ? (y < ny) : (y > ny); y += ystep) {
+                        const nx = T.round(exp.x(y), 2);
+                        if (xstep > 0 ? (nx < x) : (nx > x)) points.push({ x: nx, y: T.round(y, 2) });
+                    }
+                } else {
+                    points.push({ x: T.round(x, 2), y: ny });
+                }
+            }
+        }
+        return points;
     }
 }
 
