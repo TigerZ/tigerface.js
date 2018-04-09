@@ -15,6 +15,7 @@ const config = {
         snow: ['./example/src/snow.js'],
         layout: ['./example/src/layout.js'],
         gum: ['./example/src/gum.js'],
+        MergePolygon: ['./example/src/MergePolygon.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -55,11 +56,16 @@ const config = {
         ],
     },
     plugins: [
-
         new HtmlWebpackPlugin({
             template: './template/index.template.html',
             title: 'tigerface.js',
             filename: 'index.html',
+            chunks: ['MergePolygon'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/gum.html',
+            title: 'tigerface.js 范例 - 口香糖',
             chunks: ['gum'],
         }),
         new HtmlWebpackPlugin({

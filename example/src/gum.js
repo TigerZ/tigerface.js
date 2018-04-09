@@ -42,14 +42,40 @@ class Panel extends CanvasSprite {
         this.small = new Ball({
             name: 'small',
             radius: 20,
-            x: 150,
-            y: 150,
+            x: 50,
+            y: 50,
         });
-        this.addChild(this.big);
         this.addChild(this.small);
-        this.small.enableDrag();
+        this.addChild(this.big);
+        this.big.enableDrag();
         this.canDrag = true;
+        this.onMouseOut = this.back;
+        this.big.onDragEnd = this.back;
     }
+
+    back = () => {
+        this.big.disableDrag();
+        this.canDrag = false;
+
+        this.tweenX = new TweenAction(this.big, {
+            prop: 'x',
+            end: this.small.x,
+            time: 1000,
+            effect: Tween.Bounce.easeOut,
+        });
+        this.tweenX.start();
+        this.tweenY = new TweenAction(this.big, {
+            prop: 'y',
+            end: this.small.y,
+            time: 1000,
+            effect: Tween.Bounce.easeOut,
+        });
+        this.tweenY.start();
+        this.tweenY.onFinish = () => {
+            this.big.enableDrag();
+            this.canDrag = true;
+        };
+    };
 
 
     paint(g) {
@@ -141,27 +167,7 @@ class Panel extends CanvasSprite {
         g.fill();
 
         if (this.canDrag && dist > 200) {
-            this.small.disableDrag();
-            this.canDrag = false;
-
-            this.tweenX = new TweenAction(this.small, {
-                prop: 'x',
-                end: c0.p0.x,
-                time: 1000,
-                effect: Tween.Bounce.easeOut,
-            });
-            this.tweenX.start();
-            this.tweenY = new TweenAction(this.small, {
-                prop: 'y',
-                end: c0.p0.y,
-                time: 1000,
-                effect: Tween.Bounce.easeOut,
-            });
-            this.tweenY.start();
-            this.tweenY.onFinish = () => {
-                this.small.enableDrag();
-                this.canDrag = true;
-            };
+            this.back();
         }
     }
 }

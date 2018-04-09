@@ -16,6 +16,7 @@ const config = {
         graphics: ['./example/src/graphics.js'],
         snow: ['./example/src/snow.js'],
         gum: ['./example/src/gum.js'],
+        MergePolygon: ['./example/src/MergePolygon.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -50,6 +51,12 @@ const config = {
         ],
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/MergePolygon.html',
+            title: 'tigerface.js 范例 - 多边形合并',
+            chunks: ['MergePolygon'],
+        }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
             filename: '../html/gum.html',
