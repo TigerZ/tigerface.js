@@ -30,7 +30,6 @@ class AppRoot extends React.Component {
             options: {
                 speed: 3,
                 font: '12px Kaiti',
-                colors: ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon'],
             },
         };
     }

@@ -16,7 +16,7 @@ const config = {
         layout: ['./example/src/layout.js'],
         gum: ['./example/src/gum.js'],
         merge: ['./example/src/merge.js'],
-        points: ['./example/src/points.js'],
+        colors: ['./example/src/colors.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -57,18 +57,12 @@ const config = {
         ],
     },
     plugins: [
-        // new HtmlWebpackPlugin({
-        //     template: './template/index.template.html',
-        //     title: 'tigerface.js',
-        //     filename: 'index.html',
-        //     chunks: ['points'],
-        // }),
         new HtmlWebpackPlugin({
-                template: './template/index.template.html',
-                title: 'tigerface.js',
-                filename: 'index.html',
-                chunks: ['gum'],
-            }),
+            template: './template/index.template.html',
+            title: 'tigerface.js',
+            filename: 'index.html',
+            chunks: ['colors'],
+        }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
             filename: '../html/merge.html',
@@ -89,9 +83,9 @@ const config = {
         }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
-            filename: 'gum.html',
+            filename: 'merge.html',
             title: 'tigerface.js 范例 - 口香糖',
-            chunks: ['gum'],
+            chunks: ['merge'],
         }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',

@@ -2,6 +2,7 @@ import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
 import { Triangle } from 'tigerface-shape';
 import { Event } from 'tigerface-event';
 import { Utilities as T } from 'tigerface-common';
+import { ColorPalette } from 'tigerface-graphic';
 
 const stage = new Stage({
     fps: 16,
@@ -73,6 +74,8 @@ class Windmill extends CanvasSprite {
         this.addBound(new Triangle(0, 0, 50, 50, 120).move(-50, 0).rotate(T.degreeToRadian(240)));
         this.addBound(new Triangle(0, 0, 50, 50, 120).move(-50, 0).rotate(T.degreeToRadian(300)));
 
+        this.colors = new ColorPalette(this.bounds.length).colors;
+
         // this.origin = { x: 50, y: 0 };
 
         this.onDoubleClick = () => {
@@ -104,13 +107,13 @@ class Windmill extends CanvasSprite {
 
     paint(g) {
         let fillStyle;
-        if (this.mouseInside) {
-            fillStyle = 'rgba(255,0,0,0.5)';
-        } else {
-            fillStyle = 'rgba(0,0,255,0.5)';
-        }
 
-        this.bounds.forEach((shape) => {
+        this.bounds.forEach((shape, idx) => {
+            if (this.mouseInside) {
+                fillStyle = `rgba(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]},1)`;
+            } else {
+                fillStyle = `rgba(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]},.5)`;
+            }
             g.drawPolygon(shape, {
                 fillStyle,
             });

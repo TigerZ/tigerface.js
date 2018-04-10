@@ -4,6 +4,7 @@ import { Sector, Line, Square } from 'tigerface-shape';
 import { CanvasSprite } from 'tigerface-display';
 import { withSimpleSpriteComponent } from 'tigerface-react';
 import { Utilities as T } from 'tigerface-common';
+import { ColorPalette } from 'tigerface-graphic';
 
 /**
  * User: zyh
@@ -76,6 +77,7 @@ class PieChartSprite extends CanvasSprite {
         });
 
         this.unitAngle = 360 / sum;
+        this.colors = new ColorPalette(this._data_.length).colors;
     }
 
     get data() {
@@ -83,7 +85,6 @@ class PieChartSprite extends CanvasSprite {
     }
 
     paint(g) {
-
         let finish = true;
         const shapes = [];
         let n = 0;
@@ -126,7 +127,7 @@ class PieChartSprite extends CanvasSprite {
         shapes.forEach((pie, idx) => {
             const t = idx % this.data.length;
 
-            const fillStyle = this.config.colors[t < this.config.colors.length ? t : this.config.colors.length - 1];
+            const fillStyle = `rgb(${this.colors[t][0]},${this.colors[t][1]},${this.colors[t][2]})`;
             const strokeStyle = 'rgba(0,0,0,0.2)';
 
             g.drawPolygon(pie, {
@@ -141,7 +142,7 @@ class PieChartSprite extends CanvasSprite {
             names.forEach(([p1, p2, name, num, percent], idx) => {
                 const str = `${name}[${percent}%]`;
 
-                const fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+                const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
                 const strokeStyle = fillStyle;
 
                 const w = g.measureText(str).width + 10;
@@ -171,7 +172,7 @@ class PieChartSprite extends CanvasSprite {
         names.forEach(([p1, p2, name, num], idx) => {
             const str = `${name} [${num}]`;
 
-            const fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+            const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
 
             const { width: w } = g.measureText(str);
             const left = this.config.paddingLeft + idx % 3 * 90;
@@ -204,26 +205,4 @@ export default withSimpleSpriteComponent(pieChart, {
     className: pieChart.config.className,
     style: pieChart.config.style,
 });
-
-// 以下是演示数据
-
-const colors = ['red', 'brown', 'blue', 'green', 'orange', 'olive', 'purple', 'deepskyblue', 'teal', 'maroon'];
-const data = [
-    { name: '何敏', num: 38 },
-    { name: '王菲丽', num: 76 },
-    { name: '张思雨', num: 25 },
-    { name: '王明清', num: 48 },
-    { name: '袁立', num: 22 },
-    { name: '邢惠珊', num: 71 },
-    { name: '李安和', num: 45 },
-];
-
-// putData(
-//     data,
-//     {
-//         speed: 3,
-//         font: '12px Kaiti',
-//         colors
-//     }
-// );
 

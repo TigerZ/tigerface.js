@@ -4,6 +4,7 @@ import { Rectangle, Square } from 'tigerface-shape';
 import { CanvasSprite } from 'tigerface-display';
 import { withSimpleSpriteComponent } from 'tigerface-react';
 import { Utilities as T } from 'tigerface-common';
+import { ColorPalette } from 'tigerface-graphic';
 
 /**
  * User: zyh
@@ -51,6 +52,7 @@ class BarChartSprite extends CanvasSprite {
     }
 
     set data(v) {
+        this.colors = new ColorPalette(v.length).colors;
         this._data_ = v;
     }
 
@@ -91,8 +93,8 @@ class BarChartSprite extends CanvasSprite {
         rects.forEach(([bar, name, num], idx) => {
             g.lineWidth = 1;
 
-            const fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
-
+            const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
+            console.log('********', fillStyle);
             g.drawText(name, {
                 x: this.config.paddingLeft,
                 y: bar.top + (this.config.unit / 2),
@@ -123,7 +125,8 @@ class BarChartSprite extends CanvasSprite {
         rects.forEach(([bar, name, num], idx) => {
             const str = `${name} [${num}]`;
             g.lineWidth = 1;
-            const fillStyle = this.config.colors[idx < this.config.colors.length ? idx : this.config.colors.length - 1];
+            const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
+
             const strokeStyle = fillStyle;
             // g.drawPoint(p1);
             const { width: w } = g.measureText(str);

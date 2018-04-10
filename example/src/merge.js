@@ -66,7 +66,7 @@ surface.onRedraw = (e) => {
         if (s3) {
             g.drawPolygon(s3, {
                 fillStyle: 'rgba(255,0,0,0.1)',
-                strokeStyle: 'rgba(255,0,0,0.5)',
+                strokeStyle: 'rgba(255,0,0,0.6)',
                 lineWidth: 1,
             });
         } else {

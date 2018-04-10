@@ -5,6 +5,7 @@
 import plugins from 'RootPath/graphics.plugin';
 import Context from './Context';
 import methods from './methods';
+import ColorPalette from './ColorPalette';
 
 const EVENT_BEFORE_PAINT = 'EVENT_BEFORE_PAINT';
 
@@ -20,6 +21,8 @@ class Graphics extends Context {
         if (plugins) this.assignWithAOP(plugins);
 
         this._inPainting_ = false;
+
+        this.colorPalettes = {};
     }
 
     addBefore(func) {
@@ -72,6 +75,15 @@ class Graphics extends Context {
     flip(width) {
         this.translate(width, 0);
         this.scale(-1, 1);
+    }
+
+    createColorPalette(name, num, colors) {
+        this.colorPalettes[name] = new ColorPalette(num, colors).data;
+        return this.colorPalettes[name];
+    }
+
+    getColorPalette(name) {
+        return this.colorPalettes[name];
     }
 }
 

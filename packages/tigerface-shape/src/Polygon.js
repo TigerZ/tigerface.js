@@ -543,11 +543,15 @@ class Polygon extends Shape {
 
     convertPoints() {
         const sides = this.getSides();
-        let points = [];
+        let points;
         sides.forEach((side) => {
             const ps = side.getPoints();
-            ps.pop();
-            points = points.concat(ps);
+            if (!points) points = ps;
+            else {
+                const last = points[points.length - 1];
+                if (last.x === ps[0].x && last.y === ps[0].y) points.pop();
+                points = points.concat(ps);
+            }
         });
         return points;
     }

@@ -17,6 +17,7 @@ const config = {
         snow: ['./example/src/snow.js'],
         gum: ['./example/src/gum.js'],
         merge: ['./example/src/merge.js'],
+        colors: ['./example/src/colors.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -56,6 +57,12 @@ const config = {
             filename: '../html/merge.html',
             title: 'tigerface.js 范例 - 多边形合并',
             chunks: ['merge'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/color.html',
+            title: 'tigerface.js 范例 - 调色板',
+            chunks: ['colors'],
         }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',

@@ -236,7 +236,6 @@ class Line {
     }
 
     getPoints() {
-
         const exp = (() => {
             const x1 = this.p0.x;
             const y1 = this.p0.y;
@@ -249,37 +248,43 @@ class Line {
                 y(x) {
                     return (x - x1) / (x2 - x1) * (y2 - y1) + y1;
                 },
+                push(arr, p2) {
+                    if (arr.length === 0) arr.push(p2);
+                    const p1 = arr[arr.length - 1];
+                    if (p1.x !== p2.x || p1.y !== p2.y) arr.push(p2);
+                },
             };
         })();
 
-
         const points = [];
-        let x = T.round(this.p0.x, 2);
-        let y = T.round(this.p0.y, 2);
+        let x = T.round(this.p0.x, 1);
+        let y = T.round(this.p0.y, 1);
         const offsetX = T.round(this.p1.x - this.p0.x);
-        const offsetY = T.round(this.p1.y - this.p0.x);
-        const xstep = offsetX > 0 ? 1 : (offsetX === 0 ? 0 : -1);
-        const ystep = offsetY > 0 ? 1 : (offsetY === 0 ? 0 : -1);
+        const offsetY = T.round(this.p1.y - this.p0.y);
+        const xstep = offsetX > 0 ? 0.5 : (offsetX === 0 ? 0 : -0.5);
+        const ystep = offsetY > 0 ? 0.5 : (offsetY === 0 ? 0 : -0.5);
         if (xstep === 0 && ystep === 0) {
-            points.push({ x, y });
+            exp.push(points, { x, y });
         } else if (xstep === 0) {
             for (; ystep > 0 ? (y <= this.p1.y) : (y >= this.p1.y); y += ystep) {
-                points.push({ x, y: T.round(y, 2) });
+                exp.push(points, { x, y: T.round(y, 1) });
             }
         } else if (ystep === 0) {
             for (; xstep > 0 ? (x <= this.p1.x) : (x >= this.p1.x); x += xstep) {
-                points.push({ x: T.round(x, 2), y });
+                exp.push(points, { x: T.round(x, 1), y });
             }
         } else {
             for (; xstep > 0 ? (x <= this.p1.x) : (x >= this.p1.x); x += xstep) {
-                const ny = T.round(exp.y(x), 2);
-                if (ystep > 0 ? (ny > y + ystep) : (ny < y + ystep)) {
+                const ny = T.round(exp.y(x), 1);
+                if (ystep > 0 ? (ny > y) : (ny < y)) {
                     for (; ystep > 0 ? (y < ny) : (y > ny); y += ystep) {
-                        const nx = T.round(exp.x(y), 2);
-                        if (xstep > 0 ? (nx < x) : (nx > x)) points.push({ x: nx, y: T.round(y, 2) });
+                        const nx = T.round(exp.x(y), 1);
+                        if (xstep > 0 ? (nx < x + xstep) : (x > x + xstep)) {
+                            exp.push(points, { x: nx, y: T.round(y, 1) });
+                        }
                     }
                 } else {
-                    points.push({ x: T.round(x, 2), y: ny });
+                    exp.push(points, { x: T.round(x, 1), y: ny });
                 }
             }
         }
