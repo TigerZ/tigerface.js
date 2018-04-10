@@ -94,19 +94,21 @@ class BarChartSprite extends CanvasSprite {
             g.lineWidth = 1;
 
             const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
-            console.log('********', fillStyle);
+            const strokeStyle = 'rgba(0,0,0,0.2)';
+
             g.drawText(name, {
                 x: this.config.paddingLeft,
                 y: bar.top + (this.config.unit / 2),
                 font: this.config.font,
                 textAlign: 'end',
                 fillStyle,
+                strokeStyle,
                 textBaseline,
             });
 
             g.drawRectangle(
                 bar,
-                { fillStyle },
+                { fillStyle, strokeStyle },
             );
 
             g.drawText(num, {
@@ -116,6 +118,7 @@ class BarChartSprite extends CanvasSprite {
                 textAlign: 'start',
                 textBaseline,
                 fillStyle,
+                strokeStyle,
             });
         });
 
@@ -126,14 +129,13 @@ class BarChartSprite extends CanvasSprite {
             const str = `${name} [${num}]`;
             g.lineWidth = 1;
             const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
-
-            const strokeStyle = fillStyle;
+            const strokeStyle = 'rgba(0,0,0,0.2)';
             // g.drawPoint(p1);
             const { width: w } = g.measureText(str);
             const left = this.config.paddingTop + ((idx % 3) * 90);
             const top = 180 + (Math.floor(idx / 3) * 20);
 
-            g.drawRectangle(new Square(left, top, 10), { fillStyle });
+            g.drawRectangle(new Square(left, top, 10), { fillStyle, strokeStyle });
 
             g.drawText(str, {
                 x: left + 10 + this.config.xSpace,
@@ -141,6 +143,7 @@ class BarChartSprite extends CanvasSprite {
                 font: this.config.font,
                 textBaseline: 'top',
                 fillStyle,
+                strokeStyle,
             });
         });
 

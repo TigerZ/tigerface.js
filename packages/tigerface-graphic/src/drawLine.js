@@ -69,6 +69,8 @@ function drawLine(line, props = {}) {
         lineWidth = 1,
         lineStyle = LineStyle.SOLID,
         stroke = true,
+        fillStyle,
+        fill,
         save = false,
         beginPath = true,
         closePath = true,
@@ -85,6 +87,8 @@ function drawLine(line, props = {}) {
         lineWidth,
         strokeStyle,
         stroke,
+        fillStyle,
+        fill,
         save,
         beginPath,
         closePath,
@@ -173,6 +177,11 @@ function drawLine(line, props = {}) {
     }
 
     if (closePath) this.closePath();
+
+    if (fillStyle) {
+        this.fillStyle = fillStyle;
+        if (fill) this.fill();
+    }
 
     if (strokeStyle) {
         this.lineWidth = lineWidth;

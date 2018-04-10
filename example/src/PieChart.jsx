@@ -143,17 +143,17 @@ class PieChartSprite extends CanvasSprite {
                 const str = `${name}[${percent}%]`;
 
                 const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
-                const strokeStyle = fillStyle;
+                const strokeStyle = 'rgba(0,0,0,0.2)';
 
                 const w = g.measureText(str).width + 10;
 
                 let textAlign;
                 if (p1.x < p0.x) {
                     textAlign = 'end';
-                    g.drawLine(new Line(p1, { x: p1.x - w, y: p1.y }), { strokeStyle, lineWidth });
+                    g.drawLine(new Line(p1, { x: p1.x - w, y: p1.y }), { strokeStyle, fillStyle, lineWidth });
                 } else {
                     textAlign = 'start';
-                    g.drawLine(new Line(p1, { x: p1.x + w, y: p1.y }), { strokeStyle, lineWidth });
+                    g.drawLine(new Line(p1, { x: p1.x + w, y: p1.y }), { strokeStyle, fillStyle, lineWidth });
                 }
 
                 g.drawText(str, {
@@ -163,9 +163,10 @@ class PieChartSprite extends CanvasSprite {
                     textBaseline: 'bottom',
                     textAlign,
                     fillStyle,
+                    strokeStyle,
                 });
 
-                g.drawLine(new Line(p1, p2), { strokeStyle, lineWidth });
+                g.drawLine(new Line(p1, p2), { strokeStyle, fillStyle, lineWidth });
             });
         }
         // 绘制图例
@@ -173,12 +174,13 @@ class PieChartSprite extends CanvasSprite {
             const str = `${name} [${num}]`;
 
             const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
+            const strokeStyle = 'rgba(0,0,0,0.2)';
 
             const { width: w } = g.measureText(str);
             const left = this.config.paddingLeft + idx % 3 * 90;
             const top = this.config.paddingTop + Math.floor(idx / 3) * 20;
 
-            g.drawRectangle(new Square(left, top, 10), { fillStyle });
+            g.drawRectangle(new Square(left, top, 10), { fillStyle, strokeStyle });
 
             g.drawText(str, {
                 x: left + 10 + this.config.xSpace,
@@ -187,6 +189,7 @@ class PieChartSprite extends CanvasSprite {
                 textBaseline: 'top',
                 textAlign: 'start',
                 fillStyle,
+                strokeStyle,
             });
         });
 
