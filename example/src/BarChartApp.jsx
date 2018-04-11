@@ -35,7 +35,7 @@ class AppRoot extends React.Component {
         };
     }
 
-    refresh = () => {
+    refresh = (e) => {
         let { data } = this.state;
         if (data.length > 1) {
             data.pop();
@@ -43,6 +43,7 @@ class AppRoot extends React.Component {
             data = demoData;
         }
         this.setState({ data: [...data] });
+        e.stopPropagation();
     };
 
     render() {
