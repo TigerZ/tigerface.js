@@ -26,7 +26,7 @@ const _default = {
     paddingLeft: 10,
     font: '12px monaco',
     speed: 3,
-    colors: ['red'],
+    cutline: true,
 };
 
 class PieChartSprite extends CanvasSprite {
@@ -77,7 +77,12 @@ class PieChartSprite extends CanvasSprite {
         });
 
         this.unitAngle = 360 / sum;
-        this.colors = new ColorPalette(this._data_.length).colors;
+        this.colors = new ColorPalette(this._data_.length, {
+            0: 'rgb(255,0,0)',
+            0.3: 'rgb(255,255,0)',
+            0.6: 'rgb(0,255,255)',
+            1.0: 'rgb(255,0,0)',
+        }).colors;
     }
 
     get data() {
@@ -90,7 +95,7 @@ class PieChartSprite extends CanvasSprite {
         let n = 0;
         const names = [];
         const count = 20;
-        const p0 = { x: 160, y: 100 };
+        const p0 = { x: 175, y: 110 };
         const r = 4;
 
         // 生成图形
@@ -143,7 +148,7 @@ class PieChartSprite extends CanvasSprite {
                 const str = `${name}[${percent}%]`;
 
                 const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
-                const strokeStyle = 'rgba(0,0,0,0.2)';
+                const strokeStyle = fillStyle;
 
                 const w = g.measureText(str).width + 10;
 
@@ -163,35 +168,38 @@ class PieChartSprite extends CanvasSprite {
                     textBaseline: 'bottom',
                     textAlign,
                     fillStyle,
-                    strokeStyle,
+                    // strokeStyle,
                 });
 
                 g.drawLine(new Line(p1, p2), { strokeStyle, fillStyle, lineWidth });
             });
         }
-        // 绘制图例
-        names.forEach(([p1, p2, name, num], idx) => {
-            const str = `${name} [${num}]`;
 
-            const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
-            const strokeStyle = 'rgba(0,0,0,0.2)';
+        if (this.config.cutline) {
+            // 绘制图例
+            names.forEach(([p1, p2, name, num], idx) => {
+                const str = `${name} [${num}]`;
 
-            const { width: w } = g.measureText(str);
-            const left = this.config.paddingLeft + idx % 3 * 90;
-            const top = this.config.paddingTop + Math.floor(idx / 3) * 20;
+                const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
+                const strokeStyle = 'rgba(0,0,0,0.2)';
 
-            g.drawRectangle(new Square(left, top, 10), { fillStyle, strokeStyle });
+                const { width: w } = g.measureText(str);
+                const left = this.config.paddingLeft + idx % 3 * 90;
+                const top = this.config.paddingTop + Math.floor(idx / 3) * 20;
 
-            g.drawText(str, {
-                x: left + 10 + this.config.xSpace,
-                y: top,
-                font: this.config.font,
-                textBaseline: 'top',
-                textAlign: 'start',
-                fillStyle,
-                strokeStyle,
+                g.drawRectangle(new Square(left, top, 10), { fillStyle, strokeStyle });
+
+                g.drawText(str, {
+                    x: left + 10 + this.config.xSpace,
+                    y: top,
+                    font: this.config.font,
+                    textBaseline: 'top',
+                    textAlign: 'start',
+                    fillStyle,
+                    // strokeStyle,
+                });
             });
-        });
+        }
 
         this.h0 += this.config.speed;
         if (!finish) this.postChange();

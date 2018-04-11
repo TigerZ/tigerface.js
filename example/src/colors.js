@@ -15,7 +15,7 @@ const sprite = new CanvasSprite();
 const p0 = { x: 150, y: 100 };
 sprite.pos = p0;
 
-const polygon = new EquilateralStar(0, 0, 80, 50, 5).rotate(T.degreeToRadian(-18));
+const polygon = new EquilateralStar(0, 0, 80, 50, 6).rotate(T.degreeToRadian(30));
 
 const points = polygon.convertPoints(3);
 
@@ -33,7 +33,7 @@ sprite.onRedraw = (e) => {
             strokeStyle: `rgb(${colors[i][0]},${colors[i][1]},${colors[i][2]})`,
         });
     });
-    e.target.rotation += 0.5;
+    // e.target.rotation += 0.5;
 };
 
 stage.addLayer(surface.addChild(sprite));

@@ -587,7 +587,9 @@ class Polygon extends Shape {
             nps.push(v);
             v.next = nps[0];
             // console.log(v.toString());
-            if (g) g.drawPoint(v);
+            if (g) g.drawPoint(v, {
+                strokeStyle: g.strokeStyle,
+            });
             return true;
         };
 

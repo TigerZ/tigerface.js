@@ -134,7 +134,7 @@ class Panel extends CanvasSprite {
         const b23 = new CubicBezier(p2, p223, p23, p3);
         const b32 = new CubicBezier(p3, p323, p23, p2);
         //
-        g.fillStyle = '#006699';
+        g.fillStyle = 'rgb(254,231,155)';
         g.strokeStyle = g.fillStyle;
         g.beginPath();
         if (dist > sum) {

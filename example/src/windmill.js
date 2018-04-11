@@ -45,7 +45,7 @@ class Panel extends CanvasSprite {
     paint(g) {
         const textAlign = 'right';
         const textBaseline = 'bottom';
-        const fillStyle = 'black';
+        const fillStyle = 'white';
         g.drawText(`V:${speed}`, {
             x: 200,
             y: 200,
@@ -110,9 +110,9 @@ class Windmill extends CanvasSprite {
 
         this.bounds.forEach((shape, idx) => {
             if (this.mouseInside) {
-                fillStyle = `rgba(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]},1)`;
+                fillStyle = `rgba(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]},.8)`;
             } else {
-                fillStyle = `rgba(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]},.5)`;
+                fillStyle = `rgba(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]},1)`;
             }
             g.drawPolygon(shape, {
                 fillStyle,

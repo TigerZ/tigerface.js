@@ -30,6 +30,7 @@ class AppRoot extends React.Component {
             options: {
                 speed: 3,
                 font: '12px Kaiti',
+                cutline: false,
             },
         };
     }
@@ -48,6 +49,8 @@ class AppRoot extends React.Component {
         return (
             <div>
                 <BarChart
+                    width={350}
+                    height={200}
                     config={this.state.options}
                     data={this.state.data}
                 />

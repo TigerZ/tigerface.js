@@ -24,7 +24,7 @@ class PS extends CanvasSprite {
     paint(g) {
         this.bounds.forEach((bound) => {
             g.drawPolygon(bound, {
-                fillStyle: 'rgba(0,0,255,0.1)',
+                fillStyle: 'rgba(255,255,255,0.2)',
             });
         });
     }
@@ -57,6 +57,8 @@ surface.addChild(p2);
 
 surface.onRedraw = (e) => {
     const g = e.graphics;
+    g.strokeStyle = 'white';
+    g.fillStyle = 'white';
 
     if (p1.hitTestObject(p2)) {
         const m1 = p1.mirror().bounds[0];
@@ -65,8 +67,8 @@ surface.onRedraw = (e) => {
 
         if (s3) {
             g.drawPolygon(s3, {
-                fillStyle: 'rgba(255,0,0,0.1)',
-                strokeStyle: 'rgba(255,0,0,0.6)',
+                fillStyle: 'rgba(255,0,0,0.2)',
+                strokeStyle: 'rgb(255,0,0)',
                 lineWidth: 1,
             });
         } else {

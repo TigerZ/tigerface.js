@@ -18,24 +18,27 @@ import { ColorPalette } from 'tigerface-graphic';
  * @private
  */
 const _default = {
-    paddingLeft: 60,
-    paddingTop: 10,
+    paddingLeft: 70,
+    paddingTop: 20,
     unit: 15,
     scale: 2,
     xSpace: 5,
     ySpace: 5,
     font: '12px monaco',
     speed: 3,
+    cutline: true,
 };
 
 class BarChartSprite extends CanvasSprite {
     constructor(options) {
-        super(options);
+        super({
+            clazzName: 'BarChartSprite',
+            name: 'BarChart',
+        });
+        this.assign(options);
         this._data_ = [];
         this.h0 = 0;
         this._config_ = _default;
-        this.clazzName = 'BarChartSprite';
-        this.name = 'BarChart';
     }
 
     putData(data, options) {
@@ -52,7 +55,12 @@ class BarChartSprite extends CanvasSprite {
     }
 
     set data(v) {
-        this.colors = new ColorPalette(v.length).colors;
+        this.colors = new ColorPalette(v.length, {
+            0: 'rgb(255,0,0)',
+            0.3: 'rgb(255,255,0)',
+            0.6: 'rgb(0,255,255)',
+            1.0: 'rgb(255,0,0)',
+        }).colors;
         this._data_ = v;
     }
 
@@ -102,7 +110,7 @@ class BarChartSprite extends CanvasSprite {
                 font: this.config.font,
                 textAlign: 'end',
                 fillStyle,
-                strokeStyle,
+                // strokeStyle,
                 textBaseline,
             });
 
@@ -118,34 +126,36 @@ class BarChartSprite extends CanvasSprite {
                 textAlign: 'start',
                 textBaseline,
                 fillStyle,
-                strokeStyle,
+                // strokeStyle,
             });
         });
 
-        // 绘制图例
-        g.textBaseline = 'top';
-        g.textAlign = 'start';
-        rects.forEach(([bar, name, num], idx) => {
-            const str = `${name} [${num}]`;
-            g.lineWidth = 1;
-            const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
-            const strokeStyle = 'rgba(0,0,0,0.2)';
-            // g.drawPoint(p1);
-            const { width: w } = g.measureText(str);
-            const left = this.config.paddingTop + ((idx % 3) * 90);
-            const top = 180 + (Math.floor(idx / 3) * 20);
+        if (this.config.cutline) {
+            // 绘制图例
+            g.textBaseline = 'top';
+            g.textAlign = 'start';
+            rects.forEach(([bar, name, num], idx) => {
+                const str = `${name} [${num}]`;
+                g.lineWidth = 1;
+                const fillStyle = `rgb(${this.colors[idx][0]},${this.colors[idx][1]},${this.colors[idx][2]})`;
+                const strokeStyle = 'rgba(0,0,0,0.2)';
+                // g.drawPoint(p1);
+                const { width: w } = g.measureText(str);
+                const left = this.config.paddingTop + ((idx % 3) * 90);
+                const top = 180 + (Math.floor(idx / 3) * 20);
 
-            g.drawRectangle(new Square(left, top, 10), { fillStyle, strokeStyle });
+                g.drawRectangle(new Square(left, top, 10), { fillStyle, strokeStyle });
 
-            g.drawText(str, {
-                x: left + 10 + this.config.xSpace,
-                y: top,
-                font: this.config.font,
-                textBaseline: 'top',
-                fillStyle,
-                strokeStyle,
+                g.drawText(str, {
+                    x: left + 10 + this.config.xSpace,
+                    y: top,
+                    font: this.config.font,
+                    textBaseline: 'top',
+                    fillStyle,
+                    // strokeStyle,
+                });
             });
-        });
+        }
 
         this.h0 += this.config.speed;
         if (!finish) this.postChange();
