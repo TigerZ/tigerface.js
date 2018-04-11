@@ -20,10 +20,14 @@ tigerface.js 架构的重绘是舞台对象通过 FrameEventGenerator 类实现�
 
         paint() {
             const g = this.graphics;
-            g.fillStyle = 'rgba(255,0,0,0.8)';
-            g.textAlign = 'center';
-            g.textBaseline = 'bottom';
-            g.drawText('Hello World! ', { x: 200, y: 200 }, '12px monaco', g.DrawStyle.FILL);
+            g.drawText('Hello World! ', {
+                x: 200,
+                y: 200,
+                font:'12px monaco',
+                fillStyle: 'rgb(253,100,100)',
+                textBaseline: 'bottom',
+                textAlign: 'center',
+            });
         }
     }
     ```
@@ -31,19 +35,28 @@ tigerface.js 架构的重绘是舞台对象通过 FrameEventGenerator 类实现�
 * 外部事件侦听
 ```javascript
 const sprite = new CanvasSprite();
-sprite.on(Event.REDRAW, (g)=>{
-    g.fillStyle = 'rgba(255,0,0,0.8)';
-    g.textAlign = 'center';
-    g.textBaseline = 'bottom';
-    g.drawText('Hello World! ', { x: 200, y: 200 }, '12px monaco', g.DrawStyle.FILL);
+sprite.on(Event.REDRAW, (e)=>{
+    const g = e.graphics;
+    g.drawText('Hello World! ', {
+        x: 200,
+        y: 200,
+        font:'12px monaco',
+        fillStyle: 'rgb(253,100,100)',
+        textBaseline: 'bottom',
+        textAlign: 'center',
+    });
 });
 // 或者
 sprite.onRedraw = (e)=>{
     const g = e.graphics;
-    g.fillStyle = 'rgba(255,0,0,0.8)';
-    g.textAlign = 'center';
-    g.textBaseline = 'bottom';
-    g.drawText('Hello World! ', { x: 200, y: 200 }, '12px monaco', g.DrawStyle.FILL);
+    g.drawText('Hello World! ', {
+        x: 200,
+        y: 200,
+        font:'12px monaco',
+        fillStyle: 'rgb(253,100,100)',
+        textBaseline: 'bottom',
+        textAlign: 'center',
+    });
 };
 ```
 
@@ -53,7 +66,33 @@ tigerface.js 架构中的 Graphics 类在兼容 Context 的基础上对 Context 
 支持更多的图形绘制、组件绘制。比如：Graphics 可绘制
 tigerface-shape 包里的各种图形，可绘制虚线、箭头、曲线、扇形、任意圆角多边形。
 
-##绘制相关重要注意事项：
+### 调色板
+很多的项目里要求颜色跟随数据的数量变化。ColorPalette 调色板类用于满足这样的需求。
+
+[范例：colors](https://tigerz.github.io/html/colors.html "tigerface-embed:colors")
+
+这个范例里绘制的多边形点化后形成几百个点，然后在每个点和中心点之间绘制直线，
+为了让这些线显示不同的颜色，根据点的数量，初始化调色板，然后在绘制时取色。
+```javascript
+const { colors } = new ColorPalette(lines.length, {
+    0: 'rgb(255,0,0)',
+    0.3: 'rgb(255,255,0)',
+    0.6: 'rgb(0,255,255)',
+    0.9: 'rgb(0,0,255)',
+    1.0: 'rgb(255,0,0)',
+});
+// ...
+sprite.onRedraw = (e) => {
+    const g = e.graphics;
+    lines.forEach((line, i) => {
+        g.drawLine(line, {
+            strokeStyle: `rgb(${colors[i][0]},${colors[i][1]},${colors[i][2]})`,
+        });
+    });
+};
+```
+
+### 绘制相关重要注意事项：
 1. 画笔的调用，只能出现在 paint 方法中。
 paint 方法的绘图上下文是经过多层的容器，多次执行坐标变换、透明度调整、缩放等操作后的瞬时上下文。
 如果在 paint 方法外面调用画笔，将会导致显示对象绘制错误。

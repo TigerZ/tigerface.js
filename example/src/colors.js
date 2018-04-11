@@ -33,7 +33,6 @@ sprite.onRedraw = (e) => {
             strokeStyle: `rgb(${colors[i][0]},${colors[i][1]},${colors[i][2]})`,
         });
     });
-    // e.target.rotation += 0.5;
 };
 
 stage.addLayer(surface.addChild(sprite));
