@@ -78,10 +78,11 @@ class PieChartSprite extends CanvasSprite {
 
         this.unitAngle = 360 / sum;
         this.colors = new ColorPalette(this._data_.length, {
-            0: 'rgb(255,0,0)',
-            0.3: 'rgb(255,255,0)',
-            0.6: 'rgb(0,255,255)',
-            1.0: 'rgb(255,0,0)',
+            0: 'rgb(222,63,24)',
+            0.3: 'rgb(254,212,90)',
+            0.6: 'rgb(102,172,188)',
+            0.9: 'rgb(161,240,158)',
+            1.0: 'rgb(222,63,24)',
         }).colors;
     }
 

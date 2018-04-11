@@ -74,7 +74,13 @@ class Windmill extends CanvasSprite {
         this.addBound(new Triangle(0, 0, 50, 50, 120).move(-50, 0).rotate(T.degreeToRadian(240)));
         this.addBound(new Triangle(0, 0, 50, 50, 120).move(-50, 0).rotate(T.degreeToRadian(300)));
 
-        this.colors = new ColorPalette(this.bounds.length).colors;
+        this.colors = new ColorPalette(this.bounds.length, {
+            0: 'rgb(222,63,24)',
+            0.3: 'rgb(254,212,90)',
+            0.6: 'rgb(102,172,188)',
+            0.9: 'rgb(161,240,158)',
+            1.0: 'rgb(222,63,24)',
+        }).colors;
 
         // this.origin = { x: 50, y: 0 };
 
