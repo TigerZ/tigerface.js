@@ -53,6 +53,7 @@ class AppRoot extends React.Component {
                     height={200}
                     config={this.state.options}
                     data={this.state.data}
+                    onClick={this.refresh}
                 />
             </div>
         );

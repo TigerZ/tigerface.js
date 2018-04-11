@@ -54,6 +54,7 @@ class AppRoot extends React.Component {
                     className="stage"
                     config={this.state.options}
                     data={this.state.data}
+                    onClick={this.refresh}
                 />
             </div>
         );
