@@ -541,11 +541,11 @@ class Polygon extends Shape {
         // return this;
     }
 
-    convertPoints() {
+    convertPoints(precision = 1) {
         const sides = this.getSides();
         let points;
         sides.forEach((side) => {
-            const ps = side.getPoints();
+            const ps = side.getPoints(precision);
             if (!points) points = ps;
             else {
                 const last = points[points.length - 1];

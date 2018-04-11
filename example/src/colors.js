@@ -1,6 +1,7 @@
 import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
-import { Line, EquilateralPolygon } from 'tigerface-shape';
+import { Line, EquilateralStar } from 'tigerface-shape';
 import { ColorPalette } from 'tigerface-graphic';
+import { Utilities as T } from 'tigerface-common';
 
 const stage = new Stage({
     width: 350,
@@ -14,9 +15,9 @@ const sprite = new CanvasSprite();
 const p0 = { x: 150, y: 100 };
 sprite.pos = p0;
 
-const polygon = new EquilateralPolygon(0, 0, 80, 6);
+const polygon = new EquilateralStar(0, 0, 80, 50, 5).rotate(T.degreeToRadian(-18));
 
-const points = polygon.convertPoints();
+const points = polygon.convertPoints(3);
 
 const lines = [];
 points.forEach((p1) => {
@@ -27,18 +28,12 @@ const { colors } = new ColorPalette(lines.length);
 
 sprite.onRedraw = (e) => {
     const g = e.graphics;
-    const style = {
-        strokeStyle: 'rgba(255,0,0,1)',
-        lineWidth: 0.5,
-    };
-
-    g.drawPolygon(polygon, style);
     lines.forEach((line, i) => {
         g.drawLine(line, {
             strokeStyle: `rgb(${colors[i][0]},${colors[i][1]},${colors[i][2]})`,
         });
     });
-    // e.target.rotation += 1;
+    e.target.rotation += 0.5;
 };
 
 stage.addLayer(surface.addChild(sprite));
