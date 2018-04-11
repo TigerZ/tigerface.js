@@ -47,13 +47,14 @@ class AppRoot extends React.Component {
 
     render() {
         return (
-            <div onClick={this.refresh}>
+            <div>
                 <PieChart
                     width={350}
                     height={200}
                     className="stage"
                     config={this.state.options}
                     data={this.state.data}
+                    onClick={this.refresh}
                 />
             </div>
         );

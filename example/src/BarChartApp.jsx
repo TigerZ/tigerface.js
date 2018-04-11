@@ -47,12 +47,13 @@ class AppRoot extends React.Component {
 
     render() {
         return (
-            <div onClick={this.refresh}>
+            <div>
                 <BarChart
                     width={350}
                     height={200}
                     config={this.state.options}
                     data={this.state.data}
+                    onClick={this.refresh}
                 />
             </div>
         );
