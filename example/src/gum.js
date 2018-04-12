@@ -48,17 +48,14 @@ class Panel extends CanvasSprite {
         this.addChild(this.small);
         this.addChild(this.big);
         this.big.enableDrag();
-        this.canDrag = true;
         this.onMouseOut = () => {
-            if (this.big.dragging) this.back();
+            this.back();
         };
         this.big.onDragEnd = this.back;
     }
 
     back = () => {
-        this.big.disableDrag();
-        this.canDrag = false;
-
+        this.big._endDrag_();
         this.tweenX = new TweenAction(this.big, {
             prop: 'x',
             end: this.small.x,
@@ -73,10 +70,10 @@ class Panel extends CanvasSprite {
             effect: Tween.Elastic.easeOut,
         });
         this.tweenY.start();
-        this.tweenY.onFinish = () => {
-            this.big.enableDrag();
-            this.canDrag = true;
-        };
+        // this.tweenY.onFinish = () => {
+        //     this.big.enableDrag();
+        //     this.canDrag = true;
+        // };
     };
 
 
@@ -168,7 +165,7 @@ class Panel extends CanvasSprite {
         // g.stroke();
         g.fill();
 
-        if (this.canDrag && dist > 200) {
+        if (dist > 200) {
             this.back();
         }
     }
