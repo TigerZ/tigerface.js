@@ -54,6 +54,10 @@ class Panel extends CanvasSprite {
         this.big.onDragEnd = () => {
             this.back();
         };
+        this.big.onDragStart = () => {
+            if (this.tweenX) this.tweenX.stop();
+            if (this.tweenY) this.tweenY.stop();
+        };
     }
 
     back = () => {
@@ -62,14 +66,14 @@ class Panel extends CanvasSprite {
         this.tweenX = new TweenAction(this.big, {
             prop: 'x',
             end: this.small.x,
-            time: 1000,
+            time: 800,
             effect: Tween.Elastic.easeOut,
         });
         this.tweenX.start();
         this.tweenY = new TweenAction(this.big, {
             prop: 'y',
             end: this.small.y,
-            time: 1000,
+            time: 800,
             effect: Tween.Elastic.easeOut,
         });
         this.tweenY.start();

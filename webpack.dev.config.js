@@ -61,7 +61,7 @@ const config = {
             template: './template/index.template.html',
             title: 'tigerface.js',
             filename: 'index.html',
-            chunks: ['colors'],
+            chunks: ['gum'],
         }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',

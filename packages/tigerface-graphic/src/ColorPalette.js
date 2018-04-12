@@ -6,6 +6,7 @@ class ColorPalette {
         0.9: 'rgb(0,0,255)',
         1.0: 'rgb(255,0,0)',
     }) {
+        if (num < Object.keys(colors).length) num = Object.keys(colors).length;
         const ctx = this._createOffscreenContext_(1, num);
         const grad = ctx.createLinearGradient(0, 0, 1, num);
         Object.keys(colors).forEach((x) => {
