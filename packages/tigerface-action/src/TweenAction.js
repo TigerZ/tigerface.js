@@ -88,6 +88,10 @@ class TweenAction extends EventDispatcher {
 
     _start_() {
         this.diff = this.endValue - this.startValue;
+        if (this.diff === 0) {
+            this.dispatchEvent(Tween.Event.MOTION_FINISH);
+            return;
+        };
         this.startTime = +new Date();
         this.endTime = this.startTime + this.time;
         this.changeTargetValue(this.startValue, 0);
@@ -141,12 +145,15 @@ class TweenAction extends EventDispatcher {
     set onStart(func) {
         this.addEventListener(Tween.Event.MOTION_START, func);
     }
+
     set onFinish(func) {
         this.addEventListener(Tween.Event.MOTION_FINISH, func);
     }
+
     set onStop(func) {
         this.addEventListener(Tween.Event.MOTION_STOP, func);
     }
+
     set onChanged(func) {
         this.addEventListener(Tween.Event.MOTION_CHANGED, func);
     }
