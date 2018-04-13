@@ -174,7 +174,7 @@ class CanvasLayer extends DomLayer {
     _onAfterPaint_(g) {
         g.save();
         // 绘制顺序为后绘制的在上层
-        g.globalCompositeOperation = 'source-over';
+        g.globalCompositeOperation = this.globalCompositeOperation;
 
         // 遍历孩子，顺序与globalCompositeOperation的设置要匹配，这里的效果是后添加的在上面
         this.children.forEach((child) => {

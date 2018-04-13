@@ -57,10 +57,9 @@ class BarChartSprite extends CanvasSprite {
     set data(v) {
         this.colors = new ColorPalette(v.length, {
             0: 'rgb(222,63,24)',
-            0.3: 'rgb(254,212,90)',
-            0.6: 'rgb(102,172,188)',
-            0.9: 'rgb(161,240,158)',
-            1.0: 'rgb(222,63,24)',
+            0.33: 'rgb(254,212,90)',
+            0.66: 'rgb(102,172,188)',
+            1: 'rgb(161,240,158)',
         }).colors;
         this._data_ = v;
     }

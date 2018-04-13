@@ -1,9 +1,9 @@
 class ColorPalette {
     constructor(num = 256, colors = {
         0: 'rgb(255,0,0)',
-        0.3: 'rgb(255,255,0)',
-        0.6: 'rgb(0,255,255)',
-        0.9: 'rgb(0,0,255)',
+        0.25: 'rgb(255,255,0)',
+        0.5: 'rgb(0,255,255)',
+        0.75: 'rgb(0,0,255)',
         1.0: 'rgb(255,0,0)',
     }) {
         if (num < Object.keys(colors).length) num = Object.keys(colors).length;

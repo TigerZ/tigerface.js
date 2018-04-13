@@ -17,6 +17,7 @@ const config = {
         gum: ['./example/src/gum.js'],
         merge: ['./example/src/merge.js'],
         colors: ['./example/src/colors.js'],
+        logo: ['./tigerz.github.io/src/logo05.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -61,7 +62,7 @@ const config = {
             template: './template/index.template.html',
             title: 'tigerface.js',
             filename: 'index.html',
-            chunks: ['gum'],
+            chunks: ['logo'],
         }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',

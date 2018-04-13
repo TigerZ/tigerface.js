@@ -2,6 +2,7 @@ function drawRectangle(rectangle, props = {}) {
     const {
         lineWidth = 1,
         fillStyle,
+        strokeStyle,
         fill = true,
         stroke = true,
         save = false,
@@ -9,9 +10,6 @@ function drawRectangle(rectangle, props = {}) {
         closePath = true,
         restore = false,
     } = props;
-
-    let { strokeStyle } = props;
-    if (!fillStyle && !strokeStyle) strokeStyle = 'black';
 
     if (save) this.save();
     if (beginPath) this.beginPath();

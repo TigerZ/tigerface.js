@@ -26,6 +26,7 @@ class CanvasSprite extends Sprite {
             size: { width: 100, height: 100 },
             scale: { scaleX: 1, scaleY: 1 },
             isCanvasSprite: true,
+            globalCompositeOperation: 'source-over',
         };
 
         super(props);
@@ -92,7 +93,7 @@ class CanvasSprite extends Sprite {
         // 平移坐标系至原点
         g.translate(-this.originX, -this.originY);
 
-        g.globalCompositeOperation = 'source-over';
+        g.globalCompositeOperation = this.globalCompositeOperation;
     }
 
     /**
@@ -104,7 +105,7 @@ class CanvasSprite extends Sprite {
         // 还原原点平移
         g.translate(this.originX, this.originY);
         // 绘制顺序为后绘制的在上层
-        g.globalCompositeOperation = 'source-over';
+        g.globalCompositeOperation = this.globalCompositeOperation;
 
         // 遍历孩子，顺序与globalCompositeOperation的设置要匹配，这是的效果是后添加的在上面
         this.children.forEach((child) => {
