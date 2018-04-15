@@ -8,10 +8,11 @@
  */
 class Vector {
     static byRadian(radian, magnitude) {
-        if (magnitude == undefined)
+        if (magnitude == undefined) {
             magnitude = 1;
-        var x = Math.cos(radian) * magnitude;
-        var y = Math.sin(radian) * magnitude;
+        }
+        const x = Math.cos(radian) * magnitude;
+        const y = Math.sin(radian) * magnitude;
         return new Vector(x, y);
     }
 
@@ -30,9 +31,8 @@ class Vector {
      * @param y Y轴上的力
      */
     constructor(x, y) {
-
         // 支持对象参数
-        if ((arguments.length == 1) && typeof x == 'object') {
+        if ((arguments.length == 1) && typeof x === 'object') {
             this.x = x.x || 0;
             this.y = x.y || 0;
         } else {
@@ -41,7 +41,6 @@ class Vector {
         }
 
         this.clazzName = 'Vector';
-
     }
 
     /**
@@ -63,12 +62,22 @@ class Vector {
     }
 
     /**
+     * 缩放
+     * @param scaleX
+     * @param scaleY
+     * @return {Vector}
+     */
+    scale(scaleX, scaleY) {
+        return new Vector(this.x * scaleX, this.y * scaleY);
+    }
+
+    /**
      * 设置向量的大小<br>
      *     此算法会导致重新计算X轴和Y轴上的力，导致此实例的X，Y值改变
      * @param magnitude
      */
     setMagnitude(magnitude) {
-        var unit = this.unit();
+        const unit = this.unit();
         this.x = unit.x * magnitude;
         this.y = unit.y * magnitude;
     }
@@ -79,7 +88,7 @@ class Vector {
      * @returns {Vector}
      */
     unit() {
-        var magnitude = this.getMagnitude();
+        const magnitude = this.getMagnitude();
         return new Vector(this.x / magnitude, this.y / magnitude);
     }
 
@@ -160,7 +169,7 @@ class Vector {
      * @param radian 弧度
      */
     setRadian(radian) {
-        var magnitude = this.getMagnitude();
+        const magnitude = this.getMagnitude();
         this.x = Math.cos(radian) * magnitude;
         this.y = Math.sin(radian) * magnitude;
     }
@@ -171,7 +180,7 @@ class Vector {
      * @param radian
      */
     rotate(radian) {
-        var newRadian = this.getRadian() + radian;
+        const newRadian = this.getRadian() + radian;
         this.setRadian(newRadian);
     }
 

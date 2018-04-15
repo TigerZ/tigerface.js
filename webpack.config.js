@@ -18,6 +18,8 @@ const config = {
         gum: ['./example/src/gum.js'],
         merge: ['./example/src/merge.js'],
         colors: ['./example/src/colors.js'],
+        flower: ['./example/src/flower.js'],
+        net: ['./example/src/net.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -52,6 +54,18 @@ const config = {
         ],
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/net.html',
+            title: 'tigerface.js 范例 - 网',
+            chunks: ['net'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/flower.html',
+            title: 'tigerface.js 范例 - 花',
+            chunks: ['flower'],
+        }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
             filename: '../html/merge.html',

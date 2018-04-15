@@ -329,6 +329,7 @@ class Sprite extends DisplayObjectContainer {
     enableDrag() {
         this.addEventListener(Event.MouseEvent.MOUSE_DOWN, this._startDrag_);
         this.addEventListener(Event.MouseEvent.MOUSE_UP, this._endDrag_);
+        this.addEventListener(Event.MouseEvent.MOUSE_OUT, this._endDrag_);
     }
 
     /**
@@ -338,6 +339,7 @@ class Sprite extends DisplayObjectContainer {
         this._endDrag_();
         this.removeEventListener(Event.MouseEvent.MOUSE_DOWN, this._startDrag_);
         this.removeEventListener(Event.MouseEvent.MOUSE_UP, this._endDrag_);
+        this.removeEventListener(Event.MouseEvent.MOUSE_OUT, this._endDrag_);
     }
 
     /**
