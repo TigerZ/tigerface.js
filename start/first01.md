@@ -85,6 +85,5 @@
 
     [windmill01](html/windmill01.html "tigerface-embed:windmill01")
 
-1.
 
 
