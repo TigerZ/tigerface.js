@@ -5,6 +5,6 @@ const stage = new Stage({
     width: 200,
     height: 200,
     style: {
-        'background-color': 'rgba(255,255,0,.5)',
+        'background-color': 'yellow',
     },
-}, document.getElementById('windmill') || document.documentElement);
+}, document.getElementById('windmill01') || document.documentElement);

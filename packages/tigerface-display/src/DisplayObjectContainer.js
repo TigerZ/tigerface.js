@@ -363,7 +363,7 @@ class DisplayObjectContainer extends DisplayObject {
     //
     // /**
     //  * 画笔
-    //  * @member {module:tigerface-graphic.Graphics}
+    //  * @member {module:tigerface-graphics.Graphics}
     //  */
     // set graphics(v) {
     //     this._graphics_ = v;

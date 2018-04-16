@@ -331,7 +331,7 @@ class DisplayObject extends EventDispatcher {
 
     /**
      * 画笔
-     * @member {module:tigerface-graphic.Graphics}
+     * @member {module:tigerface-graphics.Graphics}
      */
     get graphics() {
         return this._graphics_;

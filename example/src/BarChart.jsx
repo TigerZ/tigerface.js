@@ -4,7 +4,7 @@ import { Rectangle, Square } from 'tigerface-shape';
 import { CanvasSprite } from 'tigerface-display';
 import { withSimpleSpriteComponent } from 'tigerface-react';
 import { Utilities as T } from 'tigerface-common';
-import { ColorPalette } from 'tigerface-graphic';
+import { ColorPalette } from 'tigerface-graphics';
 
 /**
  * User: zyh

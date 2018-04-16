@@ -2,12 +2,15 @@ import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
 import { Triangle } from 'tigerface-shape';
 import { Event } from 'tigerface-event';
 import { Utilities as T } from 'tigerface-common';
-import { ColorPalette } from 'tigerface-graphic';
+import { ColorPalette } from 'tigerface-graphics';
 
 const stage = new Stage({
     fps: 16,
     width: 200,
     height: 200,
+    style: {
+        'background-color': 'yellow',
+    },
 }, (document.getElementById('windmill') || document.documentElement));
 
 // 如果不直接把 dom 传给 stage，可以让 stage 自己创建 dom，再获取

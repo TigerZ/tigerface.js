@@ -19,6 +19,6 @@
   },
   "dependencies": {
     "tigerface-event": "^0.10.7",
-    "tigerface-graphic": "^0.10.5"
+    "tigerface-graphics": "^0.10.5"
   }
 }

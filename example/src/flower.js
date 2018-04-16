@@ -1,6 +1,6 @@
 import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
 import { Ellipse, Rectangle } from 'tigerface-shape';
-import { ColorPalette } from 'tigerface-graphic';
+import { ColorPalette } from 'tigerface-graphics';
 
 const stage = new Stage({
     width: 300,

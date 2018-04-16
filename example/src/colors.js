@@ -1,6 +1,6 @@
 import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
 import { Line, EquilateralStar } from 'tigerface-shape';
-import { ColorPalette } from 'tigerface-graphic';
+import { ColorPalette } from 'tigerface-graphics';
 import { Utilities as T } from 'tigerface-common';
 
 const stage = new Stage({

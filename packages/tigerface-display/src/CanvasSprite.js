@@ -1,7 +1,7 @@
 import { Utilities as T, Logger } from 'tigerface-common';
 import { Rectangle, Polygon } from 'tigerface-shape';
 import { Event } from 'tigerface-event';
-import { Graphics } from 'tigerface-graphic';
+import { Graphics } from 'tigerface-graphics';
 import Sprite from './Sprite';
 import DomCover from './DomCover';
 

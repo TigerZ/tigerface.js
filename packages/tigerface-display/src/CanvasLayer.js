@@ -1,5 +1,5 @@
 import { Utilities as T, Logger } from 'tigerface-common';
-import { Graphics } from 'tigerface-graphic';
+import { Graphics } from 'tigerface-graphics';
 import DomLayer from './DomLayer';
 
 

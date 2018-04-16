@@ -34,6 +34,6 @@
     "import/resolver": {
       "babel-module": {"root": ["./packages"]}
     },
-    "import/core-modules": [ "tigerface-common", "tigerface-event", "tigerface-react", "tigerface-shape","tigerface-display", "tigerface-graphic" ]
+    "import/core-modules": [ "tigerface-common", "tigerface-event", "tigerface-react", "tigerface-shape","tigerface-display", "tigerface-graphics" ]
   }
 }

@@ -1,6 +1,6 @@
 const assert = require('assert');
 import {Shape, Circle, Polygon, Ellipse, Triangle, Square} from 'tigerface-shape';
-import {Graphics} from 'tigerface-graphic';
+import {Graphics} from 'tigerface-graphics';
 import {Utilities as T} from 'tigerface-common';
 
 const fs = require('fs');

@@ -70,18 +70,21 @@
     如果用 `filename: index.html` 会方便些，但注意不要多个入口都用 index.html。
     这部分可以参考 HtmlWebpackPlugin 的相关文档。
 
-1. 运行测试 `npm start`。看不到结果？因为舞台是透明的，看不到。我们给舞台加个底色：
+1. 运行测试 `npm start`。看不到结果？因为舞台是透明的，我们给舞台加个底色：
     ```javascript
     const stage = new Stage({
         fps: 16,
         width: 200,
         height: 200,
         style: {
-            'background-color': 'rgba(255,255,0,.5)',
+            'background-color': 'rgb(255,255,128)',
         },
     }, document.getElementById('windmill') || document.documentElement);
     ```
     再运行：
 
-[windmill01](https://tigerz.github.io/html/windmill01.html "tigerface-embed:windmill01")
+    [windmill01](html/windmill01.html "tigerface-embed:windmill01")
+
+1.
+
 

@@ -57,7 +57,7 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
-            filename: '../html/balance.html',
+            filename: '../html/windmill01.html',
             title: 'tigerface.js 范例 - 风车 01',
             chunks: ['windmill01'],
         }),
