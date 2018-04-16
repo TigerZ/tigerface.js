@@ -26,9 +26,10 @@ tigerface.js 设计目标是用于开发各种的图形化项目。
 
 ### tigerface.js 的开发环境是什么？
 
-tigerface.js 的开发环境是典型的前端开发项目：
-* node.js 运行环境
+tigerface.js 的目标环境是典型的前端开发项目：
+* node.js 开发环境
 * npm 安装依赖
 * ECMAScript 6 语法
 * babel 编译
 * webpack 打包
+* 浏览器运行环境

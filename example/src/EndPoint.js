@@ -26,8 +26,8 @@ class EndPoint extends CanvasSprite {
         this.onEnterFrame = () => {
             if (!this.fix) {
                 const power = this.power();
-                this.x += T.round(power.x / 100, 2);
-                this.y += T.round(power.y / 100, 2);
+                this.x += T.round(power.x / 20, 2);
+                this.y += T.round(power.y / 20, 2);
             }
         };
     }

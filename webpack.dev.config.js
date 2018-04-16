@@ -18,10 +18,10 @@ const config = {
         // merge: ['./example/src/merge.js'],
         // colors: ['./example/src/colors.js'],
         // flower: ['./example/src/flower.js'],
-        // balance: ['./example/src/balance.js'],
-        windmill01: ['./start/src/windmill01.js'],
-        windmill02: ['./start/src/windmill02.js'],
-        windmill03: ['./start/src/windmill03.js'],
+        balance: ['./example/src/balance.js'],
+        // windmill01: ['./start/src/windmill01.js'],
+        // windmill02: ['./start/src/windmill02.js'],
+        // windmill03: ['./start/src/windmill03.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -62,24 +62,24 @@ const config = {
         ],
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            template: './template/index.template.html',
-            title: 'tigerface.js',
-            filename: 'index.html',
-            chunks: ['windmill03'],
-        }),
+        // new HtmlWebpackPlugin({
+        //     template: './template/index.template.html',
+        //     title: 'tigerface.js',
+        //     filename: 'index.html',
+        //     chunks: ['windmill03'],
+        // }),
         // new HtmlWebpackPlugin({
         //     template: './template/embed.template.html',
         //     filename: './html/windmill01.html',
         //     title: 'tigerface.js 范例 - 平衡',
         //     chunks: ['windmill01'],
         // }),
-        // new HtmlWebpackPlugin({
-        //     template: './template/embed.template.html',
-        //     filename: './html/merge.html',
-        //     title: 'tigerface.js 范例 - 平衡',
-        //     chunks: ['balance'],
-        // }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: './index.html',
+            title: 'tigerface.js 范例 - 平衡',
+            chunks: ['balance'],
+        }),
         // new HtmlWebpackPlugin({
         //     template: './template/embed.template.html',
         //     filename: './html/merge.html',
