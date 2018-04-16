@@ -19,7 +19,7 @@ const config = {
         merge: ['./example/src/merge.js'],
         colors: ['./example/src/colors.js'],
         flower: ['./example/src/flower.js'],
-        net: ['./example/src/net.js'],
+        balance: ['./example/src/balance.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -56,9 +56,9 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
-            filename: '../html/net.html',
+            filename: '../html/balance.html',
             title: 'tigerface.js 范例 - 网',
-            chunks: ['net'],
+            chunks: ['balance'],
         }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',

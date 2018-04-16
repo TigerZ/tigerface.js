@@ -6,7 +6,7 @@ import Link from './Link';
 const stage = new Stage({
     width: 350,
     height: 200,
-}, document.getElementById('net') || document.documentElement);
+}, document.getElementById('balance') || document.documentElement);
 
 const surface = new CanvasLayer();
 

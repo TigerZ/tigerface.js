@@ -18,7 +18,7 @@ const config = {
         merge: ['./example/src/merge.js'],
         colors: ['./example/src/colors.js'],
         flower: ['./example/src/flower.js'],
-        net: ['./example/src/net.js'],
+        balance: ['./example/src/balance.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -63,7 +63,7 @@ const config = {
             template: './template/index.template.html',
             title: 'tigerface.js',
             filename: 'index.html',
-            chunks: ['net'],
+            chunks: ['balance'],
         }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
