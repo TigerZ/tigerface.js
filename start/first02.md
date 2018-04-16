@@ -84,4 +84,9 @@ Point、Line是基础类。多个点和直线构成曲线，闭合起来就构�
 
     [windmill04](https://tigerz.github.io/html/windmill04.html "tigerface-embed:windmill04")
 
+1. 转起来吧
+    ```javascript
+    this.rotation -= 1;
+    ```
+    [windmill05](https://tigerz.github.io/html/windmill05.html "tigerface-embed:windmill05")
 
