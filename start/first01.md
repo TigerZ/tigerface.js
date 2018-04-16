@@ -83,7 +83,7 @@
     ```
     再运行：
 
-    [windmill01](html/windmill01.html "tigerface-embed:windmill01")
+    [windmill01](https://tigerz.github.io/html/windmill01.html "tigerface-embed:windmill01")
 
 
 
