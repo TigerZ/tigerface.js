@@ -21,6 +21,9 @@ const config = {
         flower: ['./example/src/flower.js'],
         balance: ['./example/src/balance.js'],
         windmill01: ['./start/src/windmill01.js'],
+        windmill02: ['./start/src/windmill02.js'],
+        windmill03: ['./start/src/windmill03.js'],
+        windmill04: ['./start/src/windmill04.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -55,6 +58,24 @@ const config = {
         ],
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/windmill04.html',
+            title: 'tigerface.js 范例 - 风车 04',
+            chunks: ['windmill04'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/windmill03.html',
+            title: 'tigerface.js 范例 - 风车 03',
+            chunks: ['windmill03'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/windmill02.html',
+            title: 'tigerface.js 范例 - 风车 02',
+            chunks: ['windmill02'],
+        }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
             filename: '../html/windmill01.html',

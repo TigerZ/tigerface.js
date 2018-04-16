@@ -7,7 +7,7 @@
 
 [windmill](https://tigerz.github.io/html/windmill.html "tigerface-embed:windmill")
 
-### 创建舞台
+### 舞台
 
 1. 创建项目，参考前面的文档吧，这里就不重复了。
 1. 创建 HTML5 页面，在页面标识要插入风车的地方放个 `div` 作为容器：
@@ -43,9 +43,10 @@
     document.getElementById('windmill') || document.documentElement
     ```
     因为我用的是通用的测试页面，如果没有找到id，那么就直接放在`<body></body>`里。
+    如果不传入 DOM，Stage 类会在内部创建一个 DOM，可以在以后用 `stage.dom` 来获取，再插入页面。
 
 1. 修改配置文件，测试时使用 "webpack.dev.config.js"。
-    **添加入口**，这样会生成独立的 windmill.js 文件：
+    * 添加入口，这样会生成独立的 windmill.js 文件：
     ```javascript
     // ...
     entry: {
@@ -84,6 +85,4 @@
     再运行：
 
     [windmill01](https://tigerz.github.io/html/windmill01.html "tigerface-embed:windmill01")
-
-
 

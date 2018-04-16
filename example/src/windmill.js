@@ -21,7 +21,6 @@ let mouseInCanvas = false;
 
 // 外部设置方式
 const surface = new CanvasLayer();
-surface.name = 'surface';
 surface.on(Event.MouseEvent.MOUSE_MOVE, () => {
     mouseInCanvas = true;
 });

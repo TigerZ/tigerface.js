@@ -1,6 +1,7 @@
 * [介绍](intro.md)
 * [开始](start.md)
-* [第一个项目: 创建舞台](first01.md)
+* [第一个项目: 舞台](first01.md)
 * [第一个项目: 绘制](first02.md)
+* [第一个项目: 事件](first03.md)
 * [运行和调试](run.md)
 * [发布](publish.md)
