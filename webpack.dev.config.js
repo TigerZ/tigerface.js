@@ -19,6 +19,7 @@ const config = {
         colors: ['./example/src/colors.js'],
         flower: ['./example/src/flower.js'],
         balance: ['./example/src/balance.js'],
+        windmill01: ['./start/src/windmill01.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -63,6 +64,12 @@ const config = {
             template: './template/index.template.html',
             title: 'tigerface.js',
             filename: 'index.html',
+            chunks: ['windmill01'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: './html/merge.html',
+            title: 'tigerface.js 范例 - 平衡',
             chunks: ['balance'],
         }),
         new HtmlWebpackPlugin({

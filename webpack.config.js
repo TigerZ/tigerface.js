@@ -20,6 +20,7 @@ const config = {
         colors: ['./example/src/colors.js'],
         flower: ['./example/src/flower.js'],
         balance: ['./example/src/balance.js'],
+        windmill01: ['./start/src/windmill01.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -54,6 +55,12 @@ const config = {
         ],
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/balance.html',
+            title: 'tigerface.js 范例 - 风车 01',
+            chunks: ['windmill01'],
+        }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
             filename: '../html/balance.html',
