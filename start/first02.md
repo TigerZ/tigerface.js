@@ -58,14 +58,14 @@ Point、Line是基础类。多个点和直线构成曲线，闭合起来就构�
     ```
 1. 看看运行的效果：
 
-    [windmill02](html/windmill02.html "tigerface-embed:windmill02")
+    [windmill02](https://tigerz.github.io/html/windmill02.html "tigerface-embed:windmill02")
 
     叶片的样子不对？为更直观看到原点，我绘制了一个点在原点位置。三角形的位置确实不对。
     我们调整一下三角形的位置。
     ```javascript
     const shape = new Triangle(0, 0, 50, 50, 120).move(-50, 0);
     ```
-    [windmill03](html/windmill03.html "tigerface-embed:windmill03")
+    [windmill03](https://tigerz.github.io/html/windmill03.html "tigerface-embed:windmill03")
 
     现在像一个叶片了。我们这样共绘制 6 片，每两片之间旋转 60 度，就完整了。
     ```javascript
@@ -82,6 +82,6 @@ Point、Line是基础类。多个点和直线构成曲线，闭合起来就构�
     import { Utilities as T } from 'tigerface-common';
     ```
 
-    [windmill04](html/windmill04.html "tigerface-embed:windmill04")
+    [windmill04](https://tigerz.github.io/html/windmill04.html "tigerface-embed:windmill04")
 
 
