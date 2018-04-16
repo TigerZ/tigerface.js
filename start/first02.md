@@ -11,7 +11,7 @@
 绘制风车，需要导入 tigerface-shape 图形包。
 图形包里包含各种基本图形类，比如：Point、Line、Circle、Rectangle、Polygon。
 
-图形包里的 Shape 是接口类，用于通用基本方法。下一版本的 tigerface.js 可能会用
+图形包里的 Shape 是接口类，用于通用方法。下一版本的 tigerface.js 可能会用
 TypeScript 改写，这样会更直观。
 
 Point、Line是基础类。多个节点和直线构成曲线，闭合起来就构成了多边形。
