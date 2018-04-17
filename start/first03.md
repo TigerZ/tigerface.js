@@ -64,7 +64,7 @@ class Windmill extends CanvasSprite {
 ```
 现在可以运行测试了：
 
-[windmill06](html/windmill06.html "tigerface-embed:windmill06")
+[windmill06](https://tigerz.github.io/html/windmill06.html "tigerface-embed:windmill06")
 
 鼠标进入，风车果然转快了，但是停不下来。我们在舞台上加上鼠标移出事件，让风扇能停下来：
 
@@ -90,6 +90,6 @@ class Windmill extends CanvasSprite {
 }
 ```
 
-[windmill07](html/windmill07.html "tigerface-embed:windmill07")
+[windmill07](https://tigerz.github.io/html/windmill07.html "tigerface-embed:windmill07")
 
 OK！功能完整了。

@@ -4,7 +4,7 @@
 * 鼠标在风车上移动，风车会快速转动。
 * 鼠标移出，风车会慢下来，恢复慢慢转动。
 
-[windmill](html/windmill.html "tigerface-embed:windmill")
+[windmill](https://tigerz.github.io/html/windmill.html "tigerface-embed:windmill")
 
 ### 完善
 
@@ -38,7 +38,7 @@ this.bounds.forEach((shape, idx) => {
 
 看看运行效果：
 
-[windmill08](html/windmill08.html "tigerface-embed:windmill08")
+[windmill08](https://tigerz.github.io/html/windmill08.html "tigerface-embed:windmill08")
 现在我们有了个彩色的风车了。和成品还差个轴心，锦上添花，我们再认识个图形：六角形。
 ```javascript
 new Hexagon(0, 0, 10)
