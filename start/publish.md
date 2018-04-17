@@ -50,8 +50,8 @@ npm run build
 #### 再次，感谢你对 tigerface.js 感兴趣，祝好运！
 
 请持续关注：
-* [tigerface.js](https://github.com/tigerz/tigerface.js)、
-* [https://tigerz.github.io](https://tigerz.github.io)、
+* [tigerface.js](https://github.com/tigerz/tigerface.js)
+* [https://tigerz.github.io](https://tigerz.github.io)
 * [http://tigerfacejs.org](http://tigerfacejs.org)
 
-我正在用 tigerface.js 开发的在线应用，希望得到你的帮助、建议、鼓励 ...
+我正在用 tigerface.js 开发完整的在线应用，希望得到你的帮助、建议、鼓励 ...
