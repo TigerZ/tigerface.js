@@ -63,12 +63,12 @@
         new HtmlWebpackPlugin({
             template: './template/index.template.html',
             title: 'tigerface.js',
-            filename: 'windmill.html',
+            filename: 'index.html',
             chunks: ['windmill'],
         }),
     // ...
     ```
-    如果用 `filename: index.html` 会方便些，但注意不要多个入口都用 index.html。
+    这里用 `filename: index.html` 为了测试方便，但注意不要多个入口都用 index.html。
     这部分可以参考 HtmlWebpackPlugin 的相关文档。
 
 1. 运行测试 `npm start`。看不到结果？因为舞台是透明的，我们给舞台加个底色：
