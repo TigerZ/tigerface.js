@@ -261,8 +261,13 @@ class DomEventAdapter extends EventDispatcher {
             }, false);
 
             if (touches.length === 1) {
-                // console.log('TOUCH_START -> Event.MouseEvent.MOUSE_DOWN');
+                this.logger.debug('TOUCH_START -> Event.MouseEvent.MOUSE_DOWN');
                 this.dispatchSystemEvent(Event.MouseEvent.MOUSE_DOWN, e, {
+                    pos: touches[0].pos,
+                }, false);
+
+                this.logger.debug('TOUCH_START -> Event.MouseEvent.MOUSE_OVER');
+                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_OVER, e, {
                     pos: touches[0].pos,
                 }, false);
             }
@@ -311,6 +316,9 @@ class DomEventAdapter extends EventDispatcher {
             if (touches.length === 1) {
                 this.logger.debug('TOUCH_END -> Event.MouseEvent.MOUSE_UP');
                 this.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, { pos: touches[0].pos }, this.preventDefault);
+
+                this.logger.debug('TOUCH_END -> Event.MouseEvent.MOUSE_OUT');
+                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_OUT, e, { pos: touches[0].pos }, this.preventDefault);
 
                 this.logger.debug('检查是否能转换为 click', touches[0].pos === touches[0].start, T.distance(touches[0].pos, touches[0].start), touches[0]);
                 if ((touches[0].pos === touches[0].start || T.distance(touches[0].pos, touches[0].start) < 1) &&

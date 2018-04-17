@@ -1,9 +1,8 @@
 import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
 import { Triangle } from 'tigerface-shape';
-import { Utilities as T } from "RootPath/packages/tigerface-common";
+import { Utilities as T } from 'tigerface-common';
 
 const stage = new Stage({
-    fps: 16,
     width: 200,
     height: 200,
     style: {

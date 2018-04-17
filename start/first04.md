@@ -1,3 +1,53 @@
+## 第一个项目
+
+* 一个风车，在慢慢转动。
+* 鼠标在风车上移动，风车会快速转动。
+* 鼠标移出，风车会慢下来，恢复慢慢转动。
+
+[windmill](html/windmill.html "tigerface-embed:windmill")
+
+### 完善
+
+风车功能已经实现了，但颜色太单调了。我们创建一个调色板，然后让每个叶片都是不同的颜色。
+
+```javascript
+const { colors } = new ColorPalette(6, {
+    0: 'rgb(222,63,24)',
+    0.3: 'rgb(254,212,90)',
+    0.6: 'rgb(102,172,188)',
+    0.9: 'rgb(161,240,158)',
+    1.0: 'rgb(222,63,24)',
+});
+```
+调色板是 tigerface-graphics 包里的一个工具类，它内部是一个线性渐变（LinearGradient）
+填充的色条，使用时从这个色条上取色。第一个参数是色条的长度，合适的长度可以在取色时充分
+利用色条上的全部颜色。第二个参数就是线性渐变的颜色，你可以参考 Canvas 线性渐变相关的文档。
+
+colors 是个二维数组，一维是色带位置，二维长度为 4，就是 "rgba" (红、绿、蓝、透明度);
+
+调色板有了，我们修改风车叶片的绘制方法：
+```javascript
+// ...
+this.bounds.forEach((shape, idx) => {
+    g.drawPolygon(shape, {
+        fillStyle: `rgba(${colors[idx][0]},${colors[idx][1]},${colors[idx][2]},1)`,
+    });
+});
+// ...
+```
+
+看看运行效果：
+
+[windmill08](html/windmill08.html "tigerface-embed:windmill08")
+现在我们有了个彩色的风车了。和成品还差个轴心，锦上添花，我们再认识个图形：六角形。
+```javascript
+new Hexagon(0, 0, 10)
+```
+好了，运行效果就是本页开始的风车了。
+
+### 总结
+我把风车源码加满了注释，就作为总结吧：
+```javascript
 // 导入舞台、画布层、和风车继承的画布精灵
 import { Stage, CanvasLayer, CanvasSprite } from 'tigerface-display';
 
@@ -100,3 +150,5 @@ const windmill = new Windmill({ x: 100, y: 100 });
 layer.addChild(windmill);
 
 // 希望你入门了，祝好运
+
+```
