@@ -38,8 +38,7 @@ npm run build
 
 入门文档里我讲解了一个叫风车的小项目，希望你对 tigerface.js 有了个基本了解。
 
-从 2014 年开始，tigerface.js 架构已经默默进化了几年，内容很多，我无法在入门文档里
-都体现出来。请继续阅读 [教程](tutorials.html#code.md)。
+更多知识，请继续阅读 [教程](https://tigerz.github.io/tutorials.html#code.md)。
 
 在开发中，如果需要详细的 API 参考，请下载最新版源码，然后运行命令生成：
 ```shell
