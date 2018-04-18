@@ -4,7 +4,7 @@ import { ColorPalette } from 'tigerface-graphics';
 import { Utilities as T } from 'tigerface-common';
 
 const stage = new Stage({
-    width: 350,
+    width: 200,
     height: 200,
 }, document.getElementById('colors') || document.documentElement);
 
@@ -12,7 +12,7 @@ const surface = new CanvasLayer();
 
 const sprite = new CanvasSprite();
 
-const p0 = { x: 150, y: 100 };
+const p0 = { x: 100, y: 100 };
 sprite.pos = p0;
 
 const polygon = new EquilateralStar(0, 0, 80, 50, 6).rotate(T.degreeToRadian(30));
