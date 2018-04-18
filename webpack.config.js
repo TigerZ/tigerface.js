@@ -28,6 +28,7 @@ const config = {
         windmill06: ['./start/src/windmill06.js'],
         windmill07: ['./start/src/windmill07.js'],
         windmill08: ['./start/src/windmill08.js'],
+        scrawl: ['./example/src/scrawl.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -62,6 +63,12 @@ const config = {
         ],
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/scrawl.html',
+            title: 'tigerface.js 范例 - 涂鸦',
+            chunks: ['scrawl'],
+        }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
             filename: '../html/windmill08.html',
