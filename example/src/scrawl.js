@@ -84,12 +84,13 @@ fg.onMouseDown = () => {
     drawing = true;
 };
 
-fg.onMouseUp = () => {
+fg.onMouseUp = (e) => {
     drawing = false;
+    points.push(e.pos);
     const last = points;
     points = [];
     fg.postChange();
-    if (last.length > 2) {
+    if (last.length > 1) {
         strokes.push(new Curve(last));
         bg.postChange();
     } else if (last.length === 1) {
