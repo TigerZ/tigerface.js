@@ -8,6 +8,7 @@ import { Logger, Utilities as T } from 'tigerface-common';
 import Point from './Point';
 import Vertex from './Vertex';
 import Vector from './Vector';
+import Polygon from "RootPath/packages/tigerface-shape/src/Polygon";
 
 /**
  * Line类，由两点坐标描述一个直线段
@@ -223,6 +224,19 @@ class Line {
         return this.slope;
     }
 
+    /**
+     * 旋转
+     * @param radian 弧度
+     * @param origin 原点 可选，缺省为 p0
+     * @returns {Line}
+     */
+    rotate(radian, origin = this.p0) {
+        console.log('*************', this.p1, this.p1.rotate);
+        const p0 = this.p0.rotate(radian, origin);
+        const p1 = this.p1.rotate(radian, origin);
+        return new Line(p0, p1);
+    }
+
     getFootPoint(point) {
         const v0 = Vector.byPoint(this.p0, this.p1);
         const v1 = Vector.byPoint(this.p0, point);
@@ -258,8 +272,8 @@ class Line {
         })();
 
         const points = [];
-        let x = T.round(this.p0.x, 1);
-        let y = T.round(this.p0.y, 1);
+        let x = this.p0.x;
+        let y = this.p0.y;
         const offsetX = T.round(this.p1.x - this.p0.x);
         const offsetY = T.round(this.p1.y - this.p0.y);
         const xStep = offsetX > 0 ? precision : (offsetX === 0 ? 0 : -precision);
@@ -268,19 +282,19 @@ class Line {
             exp.push(points, { x, y });
         } else if (xStep === 0) {
             for (; yStep > 0 ? (y <= this.p1.y) : (y >= this.p1.y); y += yStep) {
-                exp.push(points, { x, y: T.round(y, 1) });
+                exp.push(points, { x, y });
             }
         } else if (yStep === 0) {
             for (; xStep > 0 ? (x <= this.p1.x) : (x >= this.p1.x); x += xStep) {
-                exp.push(points, { x: T.round(x, 1), y });
+                exp.push(points, { x, y });
             }
         } else if (Math.abs(offsetX) > Math.abs(offsetY)) {
             for (; xStep > 0 ? (x <= this.p1.x) : (x >= this.p1.x); x += xStep) {
-                exp.push(points, { x: T.round(x, 1), y: T.round(exp.y(x), 1) });
+                exp.push(points, { x, y: exp.y(x) });
             }
         } else {
             for (; yStep > 0 ? (y <= this.p1.y) : (y >= this.p1.y); y += yStep) {
-                exp.push(points, { x: T.round(exp.x(y), 1), y: T.round(y, 1) });
+                exp.push(points, { x: exp.x(y), y });
             }
         }
         return points;

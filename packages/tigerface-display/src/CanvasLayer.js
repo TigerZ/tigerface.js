@@ -24,7 +24,7 @@ class CanvasLayer extends DomLayer {
             height: '100%',
             devicePixelRatio: 1,
             retina: true,
-            noClear: false,
+            autoClear: true,
             useDirtyRect: false,
             redrawAsNeeded: true,
             useOffScreenCanvas: false,
@@ -76,12 +76,12 @@ class CanvasLayer extends DomLayer {
         return this.props.retina;
     }
 
-    set noClear(v) {
-        this.props.noClear = v;
+    set autoClear(v) {
+        this.props.autoClear = v;
     }
 
-    get noClear() {
-        return this.props.noClear;
+    get autoClear() {
+        return this.props.autoClear;
     }
 
     set useDirtyRect(v) {
@@ -206,6 +206,11 @@ class CanvasLayer extends DomLayer {
         this._pause_ = false;
     }
 
+    clear() {
+        const g = this._graphics_;
+        g.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
     /**
      * 通用绘制方法，绘制前判断是否改变
      * @package
@@ -219,7 +224,7 @@ class CanvasLayer extends DomLayer {
             }
             const start = +new Date();
 
-            g.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            if (this.autoClear) this.clear();
 
             if (this.useOffScreenCanvas) {
                 this._offScreenGraphics_.clearRect(0, 0, this._offScreenCanvas_.width, this._offScreenCanvas_.height);

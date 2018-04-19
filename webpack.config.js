@@ -29,6 +29,7 @@ const config = {
         windmill07: ['./start/src/windmill07.js'],
         windmill08: ['./start/src/windmill08.js'],
         scrawl: ['./example/src/scrawl.js'],
+        colorscope: ['./example/src/colorscope.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -63,6 +64,12 @@ const config = {
         ],
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/colorscope.html',
+            title: 'tigerface.js 范例 - 万花板',
+            chunks: ['colorscope'],
+        }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
             filename: '../html/scrawl.html',

@@ -3,9 +3,9 @@
  * Date: 2018/3/2.
  * Time: 22:38.
  */
+import {Utilities as T} from 'tigerface-common';
 import Point from './Point';
 import Line from './Line';
-import {Utilities as T} from 'tigerface-common';
 
 class Vertex extends Point {
     static convertVertex = function (point) {

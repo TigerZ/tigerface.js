@@ -261,10 +261,9 @@ class Stage extends DomSprite {
      * @private
      */
     _checkFPS_(v) {
-        // 帧数控制在至少 12 帧
-        if (v < 12) {
-            this.logger.warn(`帧数 [${this.fps}] 限制为最少 12 帧`);
-            return 12;
+        if (v <= 0) {
+            this.logger.warn(`帧数 [${this.fps}] 不能为零或负数`);
+            return 1;
         } else if (v > 60) {
             this.logger.warn(`帧数 [${this.fps}] 限制为最多 60 帧`);
             return 60;

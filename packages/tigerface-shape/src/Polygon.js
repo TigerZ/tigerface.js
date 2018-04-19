@@ -494,7 +494,7 @@ class Polygon extends Shape {
      * @param origin 原点 可选，缺省为（0，0）
      * @returns {Polygon}
      */
-    rotate(radian, origin) {
+    rotate(radian, origin = { x: 0, y: 0 }) {
         const points = this.getVertexes();
         const newPoints = [];
         points.forEach((point) => {
