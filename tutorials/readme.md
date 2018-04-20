@@ -1,7 +1,7 @@
+* [包和类](package.md)
 * [代码风格](code.md)
 * [日志](logger.md)
 * [事件](event.md)
-* [包和类](package.md)
 * [舞台](stage.md)
 * [层](layer.md)
 * [显示对象](displayobject.md)

@@ -168,4 +168,3 @@ tigerface.js 架构是纯 JavaScript 架构，仅在 dom 节点的 css 操作中
 对于使用 React 架构的前端项目，tigerface.js 也提供了 React 接口方便用于整合。
 在范例中会看到这两种方式的实现。
 
-[下一章 日志](logger.md)

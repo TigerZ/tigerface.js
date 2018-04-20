@@ -109,5 +109,3 @@ this.dispatchEvent('CustomEventName', {msg:'World!'});
 dispatchEvent 或 emit 在某些环境下执行会有问题，比如 angularjs 环境里有可能会报循环调用错误。
 因为 dispatchEvent 和 emit 都是同步执行事件侦听器函数。
 可以用 dispatchAsyncEvent 或 asyncEmit 发送异步事件。
-
-[下一章 tigerface-display 包](package.md)

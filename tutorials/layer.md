@@ -39,6 +39,3 @@ CanvasLayer 是从 DomLayer 继承来的，其核心的 Dom 是一个 Canvas。
 * 遮罩
 
 * 路径
-
-
-[下一章 显示对象](displayobject.md)

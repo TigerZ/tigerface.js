@@ -79,5 +79,3 @@
 
 * Tween - 补间算法
 * TweenAction - 补间动作控制
-
-[下一章 舞台](stage.md)

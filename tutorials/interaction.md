@@ -14,5 +14,3 @@ tigerface.js 中的所有 Sprite 精灵类，包括子类 DomSprite 和 CanvasSp
 ### 键盘
 
 ### Cover
-
-[下一章 动画](animation.md)

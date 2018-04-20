@@ -40,5 +40,3 @@ tigerface.js 只在 Stage 上接收系统的 DOM 事件，内部的全部显示�
 如果对象有唯一的 name 属性，那么可以用 find(name) 查找。注意：如果 name 有重复，只能找到第一个对象。
 
 更安全的做法是用每个对象都有的 uuid 属性。
-
-[下一章 层](layer.md)
