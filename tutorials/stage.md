@@ -23,8 +23,8 @@ const stage = new Stage({
 Stage 也是显示对象的子类，第一个参数是初始化选项。
 `fps` 是帧速率，用于控制帧引擎每秒发送多少帧事件。
 width 和 height 与在 style 里设置 width 和 height 一样。
-第二个参数`dom`是绑定现有的 DOM 对象。
-如果不传入，Stage 会自己创建一个 DOM，可以用 `stage.dom` 获取。
+第二个参数`dom`是指定页面的 DOM 对象，作为容器。
+如果不传入，可以在插入页面时，用 `stage.dom` 获取舞台 DOM 插入页面。
 
 参数里的 style 就是 css 样式，可以在这里定义 stage 的 css 外观。
 
