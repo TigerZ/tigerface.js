@@ -13,13 +13,8 @@ class TweenAction extends EventDispatcher {
      *     构造器执行后即开始运行。
      *     本构造器支持两种参数传入方法：1个参数对象，或者，7个单独参数；
      *     其中1个参数对象的写法，还可传入用户提供的callback函数，引擎会在新值产生时调用此函数。
-     * @param obj 参数对象（单参数时），或者补间目标对象（多参数时）
-     * @param prop 补间修改的属性
-     * @param start 开始值
-     * @param end 结束值
-     * @param effect 效果
-     * @param duration 时长（毫秒数）
-     * @param digits 保留小数位数（可选，缺省为整数）
+     * @param target 补间目标对象
+     * @param options 补间选项 {prop 补间修改的属性，end 结束值，effect 效果，time 时长（毫秒数），digits 保留小数位数（可选，缺省为整数），adapter 采样引擎}
      */
     constructor(target, options = {}) {
         super({
