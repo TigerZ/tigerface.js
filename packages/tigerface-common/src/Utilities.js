@@ -3,6 +3,7 @@
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
 import Logger from './Logger';
+import { Utilities as T } from "RootPath/packages/tigerface-common/index";
 
 const G = global;
 /**
@@ -464,6 +465,60 @@ const Utilities = {
         const offsetLeft = parseFloat(this.css(dom, 'margin-left')) + parseFloat(this.css(dom, 'padding-left'));
         const offsetTop = parseFloat(this.css(dom, 'margin-top')) + parseFloat(this.css(dom, 'padding-top'));
         return { x: (domX + pos.left) - offsetLeft, y: (domY + pos.top) - offsetTop };
+    },
+
+    /**
+     * Catmull-Rom interpolation
+     * 参考资料：http://www.dxstudio.com/guide_content.aspx?id=70a2b2cf-193e-4019-859c-28210b1da81f
+     * @param p0 {{x:number, y:number}} 前参考点
+     * @param p1 {{x:number, y:number}} 起点
+     * @param p2 {{x:number, y:number}} 终点
+     * @param p3 {{x:number, y:number}} 后参考点
+     * @param u {number} 位置（0 - 1 之间）
+     */
+    interpolatedPosition(p0, p1, p2, p3, u) {
+        const u3 = u * u * u;
+        const u2 = u * u;
+        const f1 = (-0.5 * u3) + u2 - (0.5 * u);
+        const f2 = (1.5 * u3) - (2.5 * u2) + 1.0;
+        const f3 = (-1.5 * u3) + (2.0 * u2) + (0.5 * u);
+        const f4 = (0.5 * u3) - (0.5 * u2);
+        const x = (p0.x * f1) + (p1.x * f2) + (p2.x * f3) + (p3.x * f4);
+        const y = (p0.y * f1) + (p1.y * f2) + (p2.y * f3) + (p3.y * f4);
+        return ({ x, y });
+    },
+
+    /**
+     * main function to calculate the Path
+     * @param points {Array} 坐标点数组
+     * @param [spacing = 0] {number} 间距限制
+     * @return []
+     */
+    buildPathCatmullRom(points = [], spacing = 0) {
+        if (points.length === 0) return [];
+
+        const path = [points[0], ...points];
+
+        const { length } = path;
+        const out = [];
+
+        for (let i = 1; i < length - 1; i += 1) {
+
+            const p0 = path[Math.max(0, i - 1)];
+            const p1 = path[i];
+            const p2 = path[Math.min(i + 1, length - 1)];
+            const p3 = path[Math.min(i + 2, length - 1)];
+
+            const step = Math.min(0.01, (1 / this.distance(p1, p2)) * 0.1);
+
+            for (let u = 0.0; u < 1.0; u += step) {
+                const p = this.interpolatedPosition(p0, p1, p2, p3, u);
+                if (out.length === 0 || this.distance(out[out.length - 1], p) > spacing) {
+                    out.push(p);
+                }
+            }
+        }
+        return out;
     },
 };
 

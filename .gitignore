@@ -1,3 +1,4 @@
+lab
 apidoc
 tigerz.github.io
 webroot
@@ -37,3 +38,5 @@ Thumbs.db
 *.tar
 *.zip
 
+example/plugins/
+example/src/colorscope.js

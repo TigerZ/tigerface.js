@@ -15,6 +15,7 @@ class Point {
      * @param args {{x:*,y:*}}
      * @param args.x {number} X 轴坐标
      * @param args.y {number} Y 轴坐标
+     * @param args.z {number} Z 轴坐标
      */
     constructor(...args) {
         this.clazzName = 'Point';
@@ -24,13 +25,15 @@ class Point {
             if (typeof args[0] !== 'object') {
                 this.logger.error('初始化 Point 对象');
             }
-            const { x, y } = args[0];
+            const { x, y, z } = args[0];
             this.x = x || 0;
             this.y = y || 0;
+            this.z = z || 0;
         } else {
-            const [x, y] = args;
+            const [x, y, z] = args;
             this.x = x || 0;
             this.y = y || 0;
+            this.z = z || 0;
         }
     }
 
@@ -40,7 +43,7 @@ class Point {
      * @returns {module:tigerface-shape.Point}
      */
     clone() {
-        return new Point(this.x, this.y);
+        return new Point(this.x, this.y, this.z);
     }
 
     /**
@@ -51,7 +54,9 @@ class Point {
      * @returns {boolean}
      */
     equals(p, precision = 0.01) {
-        return (Math.abs(this.x - p.x) < precision && Math.abs(this.y - p.y) < precision);
+        return (Math.abs(this.x - p.x) < precision
+            && Math.abs(this.y - p.y) < precision
+            && Math.abs(this.z - p.z) < precision);
     }
 
     /**
@@ -60,7 +65,7 @@ class Point {
      * @param [p = new Point(0, 0)] {module:tigerface-shape.Point} 计算点
      * @returns {number} 距离
      */
-    getDistance(p = new Point(0, 0)) {
+    getDistance(p = new Point(0, 0, 0)) {
         // if (this.x == p.x) return Math.abs(this.y - p.y);
         // if (this.y == p.y) return Math.abs(this.x - p.x);
         // // 原理：勾股定理
@@ -76,10 +81,11 @@ class Point {
      *
      * @param offsetX {number} X 轴偏移量（可负）
      * @param offsetY {number} Y 轴偏移量（可负）
+     * @param offsetZ {number} Z 轴偏移量（可负）
      * @returns {module:tigerface-shape.Point} 移动后的坐标点
      */
-    move(offsetX, offsetY) {
-        return new Point(this.x + offsetX, this.y + offsetY);
+    move(offsetX = 0, offsetY = 0, offsetZ = 0) {
+        return new Point(this.x + offsetX, this.y + offsetY, this.z + offsetZ);
     }
 
     /**
@@ -89,7 +95,7 @@ class Point {
      * @param [origin = new Point(0, 0)] {module:tigerface-shape.Point} 指定原点
      * @returns {module:tigerface-shape.Point} 返回旋转后的坐标点
      */
-    rotate(radian, origin = new Point(0, 0)) {
+    rotate(radian, origin = new Point(0, 0, 0)) {
         // 坐标到原点的距离
         const radius = this.getDistance(new Point(origin.x, origin.y));
 
@@ -108,18 +114,19 @@ class Point {
      *
      * @param scaleX {number} X 轴缩放比例
      * @param scaleY {number} Y 轴缩放比例
+     * @param scaleZ {number} Z 轴缩放比例
      * @returns {module:tigerface-shape.Point} 缩放后的坐标点
      */
-    scale(scaleX, scaleY) {
-        return new Point(this.x * scaleX, this.y * scaleY);
+    scale(scaleX = 1, scaleY = 1, scaleZ = 1) {
+        return new Point(this.x * scaleX, this.y * scaleY, this.z * scaleZ);
     }
 
     toString() {
-        return `Point(${this.x}, ${this.y})`;
+        return `Point(${this.x}, ${this.y}, ${this.z})`;
     }
 
     toJSON() {
-        return `{x:${this.x},y:${this.y}}`;
+        return `{x:${this.x},y:${this.y},z:${this.z}}`;
     }
 }
 

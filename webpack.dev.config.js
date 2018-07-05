@@ -6,8 +6,7 @@ const RootPath = path.resolve(__dirname);
 
 const config = {
     entry: {
-        merge: ['./example/src/merge.js'],
-        colorscope: ['./example/src/colorscope.js'],
+        main: ['./lab/brushes.js'],
     },
     resolve: {
         alias: { RootPath },
@@ -50,15 +49,9 @@ const config = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './template/index.template.html',
-            title: 'tigerface.js',
-            filename: 'merge.html',
-            chunks: ['merge'],
-        }),
-        new HtmlWebpackPlugin({
-            template: './template/index.template.html',
-            title: 'tigerface.js',
+            title: '开发调试',
             filename: 'index.html',
-            chunks: ['colorscope'],
+            chunks: ['main'],
         }),
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),

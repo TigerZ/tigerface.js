@@ -5,8 +5,8 @@ function drawImageObj(img, props = {}) {
 
     const {
         clip = {
-            x: pos.x,
-            y: pos.y,
+            x: 0,
+            y: 0,
         },
     } = props;
 
@@ -19,8 +19,8 @@ function drawImageObj(img, props = {}) {
     if (clip.width !== undefined && clip.width < 1) clip.width *= img.width;
     if (clip.height !== undefined && clip.height < 1) clip.height *= img.height;
 
-    if (clip.x === undefined) clip.x = pos.x;
-    if (clip.y === undefined) clip.y = pos.y;
+    if (clip.x === undefined) clip.x = 0;
+    if (clip.y === undefined) clip.y = 0;
     if (clip.width === undefined) clip.width = img.width - clip.x;
     if (clip.height === undefined) clip.height = img.height - clip.y;
 
