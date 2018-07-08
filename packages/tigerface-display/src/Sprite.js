@@ -326,20 +326,20 @@ class Sprite extends DisplayObjectContainer {
     /**
      * 启用拖拽
      */
-    enableDrag() {
+    enableDrag(checkOut = true) {
         this.addEventListener(Event.MouseEvent.MOUSE_DOWN, this._startDrag_);
         this.addEventListener(Event.MouseEvent.MOUSE_UP, this._endDrag_);
-        this.addEventListener(Event.MouseEvent.MOUSE_OUT, this._endDrag_);
+        if (checkOut) this.addEventListener(Event.MouseEvent.MOUSE_OUT, this._endDrag_);
     }
 
     /**
      * 禁用拖拽
      */
-    disableDrag() {
+    disableDrag(checkOut = true) {
         this._endDrag_();
         this.removeEventListener(Event.MouseEvent.MOUSE_DOWN, this._startDrag_);
         this.removeEventListener(Event.MouseEvent.MOUSE_UP, this._endDrag_);
-        this.removeEventListener(Event.MouseEvent.MOUSE_OUT, this._endDrag_);
+        if (checkOut) this.removeEventListener(Event.MouseEvent.MOUSE_OUT, this._endDrag_);
     }
 
     /**

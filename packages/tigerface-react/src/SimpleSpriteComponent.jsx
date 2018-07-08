@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import BaseComponent from './BaseComponent';
-import Stage, { Tag } from './StageComponent';
+import StageComponent from './StageComponent';
+import { Tag } from './displayObjectFactory';
 
 /**
  * User: zyh
@@ -22,11 +23,11 @@ class SimpleSpriteComponent extends BaseComponent {
         const { props } = this;
         const { instance, canvasProps } = this.getSpriteInfo();
         return (
-            <Stage {...props}>
-                <Tag.Surface {...canvasProps}>
+            <StageComponent {...props}>
+                <Tag.CanvasLayer {...canvasProps}>
                     <Tag.Sprite instance={instance} {...props} />
-                </Tag.Surface>
-            </Stage>
+                </Tag.CanvasLayer>
+            </StageComponent>
         );
     }
 }

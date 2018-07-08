@@ -431,9 +431,9 @@ class DisplayObjectContainer extends DisplayObject {
     _onPosChanged_() {
         super._onPosChanged_();
 
-        this.children.forEach((child) => {
-            child._onPosChanged_();
-        });
+        // this.children.forEach((child) => {
+        //     child._onPosChanged_();
+        // });
     }
 
     /**

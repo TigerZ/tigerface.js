@@ -1,2 +1,3 @@
-export {default as Stage, Tag} from './src/StageComponent';
-export {default as withSimpleSpriteComponent} from './src/SimpleSpriteComponent';
+export { default as StageComponent } from './src/StageComponent';
+export { Tag } from './src/displayObjectFactory';
+export { default as withSimpleSpriteComponent } from './src/SimpleSpriteComponent';

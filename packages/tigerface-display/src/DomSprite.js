@@ -51,6 +51,7 @@ class DomSprite extends Sprite {
             clazzName: 'DomSprite',
             _dom_: _dom, // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
+            text: '',
         };
 
         super(props);
@@ -89,6 +90,14 @@ class DomSprite extends Sprite {
         this.logger.error('禁止替换 dom 对象');
         // this._dom_ = v;
         // this._onDomChanged_();
+    }
+
+    set text(text) {
+        this.dom.textContent = text;
+    }
+
+    get text() {
+        return this.dom.textContent;
     }
 
     set width(v) {

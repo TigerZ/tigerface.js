@@ -5,8 +5,9 @@ const path = require('path');
 const RootPath = path.resolve(__dirname);
 
 const config = {
+    mode: 'development',
     entry: {
-        main: ['./lab/cow.js'],
+        main: ['./lab/scriptable.jsx'],
     },
     resolve: {
         alias: { RootPath },
@@ -42,8 +43,7 @@ const config = {
             //     }
             // },
             // // 结合 .babelrc 文件，此处就只需要简单指定使用 babel-loader
-            { test: /\.(js|jsx)$/, exclude: /node_modules/, use: 'babel-loader' },
-            { test: /\.json$/, loader: 'json-loader' },
+            { test: /.(js|jsx)$/, exclude: /node_modules/, use: 'babel-loader' },
         ],
     },
     plugins: [

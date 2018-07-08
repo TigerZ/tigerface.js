@@ -5,14 +5,7 @@ import { Logger } from 'tigerface-common';
 import Reconciler from 'react-reconciler';
 import emptyObject from 'fbjs/lib/emptyObject';
 import BaseComponent from './BaseComponent';
-
-
-export const Tag = {
-    Sprite: 'CanvasSprite',
-    Surface: 'CanvasLayer',
-    Layer: 'DomLayer',
-    Dom: 'DomSprite',
-};
+import { displayObjectFactory } from './displayObjectFactory';
 
 
 /**
@@ -26,12 +19,12 @@ class StageComponent extends BaseComponent {
     constructor(...args) {
         super(...args);
         this.clazzName = StageComponent.name;
-        this.tagName = 'canvas';
     }
 
     componentDidMount() {
         const props = Object.assign({}, this.props);
         delete props.children;
+
         this._displayObject_ = new Stage(props, this._tagRef);
 
         this._mountNode = DisplayObjectRenderer.createContainer(this._displayObject_);
@@ -43,7 +36,7 @@ class StageComponent extends BaseComponent {
     // eslint-disable-next-line no-unused-vars
     componentDidUpdate(prevProps, prevState) {
         const { props } = this;
-        this._displayObject_.assign({ style: props.style });
+        //this._displayObject_.assign({ style: props.style });
 
         DisplayObjectRenderer.updateContainer(this.props.children, this._mountNode, this);
     }
@@ -64,7 +57,7 @@ class StageComponent extends BaseComponent {
                 className={props.className}
                 draggable={props.draggable}
                 role={props.role}
-                style={props.style}
+                // style={props.style}
                 tabIndex={props.tabIndex}
                 title={props.title}
             />
@@ -84,17 +77,7 @@ const DisplayObjectRenderer = Reconciler({
     createInstance(type, props, internalInstanceHandle) {
         StageComponent.logger.debug('createInstance()', type, props, internalInstanceHandle);
 
-        let instance;
-        if (type === Tag.Surface) {
-            instance = props.instance ? props.instance : (props.clazz ? (typeof props.clazz === 'string' ? new CanvasLayer({}, props.clazz) : new props.clazz()) : new CanvasLayer());
-        } else if (type === Tag.Dom) {
-            instance = props.instance ? props.instance : (props.clazz ? (typeof props.clazz === 'string' ? new DomSprite({}, props.clazz) : new props.clazz()) : new DomSprite());
-        } else if (type === Tag.Layer) {
-            instance = props.instance ? props.instance : (props.clazz ? (typeof props.clazz === 'string' ? new DomLayer({}, props.clazz) : new props.clazz()) : new DomLayer());
-        } else if (type === Tag.Sprite) {
-            instance = props.instance ? props.instance : (props.clazz ? new props.clazz() : new CanvasSprite());
-        }
-
+        const instance = props.instance ? props.instance : displayObjectFactory(type, props.clazz, props.dom);
 
         if (instance) {
             const _props = Object.assign({}, props);
