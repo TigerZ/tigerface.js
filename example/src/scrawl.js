@@ -177,7 +177,7 @@ function hello() {
 }
 
 const texture = new Image();
-texture.src = './watercolor25.png';
+texture.src = './img/watercolor25.png';
 texture.onload = function () {
     brushes.width = texture.width * 6;
     brushes.height = texture.height * 6;

@@ -6,7 +6,7 @@ const RootPath = path.resolve(__dirname);
 
 const config = {
     entry: {
-        main: ['./lab/brushes.js'],
+        main: ['./lab/cow.js'],
     },
     resolve: {
         alias: { RootPath },

@@ -19,6 +19,7 @@ const config = {
         colors: ['./example/src/colors.js'],
         flower: ['./example/src/flower.js'],
         balance: ['./example/src/balance.js'],
+        cow: ['./example/src/cow.js'],
         windmill: ['./example/src/windmill.js'],
         windmill01: ['./start/src/windmill01.js'],
         windmill02: ['./start/src/windmill02.js'],
@@ -129,6 +130,12 @@ const config = {
             filename: '../html/balance.html',
             title: 'tigerface.js 范例 - 网',
             chunks: ['balance'],
+        }),
+        new HtmlWebpackPlugin({
+            template: './template/embed.template.html',
+            filename: '../html/cow.html',
+            title: 'tigerface.js 范例 - 动画',
+            chunks: ['cow'],
         }),
         new HtmlWebpackPlugin({
             template: './template/embed.template.html',
