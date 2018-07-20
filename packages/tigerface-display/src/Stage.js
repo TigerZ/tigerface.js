@@ -2,6 +2,8 @@ import { Utilities as T, Logger } from 'tigerface-common';
 import { Event, FrameEventGenerator, DomEventAdapter } from 'tigerface-event';
 import DomSprite from './DomSprite';
 import Sprite from './Sprite';
+import CanvasSprite from './CanvasSprite';
+import CanvasLayer from './CanvasLayer';
 
 function setZIndex(obj, pre = '1') {
     const len = (`${obj.children.length * 10}`).length;

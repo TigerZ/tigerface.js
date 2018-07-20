@@ -12,6 +12,16 @@ import { Utilities as T, Logger } from 'tigerface-common';
  */
 class Point {
     /**
+     * 通过对象参数创建实例
+     * @param opt 初始化参数
+     * @return {Point}
+     */
+    static create(opt) {
+        const { x = 0, y = 0 } = opt;
+        return new Point(x, y);
+    }
+
+    /**
      * @param args {{x:*,y:*}}
      * @param args.x {number} X 轴坐标
      * @param args.y {number} Y 轴坐标

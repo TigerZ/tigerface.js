@@ -5,7 +5,7 @@
  */
 import Point from './Point';
 import Polygon from './Polygon';
-import {Utilities as T} from 'tigerface-common';
+import { Utilities as T } from 'tigerface-common';
 
 /**
  * 矩形
@@ -13,12 +13,22 @@ import {Utilities as T} from 'tigerface-common';
  * @type {*|void}
  */
 class Rectangle extends Polygon {
+    /**
+     * 通过对象参数创建实例
+     * @param opt 初始化参数
+     * @return {Rectangle}
+     */
+    static create(opt = {}) {
+        const { left = 0, top = 0, width = 50, height = 50 } = opt;
+        return new Rectangle(left, top, width, height);
+    }
+
     static isRectangle = function (points) {
         return points.length === 4 && points[0].getDistance(points[1]) === points[2].getDistance(points[3])
             && points[0].getDistance(points[2]) === points[1].getDistance(points[3])
             && points[0].getDistance(points[3]) === points[1].getDistance(points[2]);
     };
-    
+
     constructor(left, top, width, height) {
         super();
         this.clazzName = 'Rectangle';

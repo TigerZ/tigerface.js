@@ -2,8 +2,7 @@
 
 import { Logger } from 'tigerface-common';
 import { Event } from 'tigerface-event';
-import { Rectangle } from 'tigerface-shape';
-import { Polygon } from 'tigerface-shape';
+import { Rectangle, Polygon } from 'tigerface-shape';
 
 import DisplayObjectContainer from './DisplayObjectContainer';
 
@@ -276,6 +275,7 @@ class Sprite extends DisplayObjectContainer {
      */
     _onStageMouseMove_(pos) {
         this.mousePos = this.getInnerPos(pos, 2);
+
         if (this._checkMouseInside_()) {
             // 发送鼠标移动事件
             // this.logger.debug('鼠标指针移动', this.mousePos, this);

@@ -1,5 +1,6 @@
 function drawRectangle(rectangle, props = {}) {
     const {
+        lineDash,
         lineWidth = 1,
         fillStyle,
         strokeStyle,
@@ -24,6 +25,7 @@ function drawRectangle(rectangle, props = {}) {
     }
 
     if (strokeStyle) {
+        if (lineDash) this.setLineDash(lineDash);
         this.lineWidth = lineWidth;
         this.strokeStyle = strokeStyle;
         if (stroke) this.stroke();

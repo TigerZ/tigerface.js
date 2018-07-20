@@ -9,6 +9,18 @@ import Point from './Point';
  * Time: 07:29.
  */
 class Arc extends Curve {
+    /**
+     * 通过对象参数创建实例
+     * @param opt 初始化参数
+     * @return {Arc}
+     */
+    static create(opt) {
+        const {
+            x, y, radiusX, radiusY, startAngle, endAngle, precision,
+        } = opt;
+        return new Arc(x, y, radiusX, radiusY, startAngle, endAngle, precision);
+    }
+
     constructor(x, y, radiusX, radiusY, startAngle, endAngle, precision) {
         super();
         this.p0 = new Point(x, y);

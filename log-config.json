@@ -1,5 +1,5 @@
 {
-  "log-level": "off",
+  "log-level": "info",
   "class-log-level": {
     "Windmill":"off"
   },

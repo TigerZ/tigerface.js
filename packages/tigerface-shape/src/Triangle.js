@@ -16,6 +16,16 @@ class Triangle extends Polygon {
     static logger = Logger.getLogger('Triangle');
 
     /**
+     * 通过对象参数创建实例
+     * @param opt 初始化参数
+     * @return {Triangle}
+     */
+    static create(opt = {}) {
+        const { x = 0, y = 0, l1 = 30, l2 = 30, angle = 60 } = opt;
+        return new Triangle(x, y, l1, l2, angle);
+    }
+
+    /**
      * @param x {number} X 轴坐标
      * @param y {number} Y 轴坐标
      * @param l1 {number} 左侧边长

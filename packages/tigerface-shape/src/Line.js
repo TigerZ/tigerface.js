@@ -14,6 +14,16 @@ import Polygon from "RootPath/packages/tigerface-shape/src/Polygon";
  * Line类，由两点坐标描述一个直线段
  */
 class Line {
+    /**
+     * 通过对象参数创建实例
+     * @param opt 初始化参数
+     * @return {Line}
+     */
+    static create(opt) {
+        const { start = { x: 0, y: 0 }, end } = opt;
+        return new Line(start, end);
+    }
+
     static byPoint(p0, p1) {
         return new Line(p0, p1);
     }

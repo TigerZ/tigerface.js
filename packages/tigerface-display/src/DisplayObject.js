@@ -50,7 +50,6 @@ class DisplayObject extends EventDispatcher {
             rotation: 0,
             visible: true,
         };
-        this.assign(options);
 
         // 设置传入的初始值
         this.assign(options);
@@ -473,15 +472,15 @@ class DisplayObject extends EventDispatcher {
      * @returns {module:tigerface-shape.Point} 外部坐标
      */
     getOuterPos(point, digits = 0) {
-        const o = this.origin;
-        const r = this.rotation;
-        const s = this.scale;
-
-        // 抵消原点 > 旋转 > 缩放 > 移动
-        const pos = new Point(point).move(-o.x, -o.y)
-            .rotate(T.degreeToRadian(r))
-            .scale(s.x, s.y)
+        // 抵消内部原点偏移 > 旋转 > 缩放 > 移动 > 抵消外部原点偏移
+        let pos = new Point(point).move(-this.originX, -this.originY)
+            .rotate(T.degreeToRadian(this.rotation))
+            .scale(this.scaleX, this.scaleY)
             .move(this.x, this.y);
+
+        if (this.parent && !this.parent.isStage) {
+            pos = pos.move(this.parent.originX, this.parent.originY);
+        }
 
         // 除非指定小数位数，缺省取整
         pos.x = T.round(pos.x, digits > 0 ? digits : 0);
@@ -500,15 +499,17 @@ class DisplayObject extends EventDispatcher {
      * @returns {module:tigerface-shape.Point} 内部坐标
      */
     getInnerPos(point, digits = 0) {
+        // 抵消外部原点偏移 > 移动 > 缩放 > 旋转 > 抵消内部原点偏移
+        let pos = new Point(point);
 
-        const o = this.origin;
-        const r = this.rotation;
-        const s = this.scale;
-
-        const pos = new Point(point).move(-this.x, -this.y) // 偏移本地位置
-            .scale(1 / s.x, 1 / s.y) // 缩放
-            .rotate(T.degreeToRadian(-r)) // 旋转
-            .move(o.x, o.y); // 偏移原点
+        if (this.parent && !this.parent.isStage) {
+            pos = pos.move(-this.parent.originX, -this.parent.originY);
+        }
+        
+        pos = pos.move(-this.x, -this.y) // 偏移本地位置
+            .scale(1 / this.scaleX, 1 / this.scaleY) // 缩放
+            .rotate(T.degreeToRadian(-this.rotation)) // 旋转
+            .move(this.originX, this.originY); // 偏移原点
 
         // 除非指定小数位数，缺省取整
         pos.x = T.round(pos.x, digits > 0 ? digits : 0);
@@ -531,7 +532,7 @@ class DisplayObject extends EventDispatcher {
             return localPos;
         }
 
-        let pos = this.getOuterPos({ x: localPos.x + this.origin.x, y: localPos.y + this.origin.y }, digits);
+        let pos = this.getOuterPos(localPos, digits);
 
         if (this.parent && !this.parent.isLayer) {
             pos = this.parent.getLayerPos(pos, digits);
@@ -547,7 +548,7 @@ class DisplayObject extends EventDispatcher {
      * @package
      */
     getStagePos(localPos = { x: 0, y: 0 }, digits = 0) {
-        let pos = this.getOuterPos({ x: localPos.x + this.origin.x, y: localPos.y + this.origin.y }, digits);
+        let pos = this.getOuterPos(localPos, digits);
         if (this.parent && !this.parent.isStage) {
             pos = this.parent.getStagePos(pos, digits);
         }
@@ -572,11 +573,13 @@ class DisplayObject extends EventDispatcher {
      * @package
      */
     _getStageOrigin_() {
-        if (this.parent && !this.parent.isStage) {
-            const parentStageOrigin = this.parent._getStageOrigin_();
-            return { x: this.origin.x + parentStageOrigin.x, y: this.origin.y + parentStageOrigin.y };
-        }
-        return this.origin;
+        // if (this.parent && !this.parent.isStage) {
+        //     const parentStageOrigin = this.parent._getStageOrigin_();
+        //     return { x: this.origin.x - parentStageOrigin.x, y: this.origin.y - parentStageOrigin.y };
+        //     // return { x: parentStageOrigin.x - this.originX, y: parentStageOrigin.y - this.originY };
+        // }
+        // return this.origin;
+        return { x: 0, y: 0 };
     }
 
     /**
@@ -719,9 +722,9 @@ class DisplayObject extends EventDispatcher {
     }
 
     emit(...args) {
-        if (this.visible) {
-            super.emit(...args);
-        }
+        // if (this.visible) {
+        super.emit(...args);
+        // }
     }
 
     _onParentSizeChanged() {

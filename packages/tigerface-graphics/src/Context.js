@@ -31,6 +31,7 @@ export default class Context extends EventDispatcher {
         this.translate = this.context.translate.bind(this.context);
         this.transform = this.context.transform.bind(this.context);
         this.setTransform = this.context.setTransform.bind(this.context);
+        this.setLineDash = this.context.setLineDash.bind(this.context);
 
         this.fill = this.context.fill.bind(this.context);
         this.stroke = this.context.stroke.bind(this.context);

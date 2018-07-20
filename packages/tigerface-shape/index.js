@@ -19,6 +19,7 @@ export { default as RightTriangle } from './src/RightTriangle';
 export { default as Sector } from './src/Sector';
 export { default as Shape } from './src/Shape';
 export { default as Square } from './src/Square';
+export { default as ShapeBuilder } from './src/ShapeBuilder';
 
 export { default as Triangle } from './src/Triangle';
 export { default as Hexagon } from './src/Hexagon';

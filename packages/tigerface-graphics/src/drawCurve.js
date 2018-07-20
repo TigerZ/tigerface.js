@@ -6,12 +6,14 @@ function _drawCurve(g, points, props) {
         lineStyle,
         strokeStyle,
         lineWidth,
+        lineJoin,
     } = props;
 
     const lineProps = {
         lineStyle,
         strokeStyle,
         lineWidth,
+        lineJoin,
         stroke: false,
         save: false,
         beginPath: false,
@@ -30,6 +32,8 @@ function _drawCurve(g, points, props) {
 
 function drawCurve(curve, props = {}) {
     const {
+        lineJoin = 'round',
+        lineCap = 'round',
         lineStyle = this.LineStyle.SOLID,
         strokeStyle = 'black',
         lineWidth = 1,
@@ -47,12 +51,16 @@ function drawCurve(curve, props = {}) {
             lineStyle,
             strokeStyle,
             lineWidth,
+            lineJoin,
+            lineCap,
         });
     } else {
         _drawCurve(this, curve.getPoints(), {
             lineStyle,
             strokeStyle,
             lineWidth,
+            lineJoin,
+            lineCap,
         });
     }
 
@@ -60,6 +68,8 @@ function drawCurve(curve, props = {}) {
 
     if (strokeStyle) {
         this.lineWidth = lineWidth;
+        this.lineJoin = lineJoin;
+        this.lineCap = lineCap;
         this.strokeStyle = strokeStyle;
         if (stroke) this.stroke();
     }

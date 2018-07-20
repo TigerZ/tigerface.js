@@ -51,7 +51,6 @@ class DomSprite extends Sprite {
             clazzName: 'DomSprite',
             _dom_: _dom, // 注意：这里通过 _dom_ 来设置，因为用'dom =...'，会导致过早触发 _onDomChanged_ 事件
             preventDefault: false,
-            text: '',
         };
 
         super(props);
@@ -246,13 +245,13 @@ class DomSprite extends Sprite {
         this.style = { visibility: this.visible ? 'visible' : 'hidden' };
     }
 
-    /**
-     * 根据 Dom 对象调整 size 属性
-     * @private
-     */
-    _resize_() {
-        this.size = T.size(this.dom);
-    }
+    // /**
+    //  * 根据 Dom 对象调整 size 属性
+    //  * @private
+    //  */
+    // _resize_() {
+    //     this.size = T.size(this.dom);
+    // }
 
     /**
      * Dom 特有的边界获取方法，如果存在图形边界，返回图形边界数组，否则，返回边框图形
@@ -271,13 +270,17 @@ class DomSprite extends Sprite {
      */
     _onPosChanged_() {
         if (this.dom === document) return;
-        this.setStyle({ position: DomSprite.Position.ABSOLUTE });
+        if (this.style.position === DomSprite.Position.ABSOLUTE) {
+            // this.setStyle({ position: DomSprite.Position.ABSOLUTE });
 
-        const t = this.origin;
-        T.css(this.dom, 'left', `${this.x - t.x}px`);
-        T.css(this.dom, 'top', `${this.y - t.y}px`);
+            const t = this.origin;
+            T.css(this.dom, 'left', `${this.x - t.x}px`);
+            T.css(this.dom, 'top', `${this.y - t.y}px`);
 
-        super._onPosChanged_();
+            super._onPosChanged_();
+        } else {
+            this.logger.debug(`仅在 style.position == '${DomSprite.Position.ABSOLUTE}'时，改变位置才会生效。当前 style.position = '${this.style.position}'`);
+        }
     }
 
     /**
@@ -418,8 +421,15 @@ class DomSprite extends Sprite {
             delete style.width;
             delete style.height;
         }
-        if (T.assignEqual(this.dom.style, style)) return;
+        // if (T.assignEqual(this.dom.style, style)) return;
+
         T.cssMerge(this.dom, style, autoPrefix);
+        // 当非绝对定位时，用于反向获取位置
+        if (this.style.position !== DomSprite.Position.ABSOLUTE) {
+            Object.assign(this.state.pos, T.pos(this.dom));
+            Object.assign(this.state.size, T.size(this.dom));
+        }
+
         this.postChange('dom style', style);
     }
 

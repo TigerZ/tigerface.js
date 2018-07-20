@@ -1,6 +1,6 @@
 {
   "name": "tigerface-action",
-  "version": "0.10.0",
+  "version": "0.10.12",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
   "author": "Tiger zhangyihu@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "tigerface-common": "^0.10.10"
+    "tigerface-common": "^0.10.12"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

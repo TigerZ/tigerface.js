@@ -13,11 +13,13 @@ class DomCover extends DomSprite {
         super({
             clazzName: 'DomCover',
         }, dom);
+
         this.assign(T.merge({
             style: {
                 visibility: 'hidden',
             },
         }, options));
+
         this.state.visible = false;
         // 定义 Dom 引擎
         this.domAdapter = new DomEventAdapter(this.dom, {

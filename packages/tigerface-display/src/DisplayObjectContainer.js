@@ -338,7 +338,7 @@ class DisplayObjectContainer extends DisplayObject {
     _onChildrenChanged_() {
         this.logger.debug('子对象发生变化', this.children);
         this.emit(Event.NodeEvent.CHILDREN_CHANGED);
-        if (this.parent && !this.parent.isStage) this._onChildrenChanged_();
+        if (this.parent && !this.parent.isStage) this.parent._onChildrenChanged_();
     }
 
     /**

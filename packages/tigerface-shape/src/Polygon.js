@@ -18,6 +18,16 @@ import QuadraticBezier from './QuadraticBezier';
 
 class Polygon extends Shape {
     /**
+     * 通过对象参数创建实例
+     * @param opt 初始化参数
+     * @return {Polygon}
+     */
+    static create(opt) {
+        const { points = { x: 0, y: 0 } } = opt;
+        return new Polygon(points);
+    }
+
+    /**
      * 多边形构造器
      * @param points 多边形顶点数组（注意：必须按连线顺序）
      */

@@ -11,6 +11,17 @@ import Rectange from './Rectangle';
  *
  */
 class Circle extends Shape {
+
+    /**
+     * 通过对象参数创建实例
+     * @param opt 初始化参数
+     * @return {Circle}
+     */
+    static create(opt) {
+        const { x = 0, y = 0, radius = 50 } = opt;
+        return new Circle(x, y, radius);
+    }
+
     /**
      * 圆构造器
      *

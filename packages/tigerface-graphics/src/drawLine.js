@@ -68,6 +68,8 @@ function drawLine(line, props = {}) {
         strokeStyle = 'black',
         lineWidth = 1,
         lineStyle = LineStyle.SOLID,
+        lineJoin = 'round',
+        lineCap = 'round',
         stroke = true,
         fillStyle,
         fill,
@@ -75,6 +77,10 @@ function drawLine(line, props = {}) {
         beginPath = true,
         closePath = true,
         restore = false,
+        shadowBlur = 0,
+        shadowColor,
+        shadowOffsetX = 0,
+        shadowOffsetY = 0,
     } = props;
 
     const {
@@ -85,6 +91,8 @@ function drawLine(line, props = {}) {
 
     const _props = {
         lineWidth,
+        lineJoin,
+        lineCap,
         strokeStyle,
         stroke,
         fillStyle,
@@ -97,6 +105,16 @@ function drawLine(line, props = {}) {
 
     if (save) this.save();
     if (beginPath) this.beginPath();
+
+    this.lineJoin = lineJoin;
+    this.lineCap = lineCap;
+
+    if (shadowColor) {
+        this.shadowColor = shadowColor;
+        this.shadowBlur = shadowBlur;
+        this.shadowOffsetX = shadowOffsetX;
+        this.shadowOffsetY = shadowOffsetY;
+    }
 
     if (lineStyle === LineStyle.SOLID) {
         _drawLine(this, line);

@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import {Logger} from 'tigerface-common';
+import { Logger } from 'tigerface-common';
+
 /**
  * User: zyh
  * Date: 2018/2/27.
