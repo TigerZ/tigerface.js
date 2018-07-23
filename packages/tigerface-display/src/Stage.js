@@ -256,12 +256,21 @@ class Stage extends DomSprite {
         if (e.eventName === Event.MouseEvent.CLICK) {
             if (!this._lastMouseDownPos_ || this._lastMouseDownPos_.x !== e.pos.x || this._lastMouseDownPos_.y !== e.pos.y) return;
         }
+
         this.mousePos = e.pos;
-        this.children.forEach((child) => {
+
+        // this.children.forEach((child) => {
+        //     if (child instanceof Sprite) {
+        //         child._onStageMouseEvents_(e.eventName, { pos: this.mousePos });
+        //     }
+        // });
+
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            const child = this.children[i];
             if (child instanceof Sprite) {
                 child._onStageMouseEvents_(e.eventName, { pos: this.mousePos });
             }
-        });
+        }
     }
 
     /**

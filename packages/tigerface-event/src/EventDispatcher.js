@@ -196,7 +196,6 @@ export const Mixin = {
      * @param data 提交给事件的数据
      */
     dispatchEvent(eventName, data) {
-
         this.emit(eventName, data);
         if (this.debugging && this.getEventSubscribers().length > 0) {
             EventDispatcher.logger.debug(`向事件 ${this.getEventSubscribers().length} 个订阅者转发事件`);
@@ -211,11 +210,10 @@ export const Mixin = {
     /**
      * 直接提供 this._eventEmitter_ 的 emit 方法.
      * 此处有个重要改变, 第二个参数为直接传入的 data, 不是 e 对象.
-     * TODO: 检查全部 tigerfacejs 内部的调用, 修改第二个参数的使用
      * @param eventName
      * @param data
      */
-    emit(eventName, data) {
+    emit(eventName, data, async = false) {
         if (!this._isNoise_(eventName)) this.logger.debug(`发布事件 ${eventName}`, data || '');
         const e = {
             clazzName: 'Event',
@@ -223,10 +221,26 @@ export const Mixin = {
             eventName,
         };
         Object.assign(e, data);
-        this._getEmitter_().emit(eventName, e);
 
+        if (async) {
+            this._asyncEmit_(eventName, e);
+        } else {
+            this._emit_(eventName, e);
+        }
+    },
+
+    _emit_(eventName, e) {
+        this._getEmitter_().emit(eventName, e);
         if (this.debugging && !this._isNoise_(eventName)) {
-            EventDispatcher.logger.debug(`已执行发送事件 [${eventName}]`, data);
+            EventDispatcher.logger.debug(`已执行发送事件 [${eventName}]`, e);
+        }
+    },
+
+    _asyncEmit_(eventName, e) {
+        if (process && process.nextTick) {
+            process.nextTick(() => this._emit_(eventName, e));
+        } else {
+            setTimeout(() => this._emit_(eventName, e), 0);
         }
     },
 
@@ -259,12 +273,8 @@ export const Mixin = {
     },
 
     asyncEmit(eventName, data) {
-        if (process && process.nextTick) {
-            process.nextTick(() => this.emit(eventName, data));
-        } else {
-            setTimeout(() => this.emit(eventName, data), 10);
-        }
         EventDispatcher.logger.debug(`已安排发送异步事件 [${eventName}] `, data);
+        this.emit(eventName, data, true);
     },
 
     /**

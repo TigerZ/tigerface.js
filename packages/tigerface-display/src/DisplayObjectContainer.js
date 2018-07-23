@@ -375,7 +375,7 @@ class DisplayObjectContainer extends DisplayObject {
      * @package
      */
     _onAddChild_(child) {
-        this.emit(Event.NodeEvent.CHILD_ADDED, child);
+        this.emit(Event.NodeEvent.CHILD_ADDED, { child });
     }
 
     /**
@@ -384,7 +384,7 @@ class DisplayObjectContainer extends DisplayObject {
      */
     _appendToStage_(stage) {
         if (!stage) return;
-        
+
         super._appendToStage_(stage);
 
         this.children.forEach((child) => {

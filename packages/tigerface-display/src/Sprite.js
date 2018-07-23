@@ -308,15 +308,26 @@ class Sprite extends DisplayObjectContainer {
                 this._mouseInside_ = false;
             }
 
-            // 本级事件转发
-            this.dispatchEvent(eventName, { pos: this.mousePos });
-            // 向下级传播
-            this.children.forEach((child) => {
+            //* ************** 先触发本级事件，再自下向上传播 **************************
+            // this.dispatchEvent(eventName, { pos: this.mousePos });
+            // this.children.forEach((child) => {
+            //     if (child instanceof Sprite) {
+            //         this.logger.debug('_onStageMouseEvents_', eventName, data.pos, child);
+            //         child._onStageMouseEvents_(eventName, { pos: this.mousePos });
+            //     }
+            // });
+            //* **********************************************************************
+
+            //* ************** 先自顶向下传播，最后触发本级事件 **************************
+            for (let i = this.children.length - 1; i >= 0; i -= 1) {
+                const child = this.children[i];
                 if (child instanceof Sprite) {
                     this.logger.debug('_onStageMouseEvents_', eventName, data.pos, child);
                     child._onStageMouseEvents_(eventName, { pos: this.mousePos });
                 }
-            });
+            }
+            this.dispatchEvent(eventName, { pos: this.mousePos });
+            //* **********************************************************************
         }
     }
 
@@ -621,7 +632,7 @@ class Sprite extends DisplayObjectContainer {
         this.on(Event.ENTER_FRAME, func);
     }
 
-    //* ******************************** loop Event *********************************
+    //* ******************************** Append Event *********************************
 
     set onAppendToParent(func) {
         this.on(Event.APPEND_TO_PARENT, func);
@@ -633,6 +644,20 @@ class Sprite extends DisplayObjectContainer {
 
     set onAppendToStage(func) {
         this.on(Event.APPEND_TO_STAGE, func);
+    }
+
+    //* ******************************** Node Event *********************************
+
+    set onChildAdded(func) {
+        this.on(Event.NodeEvent.CHILD_ADDED, func);
+    }
+
+    set onChildRemoved(func) {
+        this.on(Event.NodeEvent.CHILD_REMOVED, func);
+    }
+
+    set onChildrenChanged(func) {
+        this.on(Event.NodeEvent.CHILDREN_CHANGED, func);
     }
 
     //* ******************************** end *********************************

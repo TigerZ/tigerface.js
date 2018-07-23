@@ -49,7 +49,7 @@ class DisplayObject extends EventDispatcher {
             alpha: 1,
             rotation: 0,
             visible: true,
-            disabled: false, // 当 disabled=true 时，显示对象不会接收任何交互事件
+            disabled: false, // 当 disabled=true 时，显示对象不会接收
         };
 
         // 设置传入的初始值
