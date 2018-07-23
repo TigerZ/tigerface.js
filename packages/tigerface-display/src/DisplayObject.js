@@ -671,7 +671,7 @@ class DisplayObject extends EventDispatcher {
      * @package
      */
     _onAppendToParent_() {
-        if (!this.parent) return;
+        // if (!this.parent) return;
         this.dispatchEvent(Event.APPEND_TO_PARENT);
         this.postChange('AppendToParent');
         // eslint-disable-next-line no-unused-expressions
@@ -727,11 +727,11 @@ class DisplayObject extends EventDispatcher {
         this.logger.debug('添加至层');
     }
 
-    emit(...args) {
+    // emit(...args) {
         // if (this.visible) {
-        super.emit(...args);
+        // return super.emit(...args);
         // }
-    }
+    // }
 
     _onParentSizeChanged() {
         if (this.props.precWidth) {

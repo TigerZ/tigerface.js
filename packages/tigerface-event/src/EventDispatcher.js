@@ -194,9 +194,10 @@ export const Mixin = {
      * 触发事件
      * @param eventName
      * @param data 提交给事件的数据
+     * @return {boolean}
      */
     dispatchEvent(eventName, data) {
-        this.emit(eventName, data);
+        const bubble = this.emit(eventName, data);
         if (this.debugging && this.getEventSubscribers().length > 0) {
             EventDispatcher.logger.debug(`向事件 ${this.getEventSubscribers().length} 个订阅者转发事件`);
         }
@@ -205,20 +206,32 @@ export const Mixin = {
                 subscriber.dispatchEvent(eventName, data);
             }
         });
+        return bubble;
     },
 
     /**
      * 直接提供 this._eventEmitter_ 的 emit 方法.
-     * 此处有个重要改变, 第二个参数为直接传入的 data, 不是 e 对象.
+     * 第二个参数为直接传入的 data 对象，此对象将会合并为 e.
+     * 注意 data 不要覆盖 e 的关键字：clazzName, currentTarget, target, eventName, stopPropation, cancelBubble
+     *
      * @param eventName
-     * @param data
+     * @param data 发送的数据
+     * @return {boolean}
      */
     emit(eventName, data, async = false) {
         if (!this._isNoise_(eventName)) this.logger.debug(`发布事件 ${eventName}`, data || '');
+        let bubble = true;
         const e = {
             clazzName: 'Event',
             currentTarget: this,
+            target: this,
             eventName,
+            stopPropation() {
+                bubble = false;
+            },
+            cancelBubble() {
+                bubble = false;
+            },
         };
         Object.assign(e, data);
 
@@ -227,6 +240,8 @@ export const Mixin = {
         } else {
             this._emit_(eventName, e);
         }
+
+        return bubble;
     },
 
     _emit_(eventName, e) {

@@ -245,63 +245,94 @@ class Sprite extends DisplayObjectContainer {
      * @return {boolean} 是否在范围内
      * @package
      */
-    _checkMouseInside_() {
+    _checkMouseMove_() {
+        let bubble = true;
         // 记录之前的状态，用来判断是否第一次进入
         const beforeInside = this._mouseInside_;
+
+        // 如果之前在范围内，先发送一次移动事件
+        if (beforeInside) {
+            // 发送鼠标移动事件
+            // this.logger.debug('鼠标指针移动', this.mousePos, this);
+            bubble = this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
+        }
+
         // this.logger.debug('舞台指针移动', mouse, beforeInside, this._mouseInside_);
         // 根据边界形状，判断鼠标是否在本对象范围内
         this._mouseInside_ = this._pointInBounds_(this.mousePos);
 
-        if (this._mouseInside_) {
-            // 当前鼠标在范围内
-            if (!beforeInside) {
-                // 如果之前不在范围内，发送鼠标进入事件
-                this.logger.debug('鼠标指针进入边界', { pos: this.mousePos });
-                this.dispatchEvent(Event.MouseEvent.MOUSE_OVER, { pos: this.mousePos });
-            }
-            return true;
-        } else if (beforeInside) {
-            // 当前鼠标不在范围内, 如果之前在范围内，发送鼠标移出事件
+        if (this._mouseInside_ && !beforeInside) {
+            // 如果之前不在范围内, 现在鼠标在范围内，发送鼠标进入事件
+            this.logger.debug('鼠标指针进入边界', { pos: this.mousePos });
+            this.dispatchEvent(Event.MouseEvent.MOUSE_OVER, { pos: this.mousePos });
+
+            // 发送鼠标移动事件
+            // this.logger.debug('鼠标指针移动', this.mousePos, this);
+            bubble = this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
+        } else if (!this._mouseInside_ && beforeInside) {
+            // 如果之前在范围内，现在鼠标不在范围内, 发送鼠标移出事件
             this.logger.debug('鼠标指针移出边界', this.mousePos);
             this.dispatchEvent(Event.MouseEvent.MOUSE_OUT, { pos: this.mousePos });
         }
-        return false;
+        return bubble;
     }
 
     /**
      * 舞台有鼠标移动时调用
      * @param pos {module:tigerface-shape.Point|{x:number,y:number}}
+     * @return {boolean} 是否继续冒泡
      * @package
      */
     _onStageMouseMove_(pos) {
+        let bubble = true;
         this.mousePos = this.getInnerPos(pos, 2);
-        if (this.disabled) return;
+        if (this.disabled) return bubble;
 
-        if (this._checkMouseInside_()) {
-            // 发送鼠标移动事件
-            // this.logger.debug('鼠标指针移动', this.mousePos, this);
-            this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
-        }
 
-        this.children.forEach((child) => {
+        //* ************** 先触发本级事件，再自下向上传播 **************************
+        // if (this._checkMouseInside_()) {
+        //     // 发送鼠标移动事件
+        //     // this.logger.debug('鼠标指针移动', this.mousePos, this);
+        //     bubble = this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
+        // }
+        //
+        // this.children.forEach((child) => {
+        //     if (child instanceof Sprite) {
+        //         bubble = child._onStageMouseMove_(this.mousePos);
+        //     }
+        // });
+        //* **************************** end ***************************************
+
+        //* ************** 先自顶向下传播，最后触发本级事件 **************************
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            const child = this.children[i];
             if (child instanceof Sprite) {
-                child._onStageMouseMove_(this.mousePos);
+                bubble = child._onStageMouseMove_(this.mousePos);
+                if (bubble === false) {
+                    this.logger.debug('_onStageMouseMove_', '事件冒泡被中止');
+                    break;
+                }
             }
-        });
+        }
+        bubble = this._checkMouseMove_();
+        //* **************************** end ***************************************
+        return bubble;
     }
 
     /**
      * 舞台鼠标事件发生时调用
      * @param eventName 事件名，事件数据
      * @param data 事件数据，包含 pos
+     * @return {boolean} 是否继续冒泡
      * @package
      */
     _onStageMouseEvents_(eventName, data) {
+        let bubble = true;
         this.mousePos = this.getInnerPos(data.pos, 2);
-        if (this.disabled) return;
+        if (this.disabled) return bubble;
 
         // 如果鼠标移出 stage，那么向全体下级推送 MOUSE_OUT 事件。因为 canvas 或 sprite 可能大于 stage。
-        if (eventName === Event.MouseEvent.MOUSE_OUT || this._checkMouseInside_()) {
+        if (eventName === Event.MouseEvent.MOUSE_OUT || this._pointInBounds_(this.mousePos)) {
             // 上级推送的 MOUSE_OUT 事件，需要自己恢复状态
             if (eventName === Event.MouseEvent.MOUSE_OUT) {
                 this.logger.debug('鼠标移出舞台');
@@ -316,19 +347,27 @@ class Sprite extends DisplayObjectContainer {
             //         child._onStageMouseEvents_(eventName, { pos: this.mousePos });
             //     }
             // });
-            //* **********************************************************************
+            //* **************************** end ***************************************
 
             //* ************** 先自顶向下传播，最后触发本级事件 **************************
             for (let i = this.children.length - 1; i >= 0; i -= 1) {
                 const child = this.children[i];
                 if (child instanceof Sprite) {
                     this.logger.debug('_onStageMouseEvents_', eventName, data.pos, child);
-                    child._onStageMouseEvents_(eventName, { pos: this.mousePos });
+                    bubble = child._onStageMouseEvents_(eventName, { pos: this.mousePos });
+                    if (bubble === false) {
+                        this.logger.debug('_onStageMouseEvents_', '事件冒泡被中止');
+                        break;
+                    }
                 }
             }
-            this.dispatchEvent(eventName, { pos: this.mousePos });
-            //* **********************************************************************
+            if (bubble !== false) {
+                bubble = this.dispatchEvent(eventName, { pos: this.mousePos });
+            }
+            //* **************************** end ***************************************
         }
+
+        return bubble;
     }
 
     /** *************************************************************************
