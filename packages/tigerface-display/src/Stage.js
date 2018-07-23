@@ -248,6 +248,14 @@ class Stage extends DomSprite {
      * @package
      */
     _onMouseEvents_(e) {
+        // 记录鼠标按下位置
+        if (e.eventName === Event.MouseEvent.MOUSE_DOWN) {
+            this._lastMouseDownPos_ = e.pos;
+        }
+        // 如果鼠标按下位置与CLICK位置不同，禁止发送 CLICK 事件
+        if (e.eventName === Event.MouseEvent.CLICK) {
+            if (!this._lastMouseDownPos_ || this._lastMouseDownPos_.x !== e.pos.x || this._lastMouseDownPos_.y !== e.pos.y) return;
+        }
         this.mousePos = e.pos;
         this.children.forEach((child) => {
             if (child instanceof Sprite) {

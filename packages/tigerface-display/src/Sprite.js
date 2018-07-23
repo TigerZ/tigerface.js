@@ -275,6 +275,7 @@ class Sprite extends DisplayObjectContainer {
      */
     _onStageMouseMove_(pos) {
         this.mousePos = this.getInnerPos(pos, 2);
+        if (this.disabled) return;
 
         if (this._checkMouseInside_()) {
             // 发送鼠标移动事件
@@ -297,6 +298,8 @@ class Sprite extends DisplayObjectContainer {
      */
     _onStageMouseEvents_(eventName, data) {
         this.mousePos = this.getInnerPos(data.pos, 2);
+        if (this.disabled) return;
+
         // 如果鼠标移出 stage，那么向全体下级推送 MOUSE_OUT 事件。因为 canvas 或 sprite 可能大于 stage。
         if (eventName === Event.MouseEvent.MOUSE_OUT || this._checkMouseInside_()) {
             // 上级推送的 MOUSE_OUT 事件，需要自己恢复状态
@@ -617,6 +620,22 @@ class Sprite extends DisplayObjectContainer {
     set onEnterFrame(func) {
         this.on(Event.ENTER_FRAME, func);
     }
+
+    //* ******************************** loop Event *********************************
+
+    set onAppendToParent(func) {
+        this.on(Event.APPEND_TO_PARENT, func);
+    }
+
+    set onAppendToLayer(func) {
+        this.on(Event.APPEND_TO_LAYER, func);
+    }
+
+    set onAppendToStage(func) {
+        this.on(Event.APPEND_TO_STAGE, func);
+    }
+
+    //* ******************************** end *********************************
 
     /**
      * 将感应区投影到全局坐标系

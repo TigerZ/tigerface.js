@@ -157,7 +157,7 @@ class Circle extends Shape {
     }
 
     scale(scaleX, scaleY) {
-        return new Circle(this.p0.x, this.p0.y, this.radius * Math.max(scaleX, scaleY));
+        return new Circle(this.p0.x, this.p0.y, this.radius * Math.min(scaleX, scaleY));
     }
 
     /**

@@ -49,6 +49,7 @@ class DisplayObject extends EventDispatcher {
             alpha: 1,
             rotation: 0,
             visible: true,
+            disabled: false, // 当 disabled=true 时，显示对象不会接收任何交互事件
         };
 
         // 设置传入的初始值
@@ -310,11 +311,16 @@ class DisplayObject extends EventDispatcher {
      * @member {{width:*,height:*}}
      */
     set size(size) {
+        const oldSize = Object.assign({}, this.size);
         if (T.assignEqual(this.size, size)) return;
         Object.assign(this.state.size, size);
         this._onSizeChanged_();
+        this.dispatchEvent(Event.SIZE_CHANGED, {
+            oldSize,
+            size: Object.assign({}, this.size),
+        });
+
         this.postChange('size', this.size);
-        this.dispatchEvent(Event.SIZE_CHANGED);
     }
 
     get size() {
@@ -505,7 +511,7 @@ class DisplayObject extends EventDispatcher {
         if (this.parent && !this.parent.isStage) {
             pos = pos.move(-this.parent.originX, -this.parent.originY);
         }
-        
+
         pos = pos.move(-this.x, -this.y) // 偏移本地位置
             .scale(1 / this.scaleX, 1 / this.scaleY) // 缩放
             .rotate(T.degreeToRadian(-this.rotation)) // 旋转

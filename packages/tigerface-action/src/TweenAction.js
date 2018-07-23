@@ -18,7 +18,7 @@ class TweenAction extends EventDispatcher {
      */
     constructor(target, options = {}) {
         super({
-            className: 'TweenAction',
+            clazzName: 'TweenAction',
         });
 
         const {

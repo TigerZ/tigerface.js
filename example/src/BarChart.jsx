@@ -169,7 +169,7 @@ export const putData = (data, config) => {
 };
 
 export default withSimpleSpriteComponent(barChart, {
-    className: barChart.config.className,
+    clazzName: barChart.config.clazzName,
     style: barChart.config.style,
 });
 

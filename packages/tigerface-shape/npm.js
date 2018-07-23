@@ -16,6 +16,7 @@ module.exports = {
     'Sector': require('./lib/Sector').default,
     'Shape': require('./lib/Shape').default,
     'Square': require('./lib/Square').default,
+    'ShapeBuilder': require('./lib/ShapeBuilder').default,
 
     'Triangle': require('./lib/Triangle').default,
     'Hexagon': require('./lib/Hexagon').default,

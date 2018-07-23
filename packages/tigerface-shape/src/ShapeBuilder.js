@@ -3,15 +3,19 @@ import Point from './Point';
 import Line from './Line';
 import Triangle from './Triangle';
 import Rectangle from './Rectangle';
+import { Logger } from 'tigerface-common';
 
 const ShapeType = {
     Point: 'point',
     Line: 'line',
     Circle: 'circle',
     Triangle: 'triangle',
+    InCircle: 'incircle',
     Rectangle: 'rectangle',
     Stroke: 'stroke',
 };
+
+const logger = Logger.getLogger('ShapeBuilder');
 
 function create(type, opt) {
     switch (type.toLowerCase()) {
@@ -23,9 +27,11 @@ function create(type, opt) {
             return Circle.create(opt);
         case ShapeType.Triangle:
             return Triangle.create(opt);
+        case ShapeType.InCircle:
         case ShapeType.Rectangle:
             return Rectangle.create(opt);
         default:
+            logger.error(`不支持的图形类型："${type}"`);
             return null;
     }
 }

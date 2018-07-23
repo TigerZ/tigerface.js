@@ -5,6 +5,7 @@
  */
 import Point from './Point';
 import Polygon from './Polygon';
+import Circle from './Circle';
 import { Utilities as T } from 'tigerface-common';
 
 /**
@@ -19,8 +20,8 @@ class Rectangle extends Polygon {
      * @return {Rectangle}
      */
     static create(opt = {}) {
-        const { left = 0, top = 0, width = 50, height = 50 } = opt;
-        return new Rectangle(left, top, width, height);
+        const { left, x, y, top, width = 50, height = 50 } = opt;
+        return new Rectangle(left || x || 0, top || y || 0, width, height);
     }
 
     static isRectangle = function (points) {
@@ -127,6 +128,9 @@ class Rectangle extends Polygon {
         return new Rectangle(this.left * scaleX, this.top * scaleY, this.width * scaleX, this.height * scaleY);
     }
 
+    incircle() {
+        return new Circle(this.left + (this.width / 2), this.top + (this.height / 2), Math.min(this.width, this.height) / 2);
+    }
 }
 
 export default Rectangle;

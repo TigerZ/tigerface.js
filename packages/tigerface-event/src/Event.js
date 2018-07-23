@@ -90,4 +90,5 @@ module.exports = {
     APPEND_TO_LAYER: 'Event.APPEND_TO_LAYER',
 
     ORIENTATION_CHANGE: 'orientationchange',
+    ACTION: 'Event.ACTION',
 };

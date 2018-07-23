@@ -213,7 +213,7 @@ export const putData = (data, config) => {
 };
 
 export default withSimpleSpriteComponent(pieChart, {
-    className: pieChart.config.className,
+    clazzName: pieChart.config.clazzName,
     style: pieChart.config.style,
 });
 
