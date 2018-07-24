@@ -221,6 +221,7 @@ export const Mixin = {
     emit(eventName, data, async = false) {
         if (!this._isNoise_(eventName)) this.logger.debug(`发布事件 ${eventName}`, data || '');
         let bubble = true;
+        const self = this;
         const e = {
             clazzName: 'Event',
             currentTarget: this,
@@ -228,9 +229,11 @@ export const Mixin = {
             eventName,
             stopPropation() {
                 bubble = false;
+                self.logger.debug('stopPropation', `${eventName} 事件侦听器中止了事件冒泡`);
             },
             cancelBubble() {
                 bubble = false;
+                self.logger.debug('cancelBubble', `${eventName} 事件侦听器中止了事件冒泡`);
             },
         };
         Object.assign(e, data);

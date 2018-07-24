@@ -2,7 +2,7 @@ function drawText(text, props = {}) {
     const {
         x = 0,
         y = 0,
-        font = '14px system',
+        font = '12px system',
         strokeStyle,
         textAlign = 'left',
         textBaseline = 'bottom',

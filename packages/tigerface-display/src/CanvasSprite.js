@@ -50,9 +50,9 @@ class CanvasSprite extends Sprite {
                 this.stage._addCover_(this._cover_);
             });
 
-            this.onRedraw = () => {
+            this.on(Event.REDRAW, () => {
                 this.resetCover();
-            };
+            });
         }
     }
 
