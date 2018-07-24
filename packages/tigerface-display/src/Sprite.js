@@ -245,8 +245,7 @@ class Sprite extends DisplayObjectContainer {
      * @return {boolean} 是否在范围内
      * @package
      */
-    _checkMouseMove_() {
-        let bubble = true;
+    _checkMouseMove_(bubble) {
         // 记录之前的状态，用来判断是否第一次进入
         const beforeInside = this._mouseInside_;
 
@@ -254,7 +253,9 @@ class Sprite extends DisplayObjectContainer {
         if (beforeInside) {
             // 发送鼠标移动事件
             // this.logger.debug('鼠标指针移动', this.mousePos, this);
-            bubble = this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
+            if (bubble !== false) {
+                bubble = this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
+            }
         }
 
         // this.logger.debug('舞台指针移动', mouse, beforeInside, this._mouseInside_);
@@ -308,10 +309,7 @@ class Sprite extends DisplayObjectContainer {
             const child = this.children[i];
             if (child instanceof Sprite) {
                 bubble = child._onStageMouseMove_(this.mousePos);
-                if (bubble === false) {
-                    this.logger.debug('_onStageMouseMove_', '事件冒泡被中止');
-                    break;
-                }
+                if (bubble === false) break;
             }
         }
         bubble = this._checkMouseMove_();
@@ -353,16 +351,18 @@ class Sprite extends DisplayObjectContainer {
             for (let i = this.children.length - 1; i >= 0; i -= 1) {
                 const child = this.children[i];
                 if (child instanceof Sprite) {
-                    this.logger.debug('_onStageMouseEvents_', eventName, data.pos, child);
-                    bubble = child._onStageMouseEvents_(eventName, { pos: this.mousePos });
-                    if (bubble === false) {
-                        this.logger.debug('_onStageMouseEvents_', '事件冒泡被中止');
+                    if (bubble !== false) {
+                        bubble = child._onStageMouseEvents_(eventName, { pos: this.mousePos });
+                    } else {
+                        child.logger.debug('_onStageMouseEvents_', `${eventName} 事件未触发，因为被其它对象中止事件冒泡`);
                         break;
                     }
                 }
             }
             if (bubble !== false) {
                 bubble = this.dispatchEvent(eventName, { pos: this.mousePos });
+            } else {
+                this.logger.debug('_onStageMouseEvents_', `${eventName} 事件未触发，因为被上层对象中止事件冒泡`);
             }
             //* **************************** end ***************************************
         }
