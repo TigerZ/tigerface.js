@@ -55,7 +55,7 @@ class Rectangle extends Polygon {
             new Point(this.left, this.top),
             new Point(this.right, this.top),
             new Point(this.right, this.bottom),
-            new Point(this.left, this.bottom)
+            new Point(this.left, this.bottom),
         ];
 
         this.initPolygon(points);
@@ -89,7 +89,7 @@ class Rectangle extends Polygon {
             right: this.right,
             bottom: this.bottom,
             width: this.width,
-            height: this.height
+            height: this.height,
         };
     }
 

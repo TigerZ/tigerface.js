@@ -21,7 +21,7 @@ class Arc extends Curve {
         return new Arc(x, y, radiusX, radiusY, startAngle, endAngle, precision);
     }
 
-    constructor(x, y, radiusX, radiusY, startAngle, endAngle, precision) {
+    constructor(x, y, radiusX, radiusY, startAngle, endAngle, precision = 5) {
         super();
         this.p0 = new Point(x, y);
         this.radiusX = radiusX;

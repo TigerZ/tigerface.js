@@ -1,9 +1,9 @@
+import { Logger } from 'tigerface-common';
 import Circle from './Circle';
 import Point from './Point';
 import Line from './Line';
 import Triangle from './Triangle';
 import Rectangle from './Rectangle';
-import { Logger } from 'tigerface-common';
 
 const ShapeType = {
     Point: 'point',
@@ -22,6 +22,7 @@ function create(type, opt) {
         case ShapeType.Point:
             return Point.create(opt);
         case ShapeType.Line:
+            console.log(opt);
             return Line.create(opt);
         case ShapeType.Circle:
             return Circle.create(opt);

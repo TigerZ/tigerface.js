@@ -309,6 +309,21 @@ class Line {
         }
         return points;
     }
+
+    move(offsetX, offsetY) {
+        return new Line(
+            this.p0.move(offsetX, offsetY),
+            this.p1.move(offsetX, offsetY),
+        );
+    }
+
+
+    scale(scaleX, scaleY) {
+        return new Line(
+            this.p0.scale(scaleX, scaleY),
+            this.p1.scale(scaleX, scaleY),
+        );
+    }
 }
 
 export default Line;

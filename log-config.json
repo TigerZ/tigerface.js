@@ -1,11 +1,6 @@
 {
   "log-level": "info",
   "class-log-level": {
-    "Diagram":"debug",
-    "Container":"debug",
-    "Selectable":"debug",
-    "Resizable":"debug",
-    "ControlItem":"debug"
   },
   "exclude":["发布事件", "设置对象属性", "状态改变"]
 }

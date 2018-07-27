@@ -102,7 +102,7 @@ class DomEventAdapter extends EventDispatcher {
      * @param preventDefault
      * @returns {boolean}
      */
-    dispatchSystemEvent(eventName, e, data, preventDefault) {
+    dispatchSystemEvent(eventName, e, data, preventDefault = false) {
         // this.logger.debug(`dispatchSystemEvent()`, eventName, this.handler, e, data);
         const _data = data || {};
         _data.name = eventName;
@@ -130,24 +130,27 @@ class DomEventAdapter extends EventDispatcher {
     }
 
     bindKeyEventListener() {
-        // 键盘按下事件，数据：按键的 keyCode
+        // 键盘按下事件，数据：按键的 key, code
         addSystemEventListener(window, Event.KeyEvent.KEY_DOWN, (e) => {
+            const { key, code, ctrlKey, shiftKey, altKey } = e;
             this.dispatchSystemEvent(Event.KeyEvent.KEY_DOWN, e, {
-                keyCode: e.keyCode,
+                key, code, ctrlKey, shiftKey, altKey, optionKey: altKey,
             }, false);
         });
 
-        // 键盘松开事件，数据：按键的 keyCode
+        // 键盘松开事件，数据：按键的 key, code
         addSystemEventListener(window, Event.KeyEvent.KEY_UP, (e) => {
+            const { key, code, ctrlKey, shiftKey, altKey } = e;
             this.dispatchSystemEvent(Event.KeyEvent.KEY_UP, e, {
-                keyCode: e.keyCode,
+                key, code, ctrlKey, shiftKey, altKey, optionKey: altKey,
             }, false);
         });
 
-        // 键盘持续按下事件，数据：按键的 keyCode
+        // 键盘持续按下事件，数据：按键的 key, code
         addSystemEventListener(window, Event.KeyEvent.KEY_PRESS, (e) => {
+            const { key, code, ctrlKey, shiftKey, altKey } = e;
             this.dispatchSystemEvent(Event.KeyEvent.KEY_PRESS, e, {
-                keyCode: e.keyCode,
+                key, code, ctrlKey, shiftKey, altKey, optionKey: altKey,
             }, false);
         });
     }
@@ -179,12 +182,33 @@ class DomEventAdapter extends EventDispatcher {
             }, false);
         });
 
+        // 全局鼠标键松开事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
+        addSystemEventListener(window, Event.MouseEvent.MOUSE_UP, (e) => {
+            // 如果不是左键，那么放弃
+            if (e.which !== undefined && e.which !== 1) return;
+
+            const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
+
+            // console.log('Event.MouseEvent.MOUSE_UP');
+            this.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP_UNBOUNDED, e, {
+                pos,
+            }, false);
+        });
+
         // 鼠标移动事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
         addSystemEventListener(this.dom, Event.MouseEvent.MOUSE_MOVE, (e) => {
             const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
             this.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE, e, {
                 pos,
-            }, this.preventDefault);
+            }, false);
+        });
+
+        // 全局鼠标移动事件，操作：转换鼠标坐标为内部坐标，数据：当前鼠标坐标
+        addSystemEventListener(window, Event.MouseEvent.MOUSE_MOVE, (e) => {
+            const pos = T.pagePosToDomPos(this.dom, e.pageX, e.pageY);
+            this.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE_UNBOUNDED, e, {
+                pos,
+            }, false);
         });
 
         // 鼠标移入事件
@@ -288,12 +312,21 @@ class DomEventAdapter extends EventDispatcher {
             // console.log('Event.TouchEvent.TOUCH_MOVE');
             this.dispatchSystemEvent(Event.TouchEvent.TOUCH_MOVE, e, {
                 touches,
-            }, this.preventDefault);
+            }, true);
+
+            this.dispatchSystemEvent(Event.TouchEvent.TOUCH_MOVE_UNBOUNDED, e, {
+                touches,
+            }, true);
+
             if (touches.length === 1) {
                 // console.log('MOUSE_MOVE -> Event.MouseEvent.MOUSE_MOVE');
                 this.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE, e, {
                     pos: touches[0].pos,
-                }, this.preventDefault);
+                }, true);
+
+                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_MOVE_UNBOUNDED, e, {
+                    pos: touches[0].pos,
+                }, true);
             }
         });
 
@@ -311,14 +344,14 @@ class DomEventAdapter extends EventDispatcher {
             // console.log('Event.TouchEvent.TOUCH_END');
             this.dispatchSystemEvent(Event.TouchEvent.TOUCH_END, e, {
                 touches,
-            }, this.preventDefault);
+            }, false);
 
             if (touches.length === 1) {
                 this.logger.debug('TOUCH_END -> Event.MouseEvent.MOUSE_UP');
-                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, { pos: touches[0].pos }, this.preventDefault);
+                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP, e, { pos: touches[0].pos }, false);
 
                 this.logger.debug('TOUCH_END -> Event.MouseEvent.MOUSE_OUT');
-                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_OUT, e, { pos: touches[0].pos }, this.preventDefault);
+                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_OUT, e, { pos: touches[0].pos }, false);
 
                 this.logger.debug('检查是否能转换为 click', touches[0].pos === touches[0].start, T.distance(touches[0].pos, touches[0].start), touches[0]);
                 if ((touches[0].pos === touches[0].start || T.distance(touches[0].pos, touches[0].start) < 1) &&
@@ -326,7 +359,40 @@ class DomEventAdapter extends EventDispatcher {
                     // console.log('TOUCH_END -> Event.MouseEvent.CLICK');
                     this.dispatchSystemEvent(Event.MouseEvent.CLICK, e, {
                         pos: touches[0].pos,
-                    }, this.preventDefault);
+                    }, false);
+                }
+            }
+        });
+
+        addSystemEventListener(window, Event.TouchEvent.TOUCH_END, (e) => {
+            const touches = [];
+            for (let i = 0; i < lastTouches.length; i += 1) {
+                const touch = lastTouches[i];
+                touches.push({
+                    start: touch.start,
+                    startTime: touch.startTime,
+                    pos: touch.move || touch.start,
+                });
+            }
+            // console.log('Event.TouchEvent.TOUCH_END');
+            this.dispatchSystemEvent(Event.TouchEvent.TOUCH_END_UNBOUNDED, e, {
+                touches,
+            }, false);
+
+            if (touches.length === 1) {
+                this.logger.debug('TOUCH_END -> Event.MouseEvent.MOUSE_UP');
+                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_UP_UNBOUNDED, e, { pos: touches[0].pos }, false);
+
+                this.logger.debug('TOUCH_END -> Event.MouseEvent.MOUSE_OUT');
+                this.dispatchSystemEvent(Event.MouseEvent.MOUSE_OUT, e, { pos: touches[0].pos }, false);
+
+                this.logger.debug('检查是否能转换为 click', touches[0].pos === touches[0].start, T.distance(touches[0].pos, touches[0].start), touches[0]);
+                if ((touches[0].pos === touches[0].start || T.distance(touches[0].pos, touches[0].start) < 1) &&
+                    +new Date() - touches[0].startTime < 500) {
+                    // console.log('TOUCH_END -> Event.MouseEvent.CLICK');
+                    this.dispatchSystemEvent(Event.MouseEvent.CLICK, e, {
+                        pos: touches[0].pos,
+                    }, false);
                 }
             }
         });

@@ -49,7 +49,7 @@ class DisplayObject extends EventDispatcher {
             alpha: 1,
             rotation: 0,
             visible: true,
-            disabled: false, // 当 disabled=true 时，显示对象不会接收
+            originIsCenter: false,
         };
 
         // 设置传入的初始值
@@ -61,6 +61,24 @@ class DisplayObject extends EventDispatcher {
         this._parent_ = undefined;
         this._layer_ = undefined;
         this._stage_ = undefined;
+    }
+
+    set originIsCenter(originIsCenter) {
+        if (this.originIsCenter === originIsCenter) return;
+        const onSizeChange = () => {
+            this.origin = { x: this.width / 2, y: this.height / 2 };
+        };
+        if (this.state.originIsCenter) {
+            this.state.originIsCenter = false;
+            this.removeEventListener(Event.SIZE_CHANGED, onSizeChange);
+        } else {
+            this.state.originIsCenter = true;
+            this.on(Event.SIZE_CHANGED, onSizeChange);
+        }
+    }
+
+    get originIsCenter() {
+        return this.state.originIsCenter;
     }
 
     //* ********************************** 坐标 **************************************
@@ -109,6 +127,9 @@ class DisplayObject extends EventDispatcher {
      * @package
      */
     _onPosChanged_() {
+        this.dispatchEvent(Event.MOVE, {
+            pos: Object.assign({}, this.pos),
+        });
     }
 
     //* ********************************** 缩放 **************************************
@@ -205,6 +226,9 @@ class DisplayObject extends EventDispatcher {
      * @package
      */
     _onRotationChanged_() {
+        this.dispatchEvent(Event.ROTATION, {
+            rotation: this.rotation,
+        });
     }
 
     //* ********************************** 可见 **************************************
@@ -213,6 +237,7 @@ class DisplayObject extends EventDispatcher {
         if (T.assignEqual(this.visible, visible)) return;
         this.state.visible = visible;
         this._onVisibleChanged_();
+        if (this.parent) this.parent.postChange();
         this.postChange('visible', this.visible);
     }
 
@@ -272,6 +297,10 @@ class DisplayObject extends EventDispatcher {
         return this.state.origin;
     }
 
+    get center() {
+        return { x: this.width / 2, y: this.height / 2 };
+    }
+
     /**
      * 原点改变的处理
      * @package
@@ -311,15 +340,10 @@ class DisplayObject extends EventDispatcher {
      * @member {{width:*,height:*}}
      */
     set size(size) {
-        const oldSize = Object.assign({}, this.size);
+        this._oldSize_ = Object.assign({}, this.size);
         if (T.assignEqual(this.size, size)) return;
         Object.assign(this.state.size, size);
         this._onSizeChanged_();
-        this.dispatchEvent(Event.SIZE_CHANGED, {
-            oldSize,
-            size: Object.assign({}, this.size),
-        });
-
         this.postChange('size', this.size);
     }
 
@@ -332,6 +356,10 @@ class DisplayObject extends EventDispatcher {
      * @package
      */
     _onSizeChanged_() {
+        this.dispatchEvent(Event.SIZE_CHANGED, {
+            oldSize: this._oldSize_,
+            size: Object.assign({}, this.size),
+        });
     }
 
     /**
@@ -728,9 +756,9 @@ class DisplayObject extends EventDispatcher {
     }
 
     // emit(...args) {
-        // if (this.visible) {
-        // return super.emit(...args);
-        // }
+    // if (this.visible) {
+    // return super.emit(...args);
+    // }
     // }
 
     _onParentSizeChanged() {

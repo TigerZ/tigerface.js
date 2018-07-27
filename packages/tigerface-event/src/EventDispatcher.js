@@ -229,11 +229,15 @@ export const Mixin = {
             eventName,
             stopPropation() {
                 bubble = false;
-                self.logger.debug('stopPropation', `${eventName} 事件侦听器中止了事件冒泡`);
+                if (eventName !== 'mousemove' && eventName !== 'mousemoveunbounded') {
+                    self.logger.debug('stopPropation', `${eventName} 事件侦听器中止了事件冒泡`);
+                }
             },
             cancelBubble() {
                 bubble = false;
-                self.logger.debug('cancelBubble', `${eventName} 事件侦听器中止了事件冒泡`);
+                if (eventName !== 'mousemove' && eventName !== 'mousemoveunbounded') {
+                    self.logger.debug('cancelBubble', `${eventName} 事件侦听器中止了事件冒泡`);
+                }
             },
         };
         Object.assign(e, data);

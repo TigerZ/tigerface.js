@@ -60,6 +60,13 @@ class Sprite extends DisplayObjectContainer {
         return this;
     }
 
+    clearBounds() {
+        this._bounds_ = [];
+        this._createBoundingRect_();
+        this.postChange('clearBounds');
+        return this;
+    }
+
     /**
      * 移除边界多边形
      * @param i {number} 边界多边形顺序
@@ -102,7 +109,7 @@ class Sprite extends DisplayObjectContainer {
     }
 
     /**
-     * 获取边界多边形的外接矩形
+     * 创建边界多边形的外接矩形
      * @package
      */
     _createBoundingRect_() {
@@ -136,7 +143,7 @@ class Sprite extends DisplayObjectContainer {
             height: this.height,
         };
         // console.log(this.name, rect);
-        this.logger.debug('_createBoundingRect_()', this.name, boundRect);
+        this.logger.debug('创建边界多边形的外接矩形', boundRect);
         this._boundingRect_ = new Rectangle(boundRect.left, boundRect.top, boundRect.width, boundRect.height);
         this._onBoundingRectChanged_();
     }
@@ -166,6 +173,9 @@ class Sprite extends DisplayObjectContainer {
      * @package
      */
     _onBoundingRectChanged_() {
+        this.emit(Event.BOUNDING_CHANGED, {
+            boundingRect: Object.assign({}, this.boundingRect),
+        });
         this.postChange('bounding rect changed');
     }
 
@@ -289,21 +299,6 @@ class Sprite extends DisplayObjectContainer {
         this.mousePos = this.getInnerPos(pos, 2);
         if (this.disabled) return bubble;
 
-
-        //* ************** 先触发本级事件，再自下向上传播 **************************
-        // if (this._checkMouseInside_()) {
-        //     // 发送鼠标移动事件
-        //     // this.logger.debug('鼠标指针移动', this.mousePos, this);
-        //     bubble = this.dispatchEvent(Event.MouseEvent.MOUSE_MOVE, { pos: this.mousePos });
-        // }
-        //
-        // this.children.forEach((child) => {
-        //     if (child instanceof Sprite) {
-        //         bubble = child._onStageMouseMove_(this.mousePos);
-        //     }
-        // });
-        //* **************************** end ***************************************
-
         //* ************** 先自顶向下传播，最后触发本级事件 **************************
         for (let i = this.children.length - 1; i >= 0; i -= 1) {
             const child = this.children[i];
@@ -329,44 +324,63 @@ class Sprite extends DisplayObjectContainer {
         this.mousePos = this.getInnerPos(data.pos, 2);
         if (this.disabled) return bubble;
 
-        // 如果鼠标移出 stage，那么向全体下级推送 MOUSE_OUT 事件。因为 canvas 或 sprite 可能大于 stage。
-        if (eventName === Event.MouseEvent.MOUSE_OUT || this._pointInBounds_(this.mousePos)) {
-            // 上级推送的 MOUSE_OUT 事件，需要自己恢复状态
-            if (eventName === Event.MouseEvent.MOUSE_OUT) {
-                this.logger.debug('鼠标移出舞台');
-                this._mouseInside_ = false;
-            }
+        // MOUSE_OUT 事件，需要自己恢复状态
+        if (eventName === Event.MouseEvent.MOUSE_OUT) {
+            this.logger.debug('鼠标移出舞台');
+            this._mouseInside_ = false;
+        }
 
-            //* ************** 先触发本级事件，再自下向上传播 **************************
-            // this.dispatchEvent(eventName, { pos: this.mousePos });
-            // this.children.forEach((child) => {
-            //     if (child instanceof Sprite) {
-            //         this.logger.debug('_onStageMouseEvents_', eventName, data.pos, child);
-            //         child._onStageMouseEvents_(eventName, { pos: this.mousePos });
-            //     }
-            // });
-            //* **************************** end ***************************************
-
-            //* ************** 先自顶向下传播，最后触发本级事件 **************************
-            for (let i = this.children.length - 1; i >= 0; i -= 1) {
-                const child = this.children[i];
-                if (child instanceof Sprite) {
-                    if (bubble !== false) {
-                        bubble = child._onStageMouseEvents_(eventName, { pos: this.mousePos });
-                    } else {
+        //* ************** 先自顶向下传播，最后触发本级事件 **************************
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            const child = this.children[i];
+            if (child instanceof Sprite) {
+                if (bubble !== false) {
+                    bubble = child._onStageMouseEvents_(eventName, { pos: this.mousePos });
+                } else {
+                    if (eventName !== 'mousemove' && eventName !== 'mousemoveunbounded') {
                         child.logger.debug('_onStageMouseEvents_', `${eventName} 事件未触发，因为被其它对象中止事件冒泡`);
-                        break;
                     }
+                    break;
                 }
             }
+        }
+        //* **************************** end ***************************************
+
+
+        // 如果鼠标移出 stage，那么向全体下级推送 MOUSE_OUT 事件。因为 canvas 或 sprite 可能大于 stage。
+        if (eventName.endsWith('unbounded') || eventName === Event.MouseEvent.MOUSE_OUT || this._pointInBounds_(this.mousePos)) {
             if (bubble !== false) {
                 bubble = this.dispatchEvent(eventName, { pos: this.mousePos });
             } else {
-                this.logger.debug('_onStageMouseEvents_', `${eventName} 事件未触发，因为被上层对象中止事件冒泡`);
+                if (eventName !== 'mousemove' && eventName !== 'mousemoveunbounded') {
+                    this.logger.debug('_onStageMouseEvents_', `${eventName} 事件未触发，因为被上层对象中止事件冒泡`);
+                }
             }
-            //* **************************** end ***************************************
         }
 
+        return bubble;
+    }
+
+    _onStageKeyEvents_(e) {
+        let bubble = true;
+        if (this.disabled) return bubble;
+
+        //* ************** 先自顶向下传播，最后触发本级事件 **************************
+        for (let i = this.children.length - 1; i >= 0; i -= 1) {
+            const child = this.children[i];
+            if (child instanceof Sprite) {
+                bubble = child._onStageKeyEvents_(e);
+                if (bubble === false) break;
+            }
+        }
+
+        if (bubble !== false) {
+            bubble = this.dispatchEvent(e.eventName, e);
+        } else {
+            this.logger.debug('_onStageMouseEvents_', `${e.eventName} 事件未触发，因为被上层对象中止事件冒泡`);
+        }
+
+        //* **************************** end ***************************************
         return bubble;
     }
 
@@ -379,50 +393,62 @@ class Sprite extends DisplayObjectContainer {
     /**
      * 启用拖拽
      */
-    enableDrag(checkOut = true) {
+    enableDrag(unbounded = false) {
+        this._unboundedDrag_ = unbounded;
         this.addEventListener(Event.MouseEvent.MOUSE_DOWN, this._startDrag_);
-        this.addEventListener(Event.MouseEvent.MOUSE_UP, this._endDrag_);
-        if (checkOut) this.addEventListener(Event.MouseEvent.MOUSE_OUT, this._endDrag_);
+        this.addEventListener(Event.MouseEvent.MOUSE_UP_UNBOUNDED, this._endDrag_);
+        if (!unbounded) this.addEventListener(Event.MouseEvent.MOUSE_OUT, this._endDrag_);
     }
 
     /**
      * 禁用拖拽
      */
-    disableDrag(checkOut = true) {
+    disableDrag() {
         this._endDrag_();
         this.removeEventListener(Event.MouseEvent.MOUSE_DOWN, this._startDrag_);
-        this.removeEventListener(Event.MouseEvent.MOUSE_UP, this._endDrag_);
-        if (checkOut) this.removeEventListener(Event.MouseEvent.MOUSE_OUT, this._endDrag_);
+        this.removeEventListener(Event.MouseEvent.MOUSE_UP_UNBOUNDED, this._endDrag_);
+        this.removeEventListener(Event.MouseEvent.MOUSE_OUT, this._endDrag_);
     }
 
     /**
      * 开始拖拽，鼠标按下事件侦听器
      * @package
      */
-    _startDrag_ = () => {
+    _startDrag_ = (e) => {
         if (this.dragging) return;
-        this.parent.addEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
+
+        if (this._unboundedDrag_) {
+            this.parent.addEventListener(Event.MouseEvent.MOUSE_MOVE_UNBOUNDED, this._move_);
+        } else {
+            this.parent.addEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
+        }
 
         this.logger.debug('开始拖拽 _startDrag_(): mousePos=', this.mousePos);
         this.dragging = true;
         const m = this.getOuterPos(this.mousePos);
         this._dragX_ = m.x - this.x;
         this._dragY_ = m.y - this.y;
-        this.dispatchEvent(Event.MouseEvent.DRAG_START);
+        this.dispatchEvent(Event.MouseEvent.DRAG_START, { pos: Object.assign({}, this.pos) });
+        e.cancelBubble();
     };
 
     /**
      * 停止拖拽，鼠标放开事件侦听器
      * @package
      */
-    _endDrag_ = () => {
+    _endDrag_ = (e) => {
         if (!this.dragging) return;
 
-        this.parent.removeEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
+        if (this._unboundedDrag_) {
+            this.parent.removeEventListener(Event.MouseEvent.MOUSE_MOVE_UNBOUNDED, this._move_);
+        } else {
+            this.parent.removeEventListener(Event.MouseEvent.MOUSE_MOVE, this._move_);
+        }
 
         this.logger.debug('停止拖拽 _endDrag_()');
         this.dragging = false;
-        this.dispatchEvent(Event.MouseEvent.DRAG_END);
+        this.dispatchEvent(Event.MouseEvent.DRAG_END, { pos: Object.assign({}, this.pos) });
+        if (e) e.cancelBubble();
     };
 
     /**
@@ -431,16 +457,17 @@ class Sprite extends DisplayObjectContainer {
      * @package
      */
     _move_ = (e) => {
-        // this.logger.debug(`_move_()`);
-        if (this.dragging) {
-            const last = { x: this.x, y: this.y };
-            this.x = e.pos.x - this._dragX_;
-            this.y = e.pos.y - this._dragY_;
-            this.dispatchEvent(Event.MouseEvent.DRAG, {
-                pos: { x: this.x, y: this.y },
-                offset: { x: this.x - last.x, y: this.y - last.y },
-            });
-        }
+        if (!this.dragging) return;
+
+        const last = { x: this.x, y: this.y };
+        this.x = e.pos.x - this._dragX_;
+        this.y = e.pos.y - this._dragY_;
+        this.dispatchEvent(Event.MouseEvent.DRAG, {
+            pos: { x: this.x, y: this.y },
+            // offset: { x: this.x - last.x, y: this.y - last.y },
+            offset: { x: this._dragX_, y: this._dragY_ },
+        });
+        e.cancelBubble();
     };
 
     /**

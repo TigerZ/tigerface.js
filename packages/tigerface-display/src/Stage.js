@@ -2,8 +2,6 @@ import { Utilities as T, Logger } from 'tigerface-common';
 import { Event, FrameEventGenerator, DomEventAdapter } from 'tigerface-event';
 import DomSprite from './DomSprite';
 import Sprite from './Sprite';
-import CanvasSprite from './CanvasSprite';
-import CanvasLayer from './CanvasLayer';
 
 function setZIndex(obj, pre = '1') {
     const len = (`${obj.children.length * 10}`).length;
@@ -102,16 +100,18 @@ class Stage extends DomSprite {
         this.on(Event.MouseEvent.MOUSE_UP, e => this._onMouseEvents_(e));
         this.on(Event.MouseEvent.MOUSE_OUT, e => this._onMouseEvents_(e));
 
+        this.on(Event.MouseEvent.MOUSE_UP_UNBOUNDED, e => this._onMouseEvents_(e));
+        this.on(Event.MouseEvent.MOUSE_MOVE_UNBOUNDED, e => this._onMouseEvents_(e));
+
+        this.on(Event.KeyEvent.KEY_DOWN, e => this._onKeyEvents_(e));
+        this.on(Event.KeyEvent.KEY_UP, e => this._onKeyEvents_(e));
+        this.on(Event.KeyEvent.KEY_PRESS, e => this._onKeyEvents_(e));
+
         this.childrenIndex = {
-            domList: [],
             layers: [],
             covers: [],
             all: {},
         };
-    }
-
-    get domList() {
-        return this.childrenIndex.domList;
     }
 
     get layers() {
@@ -229,6 +229,19 @@ class Stage extends DomSprite {
     }
 
     /**
+     * Dom 键盘事件侦听器
+     * @param e
+     * @private
+     */
+    _onKeyEvents_(e) {
+        this.children.forEach((child) => {
+            if (child instanceof Sprite) {
+                child._onStageKeyEvents_(e);
+            }
+        });
+    }
+
+    /**
      * Dom 鼠标移动事件侦听器
      * @param e {object} 事件数据
      * @package
@@ -248,10 +261,12 @@ class Stage extends DomSprite {
      * @package
      */
     _onMouseEvents_(e) {
+        if (e.eventName !== 'mousemoveunbounded') this.logger.debug('舞台鼠标事件', e);
         // 记录鼠标按下位置
         if (e.eventName === Event.MouseEvent.MOUSE_DOWN) {
             this._lastMouseDownPos_ = e.pos;
         }
+
         // 如果鼠标按下位置与CLICK位置不同，禁止发送 CLICK 事件
         if (e.eventName === Event.MouseEvent.CLICK) {
             if (!this._lastMouseDownPos_ || this._lastMouseDownPos_.x !== e.pos.x || this._lastMouseDownPos_.y !== e.pos.y) return;
@@ -363,8 +378,6 @@ class Stage extends DomSprite {
      * @private
      */
     _unregister_(child) {
-        const idx = this.domList.indexOf(child);
-        this.domList.split(idx, 1);
         this._unregisterIndex_(child);
     }
 
