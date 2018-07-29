@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
-import { Logger } from 'tigerface-common';
+import { Logger, Utilities as T } from 'tigerface-common';
 import { Event } from 'tigerface-event';
 import { Rectangle, Polygon } from 'tigerface-shape';
 
@@ -173,8 +173,9 @@ class Sprite extends DisplayObjectContainer {
      * @package
      */
     _onBoundingRectChanged_() {
+        const { left, top, width, height } = this.boundingRect;
         this.emit(Event.BOUNDING_CHANGED, {
-            boundingRect: Object.assign({}, this.boundingRect),
+            boundingRect: { left, top, width, height },
         });
         this.postChange('bounding rect changed');
     }

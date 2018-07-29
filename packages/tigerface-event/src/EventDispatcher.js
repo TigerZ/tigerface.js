@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { withMix, BaseObject, Logger } from 'tigerface-common';
+import { withMix, BaseObject, Logger, Utilities as T } from 'tigerface-common';
 import Event from './Event';
 
 /**
@@ -240,6 +240,7 @@ export const Mixin = {
                 }
             },
         };
+
         Object.assign(e, data);
 
         if (async) {

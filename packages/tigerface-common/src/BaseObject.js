@@ -1,4 +1,5 @@
 import Logger from './Logger';
+import T from './Utilities';
 
 /**
  * 最底层功能基础类

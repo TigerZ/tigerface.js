@@ -27,7 +27,7 @@ const Utilities = {
     },
 
     cssMerge(dom, css, autoPrefix) {
-        const ext = Object.assign({}, css);
+        const ext = this.assign({}, css);
         if (autoPrefix) {
             Object.keys(css).forEach((key) => {
                 ext[key] = css[key];
@@ -251,6 +251,33 @@ const Utilities = {
             }
         });
         return obj;
+    },
+
+    /**
+     * 深度复制
+     * @param target
+     * @param source
+     * @return {*}
+     */
+    assign(target, source) {
+        if (this.isArray(source)) {
+            if (!target) target = [];
+            source.forEach((item, idx) => {
+                if (idx >= target.length) {
+                    target.push(this.assign(target[idx], item));
+                } else {
+                    target[idx] = this.assign(target[idx], item);
+                }
+            });
+        } else if (typeof source === 'object') {
+            if (!target) target = {};
+            Object.keys(source).forEach((key) => {
+                target[key] = this.assign(target[key], source[key]);
+            });
+        } else {
+            target = source;
+        }
+        return target;
     },
 
     inArray(obj, arr) {

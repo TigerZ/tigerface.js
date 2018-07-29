@@ -1,4 +1,5 @@
 import { Line } from 'tigerface-shape';
+import { Utilities as T } from 'tigerface-common';
 
 function distance(x0, y0, x1, y1) {
     return Math.sqrt(((x1 - x0) ** 2) + ((y1 - y0) ** 2));

@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define,no-nested-ternary,new-cap */
 import React from 'react';
 import { Stage, CanvasLayer, DomSprite, CanvasSprite, DomLayer } from 'tigerface-display';
-import { Logger } from 'tigerface-common';
+import { Logger, Utilities as T } from 'tigerface-common';
 import Reconciler from 'react-reconciler';
 import emptyObject from 'fbjs/lib/emptyObject';
 import BaseComponent from './BaseComponent';
