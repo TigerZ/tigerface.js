@@ -700,7 +700,7 @@ class DisplayObject extends EventDispatcher {
      */
     _onAppendToParent_() {
         // if (!this.parent) return;
-        this.dispatchEvent(Event.APPEND_TO_PARENT);
+        this.emit(Event.APPEND_TO_PARENT);
         this.postChange('AppendToParent');
         // eslint-disable-next-line no-unused-expressions
         this.layer;

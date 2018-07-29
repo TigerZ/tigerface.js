@@ -241,7 +241,7 @@ export const Mixin = {
             },
         };
 
-        Object.assign(e, data);
+        Object.assign(e, data || {});
 
         if (async) {
             this._asyncEmit_(eventName, e);
