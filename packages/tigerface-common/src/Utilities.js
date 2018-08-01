@@ -3,7 +3,6 @@
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
 import Logger from './Logger';
-import { Utilities as T } from "RootPath/packages/tigerface-common/index";
 
 const G = global;
 /**

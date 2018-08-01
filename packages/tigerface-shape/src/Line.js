@@ -8,7 +8,6 @@ import { Logger, Utilities as T } from 'tigerface-common';
 import Point from './Point';
 import Vertex from './Vertex';
 import Vector from './Vector';
-import Polygon from "RootPath/packages/tigerface-shape/src/Polygon";
 
 /**
  * Line类，由两点坐标描述一个直线段

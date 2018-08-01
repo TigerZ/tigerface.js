@@ -5,9 +5,8 @@
  */
 import Line from './Line';
 import Vertex from './Vertex';
-import QuadraticBezier from "RootPath/packages/tigerface-shape/src/QuadraticBezier";
-import Polygon from "RootPath/packages/tigerface-shape/src/Polygon";
-import Point from "RootPath/packages/tigerface-shape/src/Point";
+import QuadraticBezier from './QuadraticBezier';
+import Point from './Point';
 
 /**
  * 曲线基类

@@ -71,10 +71,7 @@ export const Mixin = {
     },
 
     _getTargetListeners_(target) {
-        if (!this.targets[target]) {
-            this.targets[target] = [];
-        }
-        return this.targets[target];
+        return this.targets[target] || [];
     },
 
     /**
@@ -86,19 +83,37 @@ export const Mixin = {
      */
     _saveTargetListener_(target, eventName, listener) {
         const listeners = this._getTargetListeners_(target);
-        listeners.push({ target, eventName, listener });
+        if (listeners.length === 0) {
+            this.targets[target] = [{ target, eventName, listener }];
+        } else {
+            listeners.push({ target, eventName, listener });
+        }
     },
 
     /**
      * 销毁目标对象注册的全部事件侦听器
      * @param target {object} 目标对象
      */
-    destroyTargetListeners(target) {
-        const listeners = this._getTargetPool_(target);
-        listeners.forEach((listener) => {
-            this.removeEventListener(listener.target, listener.eventName, listener.listener);
-        });
-        delete this.targets[target];
+    destroyTargetAllListeners(target) {
+        const listeners = this._getTargetListeners_(target);
+        if (listeners.length > 0) {
+            listeners.forEach((listener) => {
+                this.removeEventListener(listener.eventName, listener.listener);
+            });
+            delete this.targets[target];
+        }
+    },
+
+    destroyTargetListener(target, eventName, listener) {
+        const listeners = this._getTargetListeners_(target);
+        if (listeners.length > 0) {
+            listeners.forEach((_listener) => {
+                if (eventName === listener.eventName && listener === listener.listener) {
+                    this.removeEventListener(_listener.eventName, _listener.listener);
+                }
+            });
+            delete this.targets[target];
+        }
     },
 
     /**
@@ -157,6 +172,7 @@ export const Mixin = {
      * 直接提供 this._eventEmitter_ 的 on 方法
      * @param eventName
      * @param listener
+     * @param target
      */
     on(eventName, listener, target) {
         if (!this.containsListener(eventName, listener)) {
@@ -305,8 +321,11 @@ export const Mixin = {
      * @param eventName
      * @param listener
      */
-    removeEventListener(eventName, listener) {
+    removeEventListener(eventName, listener, target) {
         this._getEmitter_().removeListener(eventName, listener);
+        if (target) {
+            this.destroyTargetListener(target, eventName, listener);
+        }
         EventDispatcher.logger.debug(`已删除事件 [${eventName}] 的侦听器：`, listener);
     },
 
@@ -314,8 +333,11 @@ export const Mixin = {
      * 移除指定事件的全部侦听器
      * @param eventName
      */
-    removeAllEventListeners(eventName) {
+    removeAllEventListeners(eventName, target) {
         this._getEmitter_().removeAllListeners(eventName);
+        if (target) {
+            this.destroyTargetAllListeners(target);
+        }
         EventDispatcher.logger.debug(`已删除事件 [${eventName}] 的全部侦听器`);
     },
 
