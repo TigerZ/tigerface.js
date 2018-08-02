@@ -46,7 +46,7 @@ class HttpDataSource extends DataSource {
             httpData: data,
         } = this._convertHttpMethod_(message);
 
-        this.logger.debug(`send ${url} data=`, data);
+        this.logger.debug(`send ${type} ${url} data=`, data);
 
         $.ajax({
             url,
@@ -96,7 +96,7 @@ class HttpDataSource extends DataSource {
             case Network.Method.REMOVE:
                 httpMethod = HttpMethod.REMOVE;
                 if (data.id !== undefined) url = `${url}/${data.id}`;
-                httpData = data;
+                httpData = JSON.stringify(data);
                 break;
             default:
                 break;
