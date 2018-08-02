@@ -70,7 +70,7 @@ class DataSource extends EventDispatcher {
     constructor(options) {
         super({
             clazzName: DataSource.name,
-            connectTest: false,
+            connectTest: true,
             state: Network.State.CLOSED,
             uuid: undefined,
         });
@@ -113,6 +113,7 @@ class DataSource extends EventDispatcher {
      * @returns {*}
      */
     getByID(resourceName, id) {
+        this.logger.debug('getByID ${resourceName} id=${id}');
         const message = {
             eventName: resourceName,
             from: this.uuid,
@@ -217,6 +218,7 @@ class DataSource extends EventDispatcher {
      * @param e
      */
     onHeartBeatReceived(uuid) {
+        this.logger.debug(`心跳请求成功返回：{uuid:${uuid}}`);
         this.uuid = uuid;
         this.onConnected();
     }
@@ -227,6 +229,7 @@ class DataSource extends EventDispatcher {
     onConnected() {
         this.state = Network.State.CONNECTED;
         this.dispatchEvent(Network.Event.CONNECTED);
+        this.logger.debug('数据源状态为 "已连接"');
     }
 
     /**
@@ -235,6 +238,7 @@ class DataSource extends EventDispatcher {
     onClosed() {
         this.state = Network.State.CLOSED;
         this.dispatchEvent(Network.Event.CLOSED);
+        this.logger.debug('数据源状态为 "已关闭"');
     }
 
     /**

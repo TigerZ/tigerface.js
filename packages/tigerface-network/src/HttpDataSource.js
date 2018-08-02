@@ -2,31 +2,10 @@
  * Tiger zhangyihu@gmail.com MIT Licensed.
  */
 
-/**
- * 网络模块的功能支持WebSocket、长轮询(GET/POST)、长连接(GET/POST)、HTTP(GET/POST/PUT/DELETE)
- * 设计思路：<br>
- *     MessageAdapter是消息传递的规范类和各种网络连接实现的基类。
- *     前后台消息通信的复杂度来源于两个方面：数据操作的多样性和网络连接类型的多样性
- *     MessageAdapter负责把数据操作规范成：<br>
- *         doGet（通过 id 获取唯一数据）
- *         doFind（通过组合条件，获取一或多条数据）
- *         doAdd（新增一条数据）
- *         doModify（修改一条数据的内容）
- *         doRemove（删除一条数据）
- *         dispatchServerEvent（分发服务器事件）
- *
- *     网络连接通过实现不同的子类实现适配：<br>
- *         各自类根据自身的网络连接特点实现上述规范的数据操作
- *
- *     接口的衔接：<br>
- *         前台通过统一的 DataEventDispatcher 消息分发机制调用
- *         后台通过不同语言实现的后台适配器调用业务系统接口适配器
- *
- */
 import { Utilities as T } from 'tigerface-common';
 import DataSource, { Network } from './DataSource';
 
-const $ = global;
+const { $ } = global;
 
 const HttpMethod = {
     GET: 'GET',
@@ -61,23 +40,25 @@ class HttpDataSource extends DataSource {
      */
     send(message) {
         const {
-            event,
+            eventName,
             url,
             httpMethod: type,
             httpData: data,
         } = this._convertHttpMethod_(message);
+
+        this.logger.debug(`send ${url} data=`, data);
 
         $.ajax({
             url,
             cache: false,
             async: true,
             type,
-            contentType: 'application/json;charset=UTF-8',
+            contentType: 'application/json;charset=utf-8',
             data,
             dataType: 'json',
             crossDomain: true,
-            success: (jsonData, textStatus, jqXHR) => this._proccess_(event, jsonData, textStatus, jqXHR),
-            error: (XMLHttpRequest, textStatus, errorThrown) => this.onError(event, XMLHttpRequest, textStatus, errorThrown),
+            success: (jsonData, textStatus, jqXHR) => this._proccess_(eventName, jsonData, textStatus, jqXHR),
+            error: (XMLHttpRequest, textStatus, errorThrown) => this.onError(eventName, XMLHttpRequest, textStatus, errorThrown),
         });
     }
 
@@ -85,12 +66,14 @@ class HttpDataSource extends DataSource {
         return url.endsWith(separator) ? url : (url + separator);
     }
 
-    _convertHttpMethod_(message, method) {
-        const { event, data } = message;
+    _convertHttpMethod_(message) {
+        const { eventName, data, method } = message;
+
+        this.logger.debug('_convertHttpMethod_', message);
 
         let httpMethod;
         let httpData;
-        let url = this._withSeparator_(this.baseUrl, '/') + event;
+        let url = this._withSeparator_(this.baseUrl, '/') + eventName;
 
         switch (method) {
             case Network.Method.GET:
@@ -119,7 +102,7 @@ class HttpDataSource extends DataSource {
                 break;
         }
         return {
-            event,
+            eventName,
             url,
             httpMethod,
             httpData,
@@ -133,16 +116,18 @@ class HttpDataSource extends DataSource {
      * @param jqXHR
      * @private
      */
-    _proccess_(event, jsonData, textStatus, jqXHR) {
+    _proccess_(eventName, jsonData, textStatus, jqXHR) {
+        this.logger.debug('请求成功返回', eventName, jsonData);
         const eventNames = jqXHR.getResponseHeader('TigerFace-Event');
+        this.logger.debug('TigerFace-Event: ', eventNames);
         if (eventNames) {
             if (eventNames.indexOf(',') > -1) {
                 const events = eventNames.split(',');
-                events.forEach((eventName) => {
-                    eventName = T.trim(eventName);
+                events.forEach((name) => {
+                    name = T.trim(name);
                     this.onMessageReceived({
-                        eventName,
-                        data: jsonData[eventName],
+                        eventName: name,
+                        data: jsonData[name],
                     });
                 });
             } else {
@@ -153,7 +138,7 @@ class HttpDataSource extends DataSource {
             }
         } else {
             this.onMessageReceived({
-                eventName: event,
+                eventName,
                 data: jsonData,
             });
         }

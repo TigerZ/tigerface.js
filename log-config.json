@@ -1,5 +1,5 @@
 {
-  "log-level": "info",
+  "log-level": "debug",
   "class-log-level": {
   },
   "exclude":["发布事件", "设置对象属性", "状态改变"]

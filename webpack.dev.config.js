@@ -7,7 +7,7 @@ const RootPath = path.resolve(__dirname);
 const config = {
     mode: 'development',
     entry: {
-        main: ['./lab/editor.jsx'],
+        main: ['./lab/rest.js'],
     },
     resolve: {
         alias: { RootPath },
