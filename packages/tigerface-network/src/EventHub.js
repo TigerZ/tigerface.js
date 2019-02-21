@@ -6,11 +6,12 @@ import DataEventDispatcher from './DataEventDispatcher';
  * @extends DataEventDispatcher
  */
 class EventHub extends DataEventDispatcher {
-    static logger = Logger.getLogger(EventHub.name);
+    // static logger = Logger.getLogger(EventHub.name);
 
     static register(name) {
         if (global[name]) EventHub.logger(`全局上下文中已存在 "${name}"，注册失败！`);
         global[name] = new EventHub();
+        return global[name];
     }
 
     constructor(options) {
@@ -25,12 +26,14 @@ class EventHub extends DataEventDispatcher {
         this.assign(options);
     }
 
-    addDataSource(ds) {
-        this.dataSources[ds.name] = ds;
+    addDS(name, ds) {
+        this.dataSources[name] = ds;
+        ds.addEventSubscriber(this);
     }
 
     ds(name) {
-        return this.dataSources[name];
+        if (name) return this.dataSources[name];
+        return Object.values(this.dataSources)[0];
     }
 }
 

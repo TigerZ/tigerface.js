@@ -109,11 +109,10 @@ class DataSource extends EventDispatcher {
      * 通过 id 获取唯一数据
      *
      * @param resourceName 资源名称
-     * @param id 资源ID
+     * @param id 资源 id
      * @returns {*}
      */
-    getByID(resourceName, id) {
-        this.logger.debug('getByID ${resourceName} id=${id}');
+    getById(resourceName, id) {
         const message = {
             eventName: resourceName,
             from: this.uuid,
@@ -252,8 +251,8 @@ class DataSource extends EventDispatcher {
         if (eventName === HeartBeatMessageName) {
             this.onHeartBeatReceived(data.uuid);
         } else {
-            this.dispatchEvent(Network.Event.MESSAGE_RECEIVED, data);
-            this.dispatchEvent(eventName, data);
+            this.dispatchEvent(Network.Event.MESSAGE_RECEIVED, { data });
+            this.dispatchEvent(eventName, { data });
         }
     }
 
@@ -267,7 +266,7 @@ class DataSource extends EventDispatcher {
             this.onClosed();
         } else {
             this.state = Network.State.ERROR;
-            this.dispatchEvent(Network.Event.ERROR, ...error);
+            this.dispatchEvent(Network.Event.ERROR, { data: [...error] });
         }
     }
 }

@@ -48,7 +48,7 @@ class HttpDataSource extends DataSource {
 
         this.logger.debug(`send ${type} ${url} data=`, data);
 
-        $.ajax({
+        const jqxhr = $.ajax({
             url,
             cache: false,
             async: true,
@@ -57,8 +57,13 @@ class HttpDataSource extends DataSource {
             data,
             dataType: 'json',
             crossDomain: true,
-            success: (jsonData, textStatus, jqXHR) => this._proccess_(eventName, jsonData, textStatus, jqXHR),
-            error: (XMLHttpRequest, textStatus, errorThrown) => this.onError(eventName, XMLHttpRequest, textStatus, errorThrown),
+        });
+        jqxhr.done((jsonData, textStatus, jqXHR) => this._proccess_(eventName, jsonData, textStatus, jqXHR));
+        jqxhr.fail((jqXHR, textStatus, errorThrown) => {
+            const { status, responseJSON } = jqXHR;
+            if ([403, 404, 500].indexOf(status) && responseJSON) {
+                this._proccess_(eventName, responseJSON, textStatus, jqXHR);
+            } else this.onError(eventName, jqXHR, textStatus, errorThrown);
         });
     }
 
@@ -124,7 +129,7 @@ class HttpDataSource extends DataSource {
             if (eventNames.indexOf(',') > -1) {
                 const events = eventNames.split(',');
                 events.forEach((name) => {
-                    name = T.trim(name);
+                    name = name.trim();
                     this.onMessageReceived({
                         eventName: name,
                         data: jsonData[name],
@@ -167,7 +172,7 @@ class HttpDataSource extends DataSource {
 
     upload(resourceName, form) {
         const formData = new FormData(form);
-        let url = this._withSeparator_(this.baseUrl, '/') + resourceName;
+        const url = this._withSeparator_(this.baseUrl, '/') + resourceName;
         $.ajax({
             type: 'POST',
             url,
@@ -194,7 +199,7 @@ class HttpDataSource extends DataSource {
     }
 
     uploadData(resourceName, data) {
-        let url = this._withSeparator_(this.baseUrl, '/') + resourceName;
+        const url = this._withSeparator_(this.baseUrl, '/') + resourceName;
         $.ajax({
             type: 'POST',
             url,
