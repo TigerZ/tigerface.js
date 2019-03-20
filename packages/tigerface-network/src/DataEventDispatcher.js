@@ -62,11 +62,20 @@ class DataEventDispatcher extends EventDispatcher {
     _pushData_(eventName, callback) {
         const data = this.getData(eventName);
         if (data) {
-            const e = {};
-            e.className = 'Event';
-            e.currentTarget = this;
-            e.eventName = eventName;
-            e.data = data;
+            const e = {
+                clazzName: 'Event',
+                currentTarget: this,
+                target: this,
+                eventName,
+                stopPropation() {
+                    // 仅保留空方法，方式报错
+                },
+                cancelBubble() {
+                    // 仅保留空方法，方式报错
+                },
+            };
+
+            Object.assign(e, data);
             callback(e);
         }
     }
@@ -77,7 +86,7 @@ class DataEventDispatcher extends EventDispatcher {
      * @param listener {function} 事件侦听函数
      * @param target {object} 目标对象
      */
-    on(eventName, listener, target) {
+    onAndFetch(eventName, listener, target) {
         super.on(eventName, listener, target);
         this._pushData_(eventName, listener);
     }
