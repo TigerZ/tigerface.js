@@ -57,6 +57,9 @@ class HttpDataSource extends DataSource {
             data,
             dataType: 'json',
             crossDomain: true,
+            xhrFields: {
+                withCredentials: true
+            },
         });
         jqxhr.done((jsonData, textStatus, jqXHR) => this._proccess_(eventName, jsonData, textStatus, jqXHR));
         jqxhr.fail((jqXHR, textStatus, errorThrown) => {
